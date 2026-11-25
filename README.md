@@ -125,7 +125,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 | Adaptive versus | Paired seeds | Adaptive NLL<br>↓ Lower is better | Adaptive width change<br>↑ More retained is better for the width test | Adaptive speed<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
 | Cross-seed replay | 1/8 | 0.000002 lower | 0.0029 less retained | 3.1% faster |
-| Hessian trace | 2/8 | 0.000002 higher | 0.0015 more retained | 35.0% slower |
+| Hessian trace | 3/8 | 0.000004 higher | 0.0020 more retained | 36.3% slower |
 | Stronger trace | 2/8 | 0.000092 lower | 0.0178 less retained | 35.5% slower |
 | Always-on hybrid | 2/8 | 0.000161 higher | 0.0111 less retained | 48.0% faster |
 
@@ -191,9 +191,9 @@ Each panel shows the first saved prompt and full continuations from the lowest m
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 39 runs, including 38 with a completed summary.
+Recorded 40 runs, including 39 with a completed summary.
 
-TinyStories hybrid follow-up: 13 of 48 full runs and 3 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
+TinyStories hybrid follow-up: 14 of 48 full runs and 3 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
 [Full score table, strength search and per-seed test differences](reports/summary.md)
 
