@@ -11,12 +11,24 @@ from .records import HORIZONS, METHODS, storage_root
 
 def dashboard(project, port):
     """Serve the same Pages application locally with a live view of atomically recorded events."""
-    from .report_records import study_snapshot
+    from .report_records import read_json, study_snapshot
+    partial_calibrations=storage_root(project)/"calibration"
 
     class Handler(SimpleHTTPRequestHandler):
         def do_GET(self):
             if self.path.split("?",1)[0] == "/live.json":
-                data = json.dumps(study_snapshot(project),ensure_ascii=False,allow_nan=False).encode()
+                study = study_snapshot(project)
+                for run in study["runs"]:
+                    if run.get("status")=="initializing":
+                        kinds={"combined":("trace","third"),"sham":("third",)}.get(run.get("method"),(run.get("method"),))
+                        for kind in kinds:
+                            suffix="-fp64" if run["stage"]=="abstracts" else ""
+                            file=partial_calibrations/f"{run['stage']}-{kind}{suffix}-draws.json"
+                            draws=read_json(file).get("draws",[])
+                            if draws:
+                                run["status"]=f"calibrating ({len(draws)}/16)"
+                                run["calibration_progress"]={"draws_completed":len(draws),"last_draw":draws[-1]}
+                data = json.dumps(study,ensure_ascii=False,allow_nan=False).encode()
                 self.send_response(200)
                 self.send_header("Content-Type","application/json; charset=utf-8")
                 self.send_header("Cache-Control","no-store")
