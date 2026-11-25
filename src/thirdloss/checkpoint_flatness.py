@@ -163,3 +163,21 @@ def flatness_study(project,storage,stages,phase,device,publish,run_id=None):
                 subprocess.run([sys.executable,"-m","thirdloss.cli","--project",str(project),"report"],cwd=project,check=True)
                 revision=publish_snapshot(project,f"Measure comparable flatness for {run}")
                 write_json(marker,{"artifacts":artifacts,"git_revision":revision})
+    if rows and not publish:
+        subprocess.run([sys.executable,"-m","thirdloss.cli","--project",str(project),"report"],cwd=project,check=True)
+
+
+def geometry_milestone(project,storage,row,device,publish):
+    """Keep checkpoint evaluation isolated from timed training and recover each missing publication."""
+    run=row["id"]
+    folder=project/"results"/run
+    paths=[folder/"score-flatness.json"]
+    if row["method"]!="unigram":
+        paths.append(folder/"flatness.json")
+    marker=storage/"releases"/("flatness-"+run+".json")
+    if all(p.is_file() for p in paths) and (not publish or (marker.is_file() and
+            read_json(marker).get("artifacts")=={p.name:sha256(p) for p in paths})):
+        return
+    cmd=[sys.executable,"-m","thirdloss.cli","--project",str(project),"flatness","--run-id",run,
+         "--stage",row["stage"],"--device",str(device)]
+    subprocess.run(cmd+(["--publish"] if publish else []),cwd=project,check=True)

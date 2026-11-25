@@ -170,20 +170,22 @@ def evaluate_one(project, storage, run_id, device):
     return summary
 
 
-def milestone(project,storage,summary,publish):
+def milestone(project,storage,summary,publish,flatness_device=None):
     path = project/"results"/summary["id"]/"summary.json"
     marker = storage/"releases"/(summary["id"]+".json")
     fingerprint = sha256(path)
-    if publish and marker.exists() and read_json(marker)["summary_sha256"]==fingerprint:
-        return
-    # A study can run for days. Render from the current checked-in reporting code so a
-    # later milestone cannot replace an updated paper or explorer with an older template.
-    subprocess.run([sys.executable,"-m","thirdloss.cli","--project",str(project),"report"],cwd=project,check=True)
-    if publish:
-        publish_weights(project,storage,summary)
-        label = "evaluation" if "test_nll" in summary else "development"
-        revision = publish_snapshot(project,f"Record {label} results for {summary['id']}")
-        write_json(marker,{"summary_sha256":fingerprint,"git_revision":revision})
+    released=publish and marker.exists() and read_json(marker)["summary_sha256"]==fingerprint
+    if not released:
+        # Render the current checked-in report, even when the coordinator has run for days.
+        subprocess.run([sys.executable,"-m","thirdloss.cli","--project",str(project),"report"],cwd=project,check=True)
+        if publish:
+            publish_weights(project,storage,summary)
+            label = "evaluation" if "test_nll" in summary else "development"
+            revision = publish_snapshot(project,f"Record {label} results for {summary['id']}")
+            write_json(marker,{"summary_sha256":fingerprint,"git_revision":revision})
+    if flatness_device is not None:
+        from .checkpoint_flatness import geometry_milestone
+        geometry_milestone(project,storage,summary,flatness_device,publish)
 
 
 def feasibility(project, stage):
@@ -202,11 +204,11 @@ def feasibility(project, stage):
     return result
 
 
-def run_study(project,storage,stages,device,publish,with_hybrid=False):
+def run_study(project,storage,stages,device,publish,with_hybrid=False,with_flatness=False):
     """Retry-safe complete study. Cached milestones allow continuation after reboot or network loss."""
     def run(stage,method,phase,seed,ratio):
         row = run_one(project,storage,stage,method,phase,seed,ratio,device)
-        milestone(project,storage,row,publish)
+        milestone(project,storage,row,publish,device if with_flatness else None)
         return row
     for stage in stages:
         prepare_stage(project,storage,stage)
@@ -226,7 +228,7 @@ def run_study(project,storage,stages,device,publish,with_hybrid=False):
             run(stage,method,"pilot",0,ratio)
         if with_hybrid and stage=="stories":
             from .hybrid import run_hybrids
-            run_hybrids(project,storage,device,publish)
+            run_hybrids(project,storage,device,publish,with_flatness=with_flatness)
     for stage in stages:
         selected = select(project,stage)
         for seed in range(1,9):
@@ -237,4 +239,4 @@ def run_study(project,storage,stages,device,publish,with_hybrid=False):
             publish_snapshot(project,f"Freeze all {stage} confirmatory checkpoints before test evaluation")
         for run_id in sealed["runs"]:
             row = evaluate_one(project,storage,run_id,device)
-            milestone(project,storage,row,publish)
+            milestone(project,storage,row,publish,device if with_flatness else None)
