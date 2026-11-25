@@ -1,6 +1,7 @@
 """Token-weighted NLL, exact token accuracy, and uncurated paired development continuations."""
 
 import math
+import time
 import numpy as np
 import torch
 from tokenizers import Tokenizer
@@ -10,7 +11,7 @@ from .records import CONTEXT
 
 
 @torch.no_grad()
-def score(model, path, device, batch_size, limit_windows=None, unigram=None):
+def score(model, path, device, batch_size, limit_windows=None, unigram=None, progress=None):
     """Score each packed target once, including a final short window, with a fixed context grid."""
     tokens = np.memmap(path, mode="r", dtype="<u2")
     n = len(tokens) - 1
@@ -22,6 +23,11 @@ def score(model, path, device, batch_size, limit_windows=None, unigram=None):
         indices = np.linspace(0, full-1, limit_windows, dtype=np.int64)
         tail = 0
     total_loss, correct, count = 0.0, 0, 0
+    started = last_log = time.perf_counter()
+    def report():
+        progress({"targets_scored":count,"targets_to_score":len(indices)*CONTEXT+tail,
+                  "nll_so_far":total_loss/count,"accuracy_so_far":correct/count,
+                  "score_seconds":time.perf_counter()-started})
     if model is not None:
         model.eval()
 
@@ -38,10 +44,15 @@ def score(model, path, device, batch_size, limit_windows=None, unigram=None):
         offsets = indices[start:start+batch_size, None] * CONTEXT + np.arange(CONTEXT+1)
         loss, hits = batch_score(tokens[offsets])
         total_loss, correct, count = total_loss+loss, correct+hits, count+offsets.shape[0]*CONTEXT
+        if progress and time.perf_counter()-last_log>=60:
+            report()
+            last_log = time.perf_counter()
     if tail:
         loss, hits = batch_score(np.asarray(tokens[full*CONTEXT:])[None, :])
         total_loss, correct, count = total_loss+loss, correct+hits, count+tail
     nll = total_loss/count
+    if progress:
+        report()
     return {"nll": nll, "accuracy": correct/count, "tokens": count, "perplexity": math.exp(nll)}
 
 

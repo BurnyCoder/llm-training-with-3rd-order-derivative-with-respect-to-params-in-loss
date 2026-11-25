@@ -15,6 +15,8 @@ Run `uv run thirdloss study` to execute both stages, select strengths on develop
 
 Use `uv run thirdloss report` to regenerate the README results, PDF, figures, experiment notes, progress and explorer from `results/`. Use `uv run thirdloss progress` for current status. `uv run thirdloss evaluate RUN_ID` verifies the registered weight digest and test split before scoring a frozen run. Both tokenizers are stored alongside their stage data. Full untruncated generated token IDs, prompts, reference continuations and outputs are in each run's `samples.jsonl`. Timestamped session logs are stored locally under `logs/`.
 
+After preparing abstracts, `uv run thirdloss verify --pretrained --device cuda` also compares both implementations of the penalty and its entire training gradient on the same pair of training windows, adapter initialization and sign probes. The diagnostic materializes the original joint graph for comparison. Its GPU allocation exceeded 10 GiB during the original replay. The ordinary adapter training path processes the two windows sequentially. `--device cpu` runs the optional comparison in host memory. [Adapter verification](../reports/reviews/adapter-verification.md)
+
 ## Load a published checkpoint
 
 All models are indexed in the [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378). The run name identifies its objective, phase, seed and penalty strength. Replace the example run name with the desired published checkpoint. Run from a clone with the locked environment.

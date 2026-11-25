@@ -6,6 +6,7 @@ and PEFT LoRA (https://arxiv.org/abs/2106.09685).
 """
 
 from dataclasses import asdict, dataclass
+import hashlib
 from pathlib import Path
 
 import torch
@@ -131,6 +132,16 @@ def logits_of(model, ids):
     """Normalize native stories tensors and Transformers CausalLMOutput to [B,T,V]."""
     out = model(ids)
     return out if isinstance(out, torch.Tensor) else out.logits
+
+
+def trainable_digest(model):
+    """Fingerprint each named trainable tensor at initialization to audit seed pairing."""
+    digest = hashlib.sha256()
+    for name,p in model.named_parameters():
+        if p.requires_grad:
+            digest.update(name.encode("utf-8"))
+            digest.update(p.detach().contiguous().cpu().view(torch.uint8).numpy().tobytes())
+    return digest.hexdigest()
 
 
 def token_nll(logits, targets):

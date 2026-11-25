@@ -42,6 +42,9 @@ def parser():
             sub.add_argument("--stage",choices=HORIZONS,required=True)
         if action in {"train","study","evaluate"}:
             sub.add_argument("--device",default="cuda")
+        if action=="verify":
+            sub.add_argument("--pretrained",action="store_true",help="Also compare a full joint derivative on the prepared adapter training corpus")
+            sub.add_argument("--device",default="cuda",help="Device for the optional full pretrained cross-check")
         if action=="train":
             sub.add_argument("--method",choices=(*METHODS,"unigram","initial"),required=True)
             sub.add_argument("--phase",choices=("pilot","control","confirm","smoke"),default="pilot")
@@ -65,7 +68,12 @@ def main(argv=None):
     storage = storage_root(project)
     if args.action=="verify":
         from .verification import verify
-        return verify(project)
+        verify(project)
+        if args.pretrained:
+            from .probe_check import verify_pretrained
+            from .records import setup_device
+            verify_pretrained(project,setup_device(args.device))
+        return
     if args.action=="dashboard":
         return dashboard(project,args.port)
     if args.action in {"report","progress","publish"}:
