@@ -47,13 +47,13 @@ A same-probe check on pretrained Pythia found that single-precision arithmetic m
 <!-- RESULTS:START -->
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 24 runs, including 23 with a completed summary.
+Recorded 25 runs, including 24 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
 **Research abstracts.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
-TinyStories hybrid follow-up: 0 of 48 full runs and 1 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
+TinyStories hybrid follow-up: 1 of 48 full runs and 1 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
 ![Directional width by TinyStories arm and seed](docs/figures/hybrid_width.png)
 
@@ -78,6 +78,7 @@ TinyStories hybrid follow-up: 0 of 48 full runs and 1 of 8 shared checkpoints co
 | TinyStories | branch | Shared trace checkpoint | 0.010 | 8,388,608 | 1 | 2.7577 | — |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
+| TinyStories | hybrid | Curvature-dependent hybrid | 0.010 | 16,777,216 | 1 | 2.5459 | — |
 | TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |
 | TinyStories | pilot | Trace + third derivative | 0.010 | 2,097,152 | 1 | 3.8772 | — |
 | TinyStories | pilot | Squared Hessian norm | 0.030 | 2,097,152 | 1 | 3.8787 | — |
@@ -264,6 +265,28 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
      it said her mom girlan he said that fell flut back's hard. a them into work protectt hug?" his and little teeth "What sky some Timmy and on 
      down As's
      very
+
+</details>
+
+<details><summary>TinyStories · Curvature-dependent hybrid · hybrid, seed 21</summary>
+
+[Recorded sample](results/stories-hybrid-s21-adaptive-r01/samples.jsonl)
+
+**Prompt**
+
+    Once upon a time, there was a clever little dog named Max. Max loved
+
+**Reference continuation**
+
+     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
+    
+    Max went to his friend, the wise old owl,
+
+**Model continuation**
+
+     to play on the swings and slide. His owner liked to run and play outside. Lily was happy to see his dog and play.
+    
+    One day, Max found a big hole in his house
 
 </details>
 
