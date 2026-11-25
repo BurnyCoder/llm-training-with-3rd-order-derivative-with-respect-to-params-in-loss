@@ -1,7 +1,59 @@
-"""Compute study progress and throughput-based remaining confirmation time from result files."""
+"""Compute study progress and pre-test schedule estimates from timestamped pilot records."""
 
-from .records import HORIZONS, read_json, time_now
+from datetime import datetime
+
+from .records import HORIZONS, json_lines, read_json, time_now, write_json
 from .report_records import atomic_text, study_snapshot
+
+
+def week_schedule(project):
+    """Freeze a wall-time projection from both stages without reading either test token stream.
+
+    Each timed pilot includes its training-loop diagnostics. The interval from the final
+    step to the first saved sample also includes a checkpoint write and one generated text,
+    so scaling that interval by the test/dev token ratio is a conservative scoring proxy.
+    """
+    root = project/"results"
+    target = root/"feasibility"/"one-week.json"
+    if target.exists():
+        return read_json(target)
+    if any(not (target.parent/f"{s}.json").exists() for s in HORIZONS):
+        return None
+    arms = []
+    def stamp(value):
+        return datetime.fromisoformat(value).timestamp()
+    for stage, horizon in HORIZONS.items():
+        splits = read_json(root/"datasets"/f"{stage}.json")["splits"]
+        for arm in read_json(target.parent/f"{stage}.json")["arms"]:
+            path = root/arm["pilot_run"]
+            summary = read_json(path/"summary.json")
+            events = json_lines(path/"events.jsonl")
+            first, final = events[0], events[-1]
+            sample = json_lines(path/"samples.jsonl")[0]
+            full_dev = max(1, stamp(sample["timestamp"]) - stamp(final["timestamp"]) + 1)
+            # Scale *all* in-loop wall time with targets. At confirmation the frequency
+            # of diagnostic checkpoints per target is lower than or equal to that in pilots.
+            loop = max(summary["train_seconds"], stamp(final["timestamp"])-stamp(first["timestamp"])
+                       + first["train_seconds"] + 1)
+            finalizing = max(full_dev, stamp(summary["finished_at"])-stamp(final["timestamp"]) + 1)
+            test = full_dev * (splits["test"]["tokens"]-1)/(splits["dev"]["tokens"]-1)
+            hours = 8*(horizon/summary["tokens"]*loop + finalizing + test)/3600
+            arms.append({"stage":stage, "method":arm["method"], "pilot_run":arm["pilot_run"],
+                         "pilot_tokens_per_second":arm["tokens_per_sec"], "peak_allocated_mib":arm["peak_vram_mb"],
+                         "pilot_loop_seconds":loop, "pilot_finalizing_seconds":finalizing,
+                         "projected_test_seconds_per_run":test, "projected_hours_all_seeds":hours})
+    # Anchor the seven-day allowance at the first optimized training update, not at forecast time.
+    first = json_lines(root/"stories-pilot-s00-third-r03"/"events.jsonl")[0]
+    checked = time_now()
+    hours_left = 7*24 - (stamp(checked)-stamp(first["timestamp"]))/3600
+    projected = sum(a["projected_hours_all_seeds"] for a in arms)
+    result = {"computed_at":checked,"first_training_update_at":first["timestamp"],"arms":arms,
+              "hours_left_in_week":hours_left,"projected_confirmation_and_scoring_hours":projected,
+              "hours_available_for_other_work":hours_left-projected,"fits_measured_budget":projected<=hours_left,
+              "scope":"All 48 confirmations and test evaluations. Remaining secondary pilots, process startup, "
+                      "publishing, downtime and retries use the reported headroom. Times are observational projections."}
+    write_json(target,result)
+    return result
 
 
 def progress(project):
@@ -32,6 +84,13 @@ def progress(project):
                          "excluding validation, exports and uploads.")
         outcome = study["stages"][stage]
         lines.append(f"Statistical status: {outcome['status']}. {outcome['reason']}")
+    schedule = week_schedule(project)
+    if schedule:
+        lines += ["## One-week feasibility", f"At the pre-test check on {schedule['computed_at']}, pilot timings projected "
+                  f"{schedule['projected_confirmation_and_scoring_hours']:.2f} hours for all confirmatory training and "
+                  f"scoring, with {schedule['hours_available_for_other_work']:.2f} hours of the week available for "
+                  "secondary pilots, setup, publication and interruptions. [Timing and GPU memory by method]"
+                  "(../results/feasibility/one-week.json)"]
     lines += ["## Monitoring","Inspect runs lasting over 10, 30 and 60 minutes at 5, 15 and 30 minute intervals "
               "respectively. The live dashboard refreshes between those checks. "
               "[Study design](plan.md) · [Run matrix](planned-runs.md) · [Experiment ledger](experiments/experiments.md)"]
