@@ -180,7 +180,7 @@ def pilot_differences(runs: list[dict], stage: str, selection: dict) -> list[dic
     return [{"method": method, "third_id": third["id"], "comparison_id": other["id"],
              "tokens": third["tokens"], "delta": third["dev_nll"] - other["dev_nll"],
              "third_nll": third["dev_nll"], "baseline_nll": other["dev_nll"],
-             "strength_basis": "selected on development" if ratios else "initial pilot strengths"}
+             "strength_basis": "strengths selected on development" if ratios else "initial pilot strengths"}
             for method, other in by_method.items() if method != "third" and other.get("tokens") == third.get("tokens")]
 
 
@@ -213,6 +213,15 @@ def study_snapshot(root: Path = Path(".")) -> dict:
 
 def completed(run: dict) -> bool:
     return run.get("status", "").lower() in {"complete", "completed", "finished", "evaluated", "success"}
+
+
+def example_runs(runs):
+    """Choose one completed registered checkpoint per method independently of sample text or scores."""
+    examples = {}
+    for run in sorted(runs,key=lambda r:r["id"]):
+        if completed(run) and run["phase"] in {"confirm","pilot","control"} and run["samples"]:
+            examples.setdefault((run["stage"],run["method"]),run)
+    return list(examples.values())
 
 
 def describe_difference(delta) -> str:

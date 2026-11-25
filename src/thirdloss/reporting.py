@@ -9,7 +9,7 @@ from urllib.parse import quote
 from .report_figures import build_figures
 from .report_paper import write_paper
 from .report_records import (
-    METHODS, PAGES, STAGES, atomic_text, completed, describe_difference, finite, fmt, study_snapshot,
+    METHODS, PAGES, STAGES, atomic_text, completed, describe_difference, example_runs, finite, fmt, study_snapshot,
     verdict_text,
 )
 
@@ -258,17 +258,13 @@ def build_report(root: Path = Path(".")) -> dict:
     for key in ("paired", "curves"):
         if key in figures:
             readme.append(f"![{'Paired test differences' if key == 'paired' else 'Development NLL'}](docs/figures/{figures[key]})")
-    seen = set()
     panels = []
-    for run in study["runs"]:
-        key = (run.get("stage"), run.get("method"))
-        if not run["samples"] or key in seen:
-            continue
-        seen.add(key)
-        panels.append(f"<details><summary>{_stage(run)} · {_method(run)}</summary>\n\n"
+    for run in example_runs(study["runs"]):
+        panels.append(f"<details><summary>{_stage(run)} · {_method(run)} · {run['phase']}, seed {run['seed']}</summary>\n\n"
+                      + f"[Recorded sample](results/{run['id']}/samples.jsonl)\n\n"
                       + _sample(run["samples"][0]) + "\n\n</details>")
     if panels:
-        readme += ["### Recorded predictions", "First archived sample in run-ID order per "
+        readme += ["### Recorded predictions", "First registered checkpoint and sample in run-ID order per "
                    "stage and method. [All continuations](reports/experiments/experiments.md)", *panels]
     _update_readme(root, "\n\n".join(readme))
     write_paper(study, root / "reports" / "paper.pdf", root / "docs" / "figures", figures)
