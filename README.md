@@ -21,7 +21,7 @@ The third-order term measures how the Hessian changes as weights move. Two indep
 <!-- RESULTS:START -->
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 8 runs, including 8 with a completed summary.
+Recorded 9 runs, including 9 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -38,6 +38,7 @@ Recorded 8 runs, including 8 with a completed summary.
 | TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |
 | TinyStories | pilot | Third derivative | 0.010 | 2,097,152 | 1 | 3.8769 | — |
 | TinyStories | pilot | Third derivative | 0.030 | 2,097,152 | 1 | 3.8778 | — |
+| TinyStories | pilot | Third derivative | 0.100 | 2,097,152 | 1 | 3.8827 | — |
 | TinyStories | pilot | Hessian trace | 0.010 | 2,097,152 | 1 | 3.8773 | — |
 | TinyStories | pilot | Hessian trace | 0.030 | 2,097,152 | 1 | 3.8802 | — |
 | TinyStories | pilot | Hessian trace | 0.100 | 2,097,152 | 1 | 3.8979 | — |

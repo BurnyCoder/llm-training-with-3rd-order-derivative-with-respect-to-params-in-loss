@@ -11,6 +11,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | [stories-pilot-s00-ce-r00](./stories-pilot-s00-ce-r00/experiment.md) | TinyStories | Ordinary AdamW | pilot | 0 | 0.000 | 2,097,152 | 3.8770 | — | 123,871 | complete |
 | [stories-pilot-s00-third-r01](./stories-pilot-s00-third-r01/experiment.md) | TinyStories | Third derivative | pilot | 0 | 0.010 | 2,097,152 | 3.8769 | — | 42,481 | complete |
 | [stories-pilot-s00-third-r03](./stories-pilot-s00-third-r03/experiment.md) | TinyStories | Third derivative | pilot | 0 | 0.030 | 2,097,152 | 3.8778 | — | 46,072 | complete |
+| [stories-pilot-s00-third-r10](./stories-pilot-s00-third-r10/experiment.md) | TinyStories | Third derivative | pilot | 0 | 0.100 | 2,097,152 | 3.8827 | — | 43,901 | complete |
 | [stories-pilot-s00-trace-r01](./stories-pilot-s00-trace-r01/experiment.md) | TinyStories | Hessian trace | pilot | 0 | 0.010 | 2,097,152 | 3.8773 | — | 73,185 | complete |
 | [stories-pilot-s00-trace-r03](./stories-pilot-s00-trace-r03/experiment.md) | TinyStories | Hessian trace | pilot | 0 | 0.030 | 2,097,152 | 3.8802 | — | 68,106 | complete |
 | [stories-pilot-s00-trace-r10](./stories-pilot-s00-trace-r10/experiment.md) | TinyStories | Hessian trace | pilot | 0 | 0.100 | 2,097,152 | 3.8979 | — | 70,730 | complete |
