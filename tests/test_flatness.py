@@ -52,3 +52,45 @@ def test_primary_flatness_summary_compares_only_common_probe_provenance():
         arm["flatness"]["probe_windows_sha256"]="different"
     with pytest.raises(ValueError,match="same probes"):
         primary_flatness_rows(pairs)
+
+
+def test_common_logit_probe_matches_direct_softmax_and_its_second_derivative():
+    from thirdloss.score_flatness import bias_response
+    logits=torch.tensor([[.1,.2,-.3,1.],[-1.,2.,.7,-.3]],dtype=torch.float64)
+    target=torch.tensor([1,0])
+    signs=torch.tensor([1.,-1.,-1.,1.],dtype=torch.float64)
+    plus=logits.softmax(-1)[:,signs>0].sum(-1).numpy()
+    loss=torch.nn.functional.cross_entropy(logits,target)
+    delta,curvature=bias_response(plus,float(signs[target].mean()))
+    for r in (-1.,.5):
+        assert delta(r)==pytest.approx(float(torch.nn.functional.cross_entropy(logits+r*signs,target)-loss))
+    radius=torch.tensor(0.,dtype=torch.float64,requires_grad=True)
+    derivative=torch.autograd.grad(torch.nn.functional.cross_entropy(logits+radius*signs,target),radius,create_graph=True)[0]
+    assert curvature==pytest.approx(float(torch.autograd.grad(derivative,radius)[0]))
+
+
+def test_unigram_uses_identical_score_coordinates_to_a_constant_neural_predictor():
+    from thirdloss.score_flatness import score_width
+    logits=torch.tensor([[0.,.25,.5,-.5]],dtype=torch.float64)
+    targets=torch.tensor([3,1,3,2,1])
+    table=score_width(logits,targets)
+    network=score_width(logits.expand(targets.numel(),-1)+13,targets)
+    assert table["width"]==network["width"] and table["direction_sha256"]==network["direction_sha256"]
+    assert table["mean_directional_curvature"]==pytest.approx(network["mean_directional_curvature"])
+
+
+def test_all_arm_table_keeps_weightless_reference_and_every_control(tmp_path):
+    from thirdloss.flatness_tables import all_arm_tables
+    from thirdloss.report_records import study_snapshot
+    study=study_snapshot(tmp_path)
+    for stage in study["context"].values():
+        stage["selection"]={"ratios":{"trace":.01,"third":.03}}
+    point={"width":.9,"width_lower":.8999,"width_upper":.9001,"direction_sha256":"same","protocol":"scores",
+           "probe_windows_sha256":"same","vocab":4096}
+    study["runs"]=[{"stage":"stories","phase":"control","method":"unigram","status":"complete",
+                    "ratio":0.,"seed":0,"tokens":0,"score_flatness":point}]
+    text="\n".join(all_arm_tables(study))
+    assert "| Unigram | 0 | 0 | N/A · no weights | N/A · no weights | 0.900 (1/1) |" in text
+    assert all(name in text for name in ("Squared Hessian norm","Randomized gradient signs","Trace + third derivative",
+                                         "Cross-seed replay","Shared trace checkpoint","Always-on hybrid"))
+    assert "Hessian trace (10%)" in text and "Third derivative (1%)" in text

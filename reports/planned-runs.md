@@ -23,3 +23,5 @@ The six TinyStories arms share eight paired seeds. Five branch from a common tra
 ## Secondary flatness measurements
 
 Measure the saved AdamW, Hessian-trace and third-order checkpoints at the selected pilot horizon and the full confirmatory horizon in each stage. Include the three fitted pilot controls. Each evaluation records training-window perturbation widths and Hessian curvature in that stage’s trainable coordinates. This analysis was specified after early development results. [Measurement design](amendments/checkpoint-flatness.md) · [Measured statistics](flatness.md)
+
+The coverage extension also measures every other pilot strength, all hybrid arms and shared trunks, the two initial predictors and both unigram references. A common output-score perturbation is defined for all of them. The numerical diagnostic retains its separate label. [All-model flatness protocol](amendments/all-model-flatness.md)

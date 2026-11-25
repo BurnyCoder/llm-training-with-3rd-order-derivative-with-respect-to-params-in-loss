@@ -1,11 +1,11 @@
 """Directional width of an unregularized loss level set in the original weight coordinates."""
 
 import math
-import statistics
 import time
 
 import torch
 
+from .flatness_stats import width_statistics
 from .models import trainable_digest
 from .penalties import random_signs
 from .windows import generator
@@ -64,14 +64,5 @@ def measure_width(model, loss, directions=16):
             module.training = mode
     if trainable_digest(model)!=digest:
         raise RuntimeError("Width measurement changed the training weights")
-    lows,highs = [],[]
-    for row in rays:
-        bounds = [row["positive"],row["negative"]]
-        lows.append(sum(x["lower"] for x in bounds))
-        highs.append(sum(x["upper"] if x["upper"] is not None else math.inf for x in bounds))
-    lower,upper = statistics.median(lows),statistics.median(highs)
-    return {"baseline_nll":base,"delta_nll":.1,"directions":rays,"width_lower":lower,
-            "width_upper":upper if math.isfinite(upper) else None,
-            "width":(lower+upper)/2 if math.isfinite(upper) else None,
-            "censored_rays":sum(ray[s]["upper"] is None for ray in rays for s in ("positive","negative")),
+    return {"baseline_nll":base,"delta_nll":.1,**width_statistics(rays),
             "weights_sha256":digest,"weights_restored":True,"seconds":time.perf_counter()-started}

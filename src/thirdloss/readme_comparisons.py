@@ -5,7 +5,7 @@ from html import escape
 from statistics import median
 
 from .analysis import _time_match
-from .flatness_tables import hybrid_flatness_table,primary_flatness_rows
+from .flatness_tables import all_arm_tables,hybrid_flatness_table,primary_flatness_rows
 from .records import HORIZONS
 from .report_records import METHODS, completed, finite, markdown_table, verdict_text
 
@@ -271,6 +271,16 @@ def comparison_sections(study):
                    "The final seed range shows the smallest and largest seed widths. The middle 50% column gives the medians of "
                    "the within-seed directional quartiles. Spread has no preferred direction. A ray at the search limit supplies a lower bound.",
                    hybrid_flatness_table(study["runs"])])
+    detail.extend(["#### All variants and baselines",
+                   "Each row uses the same fixed training windows and probe directions within its stage. "
+                   "Parentheses give measured / planned seeds for that cell. Targets count next-token examples used for optimizer updates in this study. "
+                   "The unigram uses counts from the full training split, and initial Pythia retains its pretrained backbone. "
+                   "Compare rows with matching targets and seeds. "
+                   "Larger **weight width** means greater tolerance to moving the model’s trainable parameters. "
+                   "Larger **common score width** means that all token scores can tolerate a larger shared bias before NLL rises "
+                   "by 0.1 nats, measured in RMS logit units. The unigram has zero trainable model weights and shares the score test "
+                   "with every neural predictor. Both widths have an unknown relationship to better held-out prediction. "
+                   "[All-model measurement design](reports/amendments/all-model-flatness.md)",*all_arm_tables(study)])
     if geometry_tables:
         detail.extend(geometry_tables)
     else:
@@ -329,7 +339,7 @@ def comparison_sections(study):
             zero.append([name,*[f"{runs[m]['dev_nll']:.6f}" for m in ("initial","unigram")],
                          *[f"{100*runs[m]['dev_accuracy']:.3f}%" for m in ("initial","unigram")]])
     if zero:
-        controls+=["**Untrained references · zero training targets**",
+        controls+=["**Zero-update references** · The unigram uses training-split frequencies. Initial Pythia uses its pretrained weights.",
                    markdown_table(zero,["Stage","Initial NLL<br>"+NLL.direction,"Unigram NLL<br>"+NLL.direction,
                                         "Initial accuracy<br>"+ACCURACY.direction,"Unigram accuracy<br>"+ACCURACY.direction])]
     detail.append("<details><summary>Squared-Hessian, scrambled-gradient, combined and untrained controls</summary>\n\n"
