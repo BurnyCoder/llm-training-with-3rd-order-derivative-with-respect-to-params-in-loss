@@ -1,6 +1,6 @@
 # Study summary
 
-Recorded 51 runs, including 50 with a completed summary.
+Recorded 51 runs, including 51 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -14,7 +14,7 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 
 **TinyStories development pilot.** At 2,097,152 training targets, the third-order run recorded 0.00004 nats per target token lower against Ordinary AdamW, 0.00024 nats per target token lower against Trace + third derivative, 0.00175 nats per target token lower against Squared Hessian norm, 0.00032 nats per target token lower against Randomized gradient signs, 0.00034 nats per target token lower against Hessian trace. These are single-seed descriptions using strengths selected on development.
 
-**Research abstracts development pilot.** At 65,536 training targets, the third-order run recorded 0.00030 nats per target token higher against Ordinary AdamW, 0.00027 nats per target token higher against Hessian trace. These are single-seed descriptions using strengths selected on development.
+**Research abstracts development pilot.** At 65,536 training targets, the third-order run recorded 0.00030 nats per target token higher against Ordinary AdamW, 0.00034 nats per target token higher against Squared Hessian norm, 0.00027 nats per target token higher against Hessian trace. These are single-seed descriptions using strengths selected on development.
 
 ## Measured scores
 
@@ -23,6 +23,7 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 | Research abstracts | control | Initial checkpoint | 0.000 | 0 | 1 | 3.2517 | — |
 | Research abstracts | control | Unigram | 0.000 | 0 | 1 | 7.3306 | — |
 | Research abstracts | pilot | Ordinary AdamW | 0.000 | 65,536 | 1 | 3.1139 | — |
+| Research abstracts | pilot | Squared Hessian norm | 0.030 | 65,536 | 1 | 3.1139 | — |
 | Research abstracts | pilot | Third derivative | 0.010 | 65,536 | 1 | 3.1142 | — |
 | Research abstracts | diagnostic | Third derivative | 0.030 | 65,536 | 1 | 3.1168 | — |
 | Research abstracts | pilot | Third derivative | 0.030 | 65,536 | 1 | 3.1149 | — |

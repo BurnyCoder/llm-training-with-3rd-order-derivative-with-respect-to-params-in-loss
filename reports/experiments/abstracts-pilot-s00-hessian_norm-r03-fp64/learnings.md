@@ -1,5 +1,5 @@
 # Run learnings
 
-A development observation is pending.
+Development NLL changed by -0.1172 nats per target token from 4,096 to 65,536 training targets. Attribution to the regularizer uses matched comparisons across seeds.
 
 [Experiment and source records](experiment.md)
