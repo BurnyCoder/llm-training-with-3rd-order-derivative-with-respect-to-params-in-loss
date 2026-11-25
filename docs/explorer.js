@@ -83,7 +83,7 @@ function showLedger() {
     tr.append(first);
     const evaluation = run.evaluation_progress;
     const status = evaluation?.targets_to_score > 0
-      ? `${run.status} (${number(100 * evaluation.targets_scored / evaluation.targets_to_score, 1)}%)`
+      ? `${evaluation.split === "test" ? "scoring test" : run.status} (${number(100 * evaluation.targets_scored / evaluation.targets_to_score, 1)}%)`
       : run.status;
     for (const value of [methodName(run.method), run.seed ?? "—", number(run.ratio, 3),
       number(run.tokens, 0), number(run.dev_nll, 4), number(run.test_nll, 4),

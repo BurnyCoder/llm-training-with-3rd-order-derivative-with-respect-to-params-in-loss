@@ -1,6 +1,6 @@
 # Reproducing the study
 
-Install Python 3.12 and [uv](https://docs.astral.sh/uv/). The lock targets Windows AMD64 and Linux x86_64 with an NVIDIA driver supporting the CUDA 13.2 PyTorch wheel. The default scratch model and adapter math use float32. Make a project-local environment and install all locked dependencies with `uv sync --locked`. Copy `.env.example` to `.env` and optionally set `THIRDLOSS_STORAGE` to a directory with room for corpora, CUDA checkpoints and Hub downloads. Use the existing GitHub CLI and Hugging Face login for publication.
+Install Python 3.12 and [uv](https://docs.astral.sh/uv/). The lock targets Windows AMD64 and Linux x86_64 with an NVIDIA driver supporting the CUDA 13.2 PyTorch wheel. Scratch training and ordinary adapter updates use float32. Adapter derivatives use float64. Make a project-local environment and install all locked dependencies with `uv sync --locked`. Copy `.env.example` to `.env` and optionally set `THIRDLOSS_STORAGE` to a directory with room for corpora, CUDA checkpoints and Hub downloads. Use the existing GitHub CLI and Hugging Face login for publication.
 
 ```sh
 uv run thirdloss verify
