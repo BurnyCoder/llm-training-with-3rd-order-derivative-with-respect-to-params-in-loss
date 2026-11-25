@@ -253,6 +253,8 @@ Each panel shows the first saved prompt and full continuations from the lowest m
 
 </details>
 
+Seed sensitivity is the final stage, after both primary test evaluations, all hybrid replications and checkpoint flatness. [Final seed-sensitivity report](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/seed-sensitivity.md)
+
 <!-- COMPARISONS:END -->
 
 ## Research materials
