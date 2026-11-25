@@ -1,6 +1,6 @@
 {
-  "checked_at": "2026-11-25T09:26:27+00:00",
-  "git_revision": "1d6f87f98019521f424ef05e5878d4a7b645a07f",
+  "checked_at": "2026-11-25T09:43:11+00:00",
+  "git_revision": "910cb8c754fbf3be7c14cdf6cd1414a0183b457c",
   "exit_code": 0,
   "cases": [
     {
@@ -10,7 +10,7 @@
     },
     {
       "test": "tests.test_analysis.test_second_comparator_failure_and_ties_count_separately",
-      "seconds": 0.001,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
@@ -25,7 +25,7 @@
     },
     {
       "test": "tests.test_analysis.test_partial_or_mismatched_results_never_unlock_primary_inference[missing]",
-      "seconds": 0.001,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
@@ -70,7 +70,7 @@
     },
     {
       "test": "tests.test_analysis.test_adverse_effect_reported_separately_from_uncertainty",
-      "seconds": 0.001,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
@@ -95,27 +95,27 @@
     },
     {
       "test": "tests.test_data.test_exact_and_edited_documents_respect_split_priority",
-      "seconds": 0.003,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
       "test": "tests.test_data.test_prefix_candidates_match_exhaustive_jaccard_including_boundary",
-      "seconds": 0.061,
+      "seconds": 0.074,
       "outcome": "passed"
     },
     {
       "test": "tests.test_data.test_abstract_submission_month_and_base_id_grouping",
-      "seconds": 0.037,
+      "seconds": 0.036,
       "outcome": "passed"
     },
     {
       "test": "tests.test_data.test_prepare_from_parquet_proves_train_only_fit_packing_and_repair",
-      "seconds": 0.216,
+      "seconds": 0.199,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_gpu_production_decoder_third_order_update_matches_cpu",
-      "seconds": 4.067,
+      "seconds": 3.393,
       "outcome": "passed"
     },
     {
@@ -125,17 +125,17 @@
     },
     {
       "test": "tests.test_derivatives.test_mixed_cubic_exactly_averages_to_tensor_norm",
-      "seconds": 0.053,
+      "seconds": 0.049,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_random_probe_generator_gives_independent_directions",
-      "seconds": 0.219,
+      "seconds": 0.205,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_penalty_supports_linear_loss_and_unused_coordinates[third]",
-      "seconds": 0.004,
+      "seconds": 0.003,
       "outcome": "passed"
     },
     {
@@ -145,12 +145,12 @@
     },
     {
       "test": "tests.test_derivatives.test_penalty_supports_linear_loss_and_unused_coordinates[hessian_norm]",
-      "seconds": 0.002,
+      "seconds": 0.003,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_quadratic_has_curvature_and_zero_third_derivative",
-      "seconds": 0.001,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
@@ -160,22 +160,22 @@
     },
     {
       "test": "tests.test_derivatives.test_tiny_transformer_against_dense_tensor_and_finite_differences",
-      "seconds": 2.205,
+      "seconds": 1.899,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_actual_adamw_update_responds_to_the_third_order_term",
-      "seconds": 0.014,
+      "seconds": 0.011,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_production_story_model_exposes_full_weight_penalty_gradient",
-      "seconds": 0.064,
+      "seconds": 0.059,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_pythia_adapter_fourth_derivative_and_portable_checkpoint",
-      "seconds": 7.936,
+      "seconds": 5.824,
       "outcome": "passed",
       "measurements": {
         "adapter_directional_autograd": "9035.374247002468",
@@ -184,37 +184,57 @@
     },
     {
       "test": "tests.test_derivatives.test_large_finite_gradient_norm_survives_squaring",
-      "seconds": 0.004,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_sequential_windows_reproduce_joint_penalty_and_training_gradient",
-      "seconds": 0.164,
+      "seconds": 0.121,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hub_archive.test_archive_uses_committed_blobs_including_dotfiles",
+      "seconds": 0.573,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hub_archive.test_remote_sha_matches_git_and_large_file_storage",
+      "seconds": 0.006,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hub_archive.test_operational_logs_preserve_science_and_remove_auth_material",
+      "seconds": 0.003,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hub_archive.test_packed_files_match_manifest_and_release_test_only_after_both_gates",
+      "seconds": 0.044,
       "outcome": "passed"
     },
     {
       "test": "tests.test_reporting.test_examples_label_an_eligible_run_and_preserve_the_fixed_sample_order",
-      "seconds": 0.001,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
       "test": "tests.test_reporting.test_snapshot_keeps_full_score_and_trace_semantics",
-      "seconds": 0.03,
+      "seconds": 0.042,
       "outcome": "passed"
     },
     {
       "test": "tests.test_reporting.test_report_before_first_run_keeps_readme_and_emits_protocol_paper",
-      "seconds": 1.64,
+      "seconds": 1.358,
       "outcome": "passed"
     },
     {
       "test": "tests.test_training.test_randomized_control_preserves_coordinate_magnitudes_and_zero_is_noop",
-      "seconds": 0.149,
+      "seconds": 0.15,
       "outcome": "passed"
     },
     {
       "test": "tests.test_training.test_step_recovery_matches_uninterrupted_weights",
-      "seconds": 2.362,
+      "seconds": 2.199,
       "outcome": "passed"
     },
     {
@@ -224,7 +244,7 @@
     },
     {
       "test": "tests.test_training.test_evaluator_requires_measured_schedule_before_test_reads",
-      "seconds": 0.043,
+      "seconds": 0.044,
       "outcome": "passed"
     }
   ]

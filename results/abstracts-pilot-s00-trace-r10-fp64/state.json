@@ -1,0 +1,8 @@
+{
+  "status": "scoring development",
+  "targets_scored": 1699840,
+  "targets_to_score": 5124071,
+  "nll_so_far": 3.1058517757200086,
+  "accuracy_so_far": 0.4133830242846386,
+  "score_seconds": 241.07107389999874
+}
