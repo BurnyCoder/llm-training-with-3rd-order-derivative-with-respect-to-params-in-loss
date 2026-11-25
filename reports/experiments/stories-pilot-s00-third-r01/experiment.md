@@ -2,9 +2,9 @@
 
 Run `stories-pilot-s00-third-r01` · [raw records](../../../results/stories-pilot-s00-third-r01/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Third derivative | pilot | 0 | 0.010 | 2,097,152 | 3.8769 | — | 42,481 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | Third derivative | pilot | 0 | 0.010 | 2,097,152 | 3.8769 | 48.2758 | — | — | 42,481 | complete |
 
 Training time is 49.4 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.3233. Test token accuracy is —.
 

@@ -2,9 +2,9 @@
 
 Run `abstracts-pilot-s00-sham-r01-fp64` · [raw records](../../../results/abstracts-pilot-s00-sham-r01-fp64/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Research abstracts | Randomized gradient signs | pilot | 0 | 0.010 | 65,536 | 3.1142 | — | 171 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Research abstracts | Randomized gradient signs | pilot | 0 | 0.010 | 65,536 | 3.1142 | 22.5153 | — | — | 171 | complete |
 
 Training time is 382.6 seconds. Peak allocated GPU memory is 2,346.3 MiB. Development token accuracy is 0.4132. Test token accuracy is —.
 

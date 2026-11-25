@@ -69,7 +69,7 @@ A same-probe check on pretrained Pythia found that single-precision arithmetic m
 
 ## Side-by-side comparisons
 
-Each row states which direction is better for that metric. Bold highlights the best observed value at the displayed precision. A tie means the paired difference rounds to zero. NLL is negative log-likelihood in nats per target. Accuracy differences use percentage points (pp).
+Each row states which direction is better for that metric. Bold highlights the best observed value at the displayed precision. A tie means the paired difference rounds to zero. NLL is negative log-likelihood in nats per target. Perplexity is exp(NLL), computed for each run before taking medians. Compare it within a corpus and tokenizer. Accuracy differences use percentage points (pp). [Perplexity definition](https://huggingface.co/docs/transformers/perplexity)
 
 ### TinyStories pretraining
 
@@ -78,6 +78,7 @@ Each row states which direction is better for that metric. Bold highlights the b
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
 | Development NLL<br>↓ Lower is better | 2.547719 | 2.547969 | **2.547715** | 0.000003 lower | 0.000254 lower |
+| Development perplexity<br>↓ Lower is better | **12.7779** | 12.7811 | **12.7779** | Tie | 0.0032 lower |
 | Dev top-1 accuracy<br>↑ Higher is better | 46.151% | 46.141% | **46.153%** | 0.002 pp higher | 0.012 pp higher |
 | Equal-time probe NLL<br>↓ Lower is better | **2.53821** | 2.68115 | 2.95676 | 0.41855 higher | 0.27561 higher |
 | Training speed (targets/s)<br>↑ Higher is better | **113,244** | 65,975 | 32,018 | 71.7% slower | 51.5% slower |
@@ -94,6 +95,7 @@ Awaiting paired test results (1 of 8 full-horizon training triplets).
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
 | Development NLL<br>↓ Lower is better | **3.113948** | 3.113974 | 3.114247 | 0.000300 higher | 0.000273 higher |
+| Development perplexity<br>↓ Lower is better | **22.5097** | 22.5103 | 22.5165 | 0.0067 higher | 0.0061 higher |
 | Dev top-1 accuracy<br>↑ Higher is better | **41.321%** | **41.321%** | 41.315% | 0.006 pp lower | 0.006 pp lower |
 | Training speed (targets/s)<br>↑ Higher is better | **1,659** | 435 | 189 | 88.6% slower | 56.5% slower |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 2,346.3 | 2,346.3 | 2,346.3 | Tie | Tie |
@@ -220,6 +222,7 @@ For the primary comparison, TinyStories uses all weights and Pythia uses the LoR
 | Metric | Adaptive | Fixed ramp | vs Fixed ramp |
 | --- | --- | --- | --- |
 | Development NLL<br>↓ Lower is better | **2.546107** | 2.546281 | 0.000203 lower |
+| Development perplexity<br>↓ Lower is better | **12.7573** | 12.7596 | 0.0026 lower |
 | Dev top-1 accuracy<br>↑ Higher is better | 46.205% | **46.208%** | 0.002 pp higher |
 | Width change after switch<br>↑ More retained is better for the width test | -2.0865 | **-2.0311** | 0.0542 less retained |
 | Training speed (targets/s)<br>↑ Higher is better | 39,820 | **40,902** | 2.6% slower |
@@ -245,6 +248,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 | Metric | Third order | Squared Hessian | Scrambled signs | Trace + third |
 | --- | --- | --- | --- | --- |
 | Development NLL<br>↓ Lower is better | **3.876931** | 3.878680 | 3.877253 | 3.877172 |
+| Development perplexity<br>↓ Lower is better | **48.2758** | 48.3603 | 48.2914 | 48.2875 |
 | Dev top-1 accuracy<br>↑ Higher is better | 32.326% | 32.299% | **32.331%** | 32.317% |
 | Training speed (targets/s)<br>↑ Higher is better | 42,481 | **83,790** | 50,914 | 41,030 |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | **608.2** | **608.2** | 608.6 | 619.3 |
@@ -254,6 +258,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 | Metric | Third order | Squared Hessian | Scrambled signs | Trace + third |
 | --- | --- | --- | --- | --- |
 | Development NLL<br>↓ Lower is better | 3.114247 | **3.113905** | 3.114196 | 3.114281 |
+| Development perplexity<br>↓ Lower is better | 22.5165 | **22.5088** | 22.5153 | 22.5172 |
 | Dev top-1 accuracy<br>↑ Higher is better | 41.315% | **41.321%** | 41.316% | 41.316% |
 | Training speed (targets/s)<br>↑ Higher is better | 189 | **413** | 171 | 137 |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 2,346.3 | 2,346.3 | 2,346.3 | 2,346.3 |
@@ -305,7 +310,7 @@ Seed sensitivity is the final stage, after both primary test evaluations, all hy
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 56 runs, including 56 with a completed summary.
+Recorded 57 runs, including 56 with a completed summary.
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 

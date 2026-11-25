@@ -2,9 +2,9 @@
 
 Run `abstracts-pilot-s00-third-r01-fp64` · [raw records](../../../results/abstracts-pilot-s00-third-r01-fp64/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Research abstracts | Third derivative | pilot | 0 | 0.010 | 65,536 | 3.1142 | — | 189 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Research abstracts | Third derivative | pilot | 0 | 0.010 | 65,536 | 3.1142 | 22.5165 | — | — | 189 | complete |
 
 Training time is 346.5 seconds. Peak allocated GPU memory is 2,346.3 MiB. Development token accuracy is 0.4132. Test token accuracy is —.
 

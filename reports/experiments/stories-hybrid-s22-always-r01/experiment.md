@@ -2,9 +2,9 @@
 
 Run `stories-hybrid-s22-always-r01` · [raw records](../../../results/stories-hybrid-s22-always-r01/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Always-on hybrid | hybrid | 22 | 0.010 | 16,777,216 | 2.5460 | — | 25,017 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | Always-on hybrid | hybrid | 22 | 0.010 | 16,777,216 | 2.5460 | 12.7556 | — | — | 25,017 | complete |
 
 Training time is 670.6 seconds. Peak allocated GPU memory is 621.3 MiB. Development token accuracy is 0.4627. Test token accuracy is —.
 

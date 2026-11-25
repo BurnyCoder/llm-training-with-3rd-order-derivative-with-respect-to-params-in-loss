@@ -2,9 +2,9 @@
 
 Run `stories-control-s00-initial-r00` · [raw records](../../../results/stories-control-s00-initial-r00/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Initial checkpoint | control | 0 | 0.000 | 0 | 8.3437 | — | 0 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | Initial checkpoint | control | 0 | 0.000 | 0 | 8.3437 | 4,203.5319 | — | — | 0 | complete |
 
 Training time is 0.0 seconds. Peak allocated GPU memory is 138.0 MiB. Development token accuracy is 0.0031. Test token accuracy is —.
 

@@ -2,9 +2,9 @@
 
 Run `stories-hybrid-s23-strong-r01` · [raw records](../../../results/stories-hybrid-s23-strong-r01/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Stronger trace | hybrid | 23 | 0.010 | 16,777,216 | 2.5424 | — | 60,806 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | Stronger trace | hybrid | 23 | 0.010 | 16,777,216 | 2.5424 | 12.7096 | — | — | 60,806 | complete |
 
 Training time is 275.9 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4631. Test token accuracy is —.
 

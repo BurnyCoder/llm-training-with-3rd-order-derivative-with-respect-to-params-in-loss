@@ -2,9 +2,9 @@
 
 Run `stories-branch-s22-trunk-r01` · [raw records](../../../results/stories-branch-s22-trunk-r01/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Shared trace checkpoint | branch | 22 | 0.010 | 8,388,608 | 2.7573 | — | 61,905 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | Shared trace checkpoint | branch | 22 | 0.010 | 8,388,608 | 2.7573 | 15.7576 | — | — | 61,905 | complete |
 
 Training time is 135.5 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4340. Test token accuracy is —.
 

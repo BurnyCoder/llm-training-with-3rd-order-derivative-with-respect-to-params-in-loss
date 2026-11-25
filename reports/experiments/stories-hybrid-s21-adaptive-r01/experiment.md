@@ -2,9 +2,9 @@
 
 Run `stories-hybrid-s21-adaptive-r01` · [raw records](../../../results/stories-hybrid-s21-adaptive-r01/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Curvature-dependent hybrid | hybrid | 21 | 0.010 | 16,777,216 | 2.5459 | — | 43,973 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | Curvature-dependent hybrid | hybrid | 21 | 0.010 | 16,777,216 | 2.5459 | 12.7548 | — | — | 43,973 | complete |
 
 Training time is 381.5 seconds. Peak allocated GPU memory is 617.3 MiB. Development token accuracy is 0.4615. Test token accuracy is —.
 

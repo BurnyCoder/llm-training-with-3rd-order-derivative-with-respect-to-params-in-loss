@@ -2,9 +2,9 @@
 
 Run `abstracts-control-s00-initial-r00` · [raw records](../../../results/abstracts-control-s00-initial-r00/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Research abstracts | Initial checkpoint | control | 0 | 0.000 | 0 | 3.2517 | — | 0 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Research abstracts | Initial checkpoint | control | 0 | 0.000 | 0 | 3.2517 | 25.8335 | — | — | 0 | complete |
 
 Training time is 0.0 seconds. Peak allocated GPU memory is 2,337.3 MiB. Development token accuracy is 0.3991. Test token accuracy is —.
 

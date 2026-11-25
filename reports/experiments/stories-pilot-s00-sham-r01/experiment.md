@@ -2,9 +2,9 @@
 
 Run `stories-pilot-s00-sham-r01` · [raw records](../../../results/stories-pilot-s00-sham-r01/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Randomized gradient signs | pilot | 0 | 0.010 | 2,097,152 | 3.8773 | — | 50,914 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | Randomized gradient signs | pilot | 0 | 0.010 | 2,097,152 | 3.8773 | 48.2914 | — | — | 50,914 | complete |
 
 Training time is 41.2 seconds. Peak allocated GPU memory is 608.6 MiB. Development token accuracy is 0.3233. Test token accuracy is —.
 

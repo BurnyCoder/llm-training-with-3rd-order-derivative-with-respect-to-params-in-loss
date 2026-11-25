@@ -2,9 +2,9 @@
 
 Run `stories-pilot-s00-trace-r03` · [raw records](../../../results/stories-pilot-s00-trace-r03/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Hessian trace | pilot | 0 | 0.030 | 2,097,152 | 3.8802 | — | 68,106 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | Hessian trace | pilot | 0 | 0.030 | 2,097,152 | 3.8802 | 48.4360 | — | — | 68,106 | complete |
 
 Training time is 30.8 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.3227. Test token accuracy is —.
 

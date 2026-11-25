@@ -2,9 +2,9 @@
 
 Run `stories-confirm-s01-trace-r01` · [raw records](../../../results/stories-confirm-s01-trace-r01/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Hessian trace | confirm | 1 | 0.010 | 16,777,216 | 2.5480 | — | 65,975 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | Hessian trace | confirm | 1 | 0.010 | 16,777,216 | 2.5480 | 12.7811 | — | — | 65,975 | complete |
 
 Training time is 254.3 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4614. Test token accuracy is —.
 

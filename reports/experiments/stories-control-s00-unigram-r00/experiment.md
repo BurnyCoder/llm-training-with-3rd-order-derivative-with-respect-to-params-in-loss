@@ -2,9 +2,9 @@
 
 Run `stories-control-s00-unigram-r00` · [raw records](../../../results/stories-control-s00-unigram-r00/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Unigram | control | 0 | 0.000 | 0 | 6.0036 | — | 0 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | Unigram | control | 0 | 0.000 | 0 | 6.0036 | 404.8654 | — | — | 0 | complete |
 
 Training time is 0.0 seconds. Peak allocated GPU memory is 0.1 MiB. Development token accuracy is 0.0715. Test token accuracy is —.
 

@@ -2,9 +2,9 @@
 
 Run `abstracts-pilot-s00-trace-r10-fp64` · [raw records](../../../results/abstracts-pilot-s00-trace-r10-fp64/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Research abstracts | Hessian trace | pilot | 0 | 0.100 | 65,536 | 3.1143 | — | 431 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Research abstracts | Hessian trace | pilot | 0 | 0.100 | 65,536 | 3.1143 | 22.5172 | — | — | 431 | complete |
 
 Training time is 152.2 seconds. Peak allocated GPU memory is 2,346.3 MiB. Development token accuracy is 0.4131. Test token accuracy is —.
 

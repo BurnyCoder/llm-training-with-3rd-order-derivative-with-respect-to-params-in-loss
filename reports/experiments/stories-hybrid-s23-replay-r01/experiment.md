@@ -2,9 +2,9 @@
 
 Run `stories-hybrid-s23-replay-r01` · [raw records](../../../results/stories-hybrid-s23-replay-r01/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Cross-seed replay | hybrid | 23 | 0.010 | 16,777,216 | 2.5423 | — | 35,140 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | Cross-seed replay | hybrid | 23 | 0.010 | 16,777,216 | 2.5423 | 12.7083 | — | — | 35,140 | complete |
 
 Training time is 477.4 seconds. Peak allocated GPU memory is 617.3 MiB. Development token accuracy is 0.4632. Test token accuracy is —.
 

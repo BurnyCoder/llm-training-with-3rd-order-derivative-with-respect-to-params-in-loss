@@ -2,9 +2,9 @@
 
 Run `abstracts-control-s00-unigram-r00` · [raw records](../../../results/abstracts-control-s00-unigram-r00/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Research abstracts | Unigram | control | 0 | 0.000 | 0 | 7.3306 | — | 0 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Research abstracts | Unigram | control | 0 | 0.000 | 0 | 7.3306 | 1,526.3141 | — | — | 0 | complete |
 
 Training time is 0.0 seconds. Peak allocated GPU memory is 0.8 MiB. Development token accuracy is 0.0602. Test token accuracy is —.
 

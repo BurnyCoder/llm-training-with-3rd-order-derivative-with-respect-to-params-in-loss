@@ -2,9 +2,9 @@
 
 Run `abstracts-pilot-s00-hessian_norm-r03-fp64` · [raw records](../../../results/abstracts-pilot-s00-hessian_norm-r03-fp64/) · [registered design](../../preregistration.md)
 
-| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Research abstracts | Squared Hessian norm | pilot | 0 | 0.030 | 65,536 | 3.1139 | — | 413 | complete |
+| Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Research abstracts | Squared Hessian norm | pilot | 0 | 0.030 | 65,536 | 3.1139 | 22.5088 | — | — | 413 | complete |
 
 Training time is 158.7 seconds. Peak allocated GPU memory is 2,346.3 MiB. Development token accuracy is 0.4132. Test token accuracy is —.
 
