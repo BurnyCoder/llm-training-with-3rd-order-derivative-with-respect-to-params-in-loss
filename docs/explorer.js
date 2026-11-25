@@ -3,6 +3,7 @@
 "use strict";
 const element = id => document.getElementById(id);
 const repository = document.querySelector("a.source").href;
+const runDirectory = document.querySelector("a.source").dataset.runs || repository + "/tree/main/results/";
 const local = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname) ||
   new URL(location.href).searchParams.get("live") === "1";
 const metrics = {
@@ -78,7 +79,7 @@ function showLedger() {
     const tr = node("tr");
     const first = node("td");
     const link = node("a", run.id);
-    link.href = repository + "/tree/main/results/" + encodeURIComponent(run.id);
+    link.href = runDirectory + encodeURIComponent(run.id);
     first.append(link);
     tr.append(first);
     const evaluation = run.evaluation_progress;

@@ -248,7 +248,9 @@ def build_report(root: Path = Path(".")) -> dict:
         if key in figures:
             summary.append(f"![{label}](../docs/figures/{figures[key]})")
     atomic_text(root / "reports" / "summary.md", "\n\n".join(summary) + "\n")
-    badge = f"[Explore the results]({PAGES}) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)"
+    badge = (f"[Explore the results]({PAGES}) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · "
+             "[Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · "
+             "[Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)")
     readme = [badge, overview, _stage_summary(study)]
     if pilots:
         readme.append(pilots)
