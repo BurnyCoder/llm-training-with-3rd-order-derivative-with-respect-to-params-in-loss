@@ -43,6 +43,38 @@ def test_operational_logs_preserve_science_and_remove_auth_material(tmp_path):
     assert b"loss 3.25" in safe and b"private" not in safe and token.encode() not in safe
 
 
+def test_model_repository_compares_fitted_and_weightless_predictors_from_the_same_records(tmp_path):
+    """The individual Hub cards, raw probe files and study-wide comparison must agree."""
+    from thirdloss.hub_archive import model_files
+    table={"id":"story-counts","method":"unigram","stage":"stories","phase":"control","seed":0,
+           "tokens":0,"steps":0,"dev_nll":4.5,"data_manifest_sha256":"corpus"}
+    fitted={**table,"id":"story-ce","method":"ce","phase":"pilot","steps":1,"tokens":4096,
+            "weights_name":"model.safetensors","weights_sha256":hashlib.sha256(b"weights").hexdigest()}
+    folder=tmp_path/"checkpoints"/"story-ce"/"export"
+    folder.mkdir(parents=True)
+    (folder/"model.safetensors").write_bytes(b"weights")
+    (folder.parent/"latest.pt").write_bytes(b"state")
+    (folder/"tokenizer.json").write_text("{}")
+    (folder/"restart.json").write_text(json.dumps({"sha256":hashlib.sha256(b"state").hexdigest(),
+                                                   "next_step":1,"data_manifest_sha256":"corpus"}))
+    summary=lambda obj:json.dumps(obj).encode()
+    score={"width":1.25,"width_lower":1.249,"width_upper":1.251,"mean_directional_curvature":.9,
+           "directions":[],"censored_rays":0}
+    native={"width":2.5,"width_lower":2.499,"width_upper":2.501,"censored_rays":0,"directions":[]}
+    tree={f"results/{row['id']}/summary.json":summary(row) for row in (table,fitted)}
+    for row in (table,fitted):
+        tree[f"results/{row['id']}/score-flatness.json"]=summary({"score":score})
+    tree["results/story-ce/flatness.json"]=summary({"width":native,"curvature":{"rms_curvature":.42,"trace_per_parameter":-.02}})
+    files=model_files(tmp_path,"stories","account/test",tree,{})
+    for run in ("story-counts","story-ce"):
+        card=files[f"runs/{run}/README.md"].decode()
+        assert "1.250" in card and "all-variants-and-baselines" in card
+        assert files[f"runs/{run}/score-flatness.json"]==tree[f"results/{run}/score-flatness.json"]
+    assert "N/A" in files["runs/story-counts/README.md"].decode() and "2.500" in files["runs/story-ce/README.md"].decode()
+    assert "runs/story-counts/training_state.pt" not in files and "runs/story-ce/training_state.pt" in files
+    assert b"all-variants-and-baselines" in files["README.md"]
+
+
 def test_packed_files_match_manifest_and_release_test_only_after_both_gates(tmp_path):
     base=tmp_path/"data"/"stories"
     base.mkdir(parents=True)

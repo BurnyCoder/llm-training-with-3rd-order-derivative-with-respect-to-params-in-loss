@@ -145,40 +145,110 @@ def dataset_files(storage,stage,tree,cache):
     return files
 
 
+def run_card(run,repo,weight=None,score=None,diagnostic=None):
+    """Render a fitted checkpoint or zero-update reference from its committed measurements."""
+    from .flatness_tables import checkpoint_table
+    from .report_records import METHODS,STAGES
+    study=HUB+STUDY_HUB
+    docs=study+"/blob/main/research"
+    prefix=f"{HUB}{repo}/blob/main/runs/{run['id']}"
+    kind=METHODS.get(run["method"],run["method"])
+    lines=["---\nlanguage: [en]\npipeline_tag: text-generation\n---",f"# {kind} · {STAGES[run['stage']]}",
+           f"Run `{run['id']}` used seed {run['seed']} and {run['tokens']:,} optimizer targets. "
+           f"Full development NLL was {run['dev_nll']:.6f} nats per target. Lower NLL is better."]
+    if "test_nll" in run:
+        lines.append(f"Frozen-checkpoint test NLL was {run['test_nll']:.6f} nats per target.")
+    if run["method"]=="unigram":
+        lines.append("This predictor uses add-one-smoothed training token counts. Its common score width "
+                     "can be compared with the neural predictors on the same corpus.")
+    elif run["method"]=="initial":
+        lines.append("The registered initialization gives this zero-update neural reference. "
+                     "The probe record identifies the reconstructed weights used for measurement.")
+    else:
+        base="EleutherAI/pythia-410m with attention QKV LoRA" if run["stage"]=="abstracts" else "Randomly initialized TinyStories decoder"
+        lines.append(f"{base}. The restart manifest identifies the weights' optimizer state, data cursor and random state. "
+                     f"[Restart manifest]({prefix}/restart.json) · [Reload instructions]({docs}/docs/runbook.md)")
+    if diagnostic:
+        lines.append(f"{diagnostic['reason']} [Numerical audit]({docs}/reports/amendments/adapter-precision.md)")
+    if run["phase"] in {"branch","hybrid"}:
+        lines.append(f"[Hybrid protocol]({docs}/reports/hybrid/preregistration.md) · "
+                     f"[Paired width and development results]({docs}/reports/hybrid/results.md)")
+    lines.extend(["## Flatness",checkpoint_table(run["method"],weight,score),
+                  "Compare weight measurements within the same parameterization and token horizon. The shared "
+                  "score probes use the same token-level perturbations within each corpus. Their value for predicting "
+                  f"held-out performance is unknown. [Compare every variant and baseline]({study}#all-variants-and-baselines) · "
+                  f"[Per-run statistics and raw probes]({docs}/reports/flatness.md) · [Training scores]({prefix}/training_summary.json)"])
+    probes=[]
+    if weight and "rms_curvature" in weight:
+        probes.append(f"[Weight perturbations and Hessian probes]({prefix}/flatness.json)")
+    if score:
+        probes.append(f"[Shared score perturbations]({prefix}/score-flatness.json)")
+    if probes:
+        lines.append(" · ".join(probes))
+    return "\n\n".join(lines)+"\n"
+
+
+def _fitted_files(storage,repo,run,cache):
+    """Verify local or Hub-recovered weights and the optimizer state against the published fingerprints."""
+    prefix="runs/"+run["id"]+"/"
+    folder=storage/"checkpoints"/run["id"]
+    export=folder/"export"
+    state=folder/"latest.pt"
+    if not (export/"restart.json").exists() or not state.exists():
+        saved=snapshot_download(repo,allow_patterns=[prefix+"*"],cache_dir=storage/"hub")
+        export=Path(saved)/prefix
+        state=export/"training_state.pt"
+    restart=read_json(export/"restart.json")
+    if (fingerprint(export/run["weights_name"],cache)["sha256"]!=run["weights_sha256"]
+            or fingerprint(state,cache)["sha256"]!=restart["sha256"]
+            or restart["next_step"]!=run["steps"] or restart["data_manifest_sha256"]!=run["data_manifest_sha256"]):
+        raise ValueError(f"Weight or optimizer receipt differs for {run['id']}")
+    files={prefix+file.name:file for file in export.iterdir() if file.is_file()}
+    if prefix+"tokenizer.json" not in files:
+        raise ValueError(f"Missing publication artifact {run['id']}/tokenizer.json")
+    files[prefix+"training_state.pt"]=state
+    return files
+
+
 def model_files(storage,stage,repo,tree,cache):
-    """Include every fitted run in Git and verify both weight and restart digests on either storage path."""
+    """Place every fitted run and both untrained references alongside comparable, digest-verified probes."""
     files = {}
+    exclusions=json.loads(tree.get("results/verification/numerical-exclusions.json",b"{}"))
     for name,content in tree.items():
         if not (name.startswith("results/") and name.endswith("/summary.json")):
             continue
         run = json.loads(content)
-        if run.get("stage")!=stage or not run.get("weights_sha256"):
+        if run.get("stage")!=stage:
             continue
         prefix = "runs/"+run["id"]+"/"
-        folder = storage/"checkpoints"/run["id"]
-        export = folder/"export"
-        state = folder/"latest.pt"
-        if not (export/"restart.json").exists() or not state.exists():
-            saved = snapshot_download(repo,allow_patterns=[prefix+"*"],cache_dir=storage/"hub")
-            export = Path(saved)/prefix
-            state = export/"training_state.pt"
-        restart = read_json(export/"restart.json")
-        if (fingerprint(export/run["weights_name"],cache)["sha256"]!=run["weights_sha256"]
-                or fingerprint(state,cache)["sha256"]!=restart["sha256"]
-                or restart["next_step"]!=run["steps"] or restart["data_manifest_sha256"]!=run["data_manifest_sha256"]):
-            raise ValueError(f"Weight or optimizer receipt differs for {run['id']}")
-        files.update({prefix+file.name:file for file in export.iterdir() if file.is_file()})
-        files[prefix+"training_state.pt"] = state
+        if run.get("weights_sha256"):
+            files.update(_fitted_files(storage,repo,run,cache))
+        elif run["method"] not in {"initial","unigram"}:
+            raise ValueError(f"Missing fitted weights for {run['id']}")
+        source=name.removesuffix("summary.json")
+        weight,score={},{}
+        for filename in ("flatness.json","score-flatness.json"):
+            if source+filename in tree:
+                data=tree[source+filename]
+                probe=json.loads(data)
+                files[prefix+filename]=data
+                if filename=="flatness.json":
+                    weight={**probe["width"],**probe["curvature"]}
+                else:
+                    score=probe["score"]
+        final_width=source+f"width-{run['steps']}.json"
+        if not weight and final_width in tree:
+            weight=json.loads(tree[final_width])
+        files[prefix+"README.md"]=run_card(run,repo,weight,score,exclusions.get(run["id"])).encode()
         files[prefix+"training_summary.json"] = content
-        for required in ("README.md","tokenizer.json","restart.json"):
-            if prefix+required not in files:
-                raise ValueError(f"Missing publication artifact {run['id']}/{required}")
     if files:
         title = "Full-weight TinyStories models" if stage=="stories" else "Pythia-410M QKV LoRA adapters"
         header = "library_name: pytorch" if stage=="stories" else "library_name: peft\nbase_model: EleutherAI/pythia-410m"
         files["README.md"] = (f"---\nlanguage: [en]\npipeline_tag: text-generation\n{header}\n---\n"
-            f"# {title}\n\nEach run includes its fitted weights, card, tokenizer, scores and restartable training state. "
-            f"[Browse checkpoints]({HUB}{repo}/tree/main/runs) · [Study archive]({HUB}{STUDY_HUB}) · "
+            f"# {title}\n\nEach run has a card with its prediction scores and available flatness measurements. "
+            f"Fitted models also include weights, tokenizer and restartable training state. "
+            f"[Browse models and controls]({HUB}{repo}/tree/main/runs) · "
+            f"[Compare flatness across variants and baselines]({HUB}{STUDY_HUB}#all-variants-and-baselines) · "
             f"[Prepared corpus]({HUB}datasets/{DATA_HUB[stage]}) · [Explorer]({HUB}spaces/{SPACE})\n").encode()
     return files
 

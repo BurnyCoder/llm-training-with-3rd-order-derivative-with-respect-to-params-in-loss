@@ -7,7 +7,7 @@ from statistics import median
 from urllib.parse import quote
 
 from .report_figures import build_figures
-from .flatness_tables import flatness_ledger
+from .flatness_tables import checkpoint_table,flatness_ledger
 from .readme_comparisons import comparison_sections
 from .report_paper import write_paper
 from .report_records import (
@@ -150,6 +150,10 @@ def _experiments(root, study):
                 "[Design and hyperparameter rationale](../../planned-runs.md) · "
                 f"[Saved configuration]({raw_link}config.json)",
             ]
+            if run.get("flatness") or run.get("score_flatness"):
+                material += ["## Checkpoint flatness",checkpoint_table(run["method"],run.get("flatness"),run.get("score_flatness")),
+                             "The connection between width and better held-out prediction is unknown. "
+                             "[Compare against every variant and baseline](../../flatness.md#every-variant-and-baseline)."]
             if run.get("failures"):
                 material += ["## Recorded interruptions", _table(
                     [[failure["timestamp"],failure["error"]] for failure in run["failures"]],
