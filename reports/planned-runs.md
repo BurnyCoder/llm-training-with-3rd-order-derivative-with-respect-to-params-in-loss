@@ -1,0 +1,17 @@
+# Planned runs
+
+| Stage | Trainable coordinates | Data | Confirmatory target tokens | Effective windows per update |
+|---|---|---|---:|---:|
+| stories | Four causal blocks, width 192, four heads, gated SiLU MLP width 512, tied embeddings and 4,096 tokens | TinyStories | 16,777,216 | 32 |
+| abstracts | Pythia-410M with rank-eight QKV LoRA in every block, scale alpha 16 | 2024 arXiv abstracts | 524,288 | 8 |
+
+AdamW peaks at 0.0003 for stories and 0.0001 for adapters, with betas 0.9 and 0.95, weight decay 0.1 on matrices, gradient norm clip 1, 5% warmup and cosine decay to 10% of peak. Use full-precision parameter derivatives and eager attention. Physical microbatching can change to fit GPU memory while preserving the effective batch and two-window derivative estimate. Data order and optimizer settings are paired. These are experimental design choices.
+
+| Phase | Seed | Arms and budget |
+|---|---:|---|
+| Untrained controls | 0 | Evaluate initial checkpoint and training-token unigram on development text. |
+| Pilot and development | 0 | Run third-order 3% first. Run ordinary AdamW and both derivative baselines on the same initial one-eighth of the stage horizon. Complete the equal 1%, 3%, 10% grid for trace and third order. Measure cost before confirmatory training. |
+| Secondary controls | 0 | Squared Hessian norm at 3%, sign-scrambled third-order update, combined selected trace and third order. Use the development horizon and report them as pilot comparisons. |
+| Confirmation | 1–8 | Ordinary, signed trace, and third order at the selected strength, each at the full stage horizon. |
+
+Evaluate seed-paired final test predictions only when the stage has all planned confirmatory checkpoints. Preserve every development candidate. The one-week allocation prioritizes the two registered stages and their controls. The first 14 hours target a real one-seed pilot with its untrained controls. [Protocol](preregistration.md)
