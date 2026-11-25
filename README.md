@@ -166,7 +166,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Variant | Training targets | Seed cohort | Weight width<br>↑ Wider is flatter | RMS weight curvature<br>↓ Less local bending | Common score width<br>↑ More score tolerance |
 | --- | --- | --- | --- | --- | --- |
 | Initial checkpoint | 0 | 0 | Pending | Pending | Pending |
-| Unigram | 0 | 0 | N/A · no weights | N/A · no weights | Pending |
+| Unigram | 0 | 0 | N/A · no weights | N/A · no weights | 0.915 (1/1) |
 | Ordinary AdamW | 65,536 | 0 | 19.784 (1/1) | 1.2868 (1/1) | Pending |
 | Hessian trace (1%) | 65,536 | 0 | 19.751 (1/1) | 1.1818 (1/1) | Pending |
 | Third derivative (1%) | 65,536 | 0 | Pending | Pending | Pending |
