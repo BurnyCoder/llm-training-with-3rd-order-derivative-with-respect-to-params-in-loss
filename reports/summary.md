@@ -1,6 +1,6 @@
 # Study summary
 
-Recorded 5 runs, including 5 with a completed summary.
+Recorded 6 runs, including 6 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -10,7 +10,7 @@ Recorded 5 runs, including 5 with a completed summary.
 
 ## Development observations
 
-**TinyStories development pilot.** At 2,097,152 training targets, the third-order run recorded 0.00080 nats per target token higher against Ordinary AdamW. These are single-seed descriptions using initial pilot strengths.
+**TinyStories development pilot.** At 2,097,152 training targets, the third-order run recorded 0.00080 nats per target token higher against Ordinary AdamW, 0.00247 nats per target token lower against Hessian trace. These are single-seed descriptions using initial pilot strengths.
 
 ## Measured scores
 
@@ -21,6 +21,7 @@ Recorded 5 runs, including 5 with a completed summary.
 | TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |
 | TinyStories | pilot | Third derivative | 0.030 | 2,097,152 | 1 | 3.8778 | — |
 | TinyStories | pilot | Hessian trace | 0.010 | 2,097,152 | 1 | 3.8773 | — |
+| TinyStories | pilot | Hessian trace | 0.030 | 2,097,152 | 1 | 3.8802 | — |
 
 ![Computation graph](../docs/figures/architecture.png)
 

@@ -1,0 +1,121 @@
+{
+  "format": "thirdloss-packed-v1",
+  "stage": "abstracts",
+  "sources": [
+    {
+      "repo": "common-pile/arxiv_abstracts_filtered",
+      "revision": "dc1ceab4755eb037ec61e49cf1350dab7ceee6e7",
+      "file": "arxiv-abstracts-dolma-0000.json.gz",
+      "bytes": 892766221,
+      "sha256": "2aa4dba7c362a977853619239655f073205346978931d6ad070026c7dfa1c4d2"
+    },
+    {
+      "repo": "common-pile/arxiv_abstracts_filtered",
+      "revision": "dc1ceab4755eb037ec61e49cf1350dab7ceee6e7",
+      "file": "arxiv-abstracts-dolma-0001.json.gz",
+      "bytes": 235616002,
+      "sha256": "451ff8bbc867360d66ddca2794459377d1cc56f91b2243587857f8ded982af36"
+    },
+    {
+      "repo": "EleutherAI/pythia-410m",
+      "revision": "9879c9b5f8bea9051dcb0e68dff21493d67e9d4f",
+      "file": "tokenizer.json",
+      "bytes": 2113710,
+      "sha256": "c24618a1b3e6a38167beff1c72cffd126c3a66254347304b50547d12c5f25624"
+    }
+  ],
+  "selection": {
+    "total_source_rows": 2504679,
+    "identifier_month_differs_from_created": 5446
+  },
+  "audit": {
+    "test": {
+      "input": 20199,
+      "kept": 20199,
+      "exact": 0,
+      "cross_split_near": 0,
+      "empty": 0
+    },
+    "dev": {
+      "input": 21115,
+      "kept": 21115,
+      "exact": 0,
+      "cross_split_near": 0,
+      "empty": 0
+    },
+    "train": {
+      "input": 77185,
+      "kept": 77181,
+      "exact": 2,
+      "cross_split_near": 2,
+      "empty": 0
+    }
+  },
+  "overlap": {
+    "words": 5,
+    "jaccard_at_least": "4/5",
+    "priority": [
+      "test",
+      "dev",
+      "train"
+    ],
+    "coverage": "All retained cross-split document pairs at this threshold"
+  },
+  "dtype": "<u2",
+  "packing": "one appended EOS per document, no added BOS",
+  "eos_id": 0,
+  "vocab_size": 50277,
+  "tokenizer_entries": 50277,
+  "model_vocab_size": 50304,
+  "token_counts": {
+    "test": 4912988,
+    "dev": 5124072,
+    "train": 18617236
+  },
+  "splits": {
+    "test": {
+      "documents": 20199,
+      "tokens": 4912988,
+      "bytes": 9825976,
+      "sha256": "12d79d9dae4ccdc631b0091d8e48046ef27cd42c2620e6da6809812c5bde45ee"
+    },
+    "dev": {
+      "documents": 21115,
+      "tokens": 5124072,
+      "bytes": 10248144,
+      "sha256": "d736e75fe6fa49850931d5583eb1bf8566d488481e607fc58123332a0fc8edbb"
+    },
+    "train": {
+      "documents": 77181,
+      "tokens": 18617236,
+      "bytes": 37234472,
+      "sha256": "34a806ba704a887d6bb048302d1da09f7fdab12b0d588c65e548b37948ea5448"
+    }
+  },
+  "artifacts": {
+    "test.bin": {
+      "bytes": 9825976,
+      "sha256": "12d79d9dae4ccdc631b0091d8e48046ef27cd42c2620e6da6809812c5bde45ee"
+    },
+    "dev.bin": {
+      "bytes": 10248144,
+      "sha256": "d736e75fe6fa49850931d5583eb1bf8566d488481e607fc58123332a0fc8edbb"
+    },
+    "train.bin": {
+      "bytes": 37234472,
+      "sha256": "34a806ba704a887d6bb048302d1da09f7fdab12b0d588c65e548b37948ea5448"
+    },
+    "tokenizer.json": {
+      "bytes": 2113710,
+      "sha256": "c24618a1b3e6a38167beff1c72cffd126c3a66254347304b50547d12c5f25624"
+    },
+    "documents.jsonl": {
+      "bytes": 21401183,
+      "sha256": "269cccad3fd2bf807d635f64dfa85b3a0291f11e72a4b768a25ea55d538a3e59"
+    },
+    "rejections.jsonl": {
+      "bytes": 754,
+      "sha256": "a988d7e03b2fed002b7b3c69b6f845067a66988454f697c8e31a6445beec8598"
+    }
+  }
+}
