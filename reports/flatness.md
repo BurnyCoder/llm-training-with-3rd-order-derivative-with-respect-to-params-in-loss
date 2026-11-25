@@ -34,7 +34,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Ordinary AdamW · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
 | Hessian trace · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
 | Third derivative · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
-| Shared trace checkpoint | 8,388,608 | 21–28 | 15.143 (3/8) | 0.44989 (1/8) | 1.062 (1/8) |
+| Shared trace checkpoint | 8,388,608 | 21–28 | 15.143 (3/8) | 0.43514 (2/8) | 1.062 (2/8) |
 | Curvature-dependent hybrid · hybrid study | 16,777,216 | 21–28 | 13.157 (3/8) | 0.585 (1/8) | 1.084 (1/8) |
 | Fixed late hybrid · hybrid study | 16,777,216 | 21–28 | 13.215 (3/8) | 0.5776 (1/8) | 1.083 (1/8) |
 | Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.154 (3/8) | 0.5854 (1/8) | 1.084 (1/8) |
@@ -90,6 +90,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | abstracts | pilot | 0 | Third derivative | 1% | 19.922 | 19.400–20.421 | 0/32 | 0.582266 | +0.00146738 | Pending | Pending | Pending | Pending | [Weight probes](../results/abstracts-pilot-s00-third-r01-fp64/flatness.json) |
 | abstracts | pilot | 0 | Hessian trace | 1% | 19.751 | 19.179–20.260 | 0/32 | 1.18181 | +0.00404879 | Pending | Pending | Pending | Pending | [Weight probes](../results/abstracts-pilot-s00-trace-r01-fp64/flatness.json) |
 | stories | branch | 21 | Shared trace checkpoint | 1% | 15.143 | 14.868–15.371 | 0/32 | 0.449892 | +0.00343864 | 1.062 | 1.056–1.073 | 0/32 | 0.72934 | [Weight probes](../results/stories-branch-s21-trunk-r01/flatness.json) · [Score probes](../results/stories-branch-s21-trunk-r01/score-flatness.json) |
+| stories | branch | 22 | Shared trace checkpoint | 1% | 15.403 | 15.160–15.567 | 0/32 | 0.420382 | +0.00325 | 1.061 | 1.057–1.072 | 0/32 | 0.727319 | [Weight probes](../results/stories-branch-s22-trunk-r01/flatness.json) · [Score probes](../results/stories-branch-s22-trunk-r01/score-flatness.json) |
 | stories | control | 0 | Initial checkpoint | 0% | 90.633 | 82.412–101.555 | 0/32 | 0.439786 | +0.000336055 | 0.921 | 0.911–0.936 | 0/32 | 0.999976 | [Weight probes](../results/stories-control-s00-initial-r00/flatness.json) · [Score probes](../results/stories-control-s00-initial-r00/score-flatness.json) |
 | stories | control | 0 | Unigram | 0% | N/A | N/A | N/A | N/A | N/A | 0.915 | 0.913–0.920 | 0/32 | 0.989727 | [Score probes](../results/stories-control-s00-unigram-r00/score-flatness.json) |
 | stories | hybrid | 21 | Curvature-dependent hybrid | 1% | 13.157 | 12.991–13.236 | 0/32 | 0.585004 | +0.00424671 | 1.084 | 1.076–1.095 | 0/32 | 0.699362 | [Weight probes](../results/stories-hybrid-s21-adaptive-r01/flatness.json) · [Score probes](../results/stories-hybrid-s21-adaptive-r01/score-flatness.json) |

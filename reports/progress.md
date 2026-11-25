@@ -1,6 +1,6 @@
 # Study progress
 
-Updated 2026-11-25T17:11:28+00:00.
+Updated 2026-11-25T17:12:03+00:00.
 
 21 training/control records and 0 final evaluations are complete. This is 17.5% of 120 planned model milestones.
 
@@ -29,6 +29,17 @@ At the pre-test check on 2026-11-25T10:33:28+00:00, pilot timings projected 22.5
 The first measured set of hybrid arms projects 33.68 further hours from that checkpoint, including the eight replays. With the original confirmations and final scoring, the projected remaining work at the check was 56.18 hours with 159.49 hours left in the week. [Wall-time assumptions, measured memory and inputs](../results/feasibility/hybrid-week.json)
 
 The first seed included 4.11 hours between the last pre-restart update and the first resumed update. Excluding repetitions of that gap projects 4.91 hours of remaining hybrid work and 27.40 hours with the original confirmations and scoring. Both forecasts use actual observed wall time and apply from the first-seed checkpoint. [Restart-adjusted timing](../results/feasibility/hybrid-uptime.json)
+
+## Flatness coverage
+
+| Stage | Weight geometry | Shared score geometry | Median pilot cycle | Longest pilot cycle |
+| --- | --- | --- | --- | --- |
+| stories | 18/91 | 19/92 | 34 s | 37 s |
+| abstracts | 3/36 | 1/37 | 193 s | 311 s |
+
+Weight geometry covers every neural checkpoint. Score geometry also covers the two unigram references. [All arms and their measurements](flatness.md#every-variant-and-baseline)
+
+Giving each predictor still missing a measurement one complete native pilot cycle projects 2.62 additional hours at each stage’s median or 3.86 hours at its longest observed cycle. These scenarios include the observed reporting and upload time. Existing hybrid widths can be reused. The shared score calculation, archive growth and future interruptions can change the total. [Timestamped pilot measurements](../results/feasibility/flatness-pilot-wall-time.json) · [Archived timing log](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/logs/checkpoint-flatness-20261125T163331Z.log)
 
 ## Monitoring
 
