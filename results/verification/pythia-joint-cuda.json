@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-11-25T07:33:30+00:00",
+  "device": "cuda",
+  "seed": 0,
+  "calibration_seed": 6247,
+  "draw": 0,
+  "initial_trainable_sha256": "1c45ca4d5b3a6cd1b53eadaa7df8af15e21a040a8a61aa7f0e91d1b6f019320b",
+  "input_sha256": "e29246c0c1a347178e100d8de295d1952444ec16ce14af832e51d2d9b2592af8",
+  "probes_sha256": "7ab2a090e32d3e2d93af10cc9161953f4227dc6e1ff5950d9f59be0a4235da13",
+  "max_logit_abs_difference": 0.004558563232421875,
+  "two_window_cross_entropy": 3.2335195541381836,
+  "joint": {
+    "penalty": 467331297837056.0,
+    "gradient_norm": 3.026251756164993e+20,
+    "seconds": 63.493074900001375,
+    "finite": true,
+    "peak_allocated_mib": 10970.755859375
+  },
+  "sequential": {
+    "penalty": 265727747555328.0,
+    "gradient_norm": 1.748733281131415e+20,
+    "seconds": 6.666006799998286,
+    "finite": true,
+    "peak_allocated_mib": 6358.021484375
+  },
+  "relative_gradient_difference": 0.4871510026596066,
+  "gradient_cosine": 0.9488545150775722,
+  "relative_penalty_difference": 0.4313932133687758,
+  "repeat_initial_trainable_sha256": "1c45ca4d5b3a6cd1b53eadaa7df8af15e21a040a8a61aa7f0e91d1b6f019320b",
+  "repeat_probes_sha256": "7ab2a090e32d3e2d93af10cc9161953f4227dc6e1ff5950d9f59be0a4235da13",
+  "repeat_production_penalty": 265727747555328.0,
+  "repeat_production_gradient_norm": 1.748733281131415e+20,
+  "repeat_relative_gradient_difference": 0.0
+}

@@ -6,6 +6,8 @@
 
 Independent random signs include mixed weight derivatives in the expected penalty. The trace implementation motivating the gradient check converted its estimate to a Python number. [Derivation and references](../literature-review.md)
 
+- [abstracts-control-s00-initial-r00](./abstracts-control-s00-initial-r00/experiment.md) — A development observation is pending.
+
 - [abstracts-pilot-s00-third-r03](./abstracts-pilot-s00-third-r03/experiment.md) — Development NLL changed by -0.1143 nats per target token from 4,096 to 65,536 training targets. Attribution to the regularizer uses matched comparisons across seeds. The run ledger records 1 interrupted attempt(s).
 
 - [stories-control-s00-initial-r00](./stories-control-s00-initial-r00/experiment.md) — The observed development NLL is 8.3437 nats per target token.
