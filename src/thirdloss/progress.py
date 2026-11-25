@@ -95,9 +95,54 @@ def progress(project):
     lines += ["## TinyStories hybrid follow-up",f"{followup['completed_arms']} of 48 full runs and "
               f"{followup['completed_trunks']} of 8 shared checkpoints complete. "
               f"{followup['status']}. [Per-seed widths and development scores](hybrid/results.md)"]
+    extra = hybrid_schedule(project,schedule)
+    if extra:
+        lines.append(f"The first measured set of hybrid arms projects {extra['remaining_hybrid_hours']:.2f} "
+                     f"further hours from that checkpoint, including the eight replays. With the original "
+                     f"confirmations and final scoring, the projected remaining work at the check was "
+                     f"{extra['combined_hours']:.2f} hours with {extra['hours_left_in_week']:.2f} hours left in the week. "
+                     "[Wall-time assumptions, measured memory and inputs](../results/feasibility/hybrid-week.json)")
     lines += ["## Monitoring","Inspect runs lasting over 10, 30 and 60 minutes at 5, 15 and 30 minute intervals "
               "respectively. The live dashboard refreshes between those checks. "
               "[Study design](plan.md) · [Run matrix](planned-runs.md) · [Experiment ledger](experiments/experiments.md)"]
     body = "\n\n".join(lines)+"\n"
     atomic_text(project/"reports"/"progress.md",body)
     return body
+
+
+def hybrid_schedule(project,primary):
+    """Freeze a joint timing forecast from the first six real follow-up jobs before sealed scoring."""
+    root = project/"results"
+    out = root/"feasibility"/"hybrid-week.json"
+    if out.exists():
+        return read_json(out)
+    if not primary:
+        return None
+    arms = {kind:root/("stories-"+("branch" if kind=="trunk" else "hybrid")+f"-s21-{kind}-r01")
+            for kind in ("trunk","adaptive","late","trace","strong","always")}
+    if any(not (folder/"summary.json").exists() for folder in arms.values()):
+        return None
+    summaries = {kind:read_json(folder/"summary.json") for kind,folder in arms.items()}
+    def stamp(value):
+        return datetime.fromisoformat(value).timestamp()
+    first = json_lines(arms["trunk"]/"events.jsonl")[0]
+    start = stamp(first["timestamp"])-first["train_seconds"]
+    end = stamp(summaries["always"]["finished_at"])
+    observed = (end-start)/3600
+    replay = (stamp(summaries["adaptive"]["finished_at"])-stamp(summaries["trunk"]["finished_at"]))/3600
+    if not (0<replay<observed):
+        raise ValueError("Invalid hybrid wall-time observation order")
+    remaining = 7*observed+8*replay
+    combined = remaining+primary["projected_confirmation_and_scoring_hours"]
+    left = 168-(end-stamp(primary["first_training_update_at"]))/3600
+    record = {"computed_at":time_now(),"as_of":summaries["always"]["finished_at"],"seed":21,
+              "run_ids":[s["id"] for s in summaries.values()],"observed_six_jobs_hours":observed,
+              "estimated_one_replay_hours":replay,"remaining_hybrid_hours":remaining,
+              "combined_hours":combined,"hours_left_in_week":left,"fits_measured_budget":combined<=left,
+              "peak_allocated_mib":max(s["peak_vram_mb"] for s in summaries.values()),
+              "basis":"Observed wall time includes shared training, calibration, widths, development scoring, "
+                      "intervening publications and interruptions. Repeat the six jobs for seven more seeds. "
+                      "Budget each replay as the elapsed trunk-completion to adaptive-completion interval. "
+                      "Remaining adapter pilots and tool or network interruptions use the residual headroom."}
+    write_json(out,record)
+    return record

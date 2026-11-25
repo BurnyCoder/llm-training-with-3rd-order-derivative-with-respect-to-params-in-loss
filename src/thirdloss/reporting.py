@@ -230,7 +230,8 @@ def _hybrid_report(root,study):
                 "[Interactive measurement and run selector](../../docs/index.html#curves)",
                 "Two-sided directional width is measured in the original Euclidean weight coordinates at a "
                 "fixed increase of 0.1 nats per target. Each linked JSON contains all 32 rays and their brackets. "
-                "A missing upper bound means that the search reached its maximum radius before crossing."]
+                "A missing upper bound means that the search reached its maximum radius before crossing. "
+                "The five shared-checkpoint arms reuse the trunk’s switch measurement and its recorded probe time."]
     widths = []
     for r in study["runs"]:
         for w in r.get("widths",{}).values():
@@ -277,7 +278,7 @@ def _hybrid_report(root,study):
     material += [f"The completed branches reused {data['shared_training_tokens_saved']:,} targets of optimization "
                  "compared with independently training each branch from initialization. The replay permutation "
                  "couples different seeds through their coefficient histories. The sign-test reference for this "
-                 "comparison assumes exchangeable independent pair signs; that assumption is approximate here. "
+                 "comparison assumes exchangeable independent pair signs. Shared donor histories make that assumption approximate. "
                  "All raw pairs are reported for inspection."]
     atomic_text(root/"reports"/"hybrid"/"results.md","\n\n".join(material)+"\n")
     return headline

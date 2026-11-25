@@ -130,3 +130,23 @@ def test_missing_parent_uses_pinned_hub_revision_and_checks_bytes(tmp_path,monke
     payload.write_bytes(b"corrupt")
     with pytest.raises(ValueError,match="checksum"):
         study.parent_restart_file(tmp_path/"other",row)
+
+
+def test_joint_week_forecast_counts_shared_prefix_once_and_all_eight_replays(tmp_path):
+    from datetime import datetime, timedelta, timezone
+    import json
+    from thirdloss.progress import hybrid_schedule
+    from thirdloss.records import write_json
+    epoch=datetime(2026,1,1,tzinfo=timezone.utc)
+    primary={"first_training_update_at":epoch.isoformat(),"projected_confirmation_and_scoring_hours":24.}
+    assert hybrid_schedule(tmp_path,primary) is None
+    for i,kind in enumerate(("trunk","adaptive","late","trace","strong","always"),1):
+        run="stories-"+("branch" if kind=="trunk" else "hybrid")+f"-s21-{kind}-r01"
+        folder=tmp_path/"results"/run
+        write_json(folder/"summary.json",dict(id=run,finished_at=(epoch+timedelta(hours=i)).isoformat(),peak_vram_mb=i))
+        if kind=="trunk":
+            (folder/"events.jsonl").write_text(json.dumps({"timestamp":epoch.isoformat(),"train_seconds":0})+"\n")
+    forecast=hybrid_schedule(tmp_path,primary)
+    assert forecast["remaining_hybrid_hours"]==7*6+8*1
+    assert forecast["combined_hours"]==74 and forecast["hours_left_in_week"]==162
+    assert forecast["fits_measured_budget"]
