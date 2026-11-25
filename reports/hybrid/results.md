@@ -1,6 +1,6 @@
 # Hybrid schedules on TinyStories
 
-TinyStories hybrid follow-up: 9 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
+TinyStories hybrid follow-up: 10 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
 
 [Frozen protocol and decision rule](preregistration.md) · [Interactive measurement and run selector](../../docs/index.html#curves)
 
@@ -30,6 +30,9 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 22 | Curvature-dependent hybrid | [2048](../../results/stories-hybrid-s22-adaptive-r01/width-2048.json) | 15.40259 | 15.40137 | 15.40381 | 0 | 2.81658 | 5.80 |
 | 22 | Curvature-dependent hybrid | [3072](../../results/stories-hybrid-s22-adaptive-r01/width-3072.json) | 13.94922 | 13.94824 | 13.95020 | 0 | 2.65428 | 5.80 |
 | 22 | Curvature-dependent hybrid | [4096](../../results/stories-hybrid-s22-adaptive-r01/width-4096.json) | 13.21484 | 13.21387 | 13.21582 | 0 | 2.60449 | 6.29 |
+| 22 | Always-on hybrid | [2048](../../results/stories-hybrid-s22-always-r01/width-2048.json) | 15.45825 | 15.45703 | 15.45947 | 0 | 2.81592 | 7.13 |
+| 22 | Always-on hybrid | [3072](../../results/stories-hybrid-s22-always-r01/width-3072.json) | 14.03955 | 14.03857 | 14.04053 | 0 | 2.65258 | 7.40 |
+| 22 | Always-on hybrid | [4096](../../results/stories-hybrid-s22-always-r01/width-4096.json) | 13.33447 | 13.33350 | 13.33545 | 0 | 2.60446 | 7.15 |
 | 22 | Fixed late hybrid | [2048](../../results/stories-hybrid-s22-late-r01/width-2048.json) | 15.40259 | 15.40137 | 15.40381 | 0 | 2.81658 | 5.80 |
 | 22 | Fixed late hybrid | [3072](../../results/stories-hybrid-s22-late-r01/width-3072.json) | 13.98975 | 13.98877 | 13.99072 | 0 | 2.65451 | 5.89 |
 | 22 | Fixed late hybrid | [4096](../../results/stories-hybrid-s22-late-r01/width-4096.json) | 13.26758 | 13.26660 | 13.26855 | 0 | 2.60476 | 5.90 |
@@ -54,6 +57,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 21 | Stronger trace | 2.546010 | 0.46155 | 0.44853 | [4096](../../results/stories-hybrid-s21-strong-r01/schedule.json) | 0 | 66,667 | 608.2 | 2,073.2 |
 | 21 | Hessian trace | 2.545904 | 0.46154 | 0.44853 | [4096](../../results/stories-hybrid-s21-trace-r01/schedule.json) | 0 | 64,342 | 608.2 | 2,057.7 |
 | 22 | Curvature-dependent hybrid | 2.546305 | 0.46256 | 0.40627 | [2064](../../results/stories-hybrid-s22-adaptive-r01/schedule.json) | 1.2558e-16 | 37,992 | 617.3 | 2,081.5 |
+| 22 | Always-on hybrid | 2.545968 | 0.46273 | 0.40084 | [0](../../results/stories-hybrid-s22-always-r01/schedule.json) | 3.01905e-14 | 25,017 | 621.3 | 2,090.3 |
 | 22 | Fixed late hybrid | 2.546448 | 0.46258 | 0.40627 | [2049](../../results/stories-hybrid-s22-late-r01/schedule.json) | 3.01905e-14 | 39,514 | 617.3 | 2,083.8 |
 | 22 | Stronger trace | 2.546388 | 0.46254 | 0.40627 | [4096](../../results/stories-hybrid-s22-strong-r01/schedule.json) | 0 | 60,263 | 608.2 | 2,090.3 |
 | 22 | Hessian trace | 2.546305 | 0.46257 | 0.40627 | [4096](../../results/stories-hybrid-s22-trace-r01/schedule.json) | 0 | 61,689 | 608.2 | 2,088.9 |
@@ -78,5 +82,6 @@ Positive Δwidth favors the adaptive schedule. Negative ΔNLL favors its predict
 | 21 | Stronger trace | -0.017578 | -0.000102 | -0.000018 | yes |
 | 22 | Stronger trace | -0.018066 | -0.000083 | -0.000074 | yes |
 | 21 | Always-on hybrid | 0.041748 | -0.000015 | -0.000061 | yes |
+| 22 | Always-on hybrid | -0.063965 | 0.000337 | 0.000030 | yes |
 
 The completed branches reused 50,331,648 targets of optimization compared with independently training each branch from initialization. The replay permutation couples different seeds through their coefficient histories. The sign-test reference for this comparison assumes exchangeable independent pair signs. Shared donor histories make that assumption approximate. All raw pairs are reported for inspection.

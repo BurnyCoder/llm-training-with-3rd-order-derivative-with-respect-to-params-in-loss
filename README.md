@@ -189,7 +189,7 @@ Each panel shows the first saved prompt and full continuations from the lowest m
 
 Recorded 35 runs, including 33 with a completed summary.
 
-TinyStories hybrid follow-up: 9 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
+TinyStories hybrid follow-up: 10 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
 [Full score table, strength search and per-seed test differences](reports/summary.md)
 
