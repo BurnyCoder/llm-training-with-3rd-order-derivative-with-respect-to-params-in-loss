@@ -1,0 +1,215 @@
+"""Read the run ledger shared by the paper, live dashboard and static explorer."""
+
+import json
+import math
+import os
+import re
+from datetime import datetime, timezone
+from pathlib import Path
+from tempfile import NamedTemporaryFile
+
+from .analysis import analyze_stage
+
+
+REPOSITORY = "https://github.com/BurnyCoder/llm-training-with-3rd-order-derivative-with-respect-to-params-in-loss"
+PAGES = "https://burnycoder.github.io/llm-training-with-3rd-order-derivative-with-respect-to-params-in-loss/"
+STAGES = {"stories": "TinyStories", "abstracts": "Research abstracts"}
+METHODS = {
+    "ce": "Ordinary AdamW",
+    "trace": "Hessian trace",
+    "third": "Third derivative",
+    "hessian_norm": "Squared Hessian norm",
+    "sham": "Randomized gradient signs",
+    "combined": "Trace + third derivative",
+    "initial": "Initial checkpoint",
+    "unigram": "Unigram",
+}
+COLORS = {
+    "ce": "#374d67", "trace": "#ac582a", "third": "#007166",
+    "hessian_norm": "#64569c", "sham": "#ac3c66", "combined": "#3974a2",
+    "initial": "#674e35", "unigram": "#73736c",
+}
+FIELDS = (
+    "id", "stage", "method", "phase", "seed", "ratio", "tokens", "steps",
+    "train_seconds", "tokens_per_sec", "peak_vram_mb", "dev_nll", "dev_accuracy",
+    "test_nll", "test_accuracy", "status", "target_tokens", "budget", "parameters",
+    "trainable_parameters", "lambda", "coefficients", "device", "learning_rate",
+    "batch_size", "architecture", "commit", "dataset_revision", "data_hash",
+    "freeze_id", "test_manifest_sha256", "test_tokens", "data_manifest_sha256",
+    "token_budget", "batch_windows", "microbatch", "context", "weights_sha256", "dev_tokens",
+    "git_revision", "gpu", "torch", "matched_dev_nll", "finished_at",
+)
+EVENT_FIELDS = (
+    "step", "tokens", "train_seconds", "loss", "accuracy", "penalty", "dev_nll",
+    "dev_accuracy", "timestamp", "status", "peak_vram_mb",
+)
+
+
+def atomic_text(path: Path, text: str) -> None:
+    """Replace a complete UTF-8 artifact so a local dashboard never reads half a report."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists() and path.read_text(encoding="utf-8") == text:
+        return
+    with NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n", dir=path.parent,
+                            delete=False, suffix=".tmp") as handle:
+        handle.write(text)
+        name = handle.name
+    try:
+        os.replace(name, path)
+    finally:
+        Path(name).unlink(missing_ok=True)
+
+
+def read_json(path: Path) -> dict:
+    """Small summaries and configurations are atomically produced by the trainer."""
+    if not path.exists():
+        return {}
+    with path.open(encoding="utf-8-sig") as stream:
+        value = json.load(stream)
+    if not isinstance(value, dict):
+        raise ValueError(f"Expected a JSON object in {path}")
+    return value
+
+
+def read_lines(path: Path) -> list[dict]:
+    """Ignore a concurrent partial trailing write, but surface damaged complete records."""
+    if not path.exists():
+        return []
+    records = []
+    with path.open("rb") as stream:
+        for number, line in enumerate(stream, 1):
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except (ValueError, UnicodeDecodeError) as exc:
+                if not line.endswith(b"\n"):
+                    break
+                raise ValueError(f"Unreadable JSON record {path}:{number}") from exc
+            if not isinstance(record, dict):
+                raise ValueError(f"Expected a JSON object at {path}:{number}")
+            records.append(record)
+    return records
+
+
+def finite(value) -> bool:
+    """Exclude missing values, booleans and nonfinite numbers from graphs and summaries."""
+    return isinstance(value, (float, int)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def fmt(value, digits: int = 3) -> str:
+    """Use a visible missing-value marker instead of completing an unobserved measurement."""
+    return f"{value:,.{digits}f}" if finite(value) else "—"
+
+
+def run_record(folder: Path) -> dict:
+    """Join configuration, events and final summary with explicit completion state."""
+    config = read_json(folder / "config.json")
+    summary = read_json(folder / "summary.json")
+    last_error = read_json(folder / "failure.json")
+    events = read_lines(folder / "events.jsonl")
+    record = {key: config[key] for key in FIELDS if key in config}
+    # Calibration can fail before the trainer writes the final configuration.
+    identity = re.fullmatch(r"(stories|abstracts)-(\w+)-s(\d+)-(\w+)-r(\d+)", folder.name)
+    if identity and not config:
+        stage, phase, seed, method, ratio = identity.groups()
+        record.update(stage=stage, phase=phase, seed=int(seed), method=method, ratio=int(ratio) / 100)
+    for event in events:
+        for key in ("tokens", "train_seconds", "peak_vram_mb", "dev_nll", "dev_accuracy", "status"):
+            if event.get(key) is not None:
+                record[key] = event[key]
+        if event.get("step") is not None:
+            record["steps"] = event["step"]
+    record.update({key: summary[key] for key in FIELDS if key in summary})
+    if "token_budget" in record:
+        record["target_tokens"] = record["token_budget"]
+    record["id"] = folder.name
+    if last_error and not summary:
+        record["status"] = "failed"
+        record["error"] = str(last_error.get("error", "Recorded failure"))
+    else:
+        record.setdefault("status", "complete" if summary else "in progress" if events else "configured")
+    record["events"] = []
+    for event in events:
+        row = {k: event[k] for k in EVENT_FIELDS if event.get(k) is not None}
+        for kind, details in (event.get("derivatives") or {}).items():
+            if isinstance(details, dict) and finite(details.get("estimate")):
+                row["raw_" + kind] = details["estimate"]
+        record["events"].append(row)
+    record["samples"] = read_lines(folder / "samples.jsonl")
+    return record
+
+
+def display_events(events: list[dict], maximum: int = 240) -> list[dict]:
+    """Thin evenly by log index for display, keeping both endpoints and every validation event."""
+    if len(events) <= maximum:
+        return events
+    keep = {round(i * (len(events) - 1) / (maximum - 1)) for i in range(maximum)}
+    keep.update(i for i, event in enumerate(events) if finite(event.get("dev_nll")))
+    return [events[i] for i in sorted(keep)]
+
+
+def pilot_differences(runs: list[dict], stage: str, selection: dict) -> list[dict]:
+    """Compare one reserved seed at an identical observed horizon; keep the tuning status explicit."""
+    ratios = selection.get("ratios", {})
+    desired = {"ce": 0.0, "trace": ratios.get("trace", 0.03), "third": ratios.get("third", 0.03),
+               "hessian_norm": 0.03, "sham": ratios.get("third", 0.03), "combined": ratios.get("third", 0.03)}
+    by_method = {r["method"]: r for r in runs if r.get("stage") == stage and r.get("phase") == "pilot"
+                 and r.get("seed") == 0 and completed(r) and finite(r.get("dev_nll"))
+                 and r.get("method") in desired and r.get("ratio") == desired[r["method"]]}
+    third = by_method.get("third")
+    if not third:
+        return []
+    return [{"method": method, "third_id": third["id"], "comparison_id": other["id"],
+             "tokens": third["tokens"], "delta": third["dev_nll"] - other["dev_nll"],
+             "third_nll": third["dev_nll"], "baseline_nll": other["dev_nll"],
+             "strength_basis": "selected on development" if ratios else "initial pilot strengths"}
+            for method, other in by_method.items() if method != "third" and other.get("tokens") == third.get("tokens")]
+
+
+def study_snapshot(root: Path = Path(".")) -> dict:
+    """Return a JSON-ready live view. Inference uses full logs before display thinning."""
+    directory = Path(root) / "results"
+    runs = []
+    for folder in sorted(directory.glob("*")):
+        if folder.is_dir() and any((folder / f).is_file() for f in ("config.json", "summary.json", "failure.json")):
+            runs.append(run_record(folder))
+    stages = {stage: analyze_stage(runs, stage) for stage in STAGES}
+    for run in runs:
+        run["events_total"] = len(run["events"])
+        run["events"] = display_events(run["events"])
+    context = {stage: {key: read_json(directory / key / f"{stage}.json")
+                       for key in ("datasets", "selection", "feasibility")} for stage in STAGES}
+    pilots = {s: pilot_differences(runs, s, context[s]["selection"]) for s in STAGES}
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "runs": runs, "stages": stages, "method_names": METHODS, "stage_names": STAGES,
+        "colors": COLORS, "context": context, "pilot_comparisons": pilots,
+    }
+
+
+def completed(run: dict) -> bool:
+    return run.get("status", "").lower() in {"complete", "completed", "finished", "evaluated", "success"}
+
+
+def describe_difference(delta) -> str:
+    if delta == 0:
+        return "identical development NLL"
+    direction = "lower" if delta < 0 else "higher"
+    return f"{abs(delta):.5f} nats per target token {direction}"
+
+
+def verdict_text(result: dict) -> str:
+    """Use the analysis contract to distinguish an incomplete matrix from an inconclusive trial."""
+    status = result.get("status")
+    count = result.get("n_complete_seeds", 0)
+    goal = result.get("n_expected_seeds", 8)
+    if status == "confirmed":
+        return "Third-order training improved test NLL over both baselines under the registered decision rule."
+    if status == "inconclusive":
+        return "The completed stage did not establish an improvement over both baselines under the registered decision rule."
+    if status == "adverse":
+        return "The median test-loss difference favored at least one baseline across its full uncertainty interval."
+    if status == "invalid":
+        return f"The stage records require review. {result.get('reason') or 'See the analysis ledger.'}"
+    return f"Awaiting paired test results ({count} of {goal} full-horizon training triplets)."
