@@ -32,7 +32,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Randomized gradient signs (1%) | 2,097,152 | 0 | 15.571 (1/1) | 0.4536 (1/1) | 0.9892 (1/1) |
 | Trace + third derivative (1%) | 2,097,152 | 0 | 15.741 (1/1) | 0.44132 (1/1) | 0.9891 (1/1) |
 | Ordinary AdamW · confirmation | 16,777,216 | 1–8 | 12.933 (3/8) | 0.5863 (3/8) | 1.0812 (3/8) |
-| Hessian trace · confirmation | 16,777,216 | 1–8 | 13.041 (2/8) | 0.56421 (2/8) | 1.0811 (2/8) |
+| Hessian trace · confirmation | 16,777,216 | 1–8 | 13.038 (3/8) | 0.57766 (3/8) | 1.0810 (3/8) |
 | Third derivative · confirmation | 16,777,216 | 1–8 | 13.036 (3/8) | 0.57088 (3/8) | 1.0807 (3/8) |
 | Shared trace checkpoint | 8,388,608 | 21–28 | 15.201 (5/8) | 0.44989 (5/8) | 1.0624 (5/8) |
 | Curvature-dependent hybrid · hybrid study | 16,777,216 | 21–28 | 13.103 (4/8) | 0.57782 (4/8) | 1.0824 (4/8) |
@@ -114,6 +114,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | stories | confirm | 2 | Hessian trace | 1% | 13.038 | 12.888–13.183 | 0/32 | 0.577657 | +0.00413847 | 1.0815<br>[1.08135, 1.08161] | 1.078–1.093 | 0/32 | 0.702051 | [Weight probes](../results/stories-confirm-s02-trace-r01/flatness.json) · [Score probes](../results/stories-confirm-s02-trace-r01/score-flatness.json) |
 | stories | confirm | 3 | Ordinary AdamW | 0% | 12.759 | 12.611–13.119 | 0/32 | 0.592477 | +0.00468202 | 1.0806<br>[1.08053, 1.08075] | 1.075–1.092 | 0/32 | 0.702214 | [Weight probes](../results/stories-confirm-s03-ce-r00/flatness.json) · [Score probes](../results/stories-confirm-s03-ce-r00/score-flatness.json) |
 | stories | confirm | 3 | Third derivative | 1% | 12.923 | 12.770–13.295 | 0/32 | 0.575793 | +0.00450279 | 1.0806<br>[1.08047, 1.08069] | 1.075–1.092 | 0/32 | 0.702466 | [Weight probes](../results/stories-confirm-s03-third-r01/flatness.json) · [Score probes](../results/stories-confirm-s03-third-r01/score-flatness.json) |
+| stories | confirm | 3 | Hessian trace | 1% | 12.903 | 12.739–13.233 | 0/32 | 0.584484 | +0.00454272 | 1.0810<br>[1.08090, 1.08112] | 1.075–1.092 | 0/32 | 0.702121 | [Weight probes](../results/stories-confirm-s03-trace-r01/flatness.json) · [Score probes](../results/stories-confirm-s03-trace-r01/score-flatness.json) |
 | stories | control | 0 | Initial checkpoint | 0% | 90.633 | 82.412–101.555 | 0/32 | 0.439786 | +0.000336055 | 0.9214<br>[0.92129, 0.92148] | 0.911–0.936 | 0/32 | 0.999976 | [Weight probes](../results/stories-control-s00-initial-r00/flatness.json) · [Score probes](../results/stories-control-s00-initial-r00/score-flatness.json) |
 | stories | control | 0 | Unigram | 0% | N/A | N/A | N/A | N/A | N/A | 0.9152<br>[0.91510, 0.91526] | 0.913–0.920 | 0/32 | 0.989727 | [Score probes](../results/stories-control-s00-unigram-r00/score-flatness.json) |
 | stories | hybrid | 21 | Curvature-dependent hybrid | 1% | 13.157 | 12.991–13.236 | 0/32 | 0.585004 | +0.00424671 | 1.0836<br>[1.08349, 1.08375] | 1.076–1.095 | 0/32 | 0.699362 | [Weight probes](../results/stories-hybrid-s21-adaptive-r01/flatness.json) · [Score probes](../results/stories-hybrid-s21-adaptive-r01/score-flatness.json) |
