@@ -1,6 +1,6 @@
 # Study summary
 
-Recorded 17 runs, including 17 with a completed summary.
+Recorded 18 runs, including 18 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -23,6 +23,7 @@ Recorded 17 runs, including 17 with a completed summary.
 | Research abstracts | pilot | Ordinary AdamW | 0.000 | 65,536 | 1 | 3.1139 | — |
 | Research abstracts | diagnostic | Third derivative | 0.030 | 65,536 | 1 | 3.1168 | — |
 | Research abstracts | pilot | Third derivative | 0.030 | 65,536 | 1 | 3.1149 | — |
+| Research abstracts | pilot | Hessian trace | 0.010 | 65,536 | 1 | 3.1140 | — |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
 | TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |

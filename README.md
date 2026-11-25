@@ -37,7 +37,7 @@ A same-probe check on pretrained Pythia found that single-precision arithmetic m
 <!-- RESULTS:START -->
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 17 runs, including 17 with a completed summary.
+Recorded 18 runs, including 18 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -56,6 +56,7 @@ Recorded 17 runs, including 17 with a completed summary.
 | Research abstracts | pilot | Ordinary AdamW | 0.000 | 65,536 | 1 | 3.1139 | — |
 | Research abstracts | diagnostic | Third derivative | 0.030 | 65,536 | 1 | 3.1168 | — |
 | Research abstracts | pilot | Third derivative | 0.030 | 65,536 | 1 | 3.1149 | — |
+| Research abstracts | pilot | Hessian trace | 0.010 | 65,536 | 1 | 3.1140 | — |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
 | TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |
@@ -170,6 +171,28 @@ First archived sample in run-ID order per stage and method. [All continuations](
     patient-specific neurological disorders such as epilepsy. In this paper, we
     present a novel dataset of EEG data recorded from children with focal
     subcortical epilepsy
+
+</details>
+
+<details><summary>Research abstracts · Hessian trace</summary>
+
+**Prompt**
+
+    One of the central objectives of contemporary neuroimaging research is to
+    create predictive models
+
+**Reference continuation**
+
+     that can disentangle the connection between patterns
+    of functional connectivity across the entire brain and various behavioral
+    traits. Previous studies have shown that models trained to predict behavioral
+    features from the individual's functional
+
+**Model continuation**
+
+     that will be used to assess the cognitive
+    performance of neurological disorders. We will focus on three major areas:
+    (1) the nervous system as a whole, (2) the brain regions that
 
 </details>
 
