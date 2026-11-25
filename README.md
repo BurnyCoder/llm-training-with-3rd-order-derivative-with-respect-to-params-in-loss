@@ -2,7 +2,9 @@
 
 Sepp Hochreiter and Jürgen Schmidhuber proposed that **among models that fit the training data equally well, those in flatter minima may generalize better to unseen data**. In a flat minimum, many nearby weight settings still fit. If some weights can be rounded more coarsely without spoiling the fit, a good predictor can take fewer bits to describe under a fixed encoding. Their minimum-description-length argument links that shorter description to a lower risk of overfitting. [Hochreiter and Schmidhuber, *Flat Minima* (1997), §1](https://people.idsia.ch/~juergen/fm/node1.html)
 
-Motivated by that hypothesis, this project asks whether penalizing rapid changes in loss curvature helps a language model predict unseen tokens. It compares ordinary AdamW, Hessian-trace regularization, and a penalty on the squared third derivatives of next-token loss. It trains a TinyStories decoder from scratch and fine-tunes Pythia-410M’s low-rank attention adapters on research abstracts. [Study design](reports/planned-runs.md)
+Earlier work tested penalties on the **trace of the loss Hessian**, the sum of second derivatives along the weight coordinates. Sankar et al. added a layerwise trace penalty to the training loss of image classifiers. Liu, Yu and Lin proposed a stochastic trace penalty and reported WikiText-2 experiments with LSTM and GRU language models. Zhang, Li and Ju approximated a trace penalty with symmetric weight perturbations when fine-tuning GPT-2 for question answering. [Sankar et al., Table 1](https://arxiv.org/pdf/2012.03801#page=6) · [Liu, Yu and Lin, §5.2](https://arxiv.org/pdf/2208.05924#page=10) · [Zhang, Li and Ju, Table 5](https://arxiv.org/pdf/2306.08553#page=12)
+
+This project penalizes the squared third derivatives of next-token loss to discourage rapid changes in curvature as weights move. It tests whether this improves prediction on unseen tokens compared with ordinary AdamW and Hessian-trace regularization. It trains a TinyStories decoder from scratch and fine-tunes Pythia-410M’s low-rank attention adapters on research abstracts. [Study design](reports/planned-runs.md)
 
 ## Can the penalty favor a wider minimum?
 
