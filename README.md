@@ -12,7 +12,7 @@ The research background includes flat minima, Hessian measurements and third der
 
 | Model and split | Matched evidence | Third-order NLL vs AdamW<br>↓ Lower is better | Third-order NLL vs trace<br>↓ Lower is better | Speed vs AdamW<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
-| TinyStories pretraining · dev | one development pilot seed | 0.000045 lower | 0.000338 lower | 65.7% slower |
+| TinyStories pretraining · dev | 1/8 full-budget seeds | 0.000003 lower | 0.000254 lower | 71.7% slower |
 | Pythia-410M adapters · dev | one development pilot seed | 0.000300 higher | 0.000273 higher | 88.6% slower |
 
 **Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
@@ -73,21 +73,19 @@ Each row states which direction is better for that metric. Bold highlights the b
 
 ### TinyStories pretraining
 
-**Full development split · one development pilot seed · 2,097,152 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. The pilot also selected the derivative strengths. [Strength selection](results/selection/stories.json) · [Experiment ledger](reports/experiments/experiments.md)
+**Full development split · 1/8 full-budget seeds · 16,777,216 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](results/selection/stories.json) · [Experiment ledger](reports/experiments/experiments.md)
 
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
-| Development NLL<br>↓ Lower is better | 3.876976 | 3.877269 | **3.876931** | 0.000045 lower | 0.000338 lower |
-| Dev top-1 accuracy<br>↑ Higher is better | **32.337%** | 32.329% | 32.326% | 0.011 pp lower | 0.003 pp lower |
-| Equal-time probe NLL<br>↓ Lower is better | **3.82905** | 4.04765 | 4.95277 | 1.12372 higher | 0.90512 higher |
-| Training speed (targets/s)<br>↑ Higher is better | **123,871** | 73,185 | 42,481 | 65.7% slower | 42.0% slower |
+| Development NLL<br>↓ Lower is better | 2.547719 | 2.547969 | **2.547715** | 0.000003 lower | 0.000254 lower |
+| Dev top-1 accuracy<br>↑ Higher is better | 46.151% | 46.141% | **46.153%** | 0.002 pp higher | 0.012 pp higher |
+| Equal-time probe NLL<br>↓ Lower is better | **2.53821** | 2.68115 | 2.95676 | 0.41855 higher | 0.27561 higher |
+| Training speed (targets/s)<br>↑ Higher is better | **113,244** | 65,975 | 32,018 | 71.7% slower | 51.5% slower |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 608.2 | 608.2 | 608.2 | Tie | Tie |
 
-These early TinyStories pilots share the initialization seed and identical first-update token count, loss, accuracy and gradient norm. Initial weight digests were first recorded in later runs. [First-update records](reports/experiments/experiments.md)
+The common training-time cutoff had a median of 148.2 seconds. The furthest checkpoint used for this row was 1.9 seconds before its cutoff.
 
-The common training-time cutoff had a median of 16.9 seconds. The furthest checkpoint used for this row was 2.3 seconds before its cutoff.
-
-Awaiting paired test results (0 of 8 full-horizon training triplets).
+Awaiting paired test results (1 of 8 full-horizon training triplets).
 
 ### Pythia-410M adapters
 
@@ -273,13 +271,13 @@ The remaining controls are paired independently. Each row uses only seeds that f
 
 Each panel shows the first saved prompt and full continuations from the lowest matched seed. These examples have no quality rating. The method names link to the raw generations.
 
-<details><summary>TinyStories pretraining · same prompt, seed 0</summary>
+<details><summary>TinyStories pretraining · same prompt, seed 1</summary>
 
 **Prompt** <samp>Once upon a time, there was a clever little dog named Max. Max loved</samp>
 
-| [AdamW](results/stories-pilot-s00-ce-r00/samples.jsonl) | [Hessian trace](results/stories-pilot-s00-trace-r01/samples.jsonl) | [Third order](results/stories-pilot-s00-third-r01/samples.jsonl) |
+| [AdamW](results/stories-confirm-s01-ce-r00/samples.jsonl) | [Hessian trace](results/stories-confirm-s01-trace-r01/samples.jsonl) | [Third order](results/stories-confirm-s01-third-r01/samples.jsonl) |
 | --- | --- | --- |
-| <samp> to play on the cat.</samp> | <samp> to play on the cat.</samp> | <samp> to play on the cat.</samp> |
+| <samp> to play on the swings and swing in the snow. One day, Max went to the park with his mom and daddy.<br><br>While they were playing, Max found a big hole in the mail</samp> | <samp> to play on the swings and swing in the snow. One day, Max went to the park with his mom and daddy.<br><br>While they were playing, Max found a big hole in the mail</samp> | <samp> to play on the swings and swing in the snow. One day, Max went to the park with his mom and daddy.<br><br>While they were playing, Max found a big hole in the mail</samp> |
 
 </details>
 
@@ -307,7 +305,7 @@ Seed sensitivity is the final stage, after both primary test evaluations, all hy
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 55 runs, including 55 with a completed summary.
+Recorded 56 runs, including 56 with a completed summary.
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
@@ -321,7 +319,7 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 
 ### Full generations by method
 
-**TinyStories** · [Ordinary AdamW](reports/experiments/stories-confirm-s01-ce-r00/experiment.md#fixed-prompt-generations) · [Third derivative](reports/experiments/stories-confirm-s01-third-r01/experiment.md#fixed-prompt-generations) · [Initial checkpoint](reports/experiments/stories-control-s00-initial-r00/experiment.md#fixed-prompt-generations) · [Unigram](reports/experiments/stories-control-s00-unigram-r00/experiment.md#fixed-prompt-generations) · [Curvature-dependent hybrid](reports/experiments/stories-hybrid-s21-adaptive-r01/experiment.md#fixed-prompt-generations) · [Always-on hybrid](reports/experiments/stories-hybrid-s21-always-r01/experiment.md#fixed-prompt-generations) · [Fixed late hybrid](reports/experiments/stories-hybrid-s21-late-r01/experiment.md#fixed-prompt-generations) · [Stronger trace](reports/experiments/stories-hybrid-s21-strong-r01/experiment.md#fixed-prompt-generations) · [Hessian trace](reports/experiments/stories-hybrid-s21-trace-r01/experiment.md#fixed-prompt-generations) · [Cross-seed replay](reports/experiments/stories-hybrid-s22-replay-r01/experiment.md#fixed-prompt-generations) · [Trace + third derivative](reports/experiments/stories-pilot-s00-combined-r01/experiment.md#fixed-prompt-generations) · [Squared Hessian norm](reports/experiments/stories-pilot-s00-hessian_norm-r03/experiment.md#fixed-prompt-generations) · [Randomized gradient signs](reports/experiments/stories-pilot-s00-sham-r01/experiment.md#fixed-prompt-generations)
+**TinyStories** · [Ordinary AdamW](reports/experiments/stories-confirm-s01-ce-r00/experiment.md#fixed-prompt-generations) · [Third derivative](reports/experiments/stories-confirm-s01-third-r01/experiment.md#fixed-prompt-generations) · [Hessian trace](reports/experiments/stories-confirm-s01-trace-r01/experiment.md#fixed-prompt-generations) · [Initial checkpoint](reports/experiments/stories-control-s00-initial-r00/experiment.md#fixed-prompt-generations) · [Unigram](reports/experiments/stories-control-s00-unigram-r00/experiment.md#fixed-prompt-generations) · [Curvature-dependent hybrid](reports/experiments/stories-hybrid-s21-adaptive-r01/experiment.md#fixed-prompt-generations) · [Always-on hybrid](reports/experiments/stories-hybrid-s21-always-r01/experiment.md#fixed-prompt-generations) · [Fixed late hybrid](reports/experiments/stories-hybrid-s21-late-r01/experiment.md#fixed-prompt-generations) · [Stronger trace](reports/experiments/stories-hybrid-s21-strong-r01/experiment.md#fixed-prompt-generations) · [Cross-seed replay](reports/experiments/stories-hybrid-s22-replay-r01/experiment.md#fixed-prompt-generations) · [Trace + third derivative](reports/experiments/stories-pilot-s00-combined-r01/experiment.md#fixed-prompt-generations) · [Squared Hessian norm](reports/experiments/stories-pilot-s00-hessian_norm-r03/experiment.md#fixed-prompt-generations) · [Randomized gradient signs](reports/experiments/stories-pilot-s00-sham-r01/experiment.md#fixed-prompt-generations)
 
 **Research abstracts** · [Initial checkpoint](reports/experiments/abstracts-control-s00-initial-r00/experiment.md#fixed-prompt-generations) · [Unigram](reports/experiments/abstracts-control-s00-unigram-r00/experiment.md#fixed-prompt-generations) · [Ordinary AdamW](reports/experiments/abstracts-pilot-s00-ce-r00/experiment.md#fixed-prompt-generations) · [Trace + third derivative](reports/experiments/abstracts-pilot-s00-combined-r01-fp64/experiment.md#fixed-prompt-generations) · [Squared Hessian norm](reports/experiments/abstracts-pilot-s00-hessian_norm-r03-fp64/experiment.md#fixed-prompt-generations) · [Randomized gradient signs](reports/experiments/abstracts-pilot-s00-sham-r01-fp64/experiment.md#fixed-prompt-generations) · [Third derivative](reports/experiments/abstracts-pilot-s00-third-r01-fp64/experiment.md#fixed-prompt-generations) · [Hessian trace](reports/experiments/abstracts-pilot-s00-trace-r01-fp64/experiment.md#fixed-prompt-generations)
 
