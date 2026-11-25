@@ -1,6 +1,6 @@
 {
   "run": "stories-hybrid-s21-always-r01",
-  "verified_at": "2026-11-25T15:17:24+00:00",
+  "verified_at": "2026-11-25T15:22:00+00:00",
   "resume_checkpoint_step": 3712,
   "last_observed_pre_restart_step": 3736,
   "first_observed_restart_step": 3713,
@@ -50,5 +50,7 @@
       "absolute_loss_delta": 2.384185791015625e-07,
       "absolute_gradient_norm_delta": 0.0
     }
-  ]
+  ],
+  "previous_log": "stories-hybrid-s21-always-r01-20261125T110120088067Z.jsonl",
+  "resumed_log": "stories-hybrid-s21-always-r01-20261125T151629946831Z.jsonl"
 }
