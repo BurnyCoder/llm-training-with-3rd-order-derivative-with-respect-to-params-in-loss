@@ -21,7 +21,7 @@ The third-order term measures how the Hessian changes as weights move. Two indep
 <!-- RESULTS:START -->
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 2 runs, including 2 with a completed summary.
+Recorded 3 runs, including 3 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -32,6 +32,7 @@ Recorded 2 runs, including 2 with a completed summary.
 | Stage | Phase | Method | Ratio | Tokens/run | Runs | Median dev NLL | Median test NLL |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
+| TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
 | TinyStories | pilot | Third derivative | 0.030 | 2,097,152 | 1 | 3.8778 | — |
 
 ![Parameter-space computation graph](docs/figures/architecture.png)
@@ -57,6 +58,26 @@ First archived sample in run-ID order per stage and method. [All continuations](
 **Model continuation**
 
      break painted pleaseerp gif neat lead bro comfort rid shr search impressedosairs try ants oss note daughter woodLater rest independent stars stonesiver mixaybe Le spoon readMe fingersiew embar bached mail
+
+</details>
+
+<details><summary>TinyStories · Unigram</summary>
+
+**Prompt**
+
+    Once upon a time, there was a clever little dog named Max. Max loved
+
+**Reference continuation**
+
+     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
+    
+    Max went to his friend, the wise old owl,
+
+**Model continuation**
+
+     it said her mom girlan he said that fell flut back's hard. a them into work protectt hug?" his and little teeth "What sky some Timmy and on 
+     down As's
+     very
 
 </details>
 
