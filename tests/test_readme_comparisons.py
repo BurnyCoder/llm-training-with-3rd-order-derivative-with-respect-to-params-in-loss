@@ -1,5 +1,7 @@
 """Keep visual rankings tied to the same seeds, horizon, selection and evaluation split."""
 
+from math import exp
+
 from thirdloss.readme_comparisons import comparison_sections
 from thirdloss.report_records import study_snapshot
 
@@ -7,7 +9,7 @@ from thirdloss.report_records import study_snapshot
 def pilot(method,loss,rate,ratio,stage="stories"):
     return {"id":method+str(ratio),"stage":stage,"phase":"pilot","method":method,"seed":0,
             "ratio":ratio,"tokens":2**21 if stage=="stories" else 2**16,"status":"complete",
-            "dev_nll":loss,"dev_accuracy":.4,"tokens_per_sec":rate,"peak_vram_mb":600.,
+            "dev_nll":loss,"dev_perplexity":exp(loss),"dev_accuracy":.4,"tokens_per_sec":rate,"peak_vram_mb":600.,
             "initial_trainable_sha256":"same","data_manifest_sha256":"same","dev_tokens":256,"events":[]}
 
 
@@ -26,6 +28,8 @@ def test_pilot_comparison_excludes_unselected_runs_and_unsealed_scores(tmp_path)
     assert "Third-order NLL vs AdamW<br>↓ Lower is better" in top
     assert "Speed vs AdamW<br>↑ Higher is better" in top
     assert "Peak GPU allocation (MiB)<br>↓ Lower is better" in detail
+    assert "| Development perplexity<br>↓ Lower is better | 20.0855 | **12.1825** | 15.6426 |" in detail
+    assert "Final test perplexity<br>" not in detail
     rows[1]["tokens"]-=1
     _,detail=comparison_sections(study)
     assert "**2.500000**" not in detail
@@ -58,12 +62,13 @@ def test_final_scorecard_uses_all_eight_seeds_and_shows_holm_and_median_interval
         for i,m in enumerate(("ce","trace","third")):
             row=pilot(m,3.-i/10,100-i*15,.01 if i else 0.)
             row.update(id=f"{seed}-{m}",phase="confirm",seed=seed,tokens=2**24,test_nll=4.-i/10,
-                       test_accuracy=.5+i/100,freeze_id="frozen",test_manifest_sha256="split",test_tokens=128)
+                       test_accuracy=.5+i/100,test_perplexity=exp(4.-i/10),freeze_id="frozen",test_manifest_sha256="split",test_tokens=128)
             study["runs"].append(row)
     study["stages"]["stories"]=analyze_stage(study["runs"],"stories")
     top,detail=comparison_sections(study)
     assert "TinyStories pretraining · test" in top and "8/8 full-budget seeds" in top
     assert "| Final test NLL<br>↓ Lower is better | 4.000000 | 3.900000 | **3.800000** |" in detail
+    assert "| Final test perplexity<br>↓ Lower is better | 54.5982 | 49.4024 | **44.7012** |" in detail
     assert "Median interval" in detail and "Holm p" in detail and "0.00781" in detail
     assert "A negative difference favors third order" in detail
 

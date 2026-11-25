@@ -1,6 +1,7 @@
 """Check that the public progress views, paper and live feed share the same real records."""
 
 import json
+import math
 
 from pypdf import PdfReader
 
@@ -27,17 +28,22 @@ def test_snapshot_keeps_full_score_and_trace_semantics(tmp_path):
     (run / "summary.json").write_text('{"dev_nll":3.9,"status":"complete"}', encoding="utf-8")
     record = study_snapshot(tmp_path)["runs"][0]
     assert record["dev_nll"] == 3.9
+    assert record["dev_perplexity"] == math.exp(3.9)
+    assert "test_perplexity" not in record
     assert record["target_tokens"] == record["tokens"] == 4096
     assert record["events"][0]["raw_third"] == 7.0
     assert record["events"][0]["penalty"] == 0.03
     assert record["events_total"] == 1
+    (run / "summary.json").unlink()
+    assert "dev_perplexity" not in study_snapshot(tmp_path)["runs"][0]
 
 
 def test_report_before_first_run_keeps_readme_and_emits_protocol_paper(tmp_path):
     """A fresh checkout supports an explicit, illustrated preregistration-only publication."""
     readme = tmp_path / "README.md"
     readme.write_text("# Intro\n\nRelated work.\n\n<!-- RESULTS:START -->\n"
-                      "<!-- RESULTS:END -->\n\n## Reproduction\n", encoding="utf-8")
+                      "<!-- RESULTS:END -->\n\n## Reproduction\n\n"
+                      "<!-- MILESTONES:START -->\n<!-- MILESTONES:END -->", encoding="utf-8")
     study = build_report(tmp_path)
     assert not study["runs"]
     assert (tmp_path / "docs" / "figures" / "architecture.png").is_file()
@@ -47,6 +53,9 @@ def test_report_before_first_run_keeps_readme_and_emits_protocol_paper(tmp_path)
     assert "Related work." in readme.read_text(encoding="utf-8")
     assert "## Reproduction" in readme.read_text(encoding="utf-8")
     assert "AI statement" not in readme.read_text(encoding="utf-8")
+    tasks = [line for line in readme.read_text(encoding="utf-8").splitlines() if line.startswith("- [")]
+    assert tasks[-1].startswith("- [ ] Run the final seed-sensitivity analysis")
+    assert all(line.startswith("- [ ]") for line in tasks)
     reader = PdfReader(tmp_path / "reports" / "paper.pdf")
     text = " ".join(page.extract_text() for page in reader.pages)
     assert "AI statement" in text
