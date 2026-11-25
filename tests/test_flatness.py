@@ -94,3 +94,18 @@ def test_all_arm_table_keeps_weightless_reference_and_every_control(tmp_path):
     assert all(name in text for name in ("Squared Hessian norm","Randomized gradient signs","Trace + third derivative",
                                          "Cross-seed replay","Shared trace checkpoint","Always-on hybrid"))
     assert "Hessian trace (10%)" in text and "Third derivative (1%)" in text
+
+
+def test_geometry_milestone_retries_missing_receipt_and_skips_a_verified_unigram(tmp_path,monkeypatch):
+    from thirdloss import checkpoint_flatness as geometry
+    from thirdloss.records import sha256,write_json
+    row={"id":"control","stage":"stories","method":"unigram"}
+    score=tmp_path/"results/control/score-flatness.json"
+    write_json(score,{"example":True})
+    calls=[]
+    monkeypatch.setattr(geometry.subprocess,"run",lambda cmd,**kw:calls.append(cmd))
+    geometry.geometry_milestone(tmp_path,tmp_path,row,"cpu",True)
+    assert len(calls)==1 and "--publish" in calls[0] and "control" in calls[0]
+    write_json(tmp_path/"releases/flatness-control.json",{"artifacts":{score.name:sha256(score)}})
+    geometry.geometry_milestone(tmp_path,tmp_path,row,"cpu",True)
+    assert len(calls)==1
