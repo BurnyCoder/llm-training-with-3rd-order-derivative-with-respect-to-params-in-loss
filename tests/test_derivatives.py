@@ -206,7 +206,7 @@ def test_production_story_model_exposes_full_weight_penalty_gradient():
     assert any(not torch.allclose(a, b, atol=1e-10, rtol=1e-9) for a, b in zip(augmented, plain))
 
 
-def test_pythia_adapter_fourth_derivative_and_portable_checkpoint(tmp_path, monkeypatch):
+def test_pythia_adapter_fourth_derivative_and_portable_checkpoint(tmp_path, monkeypatch, record_property):
     """Exercise the production PEFT and GPT-NeoX code on a small, offline CPU backbone.
 
     Compare the gradient with a finite difference along a fixed direction, then load the
@@ -247,13 +247,22 @@ def test_pythia_adapter_fourth_derivative_and_portable_checkpoint(tmp_path, monk
             for p, origin, d in zip(params, initial, direction, strict=True):
                 p.copy_(origin + distance * d)
 
-    h = 2e-6
-    set_offset(h)
-    plus = penalty().detach()
-    set_offset(-h)
-    minus = penalty().detach()
+    # GPT-NeoX's eager softmax explicitly computes in FP32 even with FP64 parameters.
+    # Combine two central differences to cancel their leading truncation error and avoid
+    # subtracting nearly identical FP32-rounded attention outputs at a tiny displacement.
+    # https://github.com/huggingface/transformers/blob/main/src/transformers/models/gpt_neox/modeling_gpt_neox.py
+    def central(h):
+        set_offset(h)
+        plus = penalty().detach()
+        set_offset(-h)
+        return (plus-penalty().detach())/(2*h)
+
+    coarse, fine = central(1e-3), central(5e-4)
+    extrapolated = (4*fine-coarse)/3
     assert projected.abs() > 1e-7
-    torch.testing.assert_close(projected, (plus-minus)/(2*h), rtol=2e-5, atol=1e-8)
+    torch.testing.assert_close(projected, extrapolated, rtol=2e-5, atol=1e-8)
+    record_property("adapter_directional_autograd", projected.item())
+    record_property("adapter_directional_finite_difference", extrapolated.item())
 
     path = export_weights(model, tmp_path/"export")
     payload = load_file(str(path))

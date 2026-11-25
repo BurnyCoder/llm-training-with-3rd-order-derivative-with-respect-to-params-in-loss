@@ -15,8 +15,12 @@ def verify(project):
     records = []
     for case in ET.parse(xml).iter("testcase"):
         outcome = next((name for name in ("error","failure","skipped") if case.find(name) is not None),"passed")
-        records.append({"test":f"{case.get('classname')}.{case.get('name')}",
-                        "seconds":float(case.get("time","0")),"outcome":outcome})
+        row = {"test":f"{case.get('classname')}.{case.get('name')}",
+               "seconds":float(case.get("time","0")),"outcome":outcome}
+        properties = {p.get("name"):p.get("value") for p in case.findall("./properties/property")}
+        if properties:
+            row["measurements"] = properties
+        records.append(row)
     write_json(project/"results"/"verification"/"tests.json",{
         "checked_at":time_now(), "git_revision":subprocess.check_output(
             ["git","rev-parse","HEAD"],cwd=project,text=True).strip(),
