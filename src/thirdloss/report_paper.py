@@ -330,14 +330,14 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       f"{_link(REPOSITORY + '/blob/main/reports/hybrid/preregistration.md', 'Frozen follow-up design')}")
     hybrid = study["hybrid"]
     if "hybrid_width" in figures:
-        flow.append(_figure(figure_dir/figures["hybrid_width"],max_height=285))
+        flow.append(_figure(figure_dir/figures["hybrid_width"],max_height=605))
     p(f"{hybrid['completed_arms']} of 48 full hybrid arms and {hybrid['completed_trunks']} of 8 shared "
       f"checkpoints have completed. Geometric endpoint: {hybrid['status']}. "
       f"{_link(REPOSITORY + '/blob/main/reports/hybrid/results.md', 'All observed widths, development scores and fit differences')}")
     for comparator,s in hybrid["comparisons"].items():
         lo,hi = s["median_ci"]
         p(f"Adaptive minus {METHODS[comparator]} median width gain {fmt(s['median_delta'],5)} "
-          f"[{fmt(lo,5)}, {fmt(hi,5)}]; one-sided sign p = {fmt(s['p_raw'],5)}, Holm p = {fmt(s.get('p_holm'),5)}. "
+          f"[{fmt(lo,5)}, {fmt(hi,5)}]. One-sided sign p = {fmt(s['p_raw'],5)}, Holm p = {fmt(s.get('p_holm'),5)}. "
           "Cross-seed replay shares schedule information across pairs, limiting the independent-sign approximation.","caption")
     p("Conclusion", "heading")
     if all(outcome.get("complete") for outcome in study["stages"].values()):
