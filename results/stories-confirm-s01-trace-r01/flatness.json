@@ -1,0 +1,250 @@
+{
+  "run": "stories-confirm-s01-trace-r01",
+  "checkpoint_file_sha256": "8db53dc4cbac9fe0d9b010befd6220b8c442e9429ada01ad247589746c808c04",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "width_device": "cuda",
+  "split": "train",
+  "probe_windows_sha256": "2b09cf8d13e4e0df411e816e32f1799f1ee165712973c51a09fc75d528c8c2b1",
+  "timestamp": "2026-11-25T20:19:53+00:00",
+  "protocol": "checkpoint-flatness-v1",
+  "width_windows": 8,
+  "curvature_windows": 2,
+  "width": {
+    "baseline_nll": 2.6011314392089844,
+    "delta_nll": 0.1,
+    "directions": [
+      {
+        "direction": 0,
+        "positive": {
+          "lower": 6.2216796875,
+          "upper": 6.22265625
+        },
+        "negative": {
+          "lower": 6.740234375,
+          "upper": 6.7412109375
+        }
+      },
+      {
+        "direction": 1,
+        "positive": {
+          "lower": 6.0869140625,
+          "upper": 6.087890625
+        },
+        "negative": {
+          "lower": 6.6748046875,
+          "upper": 6.67578125
+        }
+      },
+      {
+        "direction": 2,
+        "positive": {
+          "lower": 6.7607421875,
+          "upper": 6.76171875
+        },
+        "negative": {
+          "lower": 6.4033203125,
+          "upper": 6.404296875
+        }
+      },
+      {
+        "direction": 3,
+        "positive": {
+          "lower": 6.806640625,
+          "upper": 6.8076171875
+        },
+        "negative": {
+          "lower": 6.5439453125,
+          "upper": 6.544921875
+        }
+      },
+      {
+        "direction": 4,
+        "positive": {
+          "lower": 6.42578125,
+          "upper": 6.4267578125
+        },
+        "negative": {
+          "lower": 6.740234375,
+          "upper": 6.7412109375
+        }
+      },
+      {
+        "direction": 5,
+        "positive": {
+          "lower": 6.4384765625,
+          "upper": 6.439453125
+        },
+        "negative": {
+          "lower": 6.6201171875,
+          "upper": 6.62109375
+        }
+      },
+      {
+        "direction": 6,
+        "positive": {
+          "lower": 7.013671875,
+          "upper": 7.0146484375
+        },
+        "negative": {
+          "lower": 5.60546875,
+          "upper": 5.6064453125
+        }
+      },
+      {
+        "direction": 7,
+        "positive": {
+          "lower": 6.4736328125,
+          "upper": 6.474609375
+        },
+        "negative": {
+          "lower": 6.302734375,
+          "upper": 6.3037109375
+        }
+      },
+      {
+        "direction": 8,
+        "positive": {
+          "lower": 5.8720703125,
+          "upper": 5.873046875
+        },
+        "negative": {
+          "lower": 7.296875,
+          "upper": 7.2978515625
+        }
+      },
+      {
+        "direction": 9,
+        "positive": {
+          "lower": 6.427734375,
+          "upper": 6.4287109375
+        },
+        "negative": {
+          "lower": 6.173828125,
+          "upper": 6.1748046875
+        }
+      },
+      {
+        "direction": 10,
+        "positive": {
+          "lower": 6.224609375,
+          "upper": 6.2255859375
+        },
+        "negative": {
+          "lower": 6.4091796875,
+          "upper": 6.41015625
+        }
+      },
+      {
+        "direction": 11,
+        "positive": {
+          "lower": 6.1806640625,
+          "upper": 6.181640625
+        },
+        "negative": {
+          "lower": 6.603515625,
+          "upper": 6.6044921875
+        }
+      },
+      {
+        "direction": 12,
+        "positive": {
+          "lower": 6.3857421875,
+          "upper": 6.38671875
+        },
+        "negative": {
+          "lower": 6.771484375,
+          "upper": 6.7724609375
+        }
+      },
+      {
+        "direction": 13,
+        "positive": {
+          "lower": 6.810546875,
+          "upper": 6.8115234375
+        },
+        "negative": {
+          "lower": 6.3173828125,
+          "upper": 6.318359375
+        }
+      },
+      {
+        "direction": 14,
+        "positive": {
+          "lower": 6.6845703125,
+          "upper": 6.685546875
+        },
+        "negative": {
+          "lower": 6.34375,
+          "upper": 6.3447265625
+        }
+      },
+      {
+        "direction": 15,
+        "positive": {
+          "lower": 5.9521484375,
+          "upper": 5.953125
+        },
+        "negative": {
+          "lower": 7.2724609375,
+          "upper": 7.2734375
+        }
+      }
+    ],
+    "width_lower": 13.04345703125,
+    "width_upper": 13.04541015625,
+    "width": 13.04443359375,
+    "censored_rays": 0,
+    "weights_sha256": "41d97c08ca9ed95b319c3083a3600bc5caa94de86c46ad024bbcb4ddc9985d79",
+    "weights_restored": true,
+    "seconds": 12.797714800002723
+  },
+  "curvature": {
+    "dimensions": 2557632,
+    "draws": [
+      {
+        "index": 0,
+        "trace_per_parameter": 0.0036793282682235527,
+        "squared_rms": 0.27688467777866393
+      },
+      {
+        "index": 1,
+        "trace_per_parameter": 0.00417998369099924,
+        "squared_rms": 0.30241361361600105
+      },
+      {
+        "index": 2,
+        "trace_per_parameter": 0.004139918974388879,
+        "squared_rms": 0.3254475635432535
+      },
+      {
+        "index": 3,
+        "trace_per_parameter": 0.004431989146460553,
+        "squared_rms": 0.3149332997833323
+      },
+      {
+        "index": 4,
+        "trace_per_parameter": 0.004480546666112438,
+        "squared_rms": 0.3094501846159903
+      },
+      {
+        "index": 5,
+        "trace_per_parameter": 0.0032277325757226554,
+        "squared_rms": 0.2967368378956393
+      },
+      {
+        "index": 6,
+        "trace_per_parameter": 0.004862357812580173,
+        "squared_rms": 0.3077400360856068
+      },
+      {
+        "index": 7,
+        "trace_per_parameter": 0.0040578548512447375,
+        "squared_rms": 0.29310271516952996
+      }
+    ],
+    "device": "cuda:0",
+    "dtype": "torch.float64",
+    "trace_per_parameter": 0.004132463998216529,
+    "rms_curvature": 0.5507618505860787
+  }
+}
