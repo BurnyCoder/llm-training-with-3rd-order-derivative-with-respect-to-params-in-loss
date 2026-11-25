@@ -1,0 +1,89 @@
+{
+  "observations": [
+    {
+      "run": "stories-branch-s24-trunk-r01",
+      "finished_training_at": "2026-11-25T17:22:40+00:00",
+      "receipt_written_at": "2026-11-25T17:23:36.258113+00:00",
+      "git_revision": "2b60b3882b876c9cd617adb4322c3ab9a4ab6a11",
+      "seconds": 56.258113
+    },
+    {
+      "run": "stories-hybrid-s23-replay-r01",
+      "finished_training_at": "2026-11-25T17:00:22+00:00",
+      "receipt_written_at": "2026-11-25T17:01:24.131275+00:00",
+      "git_revision": "d3c2093131dc73c346f39de978a8ce1f89285047",
+      "seconds": 62.131275
+    },
+    {
+      "run": "stories-hybrid-s23-always-r01",
+      "finished_training_at": "2026-11-25T16:38:36+00:00",
+      "receipt_written_at": "2026-11-25T16:39:30.321811+00:00",
+      "git_revision": "5134b7cae40de371e85b78d1c4d6d8d4915faaaa",
+      "seconds": 54.321811
+    },
+    {
+      "run": "stories-hybrid-s23-strong-r01",
+      "finished_training_at": "2026-11-25T16:28:30+00:00",
+      "receipt_written_at": "2026-11-25T16:29:19.299070+00:00",
+      "git_revision": "80b7dbbdea6bc793e06d675cb833b193d233784b",
+      "seconds": 49.29907
+    },
+    {
+      "run": "stories-hybrid-s23-trace-r01",
+      "finished_training_at": "2026-11-25T16:24:51+00:00",
+      "receipt_written_at": "2026-11-25T16:25:51.654907+00:00",
+      "git_revision": "b5219d0fad425ffd71e57845800b1b5eda488204",
+      "seconds": 60.654907
+    },
+    {
+      "run": "stories-hybrid-s23-late-r01",
+      "finished_training_at": "2026-11-25T16:16:36+00:00",
+      "receipt_written_at": "2026-11-25T16:19:15.101745+00:00",
+      "git_revision": "adb70afe3c8e261c648fd1303ed5fa3bc5848f0b",
+      "seconds": 159.101745
+    },
+    {
+      "run": "stories-hybrid-s23-adaptive-r01",
+      "finished_training_at": "2026-11-25T16:10:39+00:00",
+      "receipt_written_at": "2026-11-25T16:11:51.001756+00:00",
+      "git_revision": "195cf7bdcf2370d6c356b0b4f032448ebd079d91",
+      "seconds": 72.001756
+    },
+    {
+      "run": "stories-branch-s23-trunk-r01",
+      "finished_training_at": "2026-11-25T16:04:29+00:00",
+      "receipt_written_at": "2026-11-25T16:05:19.848337+00:00",
+      "git_revision": "06196b42060985f17ba1aa5392379274b3cd4e88",
+      "seconds": 50.848337
+    },
+    {
+      "run": "stories-hybrid-s22-replay-r01",
+      "finished_training_at": "2026-11-25T16:00:44+00:00",
+      "receipt_written_at": "2026-11-25T16:01:35.013188+00:00",
+      "git_revision": "85e7fcdb181633a1e32f4f3d19f1d0ba8cdbe284",
+      "seconds": 51.013188
+    },
+    {
+      "run": "stories-hybrid-s22-always-r01",
+      "finished_training_at": "2026-11-25T15:54:00+00:00",
+      "receipt_written_at": "2026-11-25T15:54:52.454638+00:00",
+      "git_revision": "2f29a5d7136295b6707bb6255cee09de9e045742",
+      "seconds": 52.454638
+    },
+    {
+      "run": "stories-hybrid-s22-strong-r01",
+      "finished_training_at": "2026-11-25T15:41:12+00:00",
+      "receipt_written_at": "2026-11-25T15:42:00.820379+00:00",
+      "git_revision": "af660109d04e19201bdd785142fb4aeafe6e5643",
+      "seconds": 48.820379
+    },
+    {
+      "run": "stories-hybrid-s22-trace-r01",
+      "finished_training_at": "2026-11-25T15:37:21+00:00",
+      "receipt_written_at": "2026-11-25T15:38:07.187344+00:00",
+      "git_revision": "128658c836c8e89ba19be3402498f005d3f31cfa",
+      "seconds": 46.187344
+    }
+  ],
+  "basis": "Wall time between model completion and the local verified Git and Hugging Face release receipt, sampled from the twelve latest published hybrid checkpoints."
+}

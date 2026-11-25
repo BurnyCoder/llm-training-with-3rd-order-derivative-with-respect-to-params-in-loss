@@ -42,12 +42,9 @@ def published_pilot_timings(project):
     return None
 
 
-def geometry_progress(project,study):
-    """Compute denominators from the registered number of arms, strengths and seeds in each cohort."""
-    from .report_records import markdown_table
-    timings=published_pilot_timings(project)
-    rows=[]
-    all_remaining=[]
+def geometry_coverage(study):
+    """Count complete predictors separately from their individual weight and output probes."""
+    counts={}
     for stage in ("stories","abstracts"):
         runs=[r for r in study["runs"] if r.get("stage")==stage]
         # Two untrained references, ordinary training, two strength sweeps, three controls, three paired arms.
@@ -58,10 +55,22 @@ def geometry_progress(project,study):
         weight=sum("flatness" in r for r in runs)
         score=sum("score_flatness" in r for r in runs)
         complete=sum("score_flatness" in r and ("flatness" in r or r["method"]=="unigram") for r in runs)
-        coverage=[stage,f"{weight}/{planned-1}",f"{score}/{planned}"]
+        counts[stage]={"planned":planned,"weight":weight,"score":score,"complete":complete}
+    return counts
+
+
+def geometry_progress(project,study):
+    """Compute denominators from the registered number of arms, strengths and seeds in each cohort."""
+    from .report_records import markdown_table
+    timings=published_pilot_timings(project)
+    rows=[]
+    all_remaining=[]
+    for stage,counts in geometry_coverage(study).items():
+        planned=counts["planned"]
+        coverage=[stage,f"{counts['weight']}/{planned-1}",f"{counts['score']}/{planned}"]
         if timings:
             cycles=[r["cycle_seconds"] for r in timings["rows"] if r["stage"]==stage]
-            remaining=planned-complete
+            remaining=planned-counts["complete"]
             all_remaining.append((remaining*median(cycles)/3600,remaining*max(cycles)/3600))
             coverage+= [f"{median(cycles):.0f} s",f"{max(cycles):.0f} s"]
         rows.append(coverage)
