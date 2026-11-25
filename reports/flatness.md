@@ -65,7 +65,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Squared Hessian norm (3%) | 65,536 | 0 | 19.853 (1/1) | 1.4535 (1/1) | 1.0927 (1/1) |
 | Randomized gradient signs (1%) | 65,536 | 0 | 19.858 (1/1) | 0.73137 (1/1) | 1.0928 (1/1) |
 | Trace + third derivative (1%) | 65,536 | 0 | 19.910 (1/1) | 0.6078 (1/1) | 1.0928 (1/1) |
-| Ordinary AdamW · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |
+| Ordinary AdamW · confirmation | 524,288 | 1–8 | 20.132 (1/8) | 0.55564 (1/8) | 1.1054 (1/8) |
 | Hessian trace · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |
 | Third derivative · confirmation | 524,288 | 1–8 | 20.313 (1/8) | 0.60575 (1/8) | 1.1055 (1/8) |
 
@@ -85,6 +85,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 
 | Stage | Horizon | Seed | Arm | Strength | Weight width ↑ | Weight middle 50% | Weight rays at limit | RMS curvature ↓ | Signed trace / parameter | Score width ↑<br>Search bracket | Score middle 50% | Score rays at limit | Mean score curvature | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| abstracts | confirm | 1 | Ordinary AdamW | 0% | 20.132 | 19.362–20.737 | 0/32 | 0.555644 | +0.00201225 | 1.1054<br>[1.10528, 1.10553] | 1.103–1.113 | 0/32 | 0.674904 | [Weight probes](../results/abstracts-confirm-s01-ce-r00/flatness.json) · [Score probes](../results/abstracts-confirm-s01-ce-r00/score-flatness.json) |
 | abstracts | confirm | 1 | Third derivative | 1% | 20.313 | 19.476–20.931 | 0/32 | 0.605748 | +0.00183383 | 1.1055<br>[1.10534, 1.10560] | 1.103–1.113 | 0/32 | 0.674805 | [Weight probes](../results/abstracts-confirm-s01-third-r01-fp64/flatness.json) · [Score probes](../results/abstracts-confirm-s01-third-r01-fp64/score-flatness.json) |
 | abstracts | control | 0 | Initial checkpoint | 0% | 21.890 | 21.676–22.687 | 0/32 | 0.690576 | +0.0011406 | 1.0859<br>[1.08575, 1.08597] | 1.081–1.095 | 0/32 | 0.700479 | [Weight probes](../results/abstracts-control-s00-initial-r00/flatness.json) · [Score probes](../results/abstracts-control-s00-initial-r00/score-flatness.json) |
 | abstracts | control | 0 | Unigram | 0% | N/A | N/A | N/A | N/A | N/A | 0.9150<br>[0.91494, 0.91511] | 0.913–0.924 | 0/32 | 0.993798 | [Score probes](../results/abstracts-control-s00-unigram-r00/score-flatness.json) |
