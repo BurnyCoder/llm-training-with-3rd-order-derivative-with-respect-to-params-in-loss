@@ -132,9 +132,12 @@ def run_record(folder: Path) -> dict:
         failures.append(last_error)
     if failures:
         record["failures"] = failures
-    if last_error and not summary:
+    resumed = bool(last_error and events and events[-1].get("timestamp", "")>last_error.get("timestamp", ""))
+    if last_error and not summary and not resumed:
         record["status"] = "failed"
         record["error"] = str(last_error.get("error", "Recorded failure"))
+    elif resumed and not summary:
+        record["status"] = "scoring development" if record.get("tokens")==record.get("token_budget") else "training"
     else:
         record.setdefault("status", "complete" if summary else "in progress" if events else "configured")
     record["events"] = []

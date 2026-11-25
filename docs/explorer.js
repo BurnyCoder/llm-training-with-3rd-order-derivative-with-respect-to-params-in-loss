@@ -81,9 +81,13 @@ function showLedger() {
     link.href = repository + "/tree/main/results/" + encodeURIComponent(run.id);
     first.append(link);
     tr.append(first);
+    const evaluation = run.evaluation_progress;
+    const status = evaluation?.targets_to_score > 0
+      ? `${run.status} (${number(100 * evaluation.targets_scored / evaluation.targets_to_score, 1)}%)`
+      : run.status;
     for (const value of [methodName(run.method), run.seed ?? "—", number(run.ratio, 3),
       number(run.tokens, 0), number(run.dev_nll, 4), number(run.test_nll, 4),
-      number(run.tokens_per_sec, 0), number(run.peak_vram_mb, 0), run.status]) {
+      number(run.tokens_per_sec, 0), number(run.peak_vram_mb, 0), status]) {
       tr.append(node("td", value));
     }
     body.append(tr);
