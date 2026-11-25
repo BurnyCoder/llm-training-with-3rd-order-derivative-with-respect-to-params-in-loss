@@ -199,41 +199,6 @@ def _update_readme(root: Path, body: str) -> None:
     atomic_text(path, re.sub(pattern, lambda _: replacement, before, flags=re.DOTALL))
 
 
-def _update_progress(root: Path, study: dict):
-    """Keep live milestone counts beside the manual research decisions in progress.md."""
-    plan = study["stages"]
-    eligible = [r for r in study["runs"] if r.get("stage") in plan and
-                r.get("phase") in {"control", "pilot", "confirm"} and completed(r)]
-    confirm_total = sum(3 * s["n_expected_seeds"] for s in plan.values())
-    # Two untrained controls, AdamW, six regularizer-strength trials, three ablations per stage.
-    total = confirm_total + len(plan) * (2 + 1 + 6 + 3)
-    tested = sum(r.get("phase") == "confirm" and finite(r.get("test_nll")) for r in eligible)
-    failed = sum(r.get("status") == "failed" for r in study["runs"])
-    content = [f"**Updated {study['generated_at']}.** Registered run summaries cover "
-               f"{len(eligible)} of {total} planned training or control jobs "
-               f"({100 * len(eligible) / total:.1f}%). Sealed test scores cover {tested} of "
-               f"{confirm_total} confirmatory checkpoints. The ledger contains {failed} "
-               "currently failed attempts.", _stage_summary(study)]
-    for stage, context in study["context"].items():
-        value = context["feasibility"].get("projected_confirm_training_hours")
-        if finite(value):
-            content.append(f"{STAGES[stage]} pilot throughput projects {value:.2f} GPU-training "
-                           f"hours for the full confirmatory matrix. Data preparation, calibration, "
-                           "evaluation and publication add elapsed time. "
-                           f"[Timing basis](../results/feasibility/{stage}.json)")
-    if not any(context["feasibility"] for context in study["context"].values()):
-        content.append("A stage runtime projection follows its completed method-matched pilots.")
-    path = root / "reports" / "progress.md"
-    previous = path.read_text(encoding="utf-8-sig") if path.exists() else "# Progress\n"
-    marker = "<!-- LIVE:START -->\n" + "\n\n".join(content) + "\n<!-- LIVE:END -->"
-    expression = r"<!-- LIVE:START -->.*?<!-- LIVE:END -->"
-    if re.search(expression, previous, re.DOTALL):
-        updated = re.sub(expression, lambda _: marker, previous, count=1, flags=re.DOTALL)
-    else:
-        updated = previous.rstrip() + "\n\n" + marker + "\n"
-    atomic_text(path, updated)
-
-
 def build_report(root: Path = Path(".")) -> dict:
     """Regenerate README results, PDF, experiment ledger, figures and the static dashboard."""
     root = Path(root).resolve()
@@ -243,7 +208,6 @@ def build_report(root: Path = Path(".")) -> dict:
     static = json.dumps(study, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
     atomic_text(root / "docs" / "study.json", static + "\n")
     _experiments(root, study)
-    _update_progress(root, study)
     compact = _compact_table(study)
     comparisons = _comparisons(study)
     counts = len(study["runs"])
