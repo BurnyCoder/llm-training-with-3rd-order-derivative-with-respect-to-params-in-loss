@@ -1,0 +1,250 @@
+{
+  "protocol": "checkpoint-flatness-v1",
+  "run": "stories-pilot-s00-trace-r01",
+  "checkpoint_file_sha256": "5db36614f800a63bf1f412e32055f2e5dc8a813da01fef52258bbaae7641cd41",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "width_device": "cuda",
+  "timestamp": "2026-11-25T16:40:25+00:00",
+  "split": "train",
+  "probe_windows_sha256": "2b09cf8d13e4e0df411e816e32f1799f1ee165712973c51a09fc75d528c8c2b1",
+  "width_windows": 8,
+  "curvature_windows": 2,
+  "width": {
+    "baseline_nll": 3.8450112342834473,
+    "delta_nll": 0.1,
+    "directions": [
+      {
+        "direction": 0,
+        "positive": {
+          "lower": 7.3193359375,
+          "upper": 7.3203125
+        },
+        "negative": {
+          "lower": 7.44921875,
+          "upper": 7.4501953125
+        }
+      },
+      {
+        "direction": 1,
+        "positive": {
+          "lower": 7.626953125,
+          "upper": 7.6279296875
+        },
+        "negative": {
+          "lower": 8.46875,
+          "upper": 8.470703125
+        }
+      },
+      {
+        "direction": 2,
+        "positive": {
+          "lower": 8.13671875,
+          "upper": 8.138671875
+        },
+        "negative": {
+          "lower": 7.4833984375,
+          "upper": 7.484375
+        }
+      },
+      {
+        "direction": 3,
+        "positive": {
+          "lower": 7.4658203125,
+          "upper": 7.466796875
+        },
+        "negative": {
+          "lower": 7.357421875,
+          "upper": 7.3583984375
+        }
+      },
+      {
+        "direction": 4,
+        "positive": {
+          "lower": 8.33984375,
+          "upper": 8.341796875
+        },
+        "negative": {
+          "lower": 7.599609375,
+          "upper": 7.6005859375
+        }
+      },
+      {
+        "direction": 5,
+        "positive": {
+          "lower": 8.138671875,
+          "upper": 8.140625
+        },
+        "negative": {
+          "lower": 8.037109375,
+          "upper": 8.0390625
+        }
+      },
+      {
+        "direction": 6,
+        "positive": {
+          "lower": 8.017578125,
+          "upper": 8.01953125
+        },
+        "negative": {
+          "lower": 7.71484375,
+          "upper": 7.7158203125
+        }
+      },
+      {
+        "direction": 7,
+        "positive": {
+          "lower": 8.2578125,
+          "upper": 8.259765625
+        },
+        "negative": {
+          "lower": 8.2265625,
+          "upper": 8.228515625
+        }
+      },
+      {
+        "direction": 8,
+        "positive": {
+          "lower": 7.90625,
+          "upper": 7.9072265625
+        },
+        "negative": {
+          "lower": 8.28125,
+          "upper": 8.283203125
+        }
+      },
+      {
+        "direction": 9,
+        "positive": {
+          "lower": 8.66796875,
+          "upper": 8.669921875
+        },
+        "negative": {
+          "lower": 6.775390625,
+          "upper": 6.7763671875
+        }
+      },
+      {
+        "direction": 10,
+        "positive": {
+          "lower": 8.73046875,
+          "upper": 8.732421875
+        },
+        "negative": {
+          "lower": 7.3828125,
+          "upper": 7.3837890625
+        }
+      },
+      {
+        "direction": 11,
+        "positive": {
+          "lower": 8.0078125,
+          "upper": 8.009765625
+        },
+        "negative": {
+          "lower": 7.7490234375,
+          "upper": 7.75
+        }
+      },
+      {
+        "direction": 12,
+        "positive": {
+          "lower": 7.720703125,
+          "upper": 7.7216796875
+        },
+        "negative": {
+          "lower": 7.1982421875,
+          "upper": 7.19921875
+        }
+      },
+      {
+        "direction": 13,
+        "positive": {
+          "lower": 7.873046875,
+          "upper": 7.8740234375
+        },
+        "negative": {
+          "lower": 7.763671875,
+          "upper": 7.7646484375
+        }
+      },
+      {
+        "direction": 14,
+        "positive": {
+          "lower": 7.9951171875,
+          "upper": 7.99609375
+        },
+        "negative": {
+          "lower": 7.39453125,
+          "upper": 7.3955078125
+        }
+      },
+      {
+        "direction": 15,
+        "positive": {
+          "lower": 7.6767578125,
+          "upper": 7.677734375
+        },
+        "negative": {
+          "lower": 7.7783203125,
+          "upper": 7.779296875
+        }
+      }
+    ],
+    "width_lower": 15.6845703125,
+    "width_upper": 15.68701171875,
+    "width": 15.685791015625,
+    "censored_rays": 0,
+    "weights_sha256": "683a12188b8e1de46670cd833bf969ac64f816a1e6bed8c0ac00e2556bfc7bfe",
+    "weights_restored": true,
+    "seconds": 9.12425770000118
+  },
+  "curvature": {
+    "dimensions": 2557632,
+    "draws": [
+      {
+        "index": 0,
+        "trace_per_parameter": 0.0033409504081661607,
+        "squared_rms": 0.18118228826464505
+      },
+      {
+        "index": 1,
+        "trace_per_parameter": 0.004086555029177914,
+        "squared_rms": 0.2971342730206218
+      },
+      {
+        "index": 2,
+        "trace_per_parameter": 0.0036035041891382727,
+        "squared_rms": 0.159559018954073
+      },
+      {
+        "index": 3,
+        "trace_per_parameter": 0.0040063186020874155,
+        "squared_rms": 0.20239230211833756
+      },
+      {
+        "index": 4,
+        "trace_per_parameter": 0.0031486716981872073,
+        "squared_rms": 0.16677102126921003
+      },
+      {
+        "index": 5,
+        "trace_per_parameter": 0.003353755969176607,
+        "squared_rms": 0.18260095634554094
+      },
+      {
+        "index": 6,
+        "trace_per_parameter": 0.0031826027660294826,
+        "squared_rms": 0.16769616958887426
+      },
+      {
+        "index": 7,
+        "trace_per_parameter": 0.003769207625168564,
+        "squared_rms": 0.24629998847214374
+      }
+    ],
+    "device": "cuda:0",
+    "dtype": "torch.float64",
+    "trace_per_parameter": 0.003561445785891453,
+    "rms_curvature": 0.4477214561020957
+  }
+}
