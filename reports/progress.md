@@ -1,6 +1,6 @@
 # Study progress
 
-Updated 2026-11-25T17:15:34+00:00.
+Updated 2026-11-25T17:16:09+00:00.
 
 21 training/control records and 0 final evaluations are complete. This is 17.5% of 120 planned model milestones.
 
@@ -34,12 +34,12 @@ The first seed included 4.11 hours between the last pre-restart update and the f
 
 | Stage | Weight geometry | Shared score geometry | Median pilot cycle | Longest pilot cycle |
 | --- | --- | --- | --- | --- |
-| stories | 24/91 | 25/92 | 34 s | 37 s |
+| stories | 25/91 | 26/92 | 34 s | 37 s |
 | abstracts | 3/36 | 1/37 | 193 s | 311 s |
 
 Weight geometry covers every neural checkpoint. Score geometry also covers the two unigram references. [All arms and their measurements](flatness.md#every-variant-and-baseline)
 
-Giving each predictor still missing a measurement one complete native pilot cycle projects 2.56 additional hours at each stage’s median or 3.80 hours at its longest observed cycle. These scenarios include the observed reporting and upload time. Existing hybrid widths can be reused. The shared score calculation, archive growth and future interruptions can change the total. [Timestamped pilot measurements](../results/feasibility/flatness-pilot-wall-time.json) · [Archived timing log](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/logs/checkpoint-flatness-20261125T163331Z.log)
+Giving each predictor still missing a measurement one complete native pilot cycle projects 2.55 additional hours at each stage’s median or 3.79 hours at its longest observed cycle. These scenarios include the observed reporting and upload time. Existing hybrid widths can be reused. The shared score calculation, archive growth and future interruptions can change the total. [Timestamped pilot measurements](../results/feasibility/flatness-pilot-wall-time.json) · [Archived timing log](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/logs/checkpoint-flatness-20261125T163331Z.log)
 
 ## Monitoring
 

@@ -142,7 +142,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Ordinary AdamW · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
 | Hessian trace · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
 | Third derivative · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
-| Shared trace checkpoint | 8,388,608 | 21–28 | 15.143 (3/8) | 0.43514 (2/8) | 1.062 (2/8) |
+| Shared trace checkpoint | 8,388,608 | 21–28 | 15.143 (3/8) | 0.44989 (3/8) | 1.061 (3/8) |
 | Curvature-dependent hybrid · hybrid study | 16,777,216 | 21–28 | 13.157 (3/8) | 0.57757 (2/8) | 1.083 (2/8) |
 | Fixed late hybrid · hybrid study | 16,777,216 | 21–28 | 13.215 (3/8) | 0.57064 (2/8) | 1.083 (2/8) |
 | Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.154 (3/8) | 0.57779 (2/8) | 1.083 (2/8) |
