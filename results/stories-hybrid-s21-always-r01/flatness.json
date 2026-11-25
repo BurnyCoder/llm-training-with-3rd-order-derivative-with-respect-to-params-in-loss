@@ -1,0 +1,252 @@
+{
+  "run": "stories-hybrid-s21-always-r01",
+  "checkpoint_file_sha256": "891e0e3f1a23ec2aaceb2bd278a750c1f5a96042982f576dc97194463c09f331",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "width_device": "cuda",
+  "split": "train",
+  "probe_windows_sha256": "2b09cf8d13e4e0df411e816e32f1799f1ee165712973c51a09fc75d528c8c2b1",
+  "timestamp": "2026-11-25T17:11:19+00:00",
+  "protocol": "checkpoint-flatness-v1",
+  "width_windows": 8,
+  "curvature_windows": 2,
+  "width": {
+    "step": 4096,
+    "tokens": 16777216,
+    "baseline_nll": 2.5931005477905273,
+    "delta_nll": 0.1,
+    "directions": [
+      {
+        "direction": 0,
+        "positive": {
+          "lower": 6.7392578125,
+          "upper": 6.740234375
+        },
+        "negative": {
+          "lower": 6.9345703125,
+          "upper": 6.935546875
+        }
+      },
+      {
+        "direction": 1,
+        "positive": {
+          "lower": 5.552734375,
+          "upper": 5.5537109375
+        },
+        "negative": {
+          "lower": 7.55859375,
+          "upper": 7.5595703125
+        }
+      },
+      {
+        "direction": 2,
+        "positive": {
+          "lower": 6.3134765625,
+          "upper": 6.314453125
+        },
+        "negative": {
+          "lower": 7.00390625,
+          "upper": 7.0048828125
+        }
+      },
+      {
+        "direction": 3,
+        "positive": {
+          "lower": 6.1083984375,
+          "upper": 6.109375
+        },
+        "negative": {
+          "lower": 6.8740234375,
+          "upper": 6.875
+        }
+      },
+      {
+        "direction": 4,
+        "positive": {
+          "lower": 6.0517578125,
+          "upper": 6.052734375
+        },
+        "negative": {
+          "lower": 7.1513671875,
+          "upper": 7.15234375
+        }
+      },
+      {
+        "direction": 5,
+        "positive": {
+          "lower": 6.671875,
+          "upper": 6.6728515625
+        },
+        "negative": {
+          "lower": 6.71484375,
+          "upper": 6.7158203125
+        }
+      },
+      {
+        "direction": 6,
+        "positive": {
+          "lower": 6.4755859375,
+          "upper": 6.4765625
+        },
+        "negative": {
+          "lower": 6.755859375,
+          "upper": 6.7568359375
+        }
+      },
+      {
+        "direction": 7,
+        "positive": {
+          "lower": 7.26171875,
+          "upper": 7.2626953125
+        },
+        "negative": {
+          "lower": 6.13671875,
+          "upper": 6.1376953125
+        }
+      },
+      {
+        "direction": 8,
+        "positive": {
+          "lower": 6.580078125,
+          "upper": 6.5810546875
+        },
+        "negative": {
+          "lower": 6.6435546875,
+          "upper": 6.64453125
+        }
+      },
+      {
+        "direction": 9,
+        "positive": {
+          "lower": 6.564453125,
+          "upper": 6.5654296875
+        },
+        "negative": {
+          "lower": 6.9013671875,
+          "upper": 6.90234375
+        }
+      },
+      {
+        "direction": 10,
+        "positive": {
+          "lower": 6.5966796875,
+          "upper": 6.59765625
+        },
+        "negative": {
+          "lower": 6.4814453125,
+          "upper": 6.482421875
+        }
+      },
+      {
+        "direction": 11,
+        "positive": {
+          "lower": 6.5205078125,
+          "upper": 6.521484375
+        },
+        "negative": {
+          "lower": 6.80859375,
+          "upper": 6.8095703125
+        }
+      },
+      {
+        "direction": 12,
+        "positive": {
+          "lower": 6.8310546875,
+          "upper": 6.83203125
+        },
+        "negative": {
+          "lower": 6.2705078125,
+          "upper": 6.271484375
+        }
+      },
+      {
+        "direction": 13,
+        "positive": {
+          "lower": 7.0185546875,
+          "upper": 7.01953125
+        },
+        "negative": {
+          "lower": 6.37890625,
+          "upper": 6.3798828125
+        }
+      },
+      {
+        "direction": 14,
+        "positive": {
+          "lower": 6.12109375,
+          "upper": 6.1220703125
+        },
+        "negative": {
+          "lower": 6.6640625,
+          "upper": 6.6650390625
+        }
+      },
+      {
+        "direction": 15,
+        "positive": {
+          "lower": 6.4462890625,
+          "upper": 6.447265625
+        },
+        "negative": {
+          "lower": 6.328125,
+          "upper": 6.3291015625
+        }
+      }
+    ],
+    "width_lower": 13.2275390625,
+    "width_upper": 13.2294921875,
+    "width": 13.228515625,
+    "censored_rays": 0,
+    "weights_sha256": "bede87434367fd994d18817b17b3b9ecbdd6a2e8a8c3beb64647833f45586ffb",
+    "weights_restored": true,
+    "seconds": 6.162902399999439
+  },
+  "curvature": {
+    "dimensions": 2557632,
+    "draws": [
+      {
+        "index": 0,
+        "trace_per_parameter": 0.004169254942924055,
+        "squared_rms": 0.3319132964589837
+      },
+      {
+        "index": 1,
+        "trace_per_parameter": 0.004678446157988959,
+        "squared_rms": 0.33010504186946366
+      },
+      {
+        "index": 2,
+        "trace_per_parameter": 0.004223846219726882,
+        "squared_rms": 0.35174201927486554
+      },
+      {
+        "index": 3,
+        "trace_per_parameter": 0.004380908495804042,
+        "squared_rms": 0.3206574237101794
+      },
+      {
+        "index": 4,
+        "trace_per_parameter": 0.0038257009904567128,
+        "squared_rms": 0.3166041163058769
+      },
+      {
+        "index": 5,
+        "trace_per_parameter": 0.0053353263723042235,
+        "squared_rms": 0.3452834904590853
+      },
+      {
+        "index": 6,
+        "trace_per_parameter": 0.003449344194733421,
+        "squared_rms": 0.31172866156865336
+      },
+      {
+        "index": 7,
+        "trace_per_parameter": 0.0037867484973194885,
+        "squared_rms": 0.29929195860882934
+      }
+    ],
+    "device": "cuda:0",
+    "dtype": "torch.float64",
+    "trace_per_parameter": 0.004231196983907223,
+    "rms_curvature": 0.5708903143616926
+  }
+}

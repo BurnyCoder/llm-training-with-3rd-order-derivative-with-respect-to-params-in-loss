@@ -10,6 +10,18 @@ Training time is 550.0 seconds. Peak allocated GPU memory is 621.3 MiB. Developm
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-hybrid-s21-always-r01/config.json)
 
+## Checkpoint flatness
+
+| Training-window measurement | Value | Interpretation |
+| --- | --- | --- |
+| Weight width | 13.229 | ↑ Wider is flatter in these weight coordinates |
+| RMS weight curvature | 0.57089 | ↓ Lower means less local bending |
+| Signed Hessian trace / parameter | 0.0042312 | No general better direction |
+| Common score width | 1.083 | ↑ Wider tolerates larger changes in token scores |
+| Mean directional score curvature | 0.699547 | ↓ Lower means less local bending in score space |
+
+The connection between width and better held-out prediction is unknown. [Compare against every variant and baseline](../../flatness.md#every-variant-and-baseline).
+
 ## Restart verification
 
 After the system restart, training resumed from update 3,712 and replayed 24 updates. Across 5 logged overlaps, the maximum absolute training NLL difference was 2.384e-07 nats per target and the maximum difference in the unclipped gradient norm was 1.192e-07. [Replay measurements](../../../results/verification/hybrid-s21-system-restart.json)

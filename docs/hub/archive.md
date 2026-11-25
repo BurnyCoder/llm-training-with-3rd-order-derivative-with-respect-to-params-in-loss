@@ -105,7 +105,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.154 (3/8) | 0.5854 (1/8) | 1.084 (1/8) |
 | Stronger trace · hybrid study | 16,777,216 | 21–28 | 13.175 (3/8) | 0.58362 (1/8) | 1.084 (1/8) |
 | Cross-seed replay · hybrid study | 16,777,216 | 21–28 | 13.133 (2/8) | Pending | Pending |
-| Always-on hybrid · hybrid study | 16,777,216 | 21–28 | 13.229 (3/8) | Pending | Pending |
+| Always-on hybrid · hybrid study | 16,777,216 | 21–28 | 13.229 (3/8) | 0.57089 (1/8) | 1.083 (1/8) |
 
 <details><summary>TinyStories · all model weights · other pilot strengths and precision diagnostics</summary>
 
