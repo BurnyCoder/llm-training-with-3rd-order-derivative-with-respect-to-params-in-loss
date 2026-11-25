@@ -41,6 +41,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | [stories-hybrid-s23-strong-r01](./stories-hybrid-s23-strong-r01/experiment.md) | TinyStories | Stronger trace | hybrid | 23 | 0.010 | 16,777,216 | 2.5424 | — | 60,806 | complete |
 | [stories-hybrid-s23-trace-r01](./stories-hybrid-s23-trace-r01/experiment.md) | TinyStories | Hessian trace | hybrid | 23 | 0.010 | 16,777,216 | 2.5423 | — | 59,471 | complete |
 | [stories-hybrid-s24-adaptive-r01](./stories-hybrid-s24-adaptive-r01/experiment.md) | TinyStories | Curvature-dependent hybrid | hybrid | 24 | 0.010 | 16,777,216 | 2.5545 | — | 41,647 | complete |
+| [stories-hybrid-s24-always-r01](./stories-hybrid-s24-always-r01/experiment.md) | TinyStories | Always-on hybrid | hybrid | 24 | 0.010 | 16,777,216 | 2.5542 | — | 33,941 | complete |
 | [stories-hybrid-s24-late-r01](./stories-hybrid-s24-late-r01/experiment.md) | TinyStories | Fixed late hybrid | hybrid | 24 | 0.010 | 16,777,216 | 2.5547 | — | 42,225 | complete |
 | [stories-hybrid-s24-strong-r01](./stories-hybrid-s24-strong-r01/experiment.md) | TinyStories | Stronger trace | hybrid | 24 | 0.010 | 16,777,216 | 2.5546 | — | 63,357 | complete |
 | [stories-hybrid-s24-trace-r01](./stories-hybrid-s24-trace-r01/experiment.md) | TinyStories | Hessian trace | hybrid | 24 | 0.010 | 16,777,216 | 2.5545 | — | 63,221 | complete |
