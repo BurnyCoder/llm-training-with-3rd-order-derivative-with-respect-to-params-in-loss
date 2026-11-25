@@ -22,7 +22,7 @@ The protocol and run matrix were published before model execution. The scores, c
 <!-- RESULTS:START -->
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 13 runs, including 12 with a completed summary.
+Recorded 13 runs, including 13 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -34,6 +34,7 @@ Recorded 13 runs, including 12 with a completed summary.
 
 | Stage | Phase | Method | Ratio | Tokens/run | Runs | Median dev NLL | Median test NLL |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| Research abstracts | pilot | Third derivative | 0.030 | 65,536 | 1 | 3.1168 | — |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
 | TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |
@@ -54,6 +55,29 @@ Recorded 13 runs, including 12 with a completed summary.
 ### Recorded predictions
 
 First archived sample in run-ID order per stage and method. [All continuations](reports/experiments/experiments.md)
+
+<details><summary>Research abstracts · Third derivative</summary>
+
+**Prompt**
+
+    One of the central objectives of contemporary neuroimaging research is to
+    create predictive models
+
+**Reference continuation**
+
+     that can disentangle the connection between patterns
+    of functional connectivity across the entire brain and various behavioral
+    traits. Previous studies have shown that models trained to predict behavioral
+    features from the individual's functional
+
+**Model continuation**
+
+     that will accurately predict the behavior of
+    patient-specific neurological disorders such as epilepsy. In this paper, we
+    present a novel dataset of EEG data recorded from children with focal
+    subcortical epilepsy
+
+</details>
 
 <details><summary>TinyStories · Initial checkpoint</summary>
 
