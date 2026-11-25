@@ -21,6 +21,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | [stories-control-s00-initial-r00](./stories-control-s00-initial-r00/experiment.md) | TinyStories | Initial checkpoint | control | 0 | 0.000 | 0 | 8.3437 | — | 0 | complete |
 | [stories-control-s00-unigram-r00](./stories-control-s00-unigram-r00/experiment.md) | TinyStories | Unigram | control | 0 | 0.000 | 0 | 6.0036 | — | 0 | complete |
 | [stories-hybrid-s21-adaptive-r01](./stories-hybrid-s21-adaptive-r01/experiment.md) | TinyStories | Curvature-dependent hybrid | hybrid | 21 | 0.010 | 16,777,216 | 2.5459 | — | 43,973 | complete |
+| [stories-hybrid-s21-late-r01](./stories-hybrid-s21-late-r01/experiment.md) | TinyStories | Fixed late hybrid | hybrid | 21 | 0.010 | 16,777,216 | 2.5461 | — | 41,141 | complete |
 | [stories-pilot-s00-ce-r00](./stories-pilot-s00-ce-r00/experiment.md) | TinyStories | Ordinary AdamW | pilot | 0 | 0.000 | 2,097,152 | 3.8770 | — | 123,871 | complete |
 | [stories-pilot-s00-combined-r01](./stories-pilot-s00-combined-r01/experiment.md) | TinyStories | Trace + third derivative | pilot | 0 | 0.010 | 2,097,152 | 3.8772 | — | 41,030 | complete |
 | [stories-pilot-s00-hessian_norm-r03](./stories-pilot-s00-hessian_norm-r03/experiment.md) | TinyStories | Squared Hessian norm | pilot | 0 | 0.030 | 2,097,152 | 3.8787 | — | 83,790 | complete |
