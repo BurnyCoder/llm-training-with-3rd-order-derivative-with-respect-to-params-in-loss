@@ -35,7 +35,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Hessian trace · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
 | Third derivative · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
 | Shared trace checkpoint | 8,388,608 | 21–28 | 15.143 (3/8) | 0.43514 (2/8) | 1.062 (2/8) |
-| Curvature-dependent hybrid · hybrid study | 16,777,216 | 21–28 | 13.157 (3/8) | 0.585 (1/8) | 1.084 (1/8) |
+| Curvature-dependent hybrid · hybrid study | 16,777,216 | 21–28 | 13.157 (3/8) | 0.57757 (2/8) | 1.083 (2/8) |
 | Fixed late hybrid · hybrid study | 16,777,216 | 21–28 | 13.215 (3/8) | 0.5776 (1/8) | 1.083 (1/8) |
 | Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.154 (3/8) | 0.5854 (1/8) | 1.084 (1/8) |
 | Stronger trace · hybrid study | 16,777,216 | 21–28 | 13.175 (3/8) | 0.58362 (1/8) | 1.084 (1/8) |
@@ -98,6 +98,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | stories | hybrid | 21 | Fixed late hybrid | 1% | 13.215 | 13.049–13.292 | 0/32 | 0.577598 | +0.00419991 | 1.083 | 1.076–1.095 | 0/32 | 0.699658 | [Weight probes](../results/stories-hybrid-s21-late-r01/flatness.json) · [Score probes](../results/stories-hybrid-s21-late-r01/score-flatness.json) |
 | stories | hybrid | 21 | Stronger trace | 1% | 13.175 | 13.006–13.257 | 0/32 | 0.58362 | +0.00423557 | 1.084 | 1.077–1.095 | 0/32 | 0.699349 | [Weight probes](../results/stories-hybrid-s21-strong-r01/flatness.json) · [Score probes](../results/stories-hybrid-s21-strong-r01/score-flatness.json) |
 | stories | hybrid | 21 | Hessian trace | 1% | 13.154 | 12.988–13.233 | 0/32 | 0.585403 | +0.00424916 | 1.084 | 1.077–1.095 | 0/32 | 0.699347 | [Weight probes](../results/stories-hybrid-s21-trace-r01/flatness.json) · [Score probes](../results/stories-hybrid-s21-trace-r01/score-flatness.json) |
+| stories | hybrid | 22 | Curvature-dependent hybrid | 1% | 13.215 | 12.984–13.494 | 0/32 | 0.570141 | +0.0045186 | 1.082 | 1.076–1.095 | 0/32 | 0.699377 | [Weight probes](../results/stories-hybrid-s22-adaptive-r01/flatness.json) · [Score probes](../results/stories-hybrid-s22-adaptive-r01/score-flatness.json) |
 | stories | pilot | 0 | Ordinary AdamW | 0% | 15.579 | 15.297–16.037 | 0/32 | 0.453288 | +0.0036281 | 0.989 | 0.985–0.996 | 0/32 | 0.843296 | [Weight probes](../results/stories-pilot-s00-ce-r00/flatness.json) · [Score probes](../results/stories-pilot-s00-ce-r00/score-flatness.json) |
 | stories | pilot | 0 | Trace + third derivative | 1% | 15.741 | 15.504–16.178 | 0/32 | 0.441322 | +0.00350869 | 0.989 | 0.985–0.996 | 0/32 | 0.843297 | [Weight probes](../results/stories-pilot-s00-combined-r01/flatness.json) · [Score probes](../results/stories-pilot-s00-combined-r01/score-flatness.json) |
 | stories | pilot | 0 | Squared Hessian norm | 3% | 15.901 | 15.638–16.320 | 0/32 | 0.429575 | +0.00343614 | 0.989 | 0.985–0.996 | 0/32 | 0.843254 | [Weight probes](../results/stories-pilot-s00-hessian_norm-r03/flatness.json) · [Score probes](../results/stories-pilot-s00-hessian_norm-r03/score-flatness.json) |
