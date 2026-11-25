@@ -1,0 +1,252 @@
+{
+  "run": "stories-branch-s25-trunk-r01",
+  "checkpoint_file_sha256": "9777e81bd26639f7242a4529263f4fe1adf85c144d90993dcf0ea54b74084f84",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "width_device": "cuda",
+  "split": "train",
+  "probe_windows_sha256": "2b09cf8d13e4e0df411e816e32f1799f1ee165712973c51a09fc75d528c8c2b1",
+  "timestamp": "2026-11-25T18:29:30+00:00",
+  "protocol": "checkpoint-flatness-v1",
+  "width_windows": 8,
+  "curvature_windows": 2,
+  "width": {
+    "step": 2048,
+    "tokens": 8388608,
+    "baseline_nll": 2.8041157722473145,
+    "delta_nll": 0.1,
+    "directions": [
+      {
+        "direction": 0,
+        "positive": {
+          "lower": 8.232421875,
+          "upper": 8.234375
+        },
+        "negative": {
+          "lower": 6.9462890625,
+          "upper": 6.947265625
+        }
+      },
+      {
+        "direction": 1,
+        "positive": {
+          "lower": 7.8330078125,
+          "upper": 7.833984375
+        },
+        "negative": {
+          "lower": 7.5576171875,
+          "upper": 7.55859375
+        }
+      },
+      {
+        "direction": 2,
+        "positive": {
+          "lower": 8.52734375,
+          "upper": 8.529296875
+        },
+        "negative": {
+          "lower": 6.966796875,
+          "upper": 6.9677734375
+        }
+      },
+      {
+        "direction": 3,
+        "positive": {
+          "lower": 7.94140625,
+          "upper": 7.9423828125
+        },
+        "negative": {
+          "lower": 6.806640625,
+          "upper": 6.8076171875
+        }
+      },
+      {
+        "direction": 4,
+        "positive": {
+          "lower": 7.7421875,
+          "upper": 7.7431640625
+        },
+        "negative": {
+          "lower": 7.65234375,
+          "upper": 7.6533203125
+        }
+      },
+      {
+        "direction": 5,
+        "positive": {
+          "lower": 8.15625,
+          "upper": 8.158203125
+        },
+        "negative": {
+          "lower": 7.796875,
+          "upper": 7.7978515625
+        }
+      },
+      {
+        "direction": 6,
+        "positive": {
+          "lower": 8.6640625,
+          "upper": 8.666015625
+        },
+        "negative": {
+          "lower": 7.03125,
+          "upper": 7.0322265625
+        }
+      },
+      {
+        "direction": 7,
+        "positive": {
+          "lower": 7.33203125,
+          "upper": 7.3330078125
+        },
+        "negative": {
+          "lower": 7.80078125,
+          "upper": 7.8017578125
+        }
+      },
+      {
+        "direction": 8,
+        "positive": {
+          "lower": 6.705078125,
+          "upper": 6.7060546875
+        },
+        "negative": {
+          "lower": 8.298828125,
+          "upper": 8.30078125
+        }
+      },
+      {
+        "direction": 9,
+        "positive": {
+          "lower": 8.0703125,
+          "upper": 8.072265625
+        },
+        "negative": {
+          "lower": 7.8212890625,
+          "upper": 7.822265625
+        }
+      },
+      {
+        "direction": 10,
+        "positive": {
+          "lower": 8.291015625,
+          "upper": 8.29296875
+        },
+        "negative": {
+          "lower": 6.9638671875,
+          "upper": 6.96484375
+        }
+      },
+      {
+        "direction": 11,
+        "positive": {
+          "lower": 8.861328125,
+          "upper": 8.86328125
+        },
+        "negative": {
+          "lower": 7.1865234375,
+          "upper": 7.1875
+        }
+      },
+      {
+        "direction": 12,
+        "positive": {
+          "lower": 7.5908203125,
+          "upper": 7.591796875
+        },
+        "negative": {
+          "lower": 7.2021484375,
+          "upper": 7.203125
+        }
+      },
+      {
+        "direction": 13,
+        "positive": {
+          "lower": 7.7568359375,
+          "upper": 7.7578125
+        },
+        "negative": {
+          "lower": 7.71484375,
+          "upper": 7.7158203125
+        }
+      },
+      {
+        "direction": 14,
+        "positive": {
+          "lower": 8.1484375,
+          "upper": 8.150390625
+        },
+        "negative": {
+          "lower": 7.6259765625,
+          "upper": 7.626953125
+        }
+      },
+      {
+        "direction": 15,
+        "positive": {
+          "lower": 7.515625,
+          "upper": 7.5166015625
+        },
+        "negative": {
+          "lower": 7.7177734375,
+          "upper": 7.71875
+        }
+      }
+    ],
+    "width_lower": 15.392578125,
+    "width_upper": 15.39453125,
+    "width": 15.3935546875,
+    "censored_rays": 0,
+    "weights_sha256": "8e14da280ed3daef2819871bb90e4e5bb989b4acb9823c182dfb56c435a16bc5",
+    "weights_restored": true,
+    "seconds": 8.231704600002558
+  },
+  "curvature": {
+    "dimensions": 2557632,
+    "draws": [
+      {
+        "index": 0,
+        "trace_per_parameter": 0.0035937875810199307,
+        "squared_rms": 0.2086990148959038
+      },
+      {
+        "index": 1,
+        "trace_per_parameter": 0.0030382531598803744,
+        "squared_rms": 0.22512385604147822
+      },
+      {
+        "index": 2,
+        "trace_per_parameter": 0.003017935713340704,
+        "squared_rms": 0.20076678775517867
+      },
+      {
+        "index": 3,
+        "trace_per_parameter": 0.0035953674058187197,
+        "squared_rms": 0.21057976997262726
+      },
+      {
+        "index": 4,
+        "trace_per_parameter": 0.004233133014585839,
+        "squared_rms": 0.23305495616689464
+      },
+      {
+        "index": 5,
+        "trace_per_parameter": 0.003724702648193393,
+        "squared_rms": 0.20914528172805075
+      },
+      {
+        "index": 6,
+        "trace_per_parameter": 0.0030073318208881776,
+        "squared_rms": 0.20453232130458449
+      },
+      {
+        "index": 7,
+        "trace_per_parameter": 0.002693101469154029,
+        "squared_rms": 0.19516302916035175
+      }
+    ],
+    "device": "cuda:0",
+    "dtype": "torch.float64",
+    "trace_per_parameter": 0.0033629516016101457,
+    "rms_curvature": 0.4592201292715006
+  }
+}
