@@ -1,6 +1,6 @@
 # Study summary
 
-Recorded 15 runs, including 14 with a completed summary.
+Recorded 15 runs, including 15 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -16,6 +16,7 @@ Recorded 15 runs, including 14 with a completed summary.
 
 | Stage | Phase | Method | Ratio | Tokens/run | Runs | Median dev NLL | Median test NLL |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| Research abstracts | control | Initial checkpoint | 0.000 | 0 | 1 | 3.2517 | — |
 | Research abstracts | diagnostic | Third derivative | 0.030 | 65,536 | 1 | 3.1168 | — |
 | Research abstracts | pilot | Third derivative | 0.030 | 65,536 | 1 | 3.1149 | — |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
