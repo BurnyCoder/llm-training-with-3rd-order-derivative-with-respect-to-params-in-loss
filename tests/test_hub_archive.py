@@ -72,3 +72,33 @@ def test_live_feed_retains_active_and_latest_completed_runs():
     feed=overlay({"runs":runs,"stages":{},"pilot_comparisons":{}})
     assert feed["active"] and [r["id"] for r in feed["runs"]]==["newer","current"]
     assert feed["runs"][1]["events"]==[{"accuracy":0.4}]
+def test_result_publisher_merges_concurrent_documentation_without_losing_either(tmp_path):
+    """Reproduce a remote documentation commit landing while a local run report is being generated."""
+    from thirdloss.release import push_main
+    def git(folder,*args):
+        return subprocess.run(["git",*args],cwd=folder,check=True,capture_output=True,text=True).stdout.strip()
+    remote=tmp_path/"upstream.git"
+    git(tmp_path,"init","--bare","--initial-branch=main",str(remote))
+    owner=tmp_path/"study"
+    git(tmp_path,"clone",str(remote),str(owner))
+    git(owner,"config","user.name","Study fixture")
+    git(owner,"config","user.email","study@example.invalid")
+    (owner/"README.md").write_text("Study",encoding="utf-8")
+    git(owner,"add",".")
+    git(owner,"commit","-m","Register study")
+    git(owner,"push","origin","main")
+    writer=tmp_path/"writer"
+    git(tmp_path,"clone",str(remote),str(writer))
+    git(writer,"config","user.name","Review fixture")
+    git(writer,"config","user.email","review@example.invalid")
+    (writer/"worked-example.md").write_text("Derivation",encoding="utf-8")
+    git(writer,"add",".")
+    git(writer,"commit","-m","Explain the schedule")
+    (owner/"width.json").write_text("{}",encoding="utf-8")
+    git(owner,"add",".")
+    git(owner,"commit","-m","Measure width")
+    git(writer,"push","origin","main")
+    push_main(owner)
+    assert git(remote,"show","main:worked-example.md")=="Derivation"
+    assert git(remote,"show","main:width.json")=="{}"
+    assert git(owner,"rev-parse","HEAD")==git(remote,"rev-parse","main")
