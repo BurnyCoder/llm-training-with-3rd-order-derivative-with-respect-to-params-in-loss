@@ -80,7 +80,17 @@ How far can the weights move before next-token loss rises by 0.1 nats on eight f
 | Cross-seed replay | 22 | 15.403 | 13.218 | One seed | 12.987–13.496 | 0/32 |
 | Always-on hybrid | 21, 22, 23 | 15.256 | 13.229 | 13.060–13.334 | 13.085–13.390 | 0/96 |
 
-Matched finite-width and Hessian measurements for the primary AdamW, trace and third-order checkpoints are pending.
+**TinyStories pretraining · development pilots · seeds 0 · 2,097,152 training targets**
+
+| Flatness statistic | AdamW | Hessian trace | Third order |
+| --- | --- | --- | --- |
+| Directional width<br>↑ Wider is flatter | 15.579 | 15.686 | 15.640 |
+| Final width range across seeds<br>Descriptive spread | One seed | One seed | One seed |
+| Middle 50% of directions<br>Descriptive spread | 15.297–16.037 | 15.431–16.102 | 15.382–16.118 |
+| Rays at limit / tested<br>Measurement coverage | 0/32 | 0/32 | 0/32 |
+| Unperturbed probe NLL<br>↓ Lower fits these windows better | 3.84335 | 3.84501 | 3.84377 |
+| RMS Hessian curvature<br>↓ Lower means less local bending | 0.453288 | 0.447721 | 0.447394 |
+| Signed Hessian trace / parameter<br>No general better direction | +0.0036281 | +0.00356145 | +0.00357761 |
 
 For the primary comparison, TinyStories uses all weights and Pythia uses the LoRA factors. Compare widths within each model. The link gives every run, directional bracket and Hessian probe. [Flatness statistics and raw files](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/flatness.md) · [Secondary measurement design](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/amendments/checkpoint-flatness.md)
 

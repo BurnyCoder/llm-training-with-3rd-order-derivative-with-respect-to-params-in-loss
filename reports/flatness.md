@@ -20,4 +20,5 @@ The seed range and directional spread describe variability. The rays at the limi
 | Stage | Horizon | Seed | Arm | Width ↑ | Middle 50% of directions | Rays at limit / tested | RMS curvature ↓ | Signed trace / parameter | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | stories | pilot | 0 | Ordinary AdamW | 15.579 | 15.297–16.037 | 0/32 | 0.453288 | +0.0036281 | [All probes](../results/stories-pilot-s00-ce-r00/flatness.json) |
+| stories | pilot | 0 | Third derivative | 15.640 | 15.382–16.118 | 0/32 | 0.447394 | +0.00357761 | [All probes](../results/stories-pilot-s00-third-r01/flatness.json) |
 | stories | pilot | 0 | Hessian trace | 15.686 | 15.431–16.102 | 0/32 | 0.447721 | +0.00356145 | [All probes](../results/stories-pilot-s00-trace-r01/flatness.json) |
