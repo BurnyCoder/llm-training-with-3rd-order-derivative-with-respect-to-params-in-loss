@@ -8,6 +8,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | [abstracts-confirm-s01-ce-r00](./abstracts-confirm-s01-ce-r00/experiment.md) | Research abstracts | Ordinary AdamW | confirm | 1 | 0.000 | 524,288 | 3.0368 | 20.8387 | — | — | 1,507 | complete |
 | [abstracts-confirm-s01-third-r01-fp64](./abstracts-confirm-s01-third-r01-fp64/experiment.md) | Research abstracts | Third derivative | confirm | 1 | 0.010 | 524,288 | 3.0368 | 20.8375 | — | — | 128 | complete |
+| [abstracts-confirm-s01-trace-r01-fp64](./abstracts-confirm-s01-trace-r01-fp64/experiment.md) | Research abstracts | Hessian trace | confirm | 1 | 0.010 | 524,288 | 3.0367 | 20.8370 | — | — | 350 | complete |
 | [abstracts-control-s00-initial-r00](./abstracts-control-s00-initial-r00/experiment.md) | Research abstracts | Initial checkpoint | control | 0 | 0.000 | 0 | 3.2517 | 25.8335 | — | — | 0 | complete |
 | [abstracts-control-s00-unigram-r00](./abstracts-control-s00-unigram-r00/experiment.md) | Research abstracts | Unigram | control | 0 | 0.000 | 0 | 7.3306 | 1,526.3141 | — | — | 0 | complete |
 | [abstracts-pilot-s00-ce-r00](./abstracts-pilot-s00-ce-r00/experiment.md) | Research abstracts | Ordinary AdamW | pilot | 0 | 0.000 | 65,536 | 3.1139 | 22.5097 | — | — | 1,659 | complete |

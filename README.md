@@ -13,7 +13,7 @@ The research background includes flat minima, Hessian measurements and third der
 | Model and split | Matched evidence | Third-order NLL vs AdamW<br>↓ Lower is better | Third-order NLL vs trace<br>↓ Lower is better | Speed vs AdamW<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
 | TinyStories pretraining · dev | 1/8 full-budget seeds | 0.000003 lower | 0.000254 lower | 71.7% slower |
-| Pythia-410M adapters · dev | one development pilot seed | 0.000300 higher | 0.000273 higher | 88.6% slower |
+| Pythia-410M adapters · dev | 1/8 full-budget seeds | 0.000058 lower | 0.000024 higher | 91.5% slower |
 
 **Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
 
@@ -90,21 +90,22 @@ Awaiting paired test results (1 of 8 full-horizon training triplets).
 
 ### Pythia-410M adapters
 
-**Full development split · one development pilot seed · 65,536 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. The pilot also selected the derivative strengths. [Strength selection](results/selection/abstracts.json) · [Experiment ledger](reports/experiments/experiments.md)
+**Full development split · 1/8 full-budget seeds · 524,288 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](results/selection/abstracts.json) · [Experiment ledger](reports/experiments/experiments.md)
 
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
-| Development NLL<br>↓ Lower is better | **3.113948** | 3.113974 | 3.114247 | 0.000300 higher | 0.000273 higher |
-| Development perplexity<br>↓ Lower is better | **22.5097** | 22.5103 | 22.5165 | 0.0067 higher | 0.0061 higher |
-| Dev top-1 accuracy<br>↑ Higher is better | **41.321%** | **41.321%** | 41.315% | 0.006 pp lower | 0.006 pp lower |
-| Training speed (targets/s)<br>↑ Higher is better | **1,659** | 435 | 189 | 88.6% slower | 56.5% slower |
+| Development NLL<br>↓ Lower is better | 3.036813 | **3.036731** | 3.036755 | 0.000058 lower | 0.000024 higher |
+| Development perplexity<br>↓ Lower is better | 20.8387 | **20.8370** | 20.8375 | 0.0012 lower | 0.0005 higher |
+| Dev top-1 accuracy<br>↑ Higher is better | **42.478%** | 42.476% | **42.478%** | Tie | 0.002 pp higher |
+| Equal-time probe NLL<br>↓ Lower is better | **3.00554** | 3.04789 | 3.16336 | 0.15782 higher | 0.11547 higher |
+| Training speed (targets/s)<br>↑ Higher is better | **1,507** | 350 | 128 | 91.5% slower | 63.4% slower |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 2,346.3 | 2,346.3 | 2,346.3 | Tie | Tie |
 
-An equal-time NLL comparison is pending because at least one arm lacks a recorded development checkpoint at or before the shared cutoff.
+The common training-time cutoff had a median of 347.9 seconds. The furthest checkpoint used for this row was 112.1 seconds before its cutoff.
 
-Peak host memory (lower uses less RAM) was AdamW 3.78 GiB, Hessian trace 10.28 GiB, Third order 13.09 GiB. This measure includes earlier work in each interpreter.
+Peak host memory (lower uses less RAM) was AdamW 14.04 GiB, Hessian trace 14.04 GiB, Third order 14.04 GiB. This measure includes earlier work in each interpreter.
 
-Awaiting paired test results (0 of 8 full-horizon training triplets).
+Awaiting paired test results (1 of 8 full-horizon training triplets).
 
 The equal-time row uses the last available fixed-window development score at or before the fastest run’s finish time in each seed. Full-split NLL uses every development target. Training speed includes regularizer probes. Adapter derivatives use CPU float64 with one GPU reserved. [Timing definitions and checkpoint lags](reports/summary.md)
 
@@ -286,13 +287,13 @@ Each panel shows the first saved prompt and full continuations from the lowest m
 
 </details>
 
-<details><summary>Pythia-410M adapters · same prompt, seed 0</summary>
+<details><summary>Pythia-410M adapters · same prompt, seed 1</summary>
 
 **Prompt** <samp>One of the central objectives of contemporary neuroimaging research is to<br>create predictive models</samp>
 
-| [AdamW](results/abstracts-pilot-s00-ce-r00/samples.jsonl) | [Hessian trace](results/abstracts-pilot-s00-trace-r01-fp64/samples.jsonl) | [Third order](results/abstracts-pilot-s00-third-r01-fp64/samples.jsonl) |
+| [AdamW](results/abstracts-confirm-s01-ce-r00/samples.jsonl) | [Hessian trace](results/abstracts-confirm-s01-trace-r01-fp64/samples.jsonl) | [Third order](results/abstracts-confirm-s01-third-r01-fp64/samples.jsonl) |
 | --- | --- | --- |
-| <samp> that will accurately predict the behavior of<br>patient-specific neurological disorders such as epilepsy. In this paper, we<br>present a novel dataset of EEG data recorded from children with focal<br>subcortical epilepsy</samp> | <samp> that will be used to assess the cognitive<br>performance of neurological disorders. We will focus on three major areas:<br>(1) the nervous system as a whole, (2) the brain regions that</samp> | <samp> that will accurately predict the behavior of<br>patient-specific neurological disorders such as epilepsy. In this paper, we<br>present a novel dataset of EEG data recorded from children with focal<br>subcortical epilepsy</samp> |
+| <samp> that will accurately predict the behavior of<br>neuropsychiatric disorders. We hypothesize that the more accurate prediction of<br>behavior based on the nervous system anatomy, the better the prediction<br>precision for clinical diagnosis</samp> | <samp> that will accurately predict the behavior of<br>neuropsychiatric disorders. We hypothesize that the more accurate prediction of<br>behavior based on the nervous system anatomy, the better the prediction<br>precision for clinical diagnosis</samp> | <samp> that will accurately predict the behavior of<br>neuropsychiatric disorders. We hypothesize that the more accurate prediction of<br>behavior based on the nervous system anatomy, the better the prediction<br>precision for clinical diagnosis</samp> |
 
 </details>
 
@@ -310,7 +311,7 @@ Seed sensitivity is the final stage, after both primary test evaluations, all hy
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 58 runs, including 58 with a completed summary.
+Recorded 59 runs, including 59 with a completed summary.
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
@@ -326,7 +327,7 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 
 **TinyStories** · [Ordinary AdamW](reports/experiments/stories-confirm-s01-ce-r00/experiment.md#fixed-prompt-generations) · [Third derivative](reports/experiments/stories-confirm-s01-third-r01/experiment.md#fixed-prompt-generations) · [Hessian trace](reports/experiments/stories-confirm-s01-trace-r01/experiment.md#fixed-prompt-generations) · [Initial checkpoint](reports/experiments/stories-control-s00-initial-r00/experiment.md#fixed-prompt-generations) · [Unigram](reports/experiments/stories-control-s00-unigram-r00/experiment.md#fixed-prompt-generations) · [Curvature-dependent hybrid](reports/experiments/stories-hybrid-s21-adaptive-r01/experiment.md#fixed-prompt-generations) · [Always-on hybrid](reports/experiments/stories-hybrid-s21-always-r01/experiment.md#fixed-prompt-generations) · [Fixed late hybrid](reports/experiments/stories-hybrid-s21-late-r01/experiment.md#fixed-prompt-generations) · [Stronger trace](reports/experiments/stories-hybrid-s21-strong-r01/experiment.md#fixed-prompt-generations) · [Cross-seed replay](reports/experiments/stories-hybrid-s22-replay-r01/experiment.md#fixed-prompt-generations) · [Trace + third derivative](reports/experiments/stories-pilot-s00-combined-r01/experiment.md#fixed-prompt-generations) · [Squared Hessian norm](reports/experiments/stories-pilot-s00-hessian_norm-r03/experiment.md#fixed-prompt-generations) · [Randomized gradient signs](reports/experiments/stories-pilot-s00-sham-r01/experiment.md#fixed-prompt-generations)
 
-**Research abstracts** · [Ordinary AdamW](reports/experiments/abstracts-confirm-s01-ce-r00/experiment.md#fixed-prompt-generations) · [Third derivative](reports/experiments/abstracts-confirm-s01-third-r01-fp64/experiment.md#fixed-prompt-generations) · [Initial checkpoint](reports/experiments/abstracts-control-s00-initial-r00/experiment.md#fixed-prompt-generations) · [Unigram](reports/experiments/abstracts-control-s00-unigram-r00/experiment.md#fixed-prompt-generations) · [Trace + third derivative](reports/experiments/abstracts-pilot-s00-combined-r01-fp64/experiment.md#fixed-prompt-generations) · [Squared Hessian norm](reports/experiments/abstracts-pilot-s00-hessian_norm-r03-fp64/experiment.md#fixed-prompt-generations) · [Randomized gradient signs](reports/experiments/abstracts-pilot-s00-sham-r01-fp64/experiment.md#fixed-prompt-generations) · [Hessian trace](reports/experiments/abstracts-pilot-s00-trace-r01-fp64/experiment.md#fixed-prompt-generations)
+**Research abstracts** · [Ordinary AdamW](reports/experiments/abstracts-confirm-s01-ce-r00/experiment.md#fixed-prompt-generations) · [Third derivative](reports/experiments/abstracts-confirm-s01-third-r01-fp64/experiment.md#fixed-prompt-generations) · [Hessian trace](reports/experiments/abstracts-confirm-s01-trace-r01-fp64/experiment.md#fixed-prompt-generations) · [Initial checkpoint](reports/experiments/abstracts-control-s00-initial-r00/experiment.md#fixed-prompt-generations) · [Unigram](reports/experiments/abstracts-control-s00-unigram-r00/experiment.md#fixed-prompt-generations) · [Trace + third derivative](reports/experiments/abstracts-pilot-s00-combined-r01-fp64/experiment.md#fixed-prompt-generations) · [Squared Hessian norm](reports/experiments/abstracts-pilot-s00-hessian_norm-r03-fp64/experiment.md#fixed-prompt-generations) · [Randomized gradient signs](reports/experiments/abstracts-pilot-s00-sham-r01-fp64/experiment.md#fixed-prompt-generations)
 
 <!-- RESULTS:END -->
 
@@ -353,7 +354,7 @@ The protocol, derivative checks and pilot timing are public. The checklist follo
 <!-- MILESTONES:START -->
 
 - [x] Finish both development searches and their single-seed trained and untrained controls. [Selection and controls](reports/planned-runs.md)
-- [ ] Complete the first full-budget AdamW, Hessian-trace and third-order comparison in both model families. [Run ledger](reports/experiments/experiments.md)
+- [x] Complete the first full-budget AdamW, Hessian-trace and third-order comparison in both model families. [Run ledger](reports/experiments/experiments.md)
 - [ ] Evaluate both frozen eight-seed primary test matrices. [Paired test results](reports/summary.md)
 - [ ] Finish the late, curvature-dependent and replay experiments with all comparison arms. [Hybrid plan](reports/hybrid/preregistration.md) · [Width and prediction results](reports/hybrid/results.md)
 - [ ] Complete the common score-space measurement and each applicable weight-space measurement. [Flatness by checkpoint](reports/flatness.md)

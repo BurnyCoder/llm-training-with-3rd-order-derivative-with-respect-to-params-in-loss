@@ -16,7 +16,7 @@ Does penalizing changes in loss curvature improve next-token prediction? The stu
 | Model and split | Matched evidence | Third-order NLL vs AdamW<br>↓ Lower is better | Third-order NLL vs trace<br>↓ Lower is better | Speed vs AdamW<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
 | TinyStories pretraining · dev | 1/8 full-budget seeds | 0.000003 lower | 0.000254 lower | 71.7% slower |
-| Pythia-410M adapters · dev | one development pilot seed | 0.000300 higher | 0.000273 higher | 88.6% slower |
+| Pythia-410M adapters · dev | 1/8 full-budget seeds | 0.000058 lower | 0.000024 higher | 91.5% slower |
 
 **Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
 
@@ -47,21 +47,22 @@ Awaiting paired test results (1 of 8 full-horizon training triplets).
 
 ### Pythia-410M adapters
 
-**Full development split · one development pilot seed · 65,536 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. The pilot also selected the derivative strengths. [Strength selection](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/selection/abstracts.json) · [Experiment ledger](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/experiments/experiments.md)
+**Full development split · 1/8 full-budget seeds · 524,288 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/selection/abstracts.json) · [Experiment ledger](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/experiments/experiments.md)
 
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
-| Development NLL<br>↓ Lower is better | **3.113948** | 3.113974 | 3.114247 | 0.000300 higher | 0.000273 higher |
-| Development perplexity<br>↓ Lower is better | **22.5097** | 22.5103 | 22.5165 | 0.0067 higher | 0.0061 higher |
-| Dev top-1 accuracy<br>↑ Higher is better | **41.321%** | **41.321%** | 41.315% | 0.006 pp lower | 0.006 pp lower |
-| Training speed (targets/s)<br>↑ Higher is better | **1,659** | 435 | 189 | 88.6% slower | 56.5% slower |
+| Development NLL<br>↓ Lower is better | 3.036813 | **3.036731** | 3.036755 | 0.000058 lower | 0.000024 higher |
+| Development perplexity<br>↓ Lower is better | 20.8387 | **20.8370** | 20.8375 | 0.0012 lower | 0.0005 higher |
+| Dev top-1 accuracy<br>↑ Higher is better | **42.478%** | 42.476% | **42.478%** | Tie | 0.002 pp higher |
+| Equal-time probe NLL<br>↓ Lower is better | **3.00554** | 3.04789 | 3.16336 | 0.15782 higher | 0.11547 higher |
+| Training speed (targets/s)<br>↑ Higher is better | **1,507** | 350 | 128 | 91.5% slower | 63.4% slower |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 2,346.3 | 2,346.3 | 2,346.3 | Tie | Tie |
 
-An equal-time NLL comparison is pending because at least one arm lacks a recorded development checkpoint at or before the shared cutoff.
+The common training-time cutoff had a median of 347.9 seconds. The furthest checkpoint used for this row was 112.1 seconds before its cutoff.
 
-Peak host memory (lower uses less RAM) was AdamW 3.78 GiB, Hessian trace 10.28 GiB, Third order 13.09 GiB. This measure includes earlier work in each interpreter.
+Peak host memory (lower uses less RAM) was AdamW 14.04 GiB, Hessian trace 14.04 GiB, Third order 14.04 GiB. This measure includes earlier work in each interpreter.
 
-Awaiting paired test results (0 of 8 full-horizon training triplets).
+Awaiting paired test results (1 of 8 full-horizon training triplets).
 
 The equal-time row uses the last available fixed-window development score at or before the fastest run’s finish time in each seed. Full-split NLL uses every development target. Training speed includes regularizer probes. Adapter derivatives use CPU float64 with one GPU reserved. [Timing definitions and checkpoint lags](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/summary.md)
 
@@ -243,13 +244,13 @@ Each panel shows the first saved prompt and full continuations from the lowest m
 
 </details>
 
-<details><summary>Pythia-410M adapters · same prompt, seed 0</summary>
+<details><summary>Pythia-410M adapters · same prompt, seed 1</summary>
 
 **Prompt** <samp>One of the central objectives of contemporary neuroimaging research is to<br>create predictive models</samp>
 
-| [AdamW](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/abstracts-pilot-s00-ce-r00/samples.jsonl) | [Hessian trace](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/abstracts-pilot-s00-trace-r01-fp64/samples.jsonl) | [Third order](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/abstracts-pilot-s00-third-r01-fp64/samples.jsonl) |
+| [AdamW](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/abstracts-confirm-s01-ce-r00/samples.jsonl) | [Hessian trace](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/abstracts-confirm-s01-trace-r01-fp64/samples.jsonl) | [Third order](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/abstracts-confirm-s01-third-r01-fp64/samples.jsonl) |
 | --- | --- | --- |
-| <samp> that will accurately predict the behavior of<br>patient-specific neurological disorders such as epilepsy. In this paper, we<br>present a novel dataset of EEG data recorded from children with focal<br>subcortical epilepsy</samp> | <samp> that will be used to assess the cognitive<br>performance of neurological disorders. We will focus on three major areas:<br>(1) the nervous system as a whole, (2) the brain regions that</samp> | <samp> that will accurately predict the behavior of<br>patient-specific neurological disorders such as epilepsy. In this paper, we<br>present a novel dataset of EEG data recorded from children with focal<br>subcortical epilepsy</samp> |
+| <samp> that will accurately predict the behavior of<br>neuropsychiatric disorders. We hypothesize that the more accurate prediction of<br>behavior based on the nervous system anatomy, the better the prediction<br>precision for clinical diagnosis</samp> | <samp> that will accurately predict the behavior of<br>neuropsychiatric disorders. We hypothesize that the more accurate prediction of<br>behavior based on the nervous system anatomy, the better the prediction<br>precision for clinical diagnosis</samp> | <samp> that will accurately predict the behavior of<br>neuropsychiatric disorders. We hypothesize that the more accurate prediction of<br>behavior based on the nervous system anatomy, the better the prediction<br>precision for clinical diagnosis</samp> |
 
 </details>
 

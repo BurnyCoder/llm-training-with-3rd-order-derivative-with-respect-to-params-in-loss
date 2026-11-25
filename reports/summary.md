@@ -1,10 +1,10 @@
 # Study summary
 
-Recorded 58 runs, including 58 with a completed summary.
+Recorded 59 runs, including 59 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (1 of 8 full-horizon training triplets).
 
-**Research abstracts.** Awaiting paired test results (0 of 8 full-horizon training triplets).
+**Research abstracts.** Awaiting paired test results (1 of 8 full-horizon training triplets).
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid outcomes](hybrid/results.md)
 
@@ -22,6 +22,7 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Research abstracts | confirm | Ordinary AdamW | 0.000 | 524,288 | 1 | 3.0368 | 20.8387 | — | — |
 | Research abstracts | confirm | Third derivative | 0.010 | 524,288 | 1 | 3.0368 | 20.8375 | — | — |
+| Research abstracts | confirm | Hessian trace | 0.010 | 524,288 | 1 | 3.0367 | 20.8370 | — | — |
 | Research abstracts | control | Initial checkpoint | 0.000 | 0 | 1 | 3.2517 | 25.8335 | — | — |
 | Research abstracts | control | Unigram | 0.000 | 0 | 1 | 7.3306 | 1,526.3141 | — | — |
 | Research abstracts | pilot | Ordinary AdamW | 0.000 | 65,536 | 1 | 3.1139 | 22.5097 | — | — |
@@ -67,6 +68,24 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 | 1 | 148.2 | Ordinary AdamW | 148.2 | 16,777,216 | 2.53821 |
 | 1 | 148.2 | Hessian trace | 147.7 | 9,961,472 | 2.68115 |
 | 1 | 148.2 | Third derivative | 146.2 | 5,767,168 | 2.95676 |
+
+### Research abstracts at equal training time
+
+| Seed | Common cutoff (s) | Method | Recorded checkpoint (s) | Training tokens | Dev NLL |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 347.9 | Ordinary AdamW | 347.9 | 524,288 | 3.00554 |
+| 1 | 347.9 | Hessian trace | 321.6 | 98,304 | 3.04789 |
+| 1 | 347.9 | Third derivative | 235.9 | 24,576 | 3.16336 |
+
+### Research abstracts after subtracting host derivative calls
+
+This supplementary clock excludes the measured host probe calls and their transfers. The registered comparison above counts elapsed time with one GPU reserved.
+
+| Seed | Cutoff (s) | Method | Checkpoint (s) | Training tokens | Dev NLL |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 347.9 | Ordinary AdamW | 347.9 | 524,288 | 3.00554 |
+| 1 | 347.9 | Hessian trace | 325.7 | 458,752 | 3.00555 |
+| 1 | 347.9 | Third derivative | 321.2 | 262,144 | 3.01897 |
 
 ![Computation graph](../docs/figures/architecture.png)
 

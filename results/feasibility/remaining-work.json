@@ -1,12 +1,12 @@
 {
-  "as_of": "2026-11-25T22:08:54+00:00",
-  "completed": 115,
+  "as_of": "2026-11-25T22:47:51+00:00",
+  "completed": 116,
   "planned": 305,
-  "remaining": 190,
-  "remaining_hours_in_week": 152.64055555555555,
+  "remaining": 189,
+  "remaining_hours_in_week": 151.99138888888888,
   "hybrid_blocks_left_including_partial": 4,
   "replays_left": 5,
-  "remaining_primary_publications": 91,
+  "remaining_primary_publications": 90,
   "geometry": {
     "stories": {
       "planned": 92,
@@ -53,8 +53,8 @@
     "trace": {
       "pilot_run": "abstracts-pilot-s00-trace-r01-fp64",
       "pilot_calls": 5,
-      "observed_calls": 5,
-      "mean_host_seconds_per_call": 20.019096819999685,
+      "observed_calls": 63,
+      "mean_host_seconds_per_call": 19.481396820635368,
       "registered_calls_by_seed": {
         "1": 58,
         "2": 72,
@@ -66,7 +66,6 @@
         "8": 68
       },
       "remaining_seeds": [
-        1,
         2,
         3,
         4,
@@ -75,27 +74,27 @@
         7,
         8
       ],
-      "remaining_calls": 517,
-      "extrapolated_pilot_calls": 320.0,
-      "adjustment_hours": 1.0954894648722049
+      "remaining_calls": 459,
+      "extrapolated_pilot_calls": 280.0,
+      "adjustment_hours": 0.9268372308532561
     }
   },
   "scenarios": {
     "typical": {
-      "confirmatory_training_and_test": 25.240867159412712,
+      "confirmatory_training_and_test": 24.47812658983821,
       "hybrid_training_and_widths": 2.843339459101358,
       "secondary_pilots": 0.0,
       "flatness_and_its_publication": 1.6422222222222222,
-      "original_model_publications": 1.3495356748611111,
-      "total_hours": 31.075964515597402
+      "original_model_publications": 1.3347056124999999,
+      "total_hours": 30.29839388366179
     },
     "slower": {
-      "confirmatory_training_and_test": 25.240867159412712,
+      "confirmatory_training_and_test": 24.47812658983821,
       "hybrid_training_and_widths": 2.843339459101358,
       "secondary_pilots": 0.0,
       "flatness_and_its_publication": 2.404166666666667,
-      "original_model_publications": 1.8200443877777777,
-      "total_hours": 32.30841767295851
+      "original_model_publications": 1.8000439000000001,
+      "total_hours": 31.525676615606237
     }
   }
 }
