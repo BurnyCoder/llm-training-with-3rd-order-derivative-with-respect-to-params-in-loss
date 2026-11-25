@@ -18,6 +18,27 @@ def publish_snapshot(project, message):
         return _publish_snapshot(project,message)
 
 
+def push_main(project):
+    """Preserve concurrent upstream commits when a completed run has a local release commit."""
+    def run(*args,check=True):
+        return subprocess.run(["git",*args],cwd=project,check=check,capture_output=True,text=True)
+    for attempt in range(4):
+        pushed = run("push","origin","main",check=False)
+        if pushed.returncode==0:
+            return
+        error = pushed.stderr.lower()
+        if attempt==3 or ("fetch first" not in error and "non-fast-forward" not in error):
+            raise RuntimeError(f"Git release push failed: {pushed.stderr.strip()}")
+        run("fetch","origin","main")
+        merged=run("merge","--no-edit","FETCH_HEAD",check=False)
+        if merged.returncode:
+            conflicts=run("diff","--name-only","--diff-filter=U").stdout.strip()
+            if conflicts:
+                # Preserve both original commits for review when edits overlap.
+                run("merge","--abort")
+            raise RuntimeError(f"Git release needs a merge review: {conflicts or merged.stderr.strip()}")
+
+
 def _publish_snapshot(project,message):
     """Keep the Git revision and all verified collection receipts together across concurrent releases."""
     def git(*args):
@@ -28,7 +49,7 @@ def _publish_snapshot(project,message):
     git("add","--",*public)
     if git("diff","--cached","--name-only"):
         git("commit","-m",message,"--",*public)
-    git("push","origin","main")
+    push_main(project)
     revision = git("rev-parse","HEAD")
     publish_archive(project,storage_root(project),revision,message)
     return revision
