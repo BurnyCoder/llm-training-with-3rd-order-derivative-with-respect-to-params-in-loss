@@ -62,3 +62,13 @@ def test_packed_files_match_manifest_and_release_test_only_after_both_gates(tmp_
     (base/"train.bin").write_bytes(b"wrong.bin")
     with pytest.raises(ValueError,match="differs from its manifest"):
         dataset_files(tmp_path,"stories",tree,{})
+
+
+def test_live_feed_retains_active_and_latest_completed_runs():
+    from thirdloss.live_hub import overlay
+    done={"stage":"abstracts","status":"complete"}
+    runs=[{**done,"id":"earlier","finished_at":"01"},{**done,"id":"newer","finished_at":"02"},
+          {"stage":"abstracts","status":"training","id":"current","events":[{"accuracy":0.4}]}]
+    feed=overlay({"runs":runs,"stages":{},"pilot_comparisons":{}})
+    assert feed["active"] and [r["id"] for r in feed["runs"]]==["newer","current"]
+    assert feed["runs"][1]["events"]==[{"accuracy":0.4}]

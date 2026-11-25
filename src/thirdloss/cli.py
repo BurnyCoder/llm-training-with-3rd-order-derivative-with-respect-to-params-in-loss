@@ -11,23 +11,13 @@ from .records import HORIZONS, METHODS, storage_root
 
 def dashboard(project, port):
     """Serve the same Pages application locally with a live view of atomically recorded events."""
-    from .report_records import read_json, study_snapshot
-    partial_calibrations=storage_root(project)/"calibration"
+    from .live_hub import live_snapshot
+    storage=storage_root(project)
 
     class Handler(SimpleHTTPRequestHandler):
         def do_GET(self):
             if self.path.split("?",1)[0] == "/live.json":
-                study = study_snapshot(project)
-                for run in study["runs"]:
-                    if run.get("status")=="initializing":
-                        kinds={"combined":("trace","third"),"sham":("third",)}.get(run.get("method"),(run.get("method"),))
-                        for kind in kinds:
-                            suffix="-fp64" if run["stage"]=="abstracts" else ""
-                            file=partial_calibrations/f"{run['stage']}-{kind}{suffix}-draws.json"
-                            draws=read_json(file).get("draws",[])
-                            if draws:
-                                run["status"]=f"calibrating ({len(draws)}/16)"
-                                run["calibration_progress"]={"draws_completed":len(draws),"last_draw":draws[-1]}
+                study = live_snapshot(project,storage)
                 data = json.dumps(study,ensure_ascii=False,allow_nan=False).encode()
                 self.send_response(200)
                 self.send_header("Content-Type","application/json; charset=utf-8")
@@ -131,7 +121,10 @@ def main(argv=None):
     from .records import setup_device
     device = setup_device(args.device)
     if args.action=="study":
-        run_study(project,storage,stages,device,args.publish)
+        from contextlib import nullcontext
+        from .live_hub import publish_live
+        with publish_live(project,storage) if args.publish else nullcontext():
+            run_study(project,storage,stages,device,args.publish)
         return
     if args.action=="evaluate":
         summary = evaluate_one(project,storage,args.run_id,device)
