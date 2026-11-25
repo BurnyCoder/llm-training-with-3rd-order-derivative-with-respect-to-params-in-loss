@@ -1,6 +1,6 @@
 {
-  "checked_at": "2026-11-25T06:46:24+00:00",
-  "git_revision": "7ba3baa409491265ed598ce0ff9ec581fc387cbb",
+  "checked_at": "2026-11-25T06:57:41+00:00",
+  "git_revision": "27a4b3fca137e9f5ddf655280151135426874f98",
   "exit_code": 0,
   "cases": [
     {
@@ -15,7 +15,7 @@
     },
     {
       "test": "tests.test_analysis.test_holm_step_down_tie_handling_and_exact_boundary",
-      "seconds": 0.002,
+      "seconds": 0.001,
       "outcome": "passed"
     },
     {
@@ -60,7 +60,7 @@
     },
     {
       "test": "tests.test_analysis.test_partial_or_mismatched_results_never_unlock_primary_inference[mixed freeze]",
-      "seconds": 0.002,
+      "seconds": 0.001,
       "outcome": "passed"
     },
     {
@@ -80,7 +80,7 @@
     },
     {
       "test": "tests.test_analysis.test_elapsed_time_uses_latest_actual_validation_before_shared_cutoff",
-      "seconds": 0.002,
+      "seconds": 0.001,
       "outcome": "passed"
     },
     {
@@ -95,47 +95,47 @@
     },
     {
       "test": "tests.test_data.test_prefix_candidates_match_exhaustive_jaccard_including_boundary",
-      "seconds": 0.066,
+      "seconds": 0.052,
       "outcome": "passed"
     },
     {
       "test": "tests.test_data.test_abstract_submission_month_and_base_id_grouping",
-      "seconds": 0.04,
+      "seconds": 0.035,
       "outcome": "passed"
     },
     {
       "test": "tests.test_data.test_prepare_from_parquet_proves_train_only_fit_packing_and_repair",
-      "seconds": 0.141,
+      "seconds": 0.193,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_gpu_production_decoder_third_order_update_matches_cpu",
-      "seconds": 8.696,
+      "seconds": 3.191,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_quartic_penalty_retains_fourth_derivative",
-      "seconds": 0.003,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_mixed_cubic_exactly_averages_to_tensor_norm",
-      "seconds": 0.085,
+      "seconds": 0.057,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_random_probe_generator_gives_independent_directions",
-      "seconds": 0.396,
+      "seconds": 0.221,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_penalty_supports_linear_loss_and_unused_coordinates[third]",
-      "seconds": 0.003,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_penalty_supports_linear_loss_and_unused_coordinates[trace]",
-      "seconds": 0.002,
+      "seconds": 0.003,
       "outcome": "passed"
     },
     {
@@ -145,17 +145,17 @@
     },
     {
       "test": "tests.test_derivatives.test_quadratic_has_curvature_and_zero_third_derivative",
-      "seconds": 0.002,
+      "seconds": 0.006,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_signed_hessian_trace_and_squared_norm_have_correct_gradients",
-      "seconds": 0.013,
+      "seconds": 0.004,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_tiny_transformer_against_dense_tensor_and_finite_differences",
-      "seconds": 2.667,
+      "seconds": 1.996,
       "outcome": "passed"
     },
     {
@@ -165,27 +165,36 @@
     },
     {
       "test": "tests.test_derivatives.test_production_story_model_exposes_full_weight_penalty_gradient",
-      "seconds": 0.086,
+      "seconds": 0.053,
       "outcome": "passed"
     },
     {
+      "test": "tests.test_derivatives.test_pythia_adapter_fourth_derivative_and_portable_checkpoint",
+      "seconds": 5.614,
+      "outcome": "passed",
+      "measurements": {
+        "adapter_directional_autograd": "9035.374247002468",
+        "adapter_directional_finite_difference": "9035.370018056445"
+      }
+    },
+    {
       "test": "tests.test_reporting.test_snapshot_keeps_full_score_and_trace_semantics",
-      "seconds": 0.017,
+      "seconds": 0.045,
       "outcome": "passed"
     },
     {
       "test": "tests.test_reporting.test_report_before_first_run_keeps_readme_and_emits_protocol_paper",
-      "seconds": 1.067,
+      "seconds": 0.478,
       "outcome": "passed"
     },
     {
       "test": "tests.test_training.test_randomized_control_preserves_coordinate_magnitudes_and_zero_is_noop",
-      "seconds": 0.205,
+      "seconds": 0.145,
       "outcome": "passed"
     },
     {
       "test": "tests.test_training.test_step_recovery_matches_uninterrupted_weights",
-      "seconds": 3.149,
+      "seconds": 2.03,
       "outcome": "passed"
     }
   ]
