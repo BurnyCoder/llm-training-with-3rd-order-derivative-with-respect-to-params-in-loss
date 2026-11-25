@@ -7,6 +7,14 @@ from pypdf import PdfReader
 from thirdloss.reporting import build_report, study_snapshot
 
 
+def test_examples_label_an_eligible_run_and_preserve_the_fixed_sample_order():
+    from thirdloss.report_records import example_runs
+    fields = {"stage":"abstracts","method":"third","status":"complete","samples":[{"continuation":"example"}]}
+    rows = [{**fields,"id":key,"phase":phase} for key,phase in
+            [("a-archived","diagnostic"),("c-later","pilot"),("b-corrected","pilot")]]
+    assert [r["id"] for r in example_runs(rows)] == ["b-corrected"]
+
+
 def test_snapshot_keeps_full_score_and_trace_semantics(tmp_path):
     """Distinguish raw derivative size, weighted training contribution and full validation."""
     run = tmp_path / "results" / "stories-pilot-s00-third-r03"

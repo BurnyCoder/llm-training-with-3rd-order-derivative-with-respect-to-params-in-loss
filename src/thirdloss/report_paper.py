@@ -23,7 +23,7 @@ from reportlab.platypus import (
     Image, KeepTogether, LongTable, PageBreak, Paragraph, SimpleDocTemplate, Spacer, TableStyle,
 )
 
-from .report_records import METHODS, REPOSITORY, STAGES, completed, describe_difference, finite, fmt, verdict_text
+from .report_records import METHODS, REPOSITORY, STAGES, completed, describe_difference, example_runs, finite, fmt, verdict_text
 
 REFERENCES = {
     "flat": ("Hochreiter and Schmidhuber (1994), Simplifying neural nets by discovering flat minima",
@@ -382,21 +382,17 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
                 p(f"{STAGES[stage]} / {METHODS[base]}: median ΔNLL {fmt(stats['median_delta'], 5)}, "
                   f"interval [{fmt(lo,5)}, {fmt(hi,5)}] at achieved coverage {fmt(stats['ci_coverage'],4)}. "
                   f"Holm-adjusted p = {fmt(stats['p_holm'], 5)}.", "caption")
-    has_examples = any(run["samples"] for run in study["runs"])
-    if has_examples:
+    examples = example_runs(study["runs"])
+    if examples:
         p("Appendix · Output examples", "heading")
-        p("For each stage and method, the first saved sample in run-ID order is shown in excerpt. "
+        p("For each stage and method, the first registered checkpoint and sample in run-ID order is shown in excerpt. "
           "The experiment ledger contains every full saved continuation and its corresponding "
           f"reference when recorded. {_link(REPOSITORY + '/tree/main/reports/experiments', 'All outputs')}")
-        seen = set()
-        for run in study["runs"]:
-            key = (run.get("stage"), run.get("method"))
-            if not run["samples"] or key in seen:
-                continue
-            seen.add(key)
+        for run in examples:
             sample = run["samples"][0]
-            label = f"{STAGES.get(key[0], key[0])} · {METHODS.get(key[1], key[1])}"
-            example = [Paragraph(escape(label), styles["subheading"])]
+            label = f"{STAGES[run['stage']]} · {METHODS[run['method']]} · {run['phase']}, seed {run['seed']}"
+            url = REPOSITORY + "/blob/main/results/" + run["id"] + "/samples.jsonl"
+            example = [Paragraph(_link(url,label), styles["subheading"])]
             for field, name in (("prompt", "Prompt"), ("reference", "Reference"), ("continuation", "Prediction")):
                 if sample.get(field) is not None:
                     value = str(sample[field])

@@ -2,6 +2,8 @@
 
 import hashlib
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 from huggingface_hub import hf_hub_download
@@ -132,15 +134,14 @@ def evaluate_one(project, storage, run_id, device):
 
 
 def milestone(project,storage,summary,publish):
-    from .reporting import build_report
-    from .progress import progress
     path = project/"results"/summary["id"]/"summary.json"
     marker = storage/"releases"/(summary["id"]+".json")
     fingerprint = sha256(path)
     if publish and marker.exists() and read_json(marker)["summary_sha256"]==fingerprint:
         return
-    build_report(project)
-    progress(project)
+    # A study can run for days. Render from the current checked-in reporting code so a
+    # later milestone cannot replace an updated paper or explorer with an older template.
+    subprocess.run([sys.executable,"-m","thirdloss.cli","--project",str(project),"report"],cwd=project,check=True)
     if publish:
         publish_weights(project,storage,summary)
         label = "evaluation" if "test_nll" in summary else "development"
