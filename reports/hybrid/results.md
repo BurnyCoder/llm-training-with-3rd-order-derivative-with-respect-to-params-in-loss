@@ -1,6 +1,6 @@
 # Hybrid schedules on TinyStories
 
-TinyStories hybrid follow-up: 23 of 48 full runs and 4 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
+TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
 
 [Frozen protocol and decision rule](preregistration.md) · [Interactive measurement and run selector](../../docs/index.html#curves)
 
@@ -14,6 +14,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 22 | Shared trace checkpoint | [2048](../../results/stories-branch-s22-trunk-r01/width-2048.json) | 15.40259 | 15.40137 | 15.40381 | 0 | 2.81658 | 5.80 |
 | 23 | Shared trace checkpoint | [2048](../../results/stories-branch-s23-trunk-r01/width-2048.json) | 14.99414 | 14.99316 | 14.99512 | 0 | 2.80132 | 7.17 |
 | 24 | Shared trace checkpoint | [2048](../../results/stories-branch-s24-trunk-r01/width-2048.json) | 15.20142 | 15.20020 | 15.20264 | 0 | 2.79983 | 6.09 |
+| 25 | Shared trace checkpoint | [2048](../../results/stories-branch-s25-trunk-r01/width-2048.json) | 15.39355 | 15.39258 | 15.39453 | 0 | 2.80412 | 8.23 |
 | 21 | Curvature-dependent hybrid | [2048](../../results/stories-hybrid-s21-adaptive-r01/width-2048.json) | 15.14258 | 15.14160 | 15.14355 | 0 | 2.77694 | 5.28 |
 | 21 | Curvature-dependent hybrid | [3072](../../results/stories-hybrid-s21-adaptive-r01/width-3072.json) | 13.95557 | 13.95459 | 13.95654 | 0 | 2.64916 | 5.48 |
 | 21 | Curvature-dependent hybrid | [4096](../../results/stories-hybrid-s21-adaptive-r01/width-4096.json) | 13.15723 | 13.15625 | 13.15820 | 0 | 2.59304 | 5.24 |
@@ -94,6 +95,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 22 | Shared trace checkpoint | 2.757325 | 0.43399 | 0.40627 | [2048](../../results/stories-branch-s22-trunk-r01/schedule.json) | 0 | 61,905 | 608.2 | 2,077.5 |
 | 23 | Shared trace checkpoint | 2.752497 | 0.43492 | 0.45587 | [2048](../../results/stories-branch-s23-trunk-r01/schedule.json) | 0 | 54,841 | 608.2 | 2,090.3 |
 | 24 | Shared trace checkpoint | 2.763870 | 0.43259 | 0.41159 | [2048](../../results/stories-branch-s24-trunk-r01/schedule.json) | 0 | 60,780 | 608.2 | 2,040.6 |
+| 25 | Shared trace checkpoint | 2.762062 | 0.43342 | 0.42858 | [2048](../../results/stories-branch-s25-trunk-r01/schedule.json) | 0 | 45,520 | 608.2 | 3,043.0 |
 | 21 | Curvature-dependent hybrid | 2.545908 | 0.46154 | 0.44853 | [2176](../../results/stories-hybrid-s21-adaptive-r01/schedule.json) | 1.38036e-15 | 43,973 | 617.3 | 2,072.2 |
 | 21 | Always-on hybrid | 2.545923 | 0.46156 | 0.44052 | [0](../../results/stories-hybrid-s21-always-r01/schedule.json) | 3.01905e-14 | 30,503 | 621.3 | 2,001.6 |
 | 21 | Fixed late hybrid | 2.546113 | 0.46158 | 0.44853 | [2049](../../results/stories-hybrid-s21-late-r01/schedule.json) | 3.01905e-14 | 41,141 | 617.3 | 2,078.0 |

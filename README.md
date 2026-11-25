@@ -142,7 +142,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Ordinary AdamW · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
 | Hessian trace · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
 | Third derivative · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
-| Shared trace checkpoint | 8,388,608 | 21–28 | 15.172 (4/8) | 0.44445 (4/8) | 1.0618 (4/8) |
+| Shared trace checkpoint | 8,388,608 | 21–28 | 15.201 (5/8) | 0.44445 (4/8) | 1.0618 (4/8) |
 | Curvature-dependent hybrid · hybrid study | 16,777,216 | 21–28 | 13.103 (4/8) | 0.57782 (4/8) | 1.0824 (4/8) |
 | Fixed late hybrid · hybrid study | 16,777,216 | 21–28 | 13.159 (4/8) | 0.57064 (4/8) | 1.0822 (4/8) |
 | Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.100 (4/8) | 0.57802 (4/8) | 1.0824 (4/8) |
@@ -298,9 +298,9 @@ Each panel shows the first saved prompt and full continuations from the lowest m
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 50 runs, including 49 with a completed summary.
+Recorded 51 runs, including 50 with a completed summary.
 
-TinyStories hybrid follow-up: 23 of 48 full runs and 4 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
+TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
 [Full score table, strength search and per-seed test differences](reports/summary.md)
 
