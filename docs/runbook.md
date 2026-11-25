@@ -58,3 +58,5 @@ With `study --publish`, the local trainer sends active loss, accuracy, probe est
 ## Checkpoint flatness
 
 Run `uv run --locked thirdloss flatness --stage both --phase pilot --publish` to measure the selected models and fitted pilot controls. Use `--phase confirm` for the eight-seed checkpoints. Each call checks the training stream and exported weights, resumes from saved measurements and publishes each newly measured checkpoint. Schedule this command between timed training runs on the same GPU. Run `uv run --locked thirdloss report` to rebuild the statistics from the saved measurements. [Design](../reports/amendments/checkpoint-flatness.md) · [Results and raw probes](../reports/flatness.md)
+
+For a complete sequential run, use `uv run --locked thirdloss study --with-hybrid --with-flatness --publish`. The final flatness pass picks up any outstanding primary checkpoints. The explorer’s measurement menu includes directional width, checkpoint RMS curvature and signed trace per parameter. [Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer)

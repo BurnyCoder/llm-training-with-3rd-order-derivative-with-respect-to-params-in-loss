@@ -61,19 +61,18 @@ def hybrid_flatness_table(runs):
                                 "Middle 50% of final directions","Rays at limit / tested"])
 
 
-def primary_flatness_table(pairs):
+def primary_flatness_rows(pairs):
     """Compare the same measured seeds, trainable parameterization, training windows and probe backend."""
     methods=("ce","trace","third")
     measured=[pair for pair in pairs if all("flatness" in pair[m] for m in methods)]
     if not measured:
-        return ""
-    for pair in measured:
-        signatures={(pair[m]["flatness"]["protocol"],pair[m]["flatness"]["probe_windows_sha256"],
-                     pair[m]["flatness"]["width_device"],pair[m]["flatness"]["hessian_device"]) for m in methods}
-        if len(signatures)!=1:
-            raise ValueError("Matched flatness statistics require the same probes and arithmetic")
+        return []
+    signatures={(pair[m]["flatness"]["protocol"],pair[m]["flatness"]["probe_windows_sha256"],
+                 pair[m]["flatness"]["width_device"],pair[m]["flatness"]["hessian_device"]) for pair in measured for m in methods}
+    if len(signatures)!=1:
+        raise ValueError("Matched flatness statistics require the same probes and arithmetic")
     groups=[[pair[m]["flatness"] for pair in measured] for m in methods]
-    rows=[
+    return [
         ["Directional width<br>↑ Wider is flatter",*[_width_stat(g,.5) for g in groups]],
         ["Final width range across seeds<br>Descriptive spread",*[_seed_range(g) for g in groups]],
         ["Middle 50% of directions<br>Descriptive spread",*[_spread(g) for g in groups]],
@@ -82,9 +81,6 @@ def primary_flatness_table(pairs):
         ["RMS Hessian curvature<br>↓ Lower means less local bending",*[f"{median(p['rms_curvature'] for p in g):.6g}" for g in groups]],
         ["Signed Hessian trace / parameter<br>No general better direction",*[f"{median(p['trace_per_parameter'] for p in g):+.6g}" for g in groups]],
     ]
-    seeds=", ".join(str(pair["ce"]["seed"]) for pair in measured)
-    return f"Seeds {seeds} · {measured[0]['ce']['tokens']:,} training targets per checkpoint.\n\n"+markdown_table(
-        rows,["Flatness statistic","AdamW","Hessian trace","Third order"])
 
 
 def flatness_ledger(study):

@@ -48,6 +48,7 @@ def parser():
             sub.add_argument("--phase",choices=("pilot","confirm","all"),default="all")
         if action=="study":
             sub.add_argument("--with-hybrid",action="store_true",help="Include the registered TinyStories hybrid follow-up on the same GPU")
+            sub.add_argument("--with-flatness",action="store_true",help="Also measure training-window geometry at saved primary checkpoints")
         if action=="verify":
             sub.add_argument("--pretrained",action="store_true",help="Also compare a full joint derivative on the prepared adapter training corpus")
             sub.add_argument("--reference",action="store_true",help="Compute the FP64 pretrained reference using the original CUDA signs")
@@ -142,6 +143,9 @@ def main(argv=None):
                 run_hybrids(project,storage,device,args.publish)
             else:
                 run_study(project,storage,stages,device,args.publish,with_hybrid=args.with_hybrid)
+                if args.with_flatness:
+                    from .checkpoint_flatness import flatness_study
+                    flatness_study(project,storage,stages,"all",device,args.publish)
         return
     if args.action=="evaluate":
         summary = evaluate_one(project,storage,args.run_id,device)

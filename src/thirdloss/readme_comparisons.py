@@ -5,7 +5,7 @@ from html import escape
 from statistics import median
 
 from .analysis import _time_match
-from .flatness_tables import hybrid_flatness_table,primary_flatness_table
+from .flatness_tables import hybrid_flatness_table,primary_flatness_rows
 from .records import HORIZONS
 from .report_records import METHODS, completed, finite, markdown_table, verdict_text
 
@@ -176,21 +176,29 @@ def _sample_panel(pairs,methods,title):
             markdown_table([[literal(s["continuation"]) for s in saved]],headers)+"\n\n</details>")
 
 
+def primary_geometry(study,stage):
+    """Choose the furthest common horizon whose three geometry records are actually available."""
+    for horizon in ("confirm","pilot"):
+        pairs=[p for p in _paired_runs(study,stage,horizon,PRIMARY) if all("flatness" in p[m] for m in PRIMARY)]
+        if pairs:
+            scope="full-budget checkpoints" if horizon=="confirm" else "development pilots"
+            seeds=", ".join(str(p["ce"]["seed"]) for p in pairs)
+            return f"{STAGES[stage]} · {scope} · seeds {seeds} · {pairs[0]['ce']['tokens']:,} training targets",primary_flatness_rows(pairs)
+    return "",[]
+
+
 def comparison_sections(study):
     """Return a short opening scorecard and the detailed, regenerable comparisons for the README."""
     top=[]
     samples=[]
-    primary_geometry=[]
+    geometry_tables=[]
     detail=["## Side-by-side comparisons","Each row states which direction is better for that metric. "
             "Bold highlights the best observed value at the displayed precision. A tie means the paired difference rounds to zero. "
             "NLL is negative log-likelihood in nats per target. Accuracy differences use percentage points (pp)."]
     for stage,name in STAGES.items():
-        for horizon in ("confirm","pilot"):
-            table=primary_flatness_table(_paired_runs(study,stage,horizon,PRIMARY))
-            if table:
-                context="full-budget checkpoints" if horizon=="confirm" else "development pilots"
-                primary_geometry.append(f"**{name} · {context}**\n\n{table}")
-                break
+        caption,geometry_rows=primary_geometry(study,stage)
+        if geometry_rows:
+            geometry_tables.append(f"**{caption}**\n\n"+markdown_table(geometry_rows,["Flatness statistic","AdamW","Hessian trace","Third order"]))
         pairs=_paired_runs(study,stage,"confirm",PRIMARY)
         confirm=bool(pairs)
         if not confirm:
@@ -263,8 +271,8 @@ def comparison_sections(study):
                    "The final seed range shows the smallest and largest seed widths. The middle 50% column gives the medians of "
                    "the within-seed directional quartiles. Spread has no preferred direction. A ray at the search limit supplies a lower bound.",
                    hybrid_flatness_table(study["runs"])])
-    if primary_geometry:
-        detail.extend(primary_geometry)
+    if geometry_tables:
+        detail.extend(geometry_tables)
     else:
         detail.append("Matched finite-width and Hessian measurements for the primary AdamW, trace and third-order checkpoints are pending.")
     detail.append("For the primary comparison, TinyStories uses all weights and Pythia uses the LoRA factors. "

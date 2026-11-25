@@ -38,3 +38,17 @@ def test_flatness_table_preserves_seed_count_and_geometry_units():
     table=hybrid_flatness_table(rows)
     assert "21, 22" in table and "8.500" in table and "8.000–9.000" in table and "0/64" in table
     assert "5.000–9.000" in table and "21 |" in table
+
+
+def test_primary_flatness_summary_compares_only_common_probe_provenance():
+    from thirdloss.flatness_tables import primary_flatness_rows
+    r={"protocol":"v1","probe_windows_sha256":"same","width_device":"cuda","hessian_device":"cpu",
+       "width":7.,"width_lower":6.99,"width_upper":7.01,"ray_count":32,"censored_rays":0,
+       "baseline_nll":2.,"rms_curvature":.1,"trace_per_parameter":-.01}
+    pairs=[{m:{"flatness":dict(r)} for m in ("ce","trace","third")} for _ in range(2)]
+    stats=primary_flatness_rows(pairs)
+    assert stats[0][1:]==["7.000"]*3 and stats[3][1:]==["0/64"]*3
+    for arm in pairs[1].values():
+        arm["flatness"]["probe_windows_sha256"]="different"
+    with pytest.raises(ValueError,match="same probes"):
+        primary_flatness_rows(pairs)
