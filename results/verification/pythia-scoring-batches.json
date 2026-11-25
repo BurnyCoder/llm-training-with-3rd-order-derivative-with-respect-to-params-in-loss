@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-11-25T07:57:00+00:00",
+  "split": "train",
+  "device": "cuda",
+  "initial_trainable_sha256": "1c45ca4d5b3a6cd1b53eadaa7df8af15e21a040a8a61aa7f0e91d1b6f019320b",
+  "records": [
+    {
+      "batch": 2,
+      "seconds": 7.977122499996767,
+      "targets_per_second": 4107.7468723857855,
+      "peak_allocated_mib": 1649.23291015625,
+      "nll": 3.2559770708321594,
+      "accuracy": 0.402374267578125,
+      "tokens": 32768,
+      "perplexity": 25.944952209677197
+    },
+    {
+      "batch": 8,
+      "seconds": 4.270318099999713,
+      "targets_per_second": 7673.433040035637,
+      "peak_allocated_mib": 1942.24755859375,
+      "nll": 3.255976888554869,
+      "accuracy": 0.40234375,
+      "tokens": 32768,
+      "perplexity": 25.944947480502044
+    },
+    {
+      "batch": 16,
+      "seconds": 4.224423999999999,
+      "targets_per_second": 7756.797139681056,
+      "peak_allocated_mib": 2337.26708984375,
+      "nll": 3.255976888554869,
+      "accuracy": 0.40234375,
+      "tokens": 32768,
+      "perplexity": 25.944947480502044
+    },
+    {
+      "batch": 32,
+      "seconds": 4.2637074000012944,
+      "targets_per_second": 7685.330377030575,
+      "peak_allocated_mib": 3121.30615234375,
+      "nll": 3.255976888554869,
+      "accuracy": 0.40234375,
+      "tokens": 32768,
+      "perplexity": 25.944947480502044
+    }
+  ],
+  "selected_batch": 16
+}

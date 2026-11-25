@@ -151,6 +151,19 @@ def test_elapsed_time_uses_latest_actual_validation_before_shared_cutoff():
     assert first["by_method"]["third"]["tokens"] == 80
 
 
+def test_adapter_time_comparisons_keep_allocated_device_and_host_excluded_clocks_distinct():
+    rows = complete_matrix()
+    for row in rows:
+        regularized = row["method"]!="ce"
+        row.update(stage="abstracts",tokens=524288,target_tokens=524288,dev_nll=1.0,
+                   train_seconds=20.0 if regularized else 10.0,training_seconds_excluding_host_probes=10.0)
+        row["events"]=[{"train_seconds":9.0,"training_seconds_excluding_host_probes":4.0,
+                        "tokens":100,"dev_nll":2.0}]
+    result = analyze_stage(rows,"abstracts")
+    assert result["matched_time"][0]["by_method"]["third"]["dev_nll"]==2.0
+    assert result["matched_nonhost_time"][0]["by_method"]["third"]["dev_nll"]==1.0
+
+
 def test_time_matched_comparison_uses_one_validation_population_across_methods():
     """Whole-split NLL cannot replace a fixed-window diagnostic in another run."""
     rows = complete_matrix()

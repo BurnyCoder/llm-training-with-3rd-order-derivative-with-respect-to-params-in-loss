@@ -57,12 +57,12 @@ def _comparison(records, baseline):
     }
 
 
-def _time_match(seed, records):
+def _time_match(seed, records, clock="train_seconds"):
     """Look backward from the shortest complete training run to actual validation evaluations."""
     runs = {method: records[seed, method] for method in _METHODS}
-    if any(not _number(run.get("train_seconds")) or run["train_seconds"] <= 0 for run in runs.values()):
+    if any(not _number(run.get(clock)) or run[clock] <= 0 for run in runs.values()):
         return None
-    cutoff = min(run["train_seconds"] for run in runs.values())
+    cutoff = min(run[clock] for run in runs.values())
     # Production logs evaluate fixed windows at each diagnostic, including the final step.
     # Older homogeneous result files have a single dev_nll field for the same population.
     fixed_windows = any("matched_dev_nll" in run for run in runs.values())
@@ -70,24 +70,25 @@ def _time_match(seed, records):
     matched = {}
     for method, run in runs.items():
         events = list(run.get("events") or [])
-        final = run.get("status") not in {"configured", "in progress", "training", "failed"}
+        final = run.get("status") not in {"configured", "in progress", "training", "failed", "initializing", "scoring development"}
         if final and _number(run.get(summary_field)):
             events.append({
-                "tokens": run["tokens"], "train_seconds": run["train_seconds"],
+                "tokens": run["tokens"], "train_seconds": run["train_seconds"], clock:run[clock],
                 "dev_nll": run[summary_field],
             })
         eligible = [
             event for event in events
-            if _number(event.get("train_seconds")) and 0 <= event["train_seconds"] <= cutoff
+            if _number(event.get(clock)) and 0 <= event[clock] <= cutoff
             and _number(event.get("dev_nll")) and event["dev_nll"] >= 0
             and _number(event.get("tokens")) and event["tokens"] >= 0
         ]
         if not eligible:
             return None
         # max() takes the first equal timestamp, giving a real event priority over its summary.
-        event = max(eligible, key=lambda x: x["train_seconds"])
+        event = max(eligible, key=lambda x: x[clock])
         matched[method] = {key: event[key] for key in ("tokens", "train_seconds", "dev_nll")}
-        matched[method]["staleness_seconds"] = cutoff - event["train_seconds"]
+        matched[method]["clock_seconds"] = event[clock]
+        matched[method]["staleness_seconds"] = cutoff - event[clock]
     return {"seed": seed, "cutoff_seconds": cutoff, "by_method": matched}
 
 
@@ -114,7 +115,7 @@ def analyze_stage(summaries: list[dict], stage: str) -> dict:
     result = {
         "stage": stage, "status": "pending", "complete": False, "success": None,
         "n_expected_seeds": len(_SEEDS), "n_complete_seeds": 0, "missing": [],
-        "comparisons": {}, "matched_time": [], "reason": "Awaiting confirmatory runs.",
+        "comparisons": {}, "matched_time": [], "matched_nonhost_time": [], "reason": "Awaiting confirmatory runs.",
     }
     records = {}
     for row in summaries:
@@ -144,6 +145,10 @@ def analyze_stage(summaries: list[dict], stage: str) -> dict:
             timing = _time_match(seed, records)
             if timing is not None:
                 result["matched_time"].append(timing)
+            if stage=="abstracts":
+                gpu_interval = _time_match(seed,records,"training_seconds_excluding_host_probes")
+                if gpu_interval is not None:
+                    result["matched_nonhost_time"].append(gpu_interval)
     if result["missing"]:
         result.update(status="incomplete", reason=f"All checkpoints must reach {horizon:,} target tokens.")
         return result

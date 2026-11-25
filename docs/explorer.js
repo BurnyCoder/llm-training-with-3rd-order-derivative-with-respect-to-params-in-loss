@@ -268,6 +268,15 @@ function showEvidence() {
           number(m.train_seconds, 1), number(m.tokens, 0), number(m.dev_nll, 5)]))));
     target.append(details);
   }
+  if ((outcome.matched_nonhost_time || []).length) {
+    const details = node("details");
+    details.append(node("summary", "Development loss after subtracting host derivative calls"));
+    details.append(table(["Seed", "Cutoff (s)", "Method", "Checkpoint (s)", "Training tokens", "Dev NLL"],
+      outcome.matched_nonhost_time.flatMap(t => Object.entries(t.by_method).map(([name, m]) =>
+        [t.seed, number(t.cutoff_seconds, 1), methodName(name), number(m.clock_seconds, 1),
+          number(m.tokens, 0), number(m.dev_nll, 5)]))));
+    target.append(details);
+  }
 }
 
 function showSample() {

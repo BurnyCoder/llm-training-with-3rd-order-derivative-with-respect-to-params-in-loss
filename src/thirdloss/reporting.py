@@ -92,6 +92,14 @@ def _comparisons(study: dict) -> str:
             parts.append(f"### {STAGES[stage]} at equal training time\n\n" + _table(times, [
                 "Seed", "Common cutoff (s)", "Method", "Recorded checkpoint (s)",
                 "Training tokens", "Dev NLL"]))
+        supplement = [[item["seed"],fmt(item["cutoff_seconds"],1),METHODS[m],fmt(point["clock_seconds"],1),
+                       fmt(point["tokens"],0),fmt(point["dev_nll"],5)]
+                      for item in analysis.get("matched_nonhost_time",[]) for m,point in item["by_method"].items()]
+        if supplement:
+            parts.append(f"### {STAGES[stage]} after subtracting host derivative calls\n\n"
+                         "This supplementary clock excludes the measured host probe calls and their transfers. "
+                         "The registered comparison above counts elapsed time with one GPU reserved.\n\n" +
+                         _table(supplement,["Seed","Cutoff (s)","Method","Checkpoint (s)","Training tokens","Dev NLL"]))
     return "\n\n".join(parts)
 
 
