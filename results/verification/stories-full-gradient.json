@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-11-25T07:48:18+00:00",
+  "initial_trainable_sha256": "2bcde9c9e4606ee32e6deab703f5efefa0f5d7bd8fab71ebcf6ef28494900958",
+  "calibration_seed": 6247,
+  "draw": 0,
+  "cpu_fp64_penalty": 11725323512.359177,
+  "cuda_fp32_penalty": 11725321216.0,
+  "cpu_fp64_gradient_norm": 519103298466.8055,
+  "cuda_fp32_gradient_norm": 519103237713.8237,
+  "relative_gradient_difference": 5.276347670311856e-07,
+  "gradient_cosine": 0.9999999999998281
+}

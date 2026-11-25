@@ -1,0 +1,6 @@
+{
+  "abstracts-pilot-s00-third-r03": {
+    "reason": "This original FP32 adapter run is preserved as a numerical diagnostic. The same-probe full-checkpoint audit found substantial rounding error in both the penalty and its training gradient. Strength selection and confirmatory inference use separately named FP64 derivative runs.",
+    "replacement": "abstracts-pilot-s00-third-r03-fp64"
+  }
+}
