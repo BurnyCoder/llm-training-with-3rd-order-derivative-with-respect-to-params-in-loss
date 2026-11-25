@@ -81,7 +81,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 
 | Adaptive versus | Paired seeds | Adaptive NLL | Adaptive width change | Adaptive speed |
 | --- | --- | --- | --- | --- |
-| Cross-seed replay | 0/8 | Pending | — | — |
+| Cross-seed replay | 1/8 | 0.000002 lower | 0.0029 less retained | 3.1% faster |
 | Hessian trace | 2/8 | 0.000002 higher | 0.0015 more retained | 35.0% slower |
 | Stronger trace | 2/8 | 0.000092 lower | 0.0178 less retained | 35.5% slower |
 | Always-on hybrid | 2/8 | 0.000161 higher | 0.0111 less retained | 48.0% faster |

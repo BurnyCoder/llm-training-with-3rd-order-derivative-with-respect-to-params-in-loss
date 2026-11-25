@@ -1,6 +1,6 @@
 # Hybrid schedules on TinyStories
 
-TinyStories hybrid follow-up: 10 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
+TinyStories hybrid follow-up: 11 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
 
 [Frozen protocol and decision rule](preregistration.md) · [Interactive measurement and run selector](../../docs/index.html#curves)
 
@@ -38,6 +38,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 22 | Fixed late hybrid | [4096](../../results/stories-hybrid-s22-late-r01/width-4096.json) | 13.26758 | 13.26660 | 13.26855 | 0 | 2.60476 | 5.90 |
 | 22 | Cross-seed replay | [2048](../../results/stories-hybrid-s22-replay-r01/width-2048.json) | 15.40259 | 15.40137 | 15.40381 | 0 | 2.81658 | 5.80 |
 | 22 | Cross-seed replay | [3072](../../results/stories-hybrid-s22-replay-r01/width-3072.json) | 13.95166 | 13.95068 | 13.95264 | 0 | 2.65427 | 7.07 |
+| 22 | Cross-seed replay | [4096](../../results/stories-hybrid-s22-replay-r01/width-4096.json) | 13.21777 | 13.21680 | 13.21875 | 0 | 2.60450 | 6.94 |
 | 22 | Stronger trace | [2048](../../results/stories-hybrid-s22-strong-r01/width-2048.json) | 15.40259 | 15.40137 | 15.40381 | 0 | 2.81658 | 5.80 |
 | 22 | Stronger trace | [3072](../../results/stories-hybrid-s22-strong-r01/width-3072.json) | 13.96240 | 13.96143 | 13.96338 | 0 | 2.65431 | 6.13 |
 | 22 | Stronger trace | [4096](../../results/stories-hybrid-s22-strong-r01/width-4096.json) | 13.23291 | 13.23193 | 13.23389 | 0 | 2.60456 | 6.56 |
@@ -61,6 +62,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 22 | Curvature-dependent hybrid | 2.546305 | 0.46256 | 0.40627 | [2064](../../results/stories-hybrid-s22-adaptive-r01/schedule.json) | 1.2558e-16 | 37,992 | 617.3 | 2,081.5 |
 | 22 | Always-on hybrid | 2.545968 | 0.46273 | 0.40084 | [0](../../results/stories-hybrid-s22-always-r01/schedule.json) | 3.01905e-14 | 25,017 | 621.3 | 2,090.3 |
 | 22 | Fixed late hybrid | 2.546448 | 0.46258 | 0.40627 | [2049](../../results/stories-hybrid-s22-late-r01/schedule.json) | 3.01905e-14 | 39,514 | 617.3 | 2,083.8 |
+| 22 | Cross-seed replay | 2.546307 | 0.46256 | 0.40627 | [2176](../../results/stories-hybrid-s22-replay-r01/schedule.json) | 1.38036e-15 | 36,853 | 617.3 | 2,090.3 |
 | 22 | Stronger trace | 2.546388 | 0.46254 | 0.40627 | [4096](../../results/stories-hybrid-s22-strong-r01/schedule.json) | 0 | 60,263 | 608.2 | 2,090.3 |
 | 22 | Hessian trace | 2.546305 | 0.46257 | 0.40627 | [4096](../../results/stories-hybrid-s22-trace-r01/schedule.json) | 0 | 61,689 | 608.2 | 2,088.9 |
 
@@ -79,6 +81,7 @@ Positive Δwidth favors the adaptive schedule. Negative ΔNLL favors its predict
 | --- | --- | --- | --- | --- | --- |
 | 21 | Fixed late hybrid | -0.058105 | -0.000205 | -0.000104 | yes |
 | 22 | Fixed late hybrid | -0.052734 | -0.000143 | -0.000277 | yes |
+| 22 | Cross-seed replay | -0.002930 | -0.000002 | -0.000018 | yes |
 | 21 | Hessian trace | 0.002930 | 0.000005 | 0.000008 | yes |
 | 22 | Hessian trace | 0.000000 | 0.000000 | 0.000003 | yes |
 | 21 | Stronger trace | -0.017578 | -0.000102 | -0.000018 | yes |
@@ -86,4 +89,4 @@ Positive Δwidth favors the adaptive schedule. Negative ΔNLL favors its predict
 | 21 | Always-on hybrid | 0.041748 | -0.000015 | -0.000061 | yes |
 | 22 | Always-on hybrid | -0.063965 | 0.000337 | 0.000030 | yes |
 
-The completed branches reused 50,331,648 targets of optimization compared with independently training each branch from initialization. The replay permutation couples different seeds through their coefficient histories. The sign-test reference for this comparison assumes exchangeable independent pair signs. Shared donor histories make that assumption approximate. All raw pairs are reported for inspection.
+The completed branches reused 58,720,256 targets of optimization compared with independently training each branch from initialization. The replay permutation couples different seeds through their coefficient histories. The sign-test reference for this comparison assumes exchangeable independent pair signs. Shared donor histories make that assumption approximate. All raw pairs are reported for inspection.

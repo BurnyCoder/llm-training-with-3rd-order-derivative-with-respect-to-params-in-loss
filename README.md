@@ -124,7 +124,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 
 | Adaptive versus | Paired seeds | Adaptive NLL | Adaptive width change | Adaptive speed |
 | --- | --- | --- | --- | --- |
-| Cross-seed replay | 0/8 | Pending | — | — |
+| Cross-seed replay | 1/8 | 0.000002 lower | 0.0029 less retained | 3.1% faster |
 | Hessian trace | 2/8 | 0.000002 higher | 0.0015 more retained | 35.0% slower |
 | Stronger trace | 2/8 | 0.000092 lower | 0.0178 less retained | 35.5% slower |
 | Always-on hybrid | 2/8 | 0.000161 higher | 0.0111 less retained | 48.0% faster |
@@ -189,9 +189,9 @@ Each panel shows the first saved prompt and full continuations from the lowest m
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 36 runs, including 34 with a completed summary.
+Recorded 36 runs, including 35 with a completed summary.
 
-TinyStories hybrid follow-up: 10 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
+TinyStories hybrid follow-up: 11 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
 [Full score table, strength search and per-seed test differences](reports/summary.md)
 
@@ -203,7 +203,7 @@ TinyStories hybrid follow-up: 10 of 48 full runs and 2 of 8 shared checkpoints c
 
 ### Full generations by method
 
-**TinyStories** · [Initial checkpoint](reports/experiments/stories-control-s00-initial-r00/experiment.md#fixed-prompt-generations) · [Unigram](reports/experiments/stories-control-s00-unigram-r00/experiment.md#fixed-prompt-generations) · [Curvature-dependent hybrid](reports/experiments/stories-hybrid-s21-adaptive-r01/experiment.md#fixed-prompt-generations) · [Always-on hybrid](reports/experiments/stories-hybrid-s21-always-r01/experiment.md#fixed-prompt-generations) · [Fixed late hybrid](reports/experiments/stories-hybrid-s21-late-r01/experiment.md#fixed-prompt-generations) · [Stronger trace](reports/experiments/stories-hybrid-s21-strong-r01/experiment.md#fixed-prompt-generations) · [Hessian trace](reports/experiments/stories-hybrid-s21-trace-r01/experiment.md#fixed-prompt-generations) · [Ordinary AdamW](reports/experiments/stories-pilot-s00-ce-r00/experiment.md#fixed-prompt-generations) · [Trace + third derivative](reports/experiments/stories-pilot-s00-combined-r01/experiment.md#fixed-prompt-generations) · [Squared Hessian norm](reports/experiments/stories-pilot-s00-hessian_norm-r03/experiment.md#fixed-prompt-generations) · [Randomized gradient signs](reports/experiments/stories-pilot-s00-sham-r01/experiment.md#fixed-prompt-generations) · [Third derivative](reports/experiments/stories-pilot-s00-third-r01/experiment.md#fixed-prompt-generations)
+**TinyStories** · [Initial checkpoint](reports/experiments/stories-control-s00-initial-r00/experiment.md#fixed-prompt-generations) · [Unigram](reports/experiments/stories-control-s00-unigram-r00/experiment.md#fixed-prompt-generations) · [Curvature-dependent hybrid](reports/experiments/stories-hybrid-s21-adaptive-r01/experiment.md#fixed-prompt-generations) · [Always-on hybrid](reports/experiments/stories-hybrid-s21-always-r01/experiment.md#fixed-prompt-generations) · [Fixed late hybrid](reports/experiments/stories-hybrid-s21-late-r01/experiment.md#fixed-prompt-generations) · [Stronger trace](reports/experiments/stories-hybrid-s21-strong-r01/experiment.md#fixed-prompt-generations) · [Hessian trace](reports/experiments/stories-hybrid-s21-trace-r01/experiment.md#fixed-prompt-generations) · [Cross-seed replay](reports/experiments/stories-hybrid-s22-replay-r01/experiment.md#fixed-prompt-generations) · [Ordinary AdamW](reports/experiments/stories-pilot-s00-ce-r00/experiment.md#fixed-prompt-generations) · [Trace + third derivative](reports/experiments/stories-pilot-s00-combined-r01/experiment.md#fixed-prompt-generations) · [Squared Hessian norm](reports/experiments/stories-pilot-s00-hessian_norm-r03/experiment.md#fixed-prompt-generations) · [Randomized gradient signs](reports/experiments/stories-pilot-s00-sham-r01/experiment.md#fixed-prompt-generations) · [Third derivative](reports/experiments/stories-pilot-s00-third-r01/experiment.md#fixed-prompt-generations)
 
 **Research abstracts** · [Initial checkpoint](reports/experiments/abstracts-control-s00-initial-r00/experiment.md#fixed-prompt-generations) · [Unigram](reports/experiments/abstracts-control-s00-unigram-r00/experiment.md#fixed-prompt-generations) · [Ordinary AdamW](reports/experiments/abstracts-pilot-s00-ce-r00/experiment.md#fixed-prompt-generations) · [Third derivative](reports/experiments/abstracts-pilot-s00-third-r01-fp64/experiment.md#fixed-prompt-generations) · [Hessian trace](reports/experiments/abstracts-pilot-s00-trace-r01-fp64/experiment.md#fixed-prompt-generations)
 
