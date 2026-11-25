@@ -330,3 +330,4 @@ The pipeline pins the source texts, splits by document, learns the stories token
 - Verify the scalar objective and its training gradient on analytical functions and a small Transformer.
 - Train the pilot, publish throughput and establish feasibility on the local GPU.
 - Complete controls, development selection, paired confirmations and a reproducible report.
+- [ ] Test whether adding the third-derivative penalty late in Hessian-trace training helps the model stay in a wider low-loss region. [Exploratory plan and rationale](reports/plan.md#late-third-derivative-regularization)
