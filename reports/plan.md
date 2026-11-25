@@ -16,6 +16,8 @@ The dated progress record gives completed milestones and outstanding work. Sourc
 
 ## Late third-derivative regularization
 
+The fixed late ramp, curvature-dependent rule, cross-seed replay and controls are now registered for execution. [Hybrid preregistration and run matrix](hybrid/preregistration.md)
+
 - [ ] Preregister a TinyStories follow-up. Train first with next-token loss plus the signed Hessian trace. At a prespecified token count, keep the trace active and gradually increase the coefficient of the existing squared third-derivative penalty. Specify the ramp and its final strength before comparing runs. [Current run matrix](planned-runs.md)
 
 One candidate is a linear ramp. If $n_t$ is the number of training tokens before update $t$, $n_0$ is the switch and $R>0$ is the ramp length in tokens, set $s_t=\min(1,\max(0,(n_t-n_0)/R))$ and $\lambda_{3,t}=\lambda_{\max}s_t$. Use the same cap for the curvature-dependent comparison. [Objective, schedules and width equations in the paper’s final appendix](paper.pdf)

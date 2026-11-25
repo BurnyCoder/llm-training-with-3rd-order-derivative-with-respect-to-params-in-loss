@@ -16,6 +16,6 @@ AdamW peaks at 0.0003 for stories and 0.0001 for adapters, with betas 0.9 and 0.
 
 Evaluate seed-paired final test predictions only when the stage has all planned confirmatory checkpoints. Preserve every development candidate. The one-week allocation prioritizes the two registered stages and their controls. The first 14 hours target a real one-seed pilot with its untrained controls. [Protocol](preregistration.md)
 
-## Proposed follow-up
+## Registered hybrid follow-up
 
-A future TinyStories comparison would keep the trace active and compare adding the third-derivative penalty at a fixed token count with increasing its coefficient as measured curvature falls. The research plan gives the rationale, controls and proposed width measurement for a separate preregistration. [Follow-up design](plan.md#curvature-dependent-penalty-weight)
+The six TinyStories arms share eight paired seeds. Five branch from a common trace-trained checkpoint and one uses both penalties from initialization. Directional width is measured at three token counts. The curvature rule, replay donors, cap, stronger-trace calibration and decision threshold were fixed before follow-up outcomes. [Hybrid run matrix and decision rule](hybrid/preregistration.md) · [Research question](plan.md#curvature-dependent-penalty-weight)
