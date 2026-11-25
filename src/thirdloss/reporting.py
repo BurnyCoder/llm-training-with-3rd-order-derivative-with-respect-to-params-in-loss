@@ -7,6 +7,7 @@ from statistics import median
 from urllib.parse import quote
 
 from .report_figures import build_figures
+from .flatness_tables import flatness_ledger
 from .readme_comparisons import comparison_sections
 from .report_paper import write_paper
 from .report_records import (
@@ -296,6 +297,7 @@ def build_report(root: Path = Path(".")) -> dict:
     root = Path(root).resolve()
     study = study_snapshot(root)
     hybrid = _hybrid_report(root,study)
+    atomic_text(root/"reports"/"flatness.md",flatness_ledger(study))
     figures = build_figures(study, root / "docs" / "figures")
     study["figures"] = figures
     static = json.dumps(study, ensure_ascii=False, allow_nan=False, separators=(",", ":"))

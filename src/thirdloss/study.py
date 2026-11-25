@@ -56,6 +56,20 @@ def weights_file(storage, summary):
     return path
 
 
+def load_trained_model(storage,summary,device):
+    """Load verified weights in the recorded coordinates, including only the adapter overlay for Pythia."""
+    state=load_file(str(weights_file(storage,summary)),device="cpu")
+    model=build_model(summary["stage"],summary["seed"],device,storage)
+    if summary["stage"]=="stories":
+        model.load_state_dict(state,strict=True)
+    else:
+        from peft import get_peft_model_state_dict,set_peft_model_state_dict
+        if set(state)!=set(get_peft_model_state_dict(model)):
+            raise ValueError("Adapter payload does not match the pinned backbone and target modules")
+        set_peft_model_state_dict(model,state)
+    return model
+
+
 def parent_restart_file(storage,summary):
     """Recover a missing branch trunk from the collection's pinned, content-addressed receipt."""
     import shutil
@@ -134,18 +148,9 @@ def evaluate_one(project, storage, run_id, device):
         if summary["freeze_id"]!=sealed["freeze_id"]:
             raise ValueError("Existing evaluation uses a different freeze")
         return summary
-    weights = weights_file(storage,summary)
     if sha256(data/"test.bin") != sealed["test_sha256"]:
         raise ValueError("Test stream differs from the frozen manifest")
-    model = build_model(stage,summary["seed"],device,storage)
-    state = load_file(str(weights),device="cpu")
-    if stage=="stories":
-        model.load_state_dict(state,strict=True)
-    else:
-        from peft import get_peft_model_state_dict,set_peft_model_state_dict
-        if set(state)!=set(get_peft_model_state_dict(model)):
-            raise ValueError("Adapter payload does not match the pinned backbone and target modules")
-        set_peft_model_state_dict(model,state)
+    model = load_trained_model(storage,summary,device)
     recorder = Recorder(project,run_id)
     state = path.parent/"test_state.json"
     def report_progress(row):

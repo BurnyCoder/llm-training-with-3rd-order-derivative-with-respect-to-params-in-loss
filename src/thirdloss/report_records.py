@@ -9,6 +9,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from .analysis import analyze_stage
+from .flatness_stats import compact_width
 from .hybrid_results import hybrid_results
 from .records import GITHUB as REPOSITORY, PAGES
 
@@ -174,11 +175,19 @@ def run_record(folder: Path) -> dict:
         record["widths"] = {}
         for path in sorted(folder.glob("width-*.json")):
             width = read_json(path)
-            point = {k:v for k,v in width.items() if k!="directions"}
+            point = compact_width(width)
             record["widths"][str(width["step"])] = point
             record["events"].append({"step":width["step"],"tokens":width["tokens"],
                                      "width":width["width"],"width_probe_nll":width["baseline_nll"]})
         record["events"].sort(key=lambda row:row.get("step",0))
+    diagnostic=read_json(folder/"flatness.json")
+    if diagnostic:
+        if diagnostic["checkpoint_file_sha256"]!=record.get("weights_sha256"):
+            raise ValueError(f"Geometry belongs to different checkpoint weights for {folder.name}")
+        record["flatness"]={**compact_width(diagnostic["width"]),
+                            **{k:diagnostic[k] for k in ("protocol","probe_windows_sha256","width_device")},
+                            **{k:diagnostic["curvature"][k] for k in ("rms_curvature","trace_per_parameter")},
+                            "hessian_device":diagnostic["curvature"]["device"]}
     record["samples"] = read_lines(folder / "samples.jsonl")
     return record
 

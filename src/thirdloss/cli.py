@@ -36,14 +36,16 @@ def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--project",type=Path,default=Path.cwd())
     parsers = p.add_subparsers(dest="action",required=True)
-    for action in ("prepare","train","study","hybrid","freeze","evaluate","report","dashboard","publish","audit-hub","audit-restart","progress","verify"):
+    for action in ("prepare","train","study","hybrid","flatness","freeze","evaluate","report","dashboard","publish","audit-hub","audit-restart","progress","verify"):
         sub = parsers.add_parser(action)
-        if action in {"prepare","study"}:
+        if action in {"prepare","study","flatness"}:
             sub.add_argument("--stage",choices=(*HORIZONS,"both"),default="both")
         if action in {"train","freeze"}:
             sub.add_argument("--stage",choices=HORIZONS,required=True)
-        if action in {"train","study","hybrid","evaluate"}:
+        if action in {"train","study","hybrid","evaluate","flatness"}:
             sub.add_argument("--device",default="cuda")
+        if action=="flatness":
+            sub.add_argument("--phase",choices=("pilot","confirm","all"),default="all")
         if action=="study":
             sub.add_argument("--with-hybrid",action="store_true",help="Include the registered TinyStories hybrid follow-up on the same GPU")
         if action=="verify":
@@ -57,7 +59,7 @@ def parser():
             sub.add_argument("--seed",type=int,default=0)
             sub.add_argument("--ratio",type=float,default=0.03)
             sub.add_argument("--microbatch",type=int)
-        if action in {"train","study","hybrid","evaluate"}:
+        if action in {"train","study","hybrid","evaluate","flatness"}:
             sub.add_argument("--publish",action="store_true",help="Publish results to the configured project accounts")
         if action in {"evaluate","audit-restart"}:
             sub.add_argument("run_id")
@@ -126,6 +128,10 @@ def main(argv=None):
         return
     from .records import setup_device
     device = setup_device(args.device)
+    if args.action=="flatness":
+        from .checkpoint_flatness import flatness_study
+        flatness_study(project,storage,stages,args.phase,device,args.publish)
+        return
     if args.action in {"study","hybrid"}:
         from contextlib import nullcontext
         from .live_hub import publish_live
