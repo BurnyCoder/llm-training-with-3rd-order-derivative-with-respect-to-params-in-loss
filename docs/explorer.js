@@ -18,6 +18,8 @@ const metrics = {
   width: ["Directional width", "Euclidean weight distance · wider is flatter"], width_probe_nll: ["Width-probe loss", "nats / target token"],
   checkpoint_rms: ["Checkpoint RMS curvature", "RMS curvature · lower means less bending"],
   checkpoint_signed_trace: ["Checkpoint signed trace / parameter", "mean signed curvature · no preferred direction"],
+  score_width: ["Common score width", "RMS logit distance · wider tolerates larger score changes"],
+  score_curvature: ["Common score curvature", "mean local bending under shared logit biases"],
   curvature_rms: ["Rolling RMS curvature", "RMS Hessian eigenvalue estimate"],
   third_lambda: ["Third-derivative coefficient", "coefficient"], trace_lambda: ["Trace coefficient", "coefficient"],
   gradient_norm: ["Unclipped gradient norm", "Euclidean gradient norm"],

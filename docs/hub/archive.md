@@ -80,6 +80,72 @@ How far can the weights move before next-token loss rises by 0.1 nats on eight f
 | Cross-seed replay | 22 | 15.403 | 13.218 | One seed | 12.987–13.496 | 0/32 |
 | Always-on hybrid | 21, 22, 23 | 15.256 | 13.229 | 13.060–13.334 | 13.085–13.390 | 0/96 |
 
+#### All variants and baselines
+
+Each row uses the same fixed training windows and probe directions within its stage. Parentheses give measured / planned seeds for that cell. Targets count next-token examples used for optimizer updates in this study. The unigram uses counts from the full training split, and initial Pythia retains its pretrained backbone. Compare rows with matching targets and seeds. Larger **weight width** means greater tolerance to moving the model’s trainable parameters. Larger **common score width** means that all token scores can tolerate a larger shared bias before NLL rises by 0.1 nats, measured in RMS logit units. The unigram has zero trainable model weights and shares the score test with every neural predictor. Both widths have an unknown relationship to better held-out prediction. [All-model measurement design](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/amendments/all-model-flatness.md)
+
+**TinyStories · all model weights**
+
+| Variant | Training targets | Seed cohort | Weight width<br>↑ Wider is flatter | RMS weight curvature<br>↓ Less local bending | Common score width<br>↑ More score tolerance |
+| --- | --- | --- | --- | --- | --- |
+| Initial checkpoint | 0 | 0 | Pending | Pending | Pending |
+| Unigram | 0 | 0 | N/A · no weights | N/A · no weights | Pending |
+| Ordinary AdamW | 2,097,152 | 0 | 15.579 (1/1) | 0.45329 (1/1) | Pending |
+| Hessian trace (1%) | 2,097,152 | 0 | 15.686 (1/1) | 0.44772 (1/1) | Pending |
+| Third derivative (1%) | 2,097,152 | 0 | 15.640 (1/1) | 0.44739 (1/1) | Pending |
+| Squared Hessian norm (3%) | 2,097,152 | 0 | Pending | Pending | Pending |
+| Randomized gradient signs (1%) | 2,097,152 | 0 | Pending | Pending | Pending |
+| Trace + third derivative (1%) | 2,097,152 | 0 | Pending | Pending | Pending |
+| Ordinary AdamW · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
+| Hessian trace · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
+| Third derivative · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
+| Shared trace checkpoint | 8,388,608 | 21–28 | 15.143 (3/8) | Pending | Pending |
+| Curvature-dependent hybrid · hybrid study | 16,777,216 | 21–28 | 13.157 (3/8) | Pending | Pending |
+| Fixed late hybrid · hybrid study | 16,777,216 | 21–28 | 13.215 (3/8) | Pending | Pending |
+| Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.154 (3/8) | Pending | Pending |
+| Stronger trace · hybrid study | 16,777,216 | 21–28 | 13.175 (3/8) | Pending | Pending |
+| Cross-seed replay · hybrid study | 16,777,216 | 21–28 | 13.218 (1/8) | Pending | Pending |
+| Always-on hybrid · hybrid study | 16,777,216 | 21–28 | 13.229 (3/8) | Pending | Pending |
+
+<details><summary>TinyStories · all model weights · other pilot strengths and precision diagnostics</summary>
+
+| Variant | Training targets | Seed cohort | Weight width<br>↑ Wider is flatter | RMS weight curvature<br>↓ Less local bending | Common score width<br>↑ More score tolerance |
+| --- | --- | --- | --- | --- | --- |
+| Hessian trace (3%) | 2,097,152 | 0 | Pending | Pending | Pending |
+| Hessian trace (10%) | 2,097,152 | 0 | Pending | Pending | Pending |
+| Third derivative (3%) | 2,097,152 | 0 | Pending | Pending | Pending |
+| Third derivative (10%) | 2,097,152 | 0 | Pending | Pending | Pending |
+
+</details>
+
+**Pythia-410M · adapter weights**
+
+| Variant | Training targets | Seed cohort | Weight width<br>↑ Wider is flatter | RMS weight curvature<br>↓ Less local bending | Common score width<br>↑ More score tolerance |
+| --- | --- | --- | --- | --- | --- |
+| Initial checkpoint | 0 | 0 | Pending | Pending | Pending |
+| Unigram | 0 | 0 | N/A · no weights | N/A · no weights | Pending |
+| Ordinary AdamW | 65,536 | 0 | 19.784 (1/1) | 1.2868 (1/1) | Pending |
+| Hessian trace (1%) | 65,536 | 0 | Pending | Pending | Pending |
+| Third derivative (1%) | 65,536 | 0 | Pending | Pending | Pending |
+| Squared Hessian norm (3%) | 65,536 | 0 | Pending | Pending | Pending |
+| Randomized gradient signs (1%) | 65,536 | 0 | Pending | Pending | Pending |
+| Trace + third derivative (1%) | 65,536 | 0 | Pending | Pending | Pending |
+| Ordinary AdamW · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |
+| Hessian trace · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |
+| Third derivative · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |
+
+<details><summary>Pythia-410M · adapter weights · other pilot strengths and precision diagnostics</summary>
+
+| Variant | Training targets | Seed cohort | Weight width<br>↑ Wider is flatter | RMS weight curvature<br>↓ Less local bending | Common score width<br>↑ More score tolerance |
+| --- | --- | --- | --- | --- | --- |
+| Hessian trace (3%) | 65,536 | 0 | Pending | Pending | Pending |
+| Hessian trace (10%) | 65,536 | 0 | Pending | Pending | Pending |
+| Third derivative (3%) | 65,536 | 0 | Pending | Pending | Pending |
+| Third derivative (10%) | 65,536 | 0 | Pending | Pending | Pending |
+| Third derivative (3%) · excluded precision diagnostic | 65,536 | 0 | Pending | Pending | Pending |
+
+</details>
+
 **TinyStories pretraining · development pilots · seeds 0 · 2,097,152 training targets**
 
 | Flatness statistic | AdamW | Hessian trace | Third order |
@@ -132,7 +198,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 
 **Pythia-410M adapters** · Secondary pilot comparisons are pending.
 
-**Untrained references · zero training targets**
+**Zero-update references** · The unigram uses training-split frequencies. Initial Pythia uses its pretrained weights.
 
 | Stage | Initial NLL<br>↓ Lower is better | Unigram NLL<br>↓ Lower is better | Initial accuracy<br>↑ Higher is better | Unigram accuracy<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |

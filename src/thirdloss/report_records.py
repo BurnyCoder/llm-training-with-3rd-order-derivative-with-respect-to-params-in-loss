@@ -193,6 +193,16 @@ def run_record(folder: Path) -> dict:
         record["events"].append({"step":record["steps"],"tokens":record["tokens"],"train_seconds":record["train_seconds"],
                                  "width":diagnostic["width"]["width"],"checkpoint_rms":diagnostic["curvature"]["rms_curvature"],
                                  "checkpoint_signed_trace":diagnostic["curvature"]["trace_per_parameter"]})
+    output=read_json(folder/"score-flatness.json")
+    if output:
+        if (output["run"]!=folder.name or output["checkpoint_file_sha256"]!=record.get("weights_sha256")
+                or output["split"]!="train" or output["data_manifest_sha256"]!=record.get("data_manifest_sha256")):
+            raise ValueError(f"Output-score geometry provenance differs for {folder.name}")
+        record["score_flatness"]={**compact_width(output["score"]),"probe_windows_sha256":output["probe_windows_sha256"],
+                                  "protocol":output["protocol"]}
+        record["events"].append({"step":record["steps"],"tokens":record["tokens"],"train_seconds":record["train_seconds"],
+                                 "score_width":output["score"]["width"],
+                                 "score_curvature":output["score"]["mean_directional_curvature"]})
     record["samples"] = read_lines(folder / "samples.jsonl")
     return record
 
@@ -202,7 +212,7 @@ def display_events(events: list[dict], maximum: int = 240) -> list[dict]:
     if len(events) <= maximum:
         return events
     keep = {round(i * (len(events) - 1) / (maximum - 1)) for i in range(maximum)}
-    keep.update(i for i, event in enumerate(events) if finite(event.get("dev_nll")) or "width" in event)
+    keep.update(i for i, event in enumerate(events) if finite(event.get("dev_nll")) or "width" in event or "score_width" in event)
     return [events[i] for i in sorted(keep)]
 
 

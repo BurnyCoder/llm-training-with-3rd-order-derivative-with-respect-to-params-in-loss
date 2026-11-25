@@ -45,7 +45,8 @@ def parser():
         if action in {"train","study","hybrid","evaluate","flatness"}:
             sub.add_argument("--device",default="cuda")
         if action=="flatness":
-            sub.add_argument("--phase",choices=("pilot","confirm","all"),default="all")
+            sub.add_argument("--phase",choices=("pilot","confirm","hybrid","all"),default="all")
+            sub.add_argument("--run-id",help="Measure a single completed run in the selected phase")
         if action=="study":
             sub.add_argument("--with-hybrid",action="store_true",help="Include the registered TinyStories hybrid follow-up on the same GPU")
             sub.add_argument("--with-flatness",action="store_true",help="Also measure training-window geometry at saved primary checkpoints")
@@ -131,7 +132,7 @@ def main(argv=None):
     device = setup_device(args.device)
     if args.action=="flatness":
         from .checkpoint_flatness import flatness_study
-        flatness_study(project,storage,stages,args.phase,device,args.publish)
+        flatness_study(project,storage,stages,args.phase,device,args.publish,run_id=args.run_id)
         return
     if args.action in {"study","hybrid"}:
         from contextlib import nullcontext

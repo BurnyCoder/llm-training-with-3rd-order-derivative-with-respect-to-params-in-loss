@@ -408,6 +408,18 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
           "Individual CUDA kernel durations were not profiled.", "caption")
         flow.append(_grid(styles,["Corpus","Seed","Cutoff (s)","AdamW NLL (lag s)",
                                   "Trace NLL (lag s)","Third NLL (lag s)"],nonhost,[82,34,65,98,98,98]))
+    from .flatness_tables import all_arm_groups
+    p("Appendix · Flatness by model and reference","heading")
+    p("Each entry gives a median and the measured/planned seed count. A wider interval of permitted weight or "
+      "score displacement is flatter under its corresponding perturbation. Smaller RMS Hessian curvature indicates "
+      "less local bending. Common score width uses identical token-level logit biases for every predictor within a "
+      "stage, including the unigram. The retained strength-search and diagnostic measurements follow each stage. "
+      f"{_link(REPOSITORY + '/blob/main/reports/amendments/all-model-flatness.md','Common measurement protocol')} · "
+      f"{_link(REPOSITORY + '/blob/main/reports/flatness.md','Per-run evidence')}")
+    for name,main_arms,other_arms in all_arm_groups(study):
+        p(name,"subheading")
+        flow.append(_grid(styles,["Variant","Training targets","Seeds","Weight width ↑","RMS curvature ↓","Score width ↑"],
+                          main_arms+other_arms,[124,71,45,79,79,78]))
     pair_rows = [[STAGES[stage], METHODS.get(base, base), pair["seed"],
                   fmt(pair["third_nll"], 5), fmt(pair["baseline_nll"], 5), fmt(pair["delta"], 5)]
                  for stage, outcome in study["stages"].items()

@@ -1,6 +1,20 @@
 """Order statistics for two-sided perturbation widths with finite bisection and open upper bounds."""
 
 import math
+from statistics import median
+
+
+def width_statistics(rays):
+    """The registered endpoint uses the medians of both crossing brackets, including open ends."""
+    lows,highs=[],[]
+    for ray in rays:
+        bounds=(ray["positive"],ray["negative"])
+        lows.append(sum(b["lower"] for b in bounds))
+        highs.append(sum(b["upper"] if b["upper"] is not None else math.inf for b in bounds))
+    lower,upper=median(lows),median(highs)
+    return {"directions":rays,"width_lower":lower,"width_upper":upper if math.isfinite(upper) else None,
+            "width":(lower+upper)/2 if math.isfinite(upper) else None,
+            "censored_rays":sum(ray[s]["upper"] is None for ray in rays for s in ("positive","negative"))}
 
 
 def _quantile(values, fraction):
