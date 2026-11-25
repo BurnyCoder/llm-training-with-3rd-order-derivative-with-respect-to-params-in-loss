@@ -54,6 +54,27 @@ def test_primary_flatness_summary_compares_only_common_probe_provenance():
         primary_flatness_rows(pairs)
 
 
+def test_geometry_forecast_counts_the_unigram_and_preserves_observed_publication_time(tmp_path):
+    from thirdloss.flatness_progress import geometry_progress,published_pilot_timings
+    from thirdloss.records import write_json
+    logs=tmp_path/"logs"
+    logs.mkdir()
+    (logs/"checkpoint-flatness-fixtureZ.log").write_text(
+        "2026-01-01T10:00:00+00:00 Measuring checkpoint flatness for run-a\n"
+        "2026-01-01T10:00:05+00:00 run-a width=1.5 RMS curvature=2\n"
+        "2026-01-01T10:00:20+00:00 Measuring checkpoint flatness for run-b\n"
+        "2026-01-01T10:01:20+00:00 run-b width=3 RMS curvature=1\n"
+        "2026-01-01T10:02:00+00:00 Completed pilot flatness measurements; releasing the training interval\n")
+    for run,stage in (("run-a","stories"),("run-b","abstracts")):
+        write_json(tmp_path/"results"/run/"summary.json",{"stage":stage})
+    data=published_pilot_timings(tmp_path)
+    assert [r["cycle_seconds"] for r in data["rows"]]==[20,100]
+    assert [r["measurement_seconds"] for r in data["rows"]]==[5,60]
+    report="\n".join(geometry_progress(tmp_path,{"runs":[{"stage":"stories","phase":"control","method":"unigram","score_flatness":{}}]}))
+    assert "0/91 | 1/92" in report and "0/35 | 0/36" in report
+    assert f"{(91*20+36*100)/3600:.2f} additional hours" in report
+
+
 def test_common_logit_probe_matches_direct_softmax_and_its_second_derivative():
     from thirdloss.score_flatness import bias_response
     logits=torch.tensor([[.1,.2,-.3,1.],[-1.,2.,.7,-.3]],dtype=torch.float64)
