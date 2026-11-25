@@ -1,0 +1,252 @@
+{
+  "run": "stories-hybrid-s22-always-r01",
+  "checkpoint_file_sha256": "d0c9ce1fd98433844de69ea970ae3a0605718ba9ed075025a64ac35b34e06c07",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "width_device": "cuda",
+  "split": "train",
+  "probe_windows_sha256": "2b09cf8d13e4e0df411e816e32f1799f1ee165712973c51a09fc75d528c8c2b1",
+  "timestamp": "2026-11-25T17:14:50+00:00",
+  "protocol": "checkpoint-flatness-v1",
+  "width_windows": 8,
+  "curvature_windows": 2,
+  "width": {
+    "step": 4096,
+    "tokens": 16777216,
+    "baseline_nll": 2.6044561862945557,
+    "delta_nll": 0.1,
+    "directions": [
+      {
+        "direction": 0,
+        "positive": {
+          "lower": 6.46484375,
+          "upper": 6.4658203125
+        },
+        "negative": {
+          "lower": 7.06640625,
+          "upper": 7.0673828125
+        }
+      },
+      {
+        "direction": 1,
+        "positive": {
+          "lower": 6.5703125,
+          "upper": 6.5712890625
+        },
+        "negative": {
+          "lower": 7.07421875,
+          "upper": 7.0751953125
+        }
+      },
+      {
+        "direction": 2,
+        "positive": {
+          "lower": 6.904296875,
+          "upper": 6.9052734375
+        },
+        "negative": {
+          "lower": 6.19921875,
+          "upper": 6.2001953125
+        }
+      },
+      {
+        "direction": 3,
+        "positive": {
+          "lower": 7.48046875,
+          "upper": 7.4814453125
+        },
+        "negative": {
+          "lower": 6.4794921875,
+          "upper": 6.48046875
+        }
+      },
+      {
+        "direction": 4,
+        "positive": {
+          "lower": 6.734375,
+          "upper": 6.7353515625
+        },
+        "negative": {
+          "lower": 6.75,
+          "upper": 6.7509765625
+        }
+      },
+      {
+        "direction": 5,
+        "positive": {
+          "lower": 6.9052734375,
+          "upper": 6.90625
+        },
+        "negative": {
+          "lower": 6.2431640625,
+          "upper": 6.244140625
+        }
+      },
+      {
+        "direction": 6,
+        "positive": {
+          "lower": 7.5546875,
+          "upper": 7.5556640625
+        },
+        "negative": {
+          "lower": 6.01171875,
+          "upper": 6.0126953125
+        }
+      },
+      {
+        "direction": 7,
+        "positive": {
+          "lower": 6.578125,
+          "upper": 6.5791015625
+        },
+        "negative": {
+          "lower": 6.44921875,
+          "upper": 6.4501953125
+        }
+      },
+      {
+        "direction": 8,
+        "positive": {
+          "lower": 6.822265625,
+          "upper": 6.8232421875
+        },
+        "negative": {
+          "lower": 6.693359375,
+          "upper": 6.6943359375
+        }
+      },
+      {
+        "direction": 9,
+        "positive": {
+          "lower": 6.619140625,
+          "upper": 6.6201171875
+        },
+        "negative": {
+          "lower": 6.927734375,
+          "upper": 6.9287109375
+        }
+      },
+      {
+        "direction": 10,
+        "positive": {
+          "lower": 6.1982421875,
+          "upper": 6.19921875
+        },
+        "negative": {
+          "lower": 6.4931640625,
+          "upper": 6.494140625
+        }
+      },
+      {
+        "direction": 11,
+        "positive": {
+          "lower": 5.7158203125,
+          "upper": 5.716796875
+        },
+        "negative": {
+          "lower": 7.1318359375,
+          "upper": 7.1328125
+        }
+      },
+      {
+        "direction": 12,
+        "positive": {
+          "lower": 6.4306640625,
+          "upper": 6.431640625
+        },
+        "negative": {
+          "lower": 7.2451171875,
+          "upper": 7.24609375
+        }
+      },
+      {
+        "direction": 13,
+        "positive": {
+          "lower": 6.56640625,
+          "upper": 6.5673828125
+        },
+        "negative": {
+          "lower": 6.6162109375,
+          "upper": 6.6171875
+        }
+      },
+      {
+        "direction": 14,
+        "positive": {
+          "lower": 6.6689453125,
+          "upper": 6.669921875
+        },
+        "negative": {
+          "lower": 6.0205078125,
+          "upper": 6.021484375
+        }
+      },
+      {
+        "direction": 15,
+        "positive": {
+          "lower": 6.46484375,
+          "upper": 6.4658203125
+        },
+        "negative": {
+          "lower": 6.654296875,
+          "upper": 6.6552734375
+        }
+      }
+    ],
+    "width_lower": 13.33349609375,
+    "width_upper": 13.33544921875,
+    "width": 13.33447265625,
+    "censored_rays": 0,
+    "weights_sha256": "4631c450949e55f28afba4c772ccf3b6b9f511298ce3e3b07b692dd923288d95",
+    "weights_restored": true,
+    "seconds": 7.147296999999526
+  },
+  "curvature": {
+    "dimensions": 2557632,
+    "draws": [
+      {
+        "index": 0,
+        "trace_per_parameter": 0.0036990374900418886,
+        "squared_rms": 0.29841622422842595
+      },
+      {
+        "index": 1,
+        "trace_per_parameter": 0.004179223081400183,
+        "squared_rms": 0.29777526901708934
+      },
+      {
+        "index": 2,
+        "trace_per_parameter": 0.004247000301657615,
+        "squared_rms": 0.34047629056891754
+      },
+      {
+        "index": 3,
+        "trace_per_parameter": 0.005077896459789024,
+        "squared_rms": 0.3296223078785815
+      },
+      {
+        "index": 4,
+        "trace_per_parameter": 0.005096919587909437,
+        "squared_rms": 0.33270393399593634
+      },
+      {
+        "index": 5,
+        "trace_per_parameter": 0.0038743691768387484,
+        "squared_rms": 0.29469174431604167
+      },
+      {
+        "index": 6,
+        "trace_per_parameter": 0.004179831310448635,
+        "squared_rms": 0.28346960820820705
+      },
+      {
+        "index": 7,
+        "trace_per_parameter": 0.005637048285696776,
+        "squared_rms": 0.32634780813626346
+      }
+    ],
+    "device": "cuda:0",
+    "dtype": "torch.float64",
+    "trace_per_parameter": 0.004498915711722788,
+    "rms_curvature": 0.5594085254031108
+  }
+}

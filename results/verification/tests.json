@@ -1,16 +1,16 @@
 {
-  "checked_at": "2026-11-25T10:53:06+00:00",
-  "git_revision": "000f26c527ca2330856775c6bd925e104419f38a",
+  "checked_at": "2026-11-25T17:14:26+00:00",
+  "git_revision": "3d62150e872edeb819bde3b6a8aad8b8dafc171e",
   "exit_code": 0,
   "cases": [
     {
       "test": "tests.test_analysis.test_wins_require_both_registered_exact_sign_tests",
-      "seconds": 0.001,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
       "test": "tests.test_analysis.test_second_comparator_failure_and_ties_count_separately",
-      "seconds": 0.001,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
@@ -25,7 +25,7 @@
     },
     {
       "test": "tests.test_analysis.test_partial_or_mismatched_results_never_unlock_primary_inference[missing]",
-      "seconds": 0.002,
+      "seconds": 0.001,
       "outcome": "passed"
     },
     {
@@ -45,17 +45,17 @@
     },
     {
       "test": "tests.test_analysis.test_partial_or_mismatched_results_never_unlock_primary_inference[all short]",
-      "seconds": 0.002,
+      "seconds": 0.001,
       "outcome": "passed"
     },
     {
       "test": "tests.test_analysis.test_partial_or_mismatched_results_never_unlock_primary_inference[wrong configured budget]",
-      "seconds": 0.001,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
       "test": "tests.test_analysis.test_partial_or_mismatched_results_never_unlock_primary_inference[nonfinite]",
-      "seconds": 0.001,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
@@ -95,47 +95,47 @@
     },
     {
       "test": "tests.test_data.test_exact_and_edited_documents_respect_split_priority",
-      "seconds": 0.001,
-      "outcome": "passed"
-    },
-    {
-      "test": "tests.test_data.test_prefix_candidates_match_exhaustive_jaccard_including_boundary",
-      "seconds": 0.06,
-      "outcome": "passed"
-    },
-    {
-      "test": "tests.test_data.test_abstract_submission_month_and_base_id_grouping",
-      "seconds": 0.034,
-      "outcome": "passed"
-    },
-    {
-      "test": "tests.test_data.test_prepare_from_parquet_proves_train_only_fit_packing_and_repair",
-      "seconds": 0.118,
-      "outcome": "passed"
-    },
-    {
-      "test": "tests.test_derivatives.test_gpu_production_decoder_third_order_update_matches_cpu",
-      "seconds": 2.262,
-      "outcome": "passed"
-    },
-    {
-      "test": "tests.test_derivatives.test_quartic_penalty_retains_fourth_derivative",
       "seconds": 0.002,
       "outcome": "passed"
     },
     {
+      "test": "tests.test_data.test_prefix_candidates_match_exhaustive_jaccard_including_boundary",
+      "seconds": 0.066,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_data.test_abstract_submission_month_and_base_id_grouping",
+      "seconds": 0.033,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_data.test_prepare_from_parquet_proves_train_only_fit_packing_and_repair",
+      "seconds": 0.114,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_derivatives.test_gpu_production_decoder_third_order_update_matches_cpu",
+      "seconds": 3.678,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_derivatives.test_quartic_penalty_retains_fourth_derivative",
+      "seconds": 0.003,
+      "outcome": "passed"
+    },
+    {
       "test": "tests.test_derivatives.test_mixed_cubic_exactly_averages_to_tensor_norm",
-      "seconds": 0.045,
+      "seconds": 0.054,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_random_probe_generator_gives_independent_directions",
-      "seconds": 0.197,
+      "seconds": 0.211,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_penalty_supports_linear_loss_and_unused_coordinates[third]",
-      "seconds": 0.003,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
@@ -145,37 +145,37 @@
     },
     {
       "test": "tests.test_derivatives.test_penalty_supports_linear_loss_and_unused_coordinates[hessian_norm]",
-      "seconds": 0.004,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_quadratic_has_curvature_and_zero_third_derivative",
-      "seconds": 0.001,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_signed_hessian_trace_and_squared_norm_have_correct_gradients",
-      "seconds": 0.006,
+      "seconds": 0.004,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_tiny_transformer_against_dense_tensor_and_finite_differences",
-      "seconds": 1.749,
+      "seconds": 2.355,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_actual_adamw_update_responds_to_the_third_order_term",
-      "seconds": 0.007,
+      "seconds": 0.006,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_production_story_model_exposes_full_weight_penalty_gradient",
-      "seconds": 0.069,
+      "seconds": 0.052,
       "outcome": "passed"
     },
     {
       "test": "tests.test_derivatives.test_pythia_adapter_fourth_derivative_and_portable_checkpoint",
-      "seconds": 5.037,
+      "seconds": 6.165,
       "outcome": "passed",
       "measurements": {
         "adapter_directional_autograd": "9035.374247002468",
@@ -189,27 +189,77 @@
     },
     {
       "test": "tests.test_derivatives.test_sequential_windows_reproduce_joint_penalty_and_training_gradient",
-      "seconds": 0.146,
+      "seconds": 0.238,
       "outcome": "passed"
     },
     {
-      "test": "tests.test_hub_archive.test_archive_uses_committed_blobs_including_dotfiles",
-      "seconds": 0.547,
+      "test": "tests.test_flatness.test_curvature_keeps_trace_signs_and_counts_negative_eigenvalues_in_rms",
+      "seconds": 0.025,
       "outcome": "passed"
     },
     {
-      "test": "tests.test_hub_archive.test_remote_sha_matches_git_and_large_file_storage",
-      "seconds": 0.006,
+      "test": "tests.test_flatness.test_direction_quantiles_propagate_open_bounds_without_dropping_rays",
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
-      "test": "tests.test_hub_archive.test_operational_logs_preserve_science_and_remove_auth_material",
+      "test": "tests.test_flatness.test_flatness_table_preserves_seed_count_and_geometry_units",
+      "seconds": 0.002,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_flatness.test_primary_flatness_summary_compares_only_common_probe_provenance",
+      "seconds": 0.002,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_flatness.test_geometry_forecast_counts_the_unigram_and_preserves_observed_publication_time",
+      "seconds": 0.03,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_flatness.test_common_logit_probe_matches_direct_softmax_and_its_second_derivative",
       "seconds": 0.003,
       "outcome": "passed"
     },
     {
+      "test": "tests.test_flatness.test_unigram_uses_identical_score_coordinates_to_a_constant_neural_predictor",
+      "seconds": 0.013,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_flatness.test_all_arm_table_keeps_weightless_reference_and_every_control",
+      "seconds": 0.008,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_flatness.test_geometry_milestone_retries_missing_receipt_and_skips_a_verified_unigram",
+      "seconds": 0.024,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hub_archive.test_archive_uses_committed_blobs_including_dotfiles",
+      "seconds": 0.464,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hub_archive.test_remote_sha_matches_git_and_large_file_storage",
+      "seconds": 0.008,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hub_archive.test_operational_logs_preserve_science_and_remove_auth_material",
+      "seconds": 0.005,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hub_archive.test_model_repository_compares_fitted_and_weightless_predictors_from_the_same_records",
+      "seconds": 0.033,
+      "outcome": "passed"
+    },
+    {
       "test": "tests.test_hub_archive.test_packed_files_match_manifest_and_release_test_only_after_both_gates",
-      "seconds": 0.034,
+      "seconds": 0.032,
       "outcome": "passed"
     },
     {
@@ -219,7 +269,12 @@
     },
     {
       "test": "tests.test_hub_archive.test_result_publisher_merges_concurrent_documentation_without_losing_either",
-      "seconds": 3.932,
+      "seconds": 3.283,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hub_archive.test_result_publication_retries_outages_without_rewriting_history",
+      "seconds": 0.005,
       "outcome": "passed"
     },
     {
@@ -229,17 +284,17 @@
     },
     {
       "test": "tests.test_hybrid.test_fixed_and_stronger_trace_apply_only_after_switch",
-      "seconds": 0.001,
+      "seconds": 0.002,
       "outcome": "passed"
     },
     {
       "test": "tests.test_hybrid.test_width_exact_crossing_censor_and_bitwise_restoration",
-      "seconds": 0.005,
+      "seconds": 0.006,
       "outcome": "passed"
     },
     {
       "test": "tests.test_hybrid.test_branch_restores_adam_moments_rng_cursor_and_monitor",
-      "seconds": 0.041,
+      "seconds": 0.033,
       "outcome": "passed"
     },
     {
@@ -249,7 +304,47 @@
     },
     {
       "test": "tests.test_hybrid.test_missing_parent_uses_pinned_hub_revision_and_checks_bytes",
-      "seconds": 0.053,
+      "seconds": 0.042,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hybrid.test_joint_week_forecast_counts_shared_prefix_once_and_all_eight_replays",
+      "seconds": 0.085,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hybrid.test_restart_timing_distinguishes_real_elapsed_time_from_repeated_outages",
+      "seconds": 0.007,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_hybrid.test_restart_audit_replays_only_uncommitted_logged_updates",
+      "seconds": 0.04,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_readme_comparisons.test_pilot_comparison_excludes_unselected_runs_and_unsealed_scores",
+      "seconds": 0.006,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_readme_comparisons.test_hybrid_effects_use_each_comparators_own_pairs_and_width_gains",
+      "seconds": 0.01,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_readme_comparisons.test_final_scorecard_uses_all_eight_seeds_and_shows_holm_and_median_interval",
+      "seconds": 0.007,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_readme_comparisons.test_output_panel_requires_identical_prompts_and_escapes_generated_markup",
+      "seconds": 0.013,
+      "outcome": "passed"
+    },
+    {
+      "test": "tests.test_readme_comparisons.test_legacy_stories_pilots_require_matching_first_update_when_initial_hash_is_absent",
+      "seconds": 0.012,
       "outcome": "passed"
     },
     {
@@ -259,12 +354,12 @@
     },
     {
       "test": "tests.test_reporting.test_snapshot_keeps_full_score_and_trace_semantics",
-      "seconds": 0.028,
+      "seconds": 0.039,
       "outcome": "passed"
     },
     {
       "test": "tests.test_reporting.test_report_before_first_run_keeps_readme_and_emits_protocol_paper",
-      "seconds": 1.481,
+      "seconds": 1.703,
       "outcome": "passed"
     },
     {
@@ -274,7 +369,7 @@
     },
     {
       "test": "tests.test_training.test_step_recovery_matches_uninterrupted_weights",
-      "seconds": 2.019,
+      "seconds": 2.084,
       "outcome": "passed"
     },
     {

@@ -40,7 +40,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.154 (3/8) | 0.57779 (2/8) | 1.083 (2/8) |
 | Stronger trace · hybrid study | 16,777,216 | 21–28 | 13.175 (3/8) | 0.57623 (2/8) | 1.083 (2/8) |
 | Cross-seed replay · hybrid study | 16,777,216 | 21–28 | 13.133 (2/8) | Pending | Pending |
-| Always-on hybrid · hybrid study | 16,777,216 | 21–28 | 13.229 (3/8) | 0.57089 (1/8) | 1.083 (1/8) |
+| Always-on hybrid · hybrid study | 16,777,216 | 21–28 | 13.229 (3/8) | 0.56515 (2/8) | 1.083 (2/8) |
 
 <details><summary>TinyStories · all model weights · other pilot strengths and precision diagnostics</summary>
 
@@ -99,6 +99,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | stories | hybrid | 21 | Stronger trace | 1% | 13.175 | 13.006–13.257 | 0/32 | 0.58362 | +0.00423557 | 1.084 | 1.077–1.095 | 0/32 | 0.699349 | [Weight probes](../results/stories-hybrid-s21-strong-r01/flatness.json) · [Score probes](../results/stories-hybrid-s21-strong-r01/score-flatness.json) |
 | stories | hybrid | 21 | Hessian trace | 1% | 13.154 | 12.988–13.233 | 0/32 | 0.585403 | +0.00424916 | 1.084 | 1.077–1.095 | 0/32 | 0.699347 | [Weight probes](../results/stories-hybrid-s21-trace-r01/flatness.json) · [Score probes](../results/stories-hybrid-s21-trace-r01/score-flatness.json) |
 | stories | hybrid | 22 | Curvature-dependent hybrid | 1% | 13.215 | 12.984–13.494 | 0/32 | 0.570141 | +0.0045186 | 1.082 | 1.076–1.095 | 0/32 | 0.699377 | [Weight probes](../results/stories-hybrid-s22-adaptive-r01/flatness.json) · [Score probes](../results/stories-hybrid-s22-adaptive-r01/score-flatness.json) |
+| stories | hybrid | 22 | Always-on hybrid | 1% | 13.334 | 13.085–13.553 | 0/32 | 0.559409 | +0.00449892 | 1.082 | 1.076–1.094 | 0/32 | 0.699753 | [Weight probes](../results/stories-hybrid-s22-always-r01/flatness.json) · [Score probes](../results/stories-hybrid-s22-always-r01/score-flatness.json) |
 | stories | hybrid | 22 | Fixed late hybrid | 1% | 13.268 | 13.036–13.544 | 0/32 | 0.563692 | +0.00448537 | 1.082 | 1.076–1.094 | 0/32 | 0.699535 | [Weight probes](../results/stories-hybrid-s22-late-r01/flatness.json) · [Score probes](../results/stories-hybrid-s22-late-r01/score-flatness.json) |
 | stories | hybrid | 22 | Stronger trace | 1% | 13.233 | 13.002–13.513 | 0/32 | 0.568831 | +0.00450677 | 1.082 | 1.076–1.095 | 0/32 | 0.69936 | [Weight probes](../results/stories-hybrid-s22-strong-r01/flatness.json) · [Score probes](../results/stories-hybrid-s22-strong-r01/score-flatness.json) |
 | stories | hybrid | 22 | Hessian trace | 1% | 13.215 | 12.984–13.494 | 0/32 | 0.570175 | +0.00451878 | 1.082 | 1.076–1.095 | 0/32 | 0.699377 | [Weight probes](../results/stories-hybrid-s22-trace-r01/flatness.json) · [Score probes](../results/stories-hybrid-s22-trace-r01/score-flatness.json) |
