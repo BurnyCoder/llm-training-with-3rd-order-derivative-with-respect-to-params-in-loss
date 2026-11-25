@@ -1,6 +1,6 @@
 # Study summary
 
-Recorded 53 runs, including 53 with a completed summary.
+Recorded 54 runs, including 54 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -34,6 +34,7 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 | Research abstracts | pilot | Hessian trace | 0.030 | 65,536 | 1 | 3.1141 | — |
 | Research abstracts | pilot | Hessian trace | 0.100 | 65,536 | 1 | 3.1143 | — |
 | TinyStories | branch | Shared trace checkpoint | 0.010 | 8,388,608 | 5 | 2.7577 | — |
+| TinyStories | confirm | Third derivative | 0.010 | 16,777,216 | 1 | 2.5477 | — |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
 | TinyStories | hybrid | Curvature-dependent hybrid | 0.010 | 16,777,216 | 4 | 2.5461 | — |

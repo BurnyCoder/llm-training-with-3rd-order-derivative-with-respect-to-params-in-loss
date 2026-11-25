@@ -1,16 +1,16 @@
 # Study progress
 
-Updated 2026-11-25T19:58:18+00:00.
+Updated 2026-11-25T20:08:06+00:00.
 
-24 training/control records and 0 final evaluations are complete. This is 20.0% of 120 planned model milestones.
+25 training/control records and 0 final evaluations are complete. This is 20.8% of 120 planned model milestones.
 
 ## Current record
 
-**stories** has 12 completed runs. The next milestone is determined by the run matrix.
+**stories** has 13 completed runs. The next milestone is determined by the run matrix.
 
-Pilot rates project 1.69 remaining confirmation GPU-hours, excluding validation, exports and uploads.
+Pilot rates project 1.58 remaining confirmation GPU-hours, excluding validation, exports and uploads.
 
-Statistical status: pending. Awaiting confirmatory runs.
+Statistical status: incomplete. All checkpoints must reach 16,777,216 target tokens.
 
 **abstracts** has 12 completed runs. The next milestone is determined by the run matrix.
 
@@ -43,9 +43,9 @@ Giving each predictor still missing a measurement one complete native pilot cycl
 
 ## Overall completion and remaining time
 
-Across training, references, final tests, hybrid runs and flatness evaluations, **105/305 milestones are complete (34.4%)** and 200 remain. Each milestone has equal weight in this count. Data preparation, software and publications are recorded separately.
+Across training, references, final tests, hybrid runs and flatness evaluations, **106/305 milestones are complete (34.8%)** and 199 remain. Each milestone has equal weight in this count. Data preparation, software and publications are recorded separately.
 
-Projected remaining machine time is **28.54–29.87 hours**, including model publication and geometry. There are 154.82 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
+Projected remaining machine time is **28.39–29.71 hours**, including model publication and geometry. There are 154.65 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
 
 The final seed-sensitivity analysis is pending. The queue completes both stages’ single-seed comparisons and original frozen test evaluations before the remaining hybrid replications. All checkpoint measurements precede the final across-seed analysis. [Queue amendment](amendments/seed-sensitivity-last.md) · [Final report](seed-sensitivity.md)
 
