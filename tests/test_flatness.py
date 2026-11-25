@@ -75,6 +75,34 @@ def test_geometry_forecast_counts_the_unigram_and_preserves_observed_publication
     assert f"{(91*20+36*100)/3600:.2f} additional hours" in report
 
 
+def test_all_model_table_rejects_mismatched_weight_probes_in_secondary_arms(tmp_path):
+    from thirdloss.flatness_tables import all_arm_tables
+    from thirdloss.report_records import study_snapshot
+    study=study_snapshot(tmp_path)
+    sample={"stage":"stories","phase":"pilot","seed":0,"tokens":2**21,"ratio":.01,"status":"complete"}
+    probed={"protocol":"native","probe_windows_sha256":"same","width_device":"cuda",
+            "hessian_device":"cuda:0","dimensions":100,"rms_curvature":.4}
+    study["runs"]=[{**sample,"method":"sham","flatness":probed},
+                   {**sample,"method":"combined","flatness":{**probed,"width_device":"cpu"}}]
+    with pytest.raises(ValueError,match="weight-space"):
+        all_arm_tables(study)
+
+
+def test_hybrid_width_reuse_distinguishes_cpu_and_cuda_random_direction_streams(tmp_path,monkeypatch):
+    from thirdloss import checkpoint_flatness as geometry
+    from thirdloss.records import write_json
+    model=torch.nn.Linear(2,3).double()
+    inputs=torch.zeros(2,2,2,dtype=torch.float64)
+    targets=torch.zeros(2,2,dtype=torch.long)
+    row={"phase":"hybrid","steps":1,"stage":"stories","device":"cpu"}
+    prior={"weights_sha256":geometry.trainable_digest(model),"weights_restored":True,"width":7.}
+    write_json(tmp_path/"width-1.json",prior)
+    monkeypatch.setattr(geometry,"measure_width",lambda model,loss:{"width":11.})
+    assert geometry._native_geometry(model,row,tmp_path,inputs,targets)["width"]["width"]==7.
+    row["device"]="cuda"
+    assert geometry._native_geometry(model,row,tmp_path,inputs,targets)["width"]["width"]==11.
+
+
 def test_common_logit_probe_matches_direct_softmax_and_its_second_derivative():
     from thirdloss.score_flatness import bias_response
     logits=torch.tensor([[.1,.2,-.3,1.],[-1.,2.,.7,-.3]],dtype=torch.float64)
