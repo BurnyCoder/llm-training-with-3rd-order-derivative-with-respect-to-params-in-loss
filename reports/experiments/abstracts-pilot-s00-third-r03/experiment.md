@@ -10,6 +10,18 @@ Training time is 72.3 seconds. Peak allocated GPU memory is 6,369.6 MiB. Develop
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/abstracts-pilot-s00-third-r03/config.json)
 
+## Checkpoint flatness
+
+| Training-window measurement | Value | Interpretation |
+| --- | --- | --- |
+| Weight width | 19.885 | ↑ Wider is flatter in these weight coordinates |
+| RMS weight curvature | 0.587972 | ↓ Lower means less local bending |
+| Signed Hessian trace / parameter | 0.00187752 | No general better direction |
+| Common score width | 1.093 | ↑ Wider tolerates larger changes in token scores |
+| Mean directional score curvature | 0.691916 | ↓ Lower means less local bending in score space |
+
+The connection between width and better held-out prediction is unknown. [Compare against every variant and baseline](../../flatness.md#every-variant-and-baseline).
+
 ## Recorded interruptions
 
 | Time (UTC) | Recorded exception |

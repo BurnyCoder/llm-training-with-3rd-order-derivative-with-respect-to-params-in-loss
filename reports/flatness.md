@@ -77,7 +77,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Hessian trace (10%) | 65,536 | 0 | Pending | Pending | Pending |
 | Third derivative (3%) | 65,536 | 0 | Pending | Pending | Pending |
 | Third derivative (10%) | 65,536 | 0 | Pending | Pending | Pending |
-| Third derivative (3%) · excluded precision diagnostic | 65,536 | 0 | Pending | Pending | Pending |
+| Third derivative (3%) · excluded precision diagnostic | 65,536 | 0 | 19.885 (1/1) | 0.58797 (1/1) | 1.093 (1/1) |
 
 </details>
 
@@ -89,6 +89,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | abstracts | control | 0 | Unigram | 0% | N/A | N/A | N/A | N/A | N/A | 0.915 | 0.913–0.924 | 0/32 | 0.993798 | [Score probes](../results/abstracts-control-s00-unigram-r00/score-flatness.json) |
 | abstracts | pilot | 0 | Ordinary AdamW | 0% | 19.784 | 19.185–20.320 | 0/32 | 1.28684 | +0.00312322 | 1.093 | 1.090–1.100 | 0/32 | 0.69199 | [Weight probes](../results/abstracts-pilot-s00-ce-r00/flatness.json) · [Score probes](../results/abstracts-pilot-s00-ce-r00/score-flatness.json) |
 | abstracts | pilot | 0 | Third derivative | 1% | 19.922 | 19.400–20.421 | 0/32 | 0.582266 | +0.00146738 | 1.093 | 1.090–1.100 | 0/32 | 0.692147 | [Weight probes](../results/abstracts-pilot-s00-third-r01-fp64/flatness.json) · [Score probes](../results/abstracts-pilot-s00-third-r01-fp64/score-flatness.json) |
+| abstracts | diagnostic | 0 | Third derivative | 3% | 19.885 | 19.294–20.399 | 0/32 | 0.587972 | +0.00187752 | 1.093 | 1.089–1.100 | 0/32 | 0.691916 | [Weight probes](../results/abstracts-pilot-s00-third-r03/flatness.json) · [Score probes](../results/abstracts-pilot-s00-third-r03/score-flatness.json) |
 | abstracts | pilot | 0 | Hessian trace | 1% | 19.751 | 19.179–20.260 | 0/32 | 1.18181 | +0.00404879 | 1.093 | 1.090–1.100 | 0/32 | 0.692079 | [Weight probes](../results/abstracts-pilot-s00-trace-r01-fp64/flatness.json) · [Score probes](../results/abstracts-pilot-s00-trace-r01-fp64/score-flatness.json) |
 | stories | branch | 21 | Shared trace checkpoint | 1% | 15.143 | 14.868–15.371 | 0/32 | 0.449892 | +0.00343864 | 1.062 | 1.056–1.073 | 0/32 | 0.72934 | [Weight probes](../results/stories-branch-s21-trunk-r01/flatness.json) · [Score probes](../results/stories-branch-s21-trunk-r01/score-flatness.json) |
 | stories | branch | 22 | Shared trace checkpoint | 1% | 15.403 | 15.160–15.567 | 0/32 | 0.420382 | +0.00325 | 1.061 | 1.057–1.072 | 0/32 | 0.727319 | [Weight probes](../results/stories-branch-s22-trunk-r01/flatness.json) · [Score probes](../results/stories-branch-s22-trunk-r01/score-flatness.json) |
