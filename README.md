@@ -39,17 +39,17 @@ The protocol and run matrix were published before model execution. The scores, c
 A same-probe check on pretrained Pythia found that single-precision arithmetic materially changed the third-order training gradient. The first adapter pilot is archived as a numerical diagnostic. The corrected adapter arms evaluate derivatives in double precision while ordinary training and prediction use the GPU. [Pre-test precision amendment](reports/amendments/adapter-precision.md) · [Full-model numerical checks](results/verification)
 
 <!-- RESULTS:START -->
-[Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
+[Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 19 runs, including 18 with a completed summary.
+Recorded 19 runs, including 19 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
 **Research abstracts.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
-**TinyStories development pilot.** At 2,097,152 training targets, the third-order run recorded 0.00004 nats per target token lower against Ordinary AdamW, 0.00024 nats per target token lower against Trace + third derivative, 0.00175 nats per target token lower against Squared Hessian norm, 0.00032 nats per target token lower against Randomized gradient signs, 0.00034 nats per target token lower against Hessian trace. These are single-seed descriptions using strengths selected on development.
+**TinyStories development pilot.** At 2,097,152 training targets, the third-order run recorded 0.00004 nats per target token lower against Ordinary AdamW, 0.00024 nats per target token lower against Trace + third derivative, 0.00175 nats per target token lower against Squared Hessian norm, 0.00032 nats per target token lower against Randomized gradient signs, 0.00034 nats per target token lower against Hessian trace. These are single-seed descriptions using selected on development.
 
-**Research abstracts development pilot.** At 65,536 training targets, the third-order run recorded 0.00091 nats per target token higher against Ordinary AdamW. These are single-seed descriptions using initial pilot strengths.
+**Research abstracts development pilot.** At 65,536 training targets, the third-order run recorded 0.00091 nats per target token higher against Ordinary AdamW, 0.00074 nats per target token higher against Hessian trace. These are single-seed descriptions using initial pilot strengths.
 
 ### Measured scores
 
@@ -61,6 +61,7 @@ Recorded 19 runs, including 18 with a completed summary.
 | Research abstracts | diagnostic | Third derivative | 0.030 | 65,536 | 1 | 3.1168 | — |
 | Research abstracts | pilot | Third derivative | 0.030 | 65,536 | 1 | 3.1149 | — |
 | Research abstracts | pilot | Hessian trace | 0.010 | 65,536 | 1 | 3.1140 | — |
+| Research abstracts | pilot | Hessian trace | 0.030 | 65,536 | 1 | 3.1141 | — |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
 | TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |
@@ -80,11 +81,9 @@ Recorded 19 runs, including 18 with a completed summary.
 
 ### Recorded predictions
 
-First registered checkpoint and sample in run-ID order per stage and method. [All continuations](reports/experiments/experiments.md)
+First archived sample in run-ID order per stage and method. [All continuations](reports/experiments/experiments.md)
 
-<details><summary>Research abstracts · Initial checkpoint · control, seed 0</summary>
-
-[Recorded sample](results/abstracts-control-s00-initial-r00/samples.jsonl)
+<details><summary>Research abstracts · Initial checkpoint</summary>
 
 **Prompt**
 
@@ -108,9 +107,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>Research abstracts · Unigram · control, seed 0</summary>
-
-[Recorded sample](results/abstracts-control-s00-unigram-r00/samples.jsonl)
+<details><summary>Research abstracts · Unigram</summary>
 
 **Prompt**
 
@@ -136,9 +133,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>Research abstracts · Ordinary AdamW · pilot, seed 0</summary>
-
-[Recorded sample](results/abstracts-pilot-s00-ce-r00/samples.jsonl)
+<details><summary>Research abstracts · Ordinary AdamW</summary>
 
 **Prompt**
 
@@ -161,9 +156,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>Research abstracts · Third derivative · pilot, seed 0</summary>
-
-[Recorded sample](results/abstracts-pilot-s00-third-r03-fp64/samples.jsonl)
+<details><summary>Research abstracts · Third derivative</summary>
 
 **Prompt**
 
@@ -186,9 +179,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>Research abstracts · Hessian trace · pilot, seed 0</summary>
-
-[Recorded sample](results/abstracts-pilot-s00-trace-r01-fp64/samples.jsonl)
+<details><summary>Research abstracts · Hessian trace</summary>
 
 **Prompt**
 
@@ -210,9 +201,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>TinyStories · Initial checkpoint · control, seed 0</summary>
-
-[Recorded sample](results/stories-control-s00-initial-r00/samples.jsonl)
+<details><summary>TinyStories · Initial checkpoint</summary>
 
 **Prompt**
 
@@ -230,9 +219,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>TinyStories · Unigram · control, seed 0</summary>
-
-[Recorded sample](results/stories-control-s00-unigram-r00/samples.jsonl)
+<details><summary>TinyStories · Unigram</summary>
 
 **Prompt**
 
@@ -252,9 +239,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>TinyStories · Ordinary AdamW · pilot, seed 0</summary>
-
-[Recorded sample](results/stories-pilot-s00-ce-r00/samples.jsonl)
+<details><summary>TinyStories · Ordinary AdamW</summary>
 
 **Prompt**
 
@@ -272,9 +257,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>TinyStories · Trace + third derivative · pilot, seed 0</summary>
-
-[Recorded sample](results/stories-pilot-s00-combined-r01/samples.jsonl)
+<details><summary>TinyStories · Trace + third derivative</summary>
 
 **Prompt**
 
@@ -292,9 +275,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>TinyStories · Squared Hessian norm · pilot, seed 0</summary>
-
-[Recorded sample](results/stories-pilot-s00-hessian_norm-r03/samples.jsonl)
+<details><summary>TinyStories · Squared Hessian norm</summary>
 
 **Prompt**
 
@@ -312,9 +293,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>TinyStories · Randomized gradient signs · pilot, seed 0</summary>
-
-[Recorded sample](results/stories-pilot-s00-sham-r01/samples.jsonl)
+<details><summary>TinyStories · Randomized gradient signs</summary>
 
 **Prompt**
 
@@ -332,9 +311,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>TinyStories · Third derivative · pilot, seed 0</summary>
-
-[Recorded sample](results/stories-pilot-s00-third-r01/samples.jsonl)
+<details><summary>TinyStories · Third derivative</summary>
 
 **Prompt**
 
@@ -352,9 +329,7 @@ First registered checkpoint and sample in run-ID order per stage and method. [Al
 
 </details>
 
-<details><summary>TinyStories · Hessian trace · pilot, seed 0</summary>
-
-[Recorded sample](results/stories-pilot-s00-trace-r01/samples.jsonl)
+<details><summary>TinyStories · Hessian trace</summary>
 
 **Prompt**
 
