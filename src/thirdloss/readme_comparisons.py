@@ -28,12 +28,14 @@ class Metric:
 
 
 NLL = Metric("dev_nll","Development NLL",6)
+PERPLEXITY = Metric("dev_perplexity","Development perplexity",4)
 ACCURACY = Metric("dev_accuracy","Dev top-1 accuracy",3,True,100.,"%")
 SPEED = Metric("tokens_per_sec","Training speed (targets/s)",0,True)
 MEMORY = Metric("peak_vram_mb","Peak GPU allocation (MiB)",1)
 WIDTH = Metric("width_gain","Width change after switch",4,True)
 EQUAL_TIME = Metric("equal_time_nll","Equal-time probe NLL",5)
 TEST = Metric("test_nll","Final test NLL",6)
+TEST_PERPLEXITY = Metric("test_perplexity","Final test perplexity",4)
 TEST_ACC = Metric("test_accuracy","Final test accuracy",3,True,100.,"%")
 STAGES = {"stories":"TinyStories pretraining","abstracts":"Pythia-410M adapters"}
 PRIMARY = ("ce","trace","third")
@@ -155,7 +157,7 @@ def _controls(study,stage):
     if not pairs:
         return f"**{STAGES[stage]}** · Awaiting controls with matched provenance."
     return f"**{STAGES[stage]}** · Pilot seed, {pairs[0]['third']['tokens']:,} training targets.\n\n"+_score_table(
-        pairs,available,(NLL,ACCURACY,SPEED,MEMORY))
+        pairs,available,(NLL,PERPLEXITY,ACCURACY,SPEED,MEMORY))
 
 
 def _sample_panel(pairs,methods,title):
@@ -194,7 +196,9 @@ def comparison_sections(study):
     geometry_tables=[]
     detail=["## Side-by-side comparisons","Each row states which direction is better for that metric. "
             "Bold highlights the best observed value at the displayed precision. A tie means the paired difference rounds to zero. "
-            "NLL is negative log-likelihood in nats per target. Accuracy differences use percentage points (pp)."]
+            "NLL is negative log-likelihood in nats per target. Perplexity is exp(NLL), computed for each "
+            "run before taking medians. Compare it within a corpus and tokenizer. Accuracy differences use "
+            "percentage points (pp). [Perplexity definition](https://huggingface.co/docs/transformers/perplexity)"]
     for stage,name in STAGES.items():
         caption,geometry_rows=primary_geometry(study,stage)
         if geometry_rows:
@@ -218,7 +222,7 @@ def comparison_sections(study):
                       "paired change for third order against each baseline. "
                       +("The pilot also selected the derivative strengths. " if not confirm else "")
                       +f"[Strength selection](results/selection/{stage}.json) · [Experiment ledger](reports/experiments/experiments.md)")
-        metrics=((TEST,TEST_ACC) if final else ())+ (NLL,ACCURACY,EQUAL_TIME,SPEED,MEMORY)
+        metrics=((TEST,TEST_PERPLEXITY,TEST_ACC) if final else ())+ (NLL,PERPLEXITY,ACCURACY,EQUAL_TIME,SPEED,MEMORY)
         detail.append(_score_table(pairs,PRIMARY,metrics,(("third","ce"),("third","trace"))))
         if not pairs[0]["ce"].get("initial_trainable_sha256"):
             detail.append("These early TinyStories pilots share the initialization seed and identical "
@@ -313,7 +317,7 @@ def comparison_sections(study):
                       "Both arms resume the same trace-trained checkpoint. Width change is final width minus width at "
                       "the switch. A larger change means more width retained at the fixed loss tolerance. "
                       "For two negative changes, the one closer to zero lost less width.")
-        detail.append(_score_table(fixed,("adaptive","late"),(NLL,ACCURACY,WIDTH,SPEED,MEMORY),(("adaptive","late"),)))
+        detail.append(_score_table(fixed,("adaptive","late"),(NLL,PERPLEXITY,ACCURACY,WIDTH,SPEED,MEMORY),(("adaptive","late"),)))
         samples.append(_sample_panel(fixed,("adaptive","late"),"TinyStories hybrid schedules"))
     else:
         detail.append("The adaptive and fixed-ramp comparison is awaiting its first matched pair.")

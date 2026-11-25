@@ -4,6 +4,7 @@ import json
 import math
 import os
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -143,6 +144,12 @@ def run_record(folder: Path) -> dict:
         if event.get("step") is not None:
             record["steps"] = event["step"]
     record.update({key: summary[key] for key in FIELDS if key in summary})
+    # The completed summary contains the token-weighted full-split NLL. Live events use a smaller probe.
+    # https://huggingface.co/docs/transformers/perplexity
+    for split in ("dev", "test"):
+        nll = summary.get(f"{split}_nll")
+        if finite(nll) and 0 <= nll <= math.log(sys.float_info.max):
+            record[f"{split}_perplexity"] = math.exp(nll)
     if "token_budget" in record:
         record["target_tokens"] = record["token_budget"]
     record["id"] = folder.name

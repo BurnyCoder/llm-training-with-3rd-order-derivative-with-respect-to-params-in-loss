@@ -131,7 +131,8 @@ def _result_tables(study):
 
     for (stage, phase, method, ratio, tokens), runs in groups.items():
         arm = [STAGES.get(stage, stage), phase, METHODS.get(method, method), fmt(ratio)]
-        scores.append([*arm, len(runs), fmt(tokens, 0), middle(runs, "dev_nll", 4), middle(runs, "test_nll", 4)])
+        scores.append([*arm, len(runs), fmt(tokens, 0), middle(runs, "dev_nll", 4), middle(runs, "dev_perplexity", 3),
+                       middle(runs, "test_nll", 4), middle(runs, "test_perplexity", 3)])
         devices = {}
         for run in runs:
             hardware = run.get("gpu") or run.get("device") or "Hardware unrecorded"
@@ -293,10 +294,11 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
     evaluated, resources = _result_tables(study)
     if evaluated:
         p("Scores across methods", "subheading")
-        flow.append(_grid(styles, ["Corpus", "Phase", "Method", "Ratio", "Runs", "Tokens/run", "Dev NLL", "Test NLL"],
-                          evaluated, [60, 53, 105, 36, 34, 69, 58, 60]))
+        flow.append(_grid(styles, ["Corpus", "Phase", "Method", "Ratio", "Runs", "Tokens/run", "Dev NLL", "Dev PPL", "Test NLL", "Test PPL"],
+                          evaluated, [51, 49, 80, 31, 29, 60, 45, 44, 44, 44]))
         p("Table 1. Medians over available completed runs sharing corpus, method, development "
-          "strength and token horizon. NLL is in nats per target token. Dashes mark missing "
+          "strength and token horizon. NLL is in nats per target token. Perplexity (PPL) is the exponential "
+          "of each run’s full-split NLL. Lower values are better for both metrics. Dashes mark missing "
           "observations. The paired seed analyses use individual final test scores.", "caption")
     for key, caption in (("curves", "Development NLL by logged token count. Each line is a run; "
                                     "panels separate training stages and phases."),

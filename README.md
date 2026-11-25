@@ -343,9 +343,15 @@ The pipeline pins the source texts, splits by document, learns the stories token
 
 **Seed sensitivity runs last.** Both stages complete their single-seed variants, controls and first full-budget comparison before the remaining primary confirmations. After the frozen tests, hybrid replications and checkpoint flatness, the final report measures how much the outcomes change across seeds. [Execution order](reports/amendments/seed-sensitivity-last.md) · [Final seed-sensitivity report](reports/seed-sensitivity.md)
 
-- Publish the protocol, references and analysis decisions.
-- Verify the scalar objective and its training gradient on analytical functions and a small Transformer.
-- Train the pilot, publish throughput and establish feasibility on the local GPU.
-- Complete controls, development selection, paired confirmations and a reproducible report.
-- [ ] Test whether adding the third-derivative penalty late in Hessian-trace training helps the model stay in a wider low-loss region. [Exploratory plan and rationale](reports/plan.md#late-third-derivative-regularization)
-- [ ] Compare a capped third-derivative penalty weight that rises as measured curvature falls with the fixed-token schedule. Test whether it preserves directional width at comparable training fit and whether it improves held-out token prediction. [Curvature-dependent schedule and controls](reports/plan.md#curvature-dependent-penalty-weight)
+The protocol, derivative checks and pilot timing are public. The checklist follows the completed experiment records. [Preregistration](reports/preregistration.md) · [Numerical verification](results/verification) · [One-week feasibility](results/feasibility/one-week.json)
+
+<!-- MILESTONES:START -->
+
+- [x] Finish both development searches and their single-seed trained and untrained controls. [Selection and controls](reports/planned-runs.md)
+- [ ] Complete the first full-budget AdamW, Hessian-trace and third-order comparison in both model families. [Run ledger](reports/experiments/experiments.md)
+- [ ] Evaluate both frozen eight-seed primary test matrices. [Paired test results](reports/summary.md)
+- [ ] Finish the late, curvature-dependent and replay experiments with all comparison arms. [Hybrid plan](reports/hybrid/preregistration.md) · [Width and prediction results](reports/hybrid/results.md)
+- [ ] Complete the common score-space measurement and each applicable weight-space measurement. [Flatness by checkpoint](reports/flatness.md)
+- [ ] Run the final seed-sensitivity analysis on the sealed results. [Across-seed variation](reports/seed-sensitivity.md)
+
+<!-- MILESTONES:END -->

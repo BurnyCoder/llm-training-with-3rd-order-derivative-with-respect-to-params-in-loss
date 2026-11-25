@@ -7,8 +7,10 @@ from statistics import median
 from urllib.parse import quote
 
 from .report_figures import build_figures
+from .flatness_progress import geometry_coverage
 from .flatness_tables import checkpoint_table,flatness_ledger
 from .readme_comparisons import comparison_sections
+from .records import HORIZONS
 from .report_paper import write_paper
 from .report_records import (
     METHODS, PAGES, STAGES, atomic_text, completed, describe_difference, example_runs, finite, fmt, study_snapshot,
@@ -28,12 +30,13 @@ def _ledger_row(run: dict) -> list:
     return [
         _stage(run), _method(run), run.get("phase", "—"), run.get("seed", "—"),
         fmt(run.get("ratio")), fmt(run.get("tokens"), 0), fmt(run.get("dev_nll"), 4),
-        fmt(run.get("test_nll"), 4), fmt(run.get("tokens_per_sec"), 0), run["status"],
+        fmt(run.get("dev_perplexity"), 4), fmt(run.get("test_nll"), 4), fmt(run.get("test_perplexity"), 4),
+        fmt(run.get("tokens_per_sec"), 0), run["status"],
     ]
 
 
 LEDGER_HEADERS = ["Stage", "Method", "Phase", "Seed", "Ratio", "Train tokens", "Dev NLL",
-                  "Test NLL", "Tokens/s", "Status"]
+                  "Dev PPL", "Test NLL", "Test PPL", "Tokens/s", "Status"]
 
 
 def _stage_summary(study: dict) -> str:
@@ -125,7 +128,8 @@ def _experiments(root, study):
     """Write all runs and samples, with one navigable index and brief evidence-linked learnings."""
     base = root / "reports" / "experiments"
     index = ["# Experiment ledger", "NLL is negative log-likelihood in nats per target token. "
-             "A smaller value assigns more probability to the observed next tokens. "
+             "A smaller value assigns more probability to the observed next tokens. Perplexity (PPL) is the "
+             "exponential of the full-corpus NLL. Lower is better within a corpus and tokenizer. "
              "The ratio sets the pilot regularizer-gradient magnitude relative to cross-entropy.",
              "[Architecture, training algorithms, objectives and planned budgets](../planned-runs.md)"]
     learnings = ["# Experimental learnings", _stage_summary(study),
@@ -210,9 +214,33 @@ def _compact_table(study: dict) -> str:
             observed = [r[metric] for r in runs if finite(r.get(metric))]
             return fmt(median(observed), 4) if observed else "—"
         rows.append([stage, phase, method, fmt(ratio), fmt(tokens, 0), len(runs),
-                     middle("dev_nll"), middle("test_nll")])
+                     middle("dev_nll"), middle("dev_perplexity"), middle("test_nll"), middle("test_perplexity")])
     return _table(rows, ["Stage", "Phase", "Method", "Ratio", "Tokens/run", "Runs",
-                         "Median dev NLL", "Median test NLL"]) if rows else ""
+                         "Median dev NLL", "Median dev PPL", "Median test NLL", "Median test PPL"]) if rows else ""
+
+
+def _experiment_milestones(study):
+    """Track study completion independently of the direction or significance of its results."""
+    finished = [r for r in study["runs"] if completed(r)]
+    pilots = all(study["context"][stage]["selection"].get("ratios") and
+                 {"initial", "unigram", "ce", "hessian_norm", "sham", "combined"} <=
+                 {r["method"] for r in finished if r["stage"] == stage and r["seed"] == 0 and r["phase"] in {"pilot", "control"}}
+                 for stage in STAGES)
+    first_seed = all({"ce", "trace", "third"} <= {r["method"] for r in finished if r["stage"] == stage and
+                     r["phase"] == "confirm" and r["seed"] == 1 and r["tokens"] == horizon}
+                     for stage, horizon in HORIZONS.items())
+    hybrid = study["hybrid"]
+    tasks = [
+        (pilots, "Finish both development searches and their single-seed trained and untrained controls. [Selection and controls](reports/planned-runs.md)"),
+        (first_seed, "Complete the first full-budget AdamW, Hessian-trace and third-order comparison in both model families. [Run ledger](reports/experiments/experiments.md)"),
+        (all(stage["complete"] for stage in study["stages"].values()), "Evaluate both frozen eight-seed primary test matrices. [Paired test results](reports/summary.md)"),
+        (hybrid["completed_arms"] == 48 and hybrid["completed_trunks"] == 8,
+         "Finish the late, curvature-dependent and replay experiments with all comparison arms. [Hybrid plan](reports/hybrid/preregistration.md) · [Width and prediction results](reports/hybrid/results.md)"),
+        (all(c["complete"] == c["planned"] for c in geometry_coverage(study).values()),
+         "Complete the common score-space measurement and each applicable weight-space measurement. [Flatness by checkpoint](reports/flatness.md)"),
+        (bool(study.get("seed_sensitivity")), "Run the final seed-sensitivity analysis on the sealed results. [Across-seed variation](reports/seed-sensitivity.md)"),
+    ]
+    return "\n".join(f"- [{'x' if ready else ' '}] {description}" for ready, description in tasks)
 
 
 def _update_sections(path,sections):
@@ -354,7 +382,8 @@ def build_report(root: Path = Path(".")) -> dict:
                    for r in examples if r["stage"]==stage]
             if links:
                 readme.append(f"**{name}** · "+" · ".join(links))
-    _update_sections(root/"README.md",[("RESULTS","\n\n".join(readme),True),("READOUT",opening,False)])
+    _update_sections(root/"README.md",[("RESULTS","\n\n".join(readme),True),("READOUT",opening,False),
+                                      ("MILESTONES",_experiment_milestones(study),False)])
     # The collection's landing card shows the same tables with native Hub evidence links.
     hub_base="https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/"
     hub_tables=re.sub(r"\]\(((?:reports|results)/)",lambda match:"]("+hub_base+match.group(1),
