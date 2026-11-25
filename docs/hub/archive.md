@@ -18,11 +18,11 @@ Does penalizing changes in loss curvature improve next-token prediction? The stu
 | TinyStories pretraining · dev | one development pilot seed | 0.000045 lower | 0.000338 lower | 65.7% slower |
 | Pythia-410M adapters · dev | one development pilot seed | 0.000300 higher | 0.000273 higher | 88.6% slower |
 
-**Adaptive vs fixed-ramp hybrid** · 3/8 paired seeds. Adaptive development NLL was 0.000204 lower. It retained 0.0542 less directional width after the switch. More width is better for the registered geometry test. Whether more width improves prediction is unknown.
+**Adaptive vs fixed-ramp hybrid** · 3/8 paired seeds. Adaptive development NLL was 0.000204 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.157 (adaptive) and 13.215 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
 
 Both primary test decisions are pending. Each stage requires eight paired test seeds and superiority over both baselines under Holm correction.
 
-[Side-by-side scores, accuracy, speed, memory and width](#side-by-side-comparisons) · [Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Paired tests and intervals](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/summary.md)
+[Side-by-side scores, accuracy, speed and memory](#side-by-side-comparisons) · [Flatness statistics](#flatness-of-the-trained-checkpoints) · [Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Paired tests and intervals](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/summary.md)
 
 ## Side-by-side comparisons
 
@@ -64,6 +64,25 @@ Peak host memory (lower uses less RAM) was AdamW 3.78 GiB, Hessian trace 10.28 G
 Awaiting paired test results (0 of 8 full-horizon training triplets).
 
 The equal-time row uses the last available fixed-window development score at or before the fastest run’s finish time in each seed. Full-split NLL uses every development target. Training speed includes regularizer probes. Adapter derivatives use CPU float64 with one GPU reserved. [Timing definitions and checkpoint lags](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/summary.md)
+
+### Flatness of the trained checkpoints
+
+How far can the weights move before next-token loss rises by 0.1 nats on eight fixed training windows? We add the crossing distances on both sides of each of 16 unit directions, then take their median. **Wider is flatter** in these coordinates. Establishing a local minimum would also require a stationarity test. [Flat-minima paper](https://people.idsia.ch/~juergen/fm/node1.html) · [Coordinate dependence](https://proceedings.mlr.press/v70/dinh17b/dinh17b.pdf#page=2)
+
+**TinyStories hybrids** · Each row names the completed seeds. Switch and final widths are medians over those seeds. The final seed range shows the smallest and largest seed widths. The middle 50% column gives the medians of the within-seed directional quartiles. Spread has no preferred direction. A ray at the search limit supplies a lower bound.
+
+| Hybrid arm | Seeds | Switch width<br>↑ Wider is flatter | Final width<br>↑ Wider is flatter | Final seed range | Middle 50% of final directions | Rays at limit / tested |
+| --- | --- | --- | --- | --- | --- | --- |
+| Curvature-dependent hybrid | 21, 22, 23 | 15.143 | 13.157 | 13.048–13.215 | 12.984–13.368 | 0/96 |
+| Fixed late hybrid | 21, 22, 23 | 15.143 | 13.215 | 13.103–13.268 | 13.036–13.411 | 0/96 |
+| Hessian trace | 21, 22, 23 | 15.143 | 13.154 | 13.046–13.215 | 12.984–13.366 | 0/96 |
+| Stronger trace | 21, 22, 23 | 15.143 | 13.175 | 13.069–13.233 | 13.002–13.387 | 0/96 |
+| Cross-seed replay | 22 | 15.403 | 13.218 | One seed | 12.987–13.496 | 0/32 |
+| Always-on hybrid | 21, 22 | 15.357 | 13.281 | 13.229–13.334 | 13.091–13.472 | 0/64 |
+
+Matched finite-width and Hessian measurements for the primary AdamW, trace and third-order checkpoints are pending.
+
+For the primary comparison, TinyStories uses all weights and Pythia uses the LoRA factors. Compare widths within each model. The link gives every run, directional bracket and Hessian probe. [Flatness statistics and raw files](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/flatness.md) · [Secondary measurement design](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/amendments/checkpoint-flatness.md)
 
 ### TinyStories hybrid schedules
 

@@ -54,3 +54,7 @@ After an operating-system restart, rerun the same study command in the project d
 Run `uv run thirdloss audit-hub` at the Git revision in `publication.json` to verify every published object against its Git blob or large-file digest, including all tracked files. The archive uses committed bytes so Windows checkout line endings and local configuration cannot change the mirrored source. [Public verification receipt](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/publication.json)
 
 With `study --publish`, the local trainer sends active loss, accuracy, probe estimates, calibration progress and examples to the public explorer about every two minutes. GitHub Pages and the Hugging Face Space read that feed between full releases. The local dashboard reads the training records directly. [Public live feed](https://huggingface.co/BurnyCoder/thirdloss-study/resolve/main/live.json)
+
+## Checkpoint flatness
+
+Run `uv run --locked thirdloss flatness --stage both --phase pilot --publish` to measure the selected models and fitted pilot controls. Use `--phase confirm` for the eight-seed checkpoints. Each call checks the training stream and exported weights, resumes from saved measurements and publishes each newly measured checkpoint. Schedule this command between timed training runs on the same GPU. Run `uv run --locked thirdloss report` to rebuild the statistics from the saved measurements. [Design](../reports/amendments/checkpoint-flatness.md) · [Results and raw probes](../reports/flatness.md)

@@ -328,12 +328,26 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "is 4/w<super>2</super> away from zero and grows toward the flat bottom. The final appendix "
       "specifies both schedules and the width test. "
       f"{_link(REPOSITORY + '/blob/main/reports/hybrid/preregistration.md', 'Frozen follow-up design')}")
+    from .flatness_tables import hybrid_flatness_rows
     hybrid = study["hybrid"]
     if "hybrid_width" in figures:
         flow.append(_figure(figure_dir/figures["hybrid_width"],max_height=605))
     p(f"{hybrid['completed_arms']} of 48 full hybrid arms and {hybrid['completed_trunks']} of 8 shared "
       f"checkpoints have completed. Geometric endpoint: {hybrid['status']}. "
       f"{_link(REPOSITORY + '/blob/main/reports/hybrid/results.md', 'All observed widths, development scores and fit differences')}")
+    geometry=hybrid_flatness_rows(study["runs"])
+    if geometry:
+        p("Flatness at trained checkpoints","subheading")
+        p("Switch and final widths are medians over the listed seeds. Larger widths tolerate greater weight "
+          "displacement before the eight-window training loss rises by 0.1 nats. The directional interval "
+          "summarizes the middle half of the 16 two-sided distances within each seed. The last column "
+          "counts final rays whose crossing exceeded the search radius.")
+        flow.append(_grid(styles,["Hybrid arm","Seeds","Switch width","Final width","Middle 50% of directions","Rays at limit"],
+                          [[r[i] for i in (0,1,2,3,5,6)] for r in geometry],[104,71,65,65,93,66]))
+    p("Secondary diagnostics compare the fitted primary checkpoints within each trainable parameterization. "
+      "The checkpoint ledger gives their finite widths, signed trace per parameter, RMS curvature and raw probes. "
+      f"{_link(REPOSITORY + '/blob/main/reports/flatness.md','Flatness measurements')} · "
+      f"{_link(REPOSITORY + '/blob/main/reports/amendments/checkpoint-flatness.md','Secondary protocol')}")
     for comparator,s in hybrid["comparisons"].items():
         lo,hi = s["median_ci"]
         p(f"Adaptive minus {METHODS[comparator]} median width gain {fmt(s['median_delta'],5)} "

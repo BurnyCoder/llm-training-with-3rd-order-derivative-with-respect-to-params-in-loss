@@ -5,6 +5,7 @@ from html import escape
 from statistics import median
 
 from .analysis import _time_match
+from .flatness_tables import hybrid_flatness_table,primary_flatness_table
 from .records import HORIZONS
 from .report_records import METHODS, completed, finite, markdown_table, verdict_text
 
@@ -179,10 +180,17 @@ def comparison_sections(study):
     """Return a short opening scorecard and the detailed, regenerable comparisons for the README."""
     top=[]
     samples=[]
+    primary_geometry=[]
     detail=["## Side-by-side comparisons","Each row states which direction is better for that metric. "
             "Bold highlights the best observed value at the displayed precision. A tie means the paired difference rounds to zero. "
             "NLL is negative log-likelihood in nats per target. Accuracy differences use percentage points (pp)."]
     for stage,name in STAGES.items():
+        for horizon in ("confirm","pilot"):
+            table=primary_flatness_table(_paired_runs(study,stage,horizon,PRIMARY))
+            if table:
+                context="full-budget checkpoints" if horizon=="confirm" else "development pilots"
+                primary_geometry.append(f"**{name} · {context}**\n\n{table}")
+                break
         pairs=_paired_runs(study,stage,"confirm",PRIMARY)
         confirm=bool(pairs)
         if not confirm:
@@ -245,6 +253,23 @@ def comparison_sections(study):
                   "the fastest run’s finish time in each seed. Full-split NLL uses every development target. "
                   "Training speed includes regularizer probes. Adapter derivatives use CPU float64 with one GPU reserved. "
                   "[Timing definitions and checkpoint lags](reports/summary.md)")
+    detail.extend(["### Flatness of the trained checkpoints",
+                   "How far can the weights move before next-token loss rises by 0.1 nats on eight fixed training windows? "
+                   "We add the crossing distances on both sides of each of 16 unit directions, then take their median. "
+                   "**Wider is flatter** in these coordinates. Establishing a local minimum would also require a stationarity test. "
+                   "[Flat-minima paper](https://people.idsia.ch/~juergen/fm/node1.html) · "
+                   "[Coordinate dependence](https://proceedings.mlr.press/v70/dinh17b/dinh17b.pdf#page=2)",
+                   "**TinyStories hybrids** · Each row names the completed seeds. Switch and final widths are medians over those seeds. "
+                   "The final seed range shows the smallest and largest seed widths. The middle 50% column gives the medians of "
+                   "the within-seed directional quartiles. Spread has no preferred direction. A ray at the search limit supplies a lower bound.",
+                   hybrid_flatness_table(study["runs"])])
+    if primary_geometry:
+        detail.extend(primary_geometry)
+    else:
+        detail.append("Matched finite-width and Hessian measurements for the primary AdamW, trace and third-order checkpoints are pending.")
+    detail.append("For the primary comparison, TinyStories uses all weights and Pythia uses the LoRA factors. "
+                  "Compare widths within each model. The link gives every run, directional bracket and Hessian probe. "
+                  "[Flatness statistics and raw files](reports/flatness.md) · [Secondary measurement design](reports/amendments/checkpoint-flatness.md)")
     fixed=_hybrid_pairs(study,"late")
     detail.append("### TinyStories hybrid schedules")
     if fixed:
@@ -256,6 +281,9 @@ def comparison_sections(study):
             geometry="The two schedules retained equal width at the displayed precision."
         else:
             geometry=f"It retained {width_change.removesuffix(' retained')} directional width after the switch."
+        finals=[[pair[m]["widths"]["4096"]["width"] for pair in fixed] for m in ("adaptive","late")]
+        if all(finite(w) for group in finals for w in group):
+            geometry+=f" Median final widths were {median(finals[0]):.3f} (adaptive) and {median(finals[1]):.3f} (fixed)."
         loss_change=_effect(fixed,NLL,"adaptive","late")
         prediction=("The two schedules had equal development NLL at the displayed precision." if loss_change=="Tie"
                     else f"Adaptive development NLL was {loss_change}.")
@@ -302,7 +330,8 @@ def comparison_sections(study):
         detail.extend(["### Same-prompt continuations","Each panel shows the first saved prompt and full continuations "
                        "from the lowest matched seed. These examples have no quality rating. The method names link to the raw generations.",
                        *(panel for panel in samples if panel)])
-    quick.append("[Side-by-side scores, accuracy, speed, memory and width](#side-by-side-comparisons) · "
+    quick.append("[Side-by-side scores, accuracy, speed and memory](#side-by-side-comparisons) · "
+                 "[Flatness statistics](#flatness-of-the-trained-checkpoints) · "
                  "[Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · "
                  "[Paired tests and intervals](reports/summary.md)")
     if not any(o.get("complete") for o in study["stages"].values()):

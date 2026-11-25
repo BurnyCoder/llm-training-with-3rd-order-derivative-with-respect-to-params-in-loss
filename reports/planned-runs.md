@@ -19,3 +19,7 @@ Evaluate seed-paired final test predictions only when the stage has all planned 
 ## Registered hybrid follow-up
 
 The six TinyStories arms share eight paired seeds. Five branch from a common trace-trained checkpoint and one uses both penalties from initialization. Directional width is measured at three token counts. The curvature rule, replay donors, cap, stronger-trace calibration and decision threshold were fixed before follow-up outcomes. [Hybrid run matrix and decision rule](hybrid/preregistration.md) · [Research question](plan.md#curvature-dependent-penalty-weight)
+
+## Secondary flatness measurements
+
+Measure the saved AdamW, Hessian-trace and third-order checkpoints at the selected pilot horizon and the full confirmatory horizon in each stage. Include the three fitted pilot controls. Each evaluation records training-window perturbation widths and Hessian curvature in that stage’s trainable coordinates. This analysis was specified after early development results. [Measurement design](amendments/checkpoint-flatness.md) · [Measured statistics](flatness.md)
