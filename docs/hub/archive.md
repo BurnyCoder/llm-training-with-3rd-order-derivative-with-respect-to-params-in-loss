@@ -83,7 +83,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 | --- | --- | --- | --- | --- |
 | Cross-seed replay | 1/8 | 0.000002 lower | 0.0029 less retained | 3.1% faster |
 | Hessian trace | 3/8 | 0.000004 higher | 0.0020 more retained | 36.3% slower |
-| Stronger trace | 2/8 | 0.000092 lower | 0.0178 less retained | 35.5% slower |
+| Stronger trace | 3/8 | 0.000094 lower | 0.0181 less retained | 37.0% slower |
 | Always-on hybrid | 2/8 | 0.000161 higher | 0.0111 less retained | 48.0% faster |
 
 **Registered width decision** · Awaiting eight paired width measurements. Width probes use fixed training windows. [Every width, training-fit flag, replay and paired difference](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/hybrid/results.md)

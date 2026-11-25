@@ -35,6 +35,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | [stories-hybrid-s22-trace-r01](./stories-hybrid-s22-trace-r01/experiment.md) | TinyStories | Hessian trace | hybrid | 22 | 0.010 | 16,777,216 | 2.5463 | — | 61,689 | complete |
 | [stories-hybrid-s23-adaptive-r01](./stories-hybrid-s23-adaptive-r01/experiment.md) | TinyStories | Curvature-dependent hybrid | hybrid | 23 | 0.010 | 16,777,216 | 2.5423 | — | 37,872 | complete |
 | [stories-hybrid-s23-late-r01](./stories-hybrid-s23-late-r01/experiment.md) | TinyStories | Fixed late hybrid | hybrid | 23 | 0.010 | 16,777,216 | 2.5425 | — | 40,662 | complete |
+| [stories-hybrid-s23-strong-r01](./stories-hybrid-s23-strong-r01/experiment.md) | TinyStories | Stronger trace | hybrid | 23 | 0.010 | 16,777,216 | 2.5424 | — | 60,806 | complete |
 | [stories-hybrid-s23-trace-r01](./stories-hybrid-s23-trace-r01/experiment.md) | TinyStories | Hessian trace | hybrid | 23 | 0.010 | 16,777,216 | 2.5423 | — | 59,471 | complete |
 | [stories-pilot-s00-ce-r00](./stories-pilot-s00-ce-r00/experiment.md) | TinyStories | Ordinary AdamW | pilot | 0 | 0.000 | 2,097,152 | 3.8770 | — | 123,871 | complete |
 | [stories-pilot-s00-combined-r01](./stories-pilot-s00-combined-r01/experiment.md) | TinyStories | Trace + third derivative | pilot | 0 | 0.010 | 2,097,152 | 3.8772 | — | 41,030 | complete |

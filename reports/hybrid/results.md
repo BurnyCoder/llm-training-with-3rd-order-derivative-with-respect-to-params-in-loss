@@ -1,6 +1,6 @@
 # Hybrid schedules on TinyStories
 
-TinyStories hybrid follow-up: 14 of 48 full runs and 3 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
+TinyStories hybrid follow-up: 15 of 48 full runs and 3 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
 
 [Frozen protocol and decision rule](preregistration.md) · [Interactive measurement and run selector](../../docs/index.html#curves)
 
@@ -52,6 +52,9 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 23 | Fixed late hybrid | [2048](../../results/stories-hybrid-s23-late-r01/width-2048.json) | 14.99414 | 14.99316 | 14.99512 | 0 | 2.80132 | 7.17 |
 | 23 | Fixed late hybrid | [3072](../../results/stories-hybrid-s23-late-r01/width-3072.json) | 13.92383 | 13.92285 | 13.92480 | 0 | 2.64046 | 5.92 |
 | 23 | Fixed late hybrid | [4096](../../results/stories-hybrid-s23-late-r01/width-4096.json) | 13.10254 | 13.10156 | 13.10352 | 0 | 2.59694 | 5.37 |
+| 23 | Stronger trace | [2048](../../results/stories-hybrid-s23-strong-r01/width-2048.json) | 14.99414 | 14.99316 | 14.99512 | 0 | 2.80132 | 7.17 |
+| 23 | Stronger trace | [3072](../../results/stories-hybrid-s23-strong-r01/width-3072.json) | 13.91357 | 13.91260 | 13.91455 | 0 | 2.64074 | 5.01 |
+| 23 | Stronger trace | [4096](../../results/stories-hybrid-s23-strong-r01/width-4096.json) | 13.06885 | 13.06787 | 13.06982 | 0 | 2.59718 | 5.36 |
 | 23 | Hessian trace | [2048](../../results/stories-hybrid-s23-trace-r01/width-2048.json) | 14.99414 | 14.99316 | 14.99512 | 0 | 2.80132 | 7.17 |
 | 23 | Hessian trace | [3072](../../results/stories-hybrid-s23-trace-r01/width-3072.json) | 13.89600 | 13.89502 | 13.89697 | 0 | 2.64070 | 5.17 |
 | 23 | Hessian trace | [4096](../../results/stories-hybrid-s23-trace-r01/width-4096.json) | 13.04639 | 13.04541 | 13.04736 | 0 | 2.59711 | 6.03 |
@@ -78,6 +81,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 22 | Hessian trace | 2.546305 | 0.46257 | 0.40627 | [4096](../../results/stories-hybrid-s22-trace-r01/schedule.json) | 0 | 61,689 | 608.2 | 2,088.9 |
 | 23 | Curvature-dependent hybrid | 2.542260 | 0.46318 | 0.45587 | [2064](../../results/stories-hybrid-s23-adaptive-r01/schedule.json) | 1.00616e-15 | 37,872 | 617.3 | 2,090.3 |
 | 23 | Fixed late hybrid | 2.542464 | 0.46313 | 0.45587 | [2049](../../results/stories-hybrid-s23-late-r01/schedule.json) | 3.01905e-14 | 40,662 | 617.3 | 2,090.3 |
+| 23 | Stronger trace | 2.542354 | 0.46314 | 0.45587 | [4096](../../results/stories-hybrid-s23-strong-r01/schedule.json) | 0 | 60,806 | 608.2 | 2,089.5 |
 | 23 | Hessian trace | 2.542257 | 0.46318 | 0.45587 | [4096](../../results/stories-hybrid-s23-trace-r01/schedule.json) | 0 | 59,471 | 608.2 | 2,034.6 |
 
 ## Stronger trace at the common checkpoint
@@ -86,6 +90,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | --- | --- | --- | --- | --- |
 | 21 | 16 | 4.557361e-08 | 12.07 | [Per-draw gradient norms](../../results/hybrid/calibration/seed-21.json) |
 | 22 | 16 | 3.697337e-08 | 13.16 | [Per-draw gradient norms](../../results/hybrid/calibration/seed-22.json) |
+| 23 | 16 | 4.530499e-08 | 11.47 | [Per-draw gradient norms](../../results/hybrid/calibration/seed-23.json) |
 
 ## Adaptive minus comparator per seed
 
@@ -102,7 +107,8 @@ Positive Δwidth favors the adaptive schedule. Negative ΔNLL favors its predict
 | 23 | Hessian trace | 0.001953 | 0.000004 | -0.000010 | yes |
 | 21 | Stronger trace | -0.017578 | -0.000102 | -0.000018 | yes |
 | 22 | Stronger trace | -0.018066 | -0.000083 | -0.000074 | yes |
+| 23 | Stronger trace | -0.020508 | -0.000094 | -0.000076 | yes |
 | 21 | Always-on hybrid | 0.041748 | -0.000015 | -0.000061 | yes |
 | 22 | Always-on hybrid | -0.063965 | 0.000337 | 0.000030 | yes |
 
-The completed branches reused 75,497,472 targets of optimization compared with independently training each branch from initialization. The replay permutation couples different seeds through their coefficient histories. The sign-test reference for this comparison assumes exchangeable independent pair signs. Shared donor histories make that assumption approximate. All raw pairs are reported for inspection.
+The completed branches reused 83,886,080 targets of optimization compared with independently training each branch from initialization. The replay permutation couples different seeds through their coefficient histories. The sign-test reference for this comparison assumes exchangeable independent pair signs. Shared donor histories make that assumption approximate. All raw pairs are reported for inspection.
