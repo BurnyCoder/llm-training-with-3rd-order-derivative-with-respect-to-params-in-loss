@@ -24,6 +24,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | [stories-branch-s23-trunk-r01](./stories-branch-s23-trunk-r01/experiment.md) | TinyStories | Shared trace checkpoint | branch | 23 | 0.010 | 8,388,608 | 2.7525 | — | 54,841 | complete |
 | [stories-branch-s24-trunk-r01](./stories-branch-s24-trunk-r01/experiment.md) | TinyStories | Shared trace checkpoint | branch | 24 | 0.010 | 8,388,608 | 2.7639 | — | 60,780 | complete |
 | [stories-branch-s25-trunk-r01](./stories-branch-s25-trunk-r01/experiment.md) | TinyStories | Shared trace checkpoint | branch | 25 | 0.010 | 8,388,608 | 2.7621 | — | 45,520 | complete |
+| [stories-confirm-s01-ce-r00](./stories-confirm-s01-ce-r00/experiment.md) | TinyStories | Ordinary AdamW | confirm | 1 | 0.000 | 16,777,216 | 2.5477 | — | 113,244 | complete |
 | [stories-confirm-s01-third-r01](./stories-confirm-s01-third-r01/experiment.md) | TinyStories | Third derivative | confirm | 1 | 0.010 | 16,777,216 | 2.5477 | — | 32,018 | complete |
 | [stories-control-s00-initial-r00](./stories-control-s00-initial-r00/experiment.md) | TinyStories | Initial checkpoint | control | 0 | 0.000 | 0 | 8.3437 | — | 0 | complete |
 | [stories-control-s00-unigram-r00](./stories-control-s00-unigram-r00/experiment.md) | TinyStories | Unigram | control | 0 | 0.000 | 0 | 6.0036 | — | 0 | complete |
