@@ -61,7 +61,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Unigram | 0 | 0 | N/A · no weights | N/A · no weights | 0.915 (1/1) |
 | Ordinary AdamW | 65,536 | 0 | 19.784 (1/1) | 1.2868 (1/1) | Pending |
 | Hessian trace (1%) | 65,536 | 0 | 19.751 (1/1) | 1.1818 (1/1) | Pending |
-| Third derivative (1%) | 65,536 | 0 | Pending | Pending | Pending |
+| Third derivative (1%) | 65,536 | 0 | 19.922 (1/1) | 0.58227 (1/1) | Pending |
 | Squared Hessian norm (3%) | 65,536 | 0 | Pending | Pending | Pending |
 | Randomized gradient signs (1%) | 65,536 | 0 | Pending | Pending | Pending |
 | Trace + third derivative (1%) | 65,536 | 0 | Pending | Pending | Pending |
@@ -87,6 +87,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | abstracts | control | 0 | Unigram | 0% | N/A | N/A | N/A | N/A | N/A | 0.915 | 0.913–0.924 | 0/32 | 0.993798 | [Score probes](../results/abstracts-control-s00-unigram-r00/score-flatness.json) |
 | abstracts | pilot | 0 | Ordinary AdamW | 0% | 19.784 | 19.185–20.320 | 0/32 | 1.28684 | +0.00312322 | Pending | Pending | Pending | Pending | [Weight probes](../results/abstracts-pilot-s00-ce-r00/flatness.json) |
+| abstracts | pilot | 0 | Third derivative | 1% | 19.922 | 19.400–20.421 | 0/32 | 0.582266 | +0.00146738 | Pending | Pending | Pending | Pending | [Weight probes](../results/abstracts-pilot-s00-third-r01-fp64/flatness.json) |
 | abstracts | pilot | 0 | Hessian trace | 1% | 19.751 | 19.179–20.260 | 0/32 | 1.18181 | +0.00404879 | Pending | Pending | Pending | Pending | [Weight probes](../results/abstracts-pilot-s00-trace-r01-fp64/flatness.json) |
 | stories | control | 0 | Unigram | 0% | N/A | N/A | N/A | N/A | N/A | 0.915 | 0.913–0.920 | 0/32 | 0.989727 | [Score probes](../results/stories-control-s00-unigram-r00/score-flatness.json) |
 | stories | pilot | 0 | Ordinary AdamW | 0% | 15.579 | 15.297–16.037 | 0/32 | 0.453288 | +0.0036281 | Pending | Pending | Pending | Pending | [Weight probes](../results/stories-pilot-s00-ce-r00/flatness.json) |

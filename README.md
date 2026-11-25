@@ -169,7 +169,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Unigram | 0 | 0 | N/A · no weights | N/A · no weights | 0.915 (1/1) |
 | Ordinary AdamW | 65,536 | 0 | 19.784 (1/1) | 1.2868 (1/1) | Pending |
 | Hessian trace (1%) | 65,536 | 0 | 19.751 (1/1) | 1.1818 (1/1) | Pending |
-| Third derivative (1%) | 65,536 | 0 | Pending | Pending | Pending |
+| Third derivative (1%) | 65,536 | 0 | 19.922 (1/1) | 0.58227 (1/1) | Pending |
 | Squared Hessian norm (3%) | 65,536 | 0 | Pending | Pending | Pending |
 | Randomized gradient signs (1%) | 65,536 | 0 | Pending | Pending | Pending |
 | Trace + third derivative (1%) | 65,536 | 0 | Pending | Pending | Pending |
@@ -200,6 +200,18 @@ Each row uses the same fixed training windows and probe directions within its st
 | Unperturbed probe NLL<br>↓ Lower fits these windows better | 3.84335 | 3.84501 | 3.84377 |
 | RMS Hessian curvature<br>↓ Lower means less local bending | 0.453288 | 0.447721 | 0.447394 |
 | Signed Hessian trace / parameter<br>No general better direction | +0.0036281 | +0.00356145 | +0.00357761 |
+
+**Pythia-410M adapters · development pilots · seeds 0 · 65,536 training targets**
+
+| Flatness statistic | AdamW | Hessian trace | Third order |
+| --- | --- | --- | --- |
+| Directional width<br>↑ Wider is flatter | 19.784 | 19.751 | 19.922 |
+| Final width range across seeds<br>Descriptive spread | One seed | One seed | One seed |
+| Middle 50% of directions<br>Descriptive spread | 19.185–20.320 | 19.179–20.260 | 19.400–20.421 |
+| Rays at limit / tested<br>Measurement coverage | 0/32 | 0/32 | 0/32 |
+| Unperturbed probe NLL<br>↓ Lower fits these windows better | 2.91035 | 2.91018 | 2.91090 |
+| RMS Hessian curvature<br>↓ Lower means less local bending | 1.28684 | 1.18181 | 0.582266 |
+| Signed Hessian trace / parameter<br>No general better direction | +0.00312322 | +0.00404879 | +0.00146738 |
 
 For the primary comparison, TinyStories uses all weights and Pythia uses the LoRA factors. Compare widths within each model. The link gives every run, directional bracket and Hessian probe. [Flatness statistics and raw files](reports/flatness.md) · [Secondary measurement design](reports/amendments/checkpoint-flatness.md)
 
