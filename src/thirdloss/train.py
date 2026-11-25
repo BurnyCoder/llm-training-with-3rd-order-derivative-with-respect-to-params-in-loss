@@ -12,7 +12,7 @@ import torch
 from filelock import FileLock
 
 from .evaluation import sample_outputs, score, unigram_distribution
-from .models import build_model, export_weights
+from .models import build_model, export_weights, trainable_digest
 from .objectives import add_penalty, calibrate, ce_backward
 from .records import (BATCHES, CONTEXT, HORIZONS, RATIOS, Recorder, json_lines, read_json,
                       run_name, sha256, time_now, write_json)
@@ -115,6 +115,7 @@ def run_one(project, storage, stage, method, phase, seed, ratio, device, microba
                 write_json(log,history)
         if marker.exists():
             remember(read_json(marker))
+            marker.unlink()
         try:
             return _run(project, storage, config, recorder, device, microbatch)
         except Exception as exc:
@@ -130,8 +131,11 @@ def _run(project, storage, config, recorder, device, microbatch):
     manifest = read_json(data/"manifest.json")
     config["data_manifest_sha256"] = sha256(data/"manifest.json")
     config["microbatch"] = microbatch
-    config["coefficients"] = chosen_coefficients(project,storage,config,device,microbatch)
     output = recorder.directory
+    state_path = output/"state.json"
+    if not (output/"summary.json").exists():
+        write_json(state_path,{**config,"status":"initializing","timestamp":time_now()})
+    config["coefficients"] = chosen_coefficients(project,storage,config,device,microbatch)
     if (output/"config.json").exists() and read_json(output/"config.json") != config:
         raise ValueError(f"Existing run configuration conflicts with {config['id']}")
     write_json(output/"config.json",config)
@@ -147,12 +151,14 @@ def _run(project, storage, config, recorder, device, microbatch):
     parameters = tuple(p for p in model.parameters() if p.requires_grad) if model is not None else ()
     summary = {**config, "device":str(device), "torch":str(torch.__version__), "platform":platform.platform(),
                "gpu":torch.cuda.get_device_name(device) if device.type=="cuda" else None,
+               "initial_trainable_sha256":trainable_digest(model) if model is not None else None,
                "git_revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=project,text=True).strip(),
                "trainable_parameters":sum(p.numel() for p in parameters)}
     batch = BATCHES[stage]
     steps = budget//(batch*CONTEXT)
     elapsed = 0.0
     if budget:
+        write_json(state_path,{"status":"training","timestamp":time_now()})
         windows = TrainingWindows(data/"train.bin",seed,batch)
         groups = [{"params":[p for p in parameters if p.ndim>1],"weight_decay":0.1},
                   {"params":[p for p in parameters if p.ndim<=1],"weight_decay":0.0}]
@@ -190,7 +196,11 @@ def _run(project, storage, config, recorder, device, microbatch):
                 save_state(ckpt/"latest.pt",model,optimizer,done,elapsed,config)
         del optimizer
     dist = unigram_distribution(data/"train.bin",4096 if stage=="stories" else 50304) if method=="unigram" else None
-    validation = score(model,data/"dev.bin",device,microbatch,unigram=dist)
+    write_json(state_path,{"status":"scoring development","timestamp":time_now()})
+    def evaluation_progress(row):
+        write_json(state_path,{"status":"scoring development",**row})
+        recorder.emit({"split":"dev",**row},"evaluation.jsonl")
+    validation = score(model,data/"dev.bin",device,microbatch,unigram=dist,progress=evaluation_progress)
     # A rerun after final-checkpoint interruption writes each documented sample exactly once.
     sample_path = output/"samples.jsonl"
     if sample_path.exists():
@@ -207,6 +217,7 @@ def _run(project, storage, config, recorder, device, microbatch):
                    dev_nll=validation["nll"],dev_accuracy=validation["accuracy"],dev_tokens=validation["tokens"],
                    finished_at=time_now(),status="complete")
     write_json(summary_path,summary)
+    state_path.unlink(missing_ok=True)
     (output/"failure.json").unlink(missing_ok=True)
     print(f"Completed {config['id']}  development NLL {summary['dev_nll']:.6f}",flush=True)
     return summary

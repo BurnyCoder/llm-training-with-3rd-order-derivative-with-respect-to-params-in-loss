@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-11-25T07:12:23+00:00",
+  "model": "EleutherAI/pythia-410m",
+  "seed": 0,
+  "calibration_draw": 0,
+  "probe_generation": "CUDA stream 827, seed 6247, FP32 CPU model derivatives, FP64 reductions",
+  "max_logit_abs_diff": 0.0,
+  "joint_penalty": 3507310145714932.0,
+  "two_window_penalty": 3507310136327515.0,
+  "relative_vector_error": 7.224275647290446e-08,
+  "cosine": 0.9999999999999951
+}

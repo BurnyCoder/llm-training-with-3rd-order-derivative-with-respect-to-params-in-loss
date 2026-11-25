@@ -37,7 +37,7 @@ FIELDS = (
     "batch_size", "architecture", "commit", "dataset_revision", "data_hash",
     "freeze_id", "test_manifest_sha256", "test_tokens", "data_manifest_sha256",
     "token_budget", "batch_windows", "microbatch", "context", "weights_sha256", "dev_tokens",
-    "git_revision", "gpu", "torch", "matched_dev_nll", "finished_at",
+    "git_revision", "gpu", "torch", "matched_dev_nll", "finished_at", "initial_trainable_sha256",
 )
 EVENT_FIELDS = (
     "step", "tokens", "train_seconds", "loss", "accuracy", "penalty", "dev_nll",
@@ -104,7 +104,8 @@ def fmt(value, digits: int = 3) -> str:
 
 def run_record(folder: Path) -> dict:
     """Join configuration, events and final summary with explicit completion state."""
-    config = read_json(folder / "config.json")
+    state = read_json(folder / "state.json")
+    config = {**state,**read_json(folder / "config.json")}
     summary = read_json(folder / "summary.json")
     last_error = read_json(folder / "failure.json")
     events = read_lines(folder / "events.jsonl")
@@ -124,6 +125,8 @@ def run_record(folder: Path) -> dict:
     if "token_budget" in record:
         record["target_tokens"] = record["token_budget"]
     record["id"] = folder.name
+    if "targets_scored" in state and not summary:
+        record["evaluation_progress"] = state
     failures = read_json(folder / "attempts.json").get("failures", [])
     if last_error and last_error not in failures:
         failures.append(last_error)
@@ -177,7 +180,7 @@ def study_snapshot(root: Path = Path(".")) -> dict:
     directory = Path(root) / "results"
     runs = []
     for folder in sorted(directory.glob("*")):
-        if folder.is_dir() and any((folder / f).is_file() for f in ("config.json", "summary.json", "failure.json")):
+        if folder.is_dir() and any((folder / f).is_file() for f in ("config.json", "summary.json", "failure.json", "state.json")):
             runs.append(run_record(folder))
     stages = {stage: analyze_stage(runs, stage) for stage in STAGES}
     for run in runs:

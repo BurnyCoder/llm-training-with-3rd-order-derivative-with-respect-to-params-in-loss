@@ -79,6 +79,7 @@ def test_step_recovery_matches_uninterrupted_weights(tmp_path,monkeypatch):
         store2 = tmp_path/"store2"
         shutil.copytree(root/"data",store2/"data")
         normal = train.run_one(reference,store2,"stories","third","smoke",seed,0.03,torch.device("cpu"))
+        assert normal["initial_trainable_sha256"] == resumed["initial_trainable_sha256"]
         rel = f"checkpoints/{normal['id']}/export/model.safetensors"
         first, second = load_file(str(root/rel)),load_file(str(store2/rel))
         for name in first:

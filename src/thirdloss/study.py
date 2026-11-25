@@ -60,6 +60,7 @@ def freeze(project, storage, stage):
     split = read_json(storage/"data"/stage/"manifest.json")["splits"]["test"]
     frozen = {"stage":stage,"ratios":selection,"test_sha256":split["sha256"],"runs":{}}
     for seed in range(1,9):
+        initial = set()
         for method in ("ce","trace","third"):
             name = run_name(stage,method,"confirm",seed,selection.get(method,0))
             summary = read_json(project/"results"/name/"summary.json")
@@ -69,6 +70,12 @@ def freeze(project, storage, stage):
                 raise ValueError(f"Different corpus for {name}")
             weights_file(storage,summary)
             frozen["runs"][name] = summary["weights_sha256"]
+            if summary.get("initial_trainable_sha256"):
+                initial.add(summary["initial_trainable_sha256"])
+        if len(initial)>1:
+            raise ValueError(f"Initial trainable weights differ across {stage} seed {seed} arms")
+        if initial:
+            frozen.setdefault("initializations",{})[str(seed)] = initial.pop()
     frozen["freeze_id"] = hashlib.sha256(json.dumps(frozen,sort_keys=True).encode()).hexdigest()
     path = project/"results"/"freeze"/f"{stage}.json"
     if path.exists() and read_json(path)!=frozen:
