@@ -97,9 +97,18 @@ def _paired_runs(study,stage,phase,methods):
         if any(len(groups.get((seed,m),[]))!=1 for m in methods):
             continue
         pair={m:dict(groups[seed,m][0]) for m in methods}
-        provenance=("initial_trainable_sha256","data_manifest_sha256","dev_tokens")
+        provenance=("data_manifest_sha256","dev_tokens")
         if any(not all(r.get(key) for r in pair.values()) or len({r[key] for r in pair.values()})!=1
                for key in provenance):
+            continue
+        hashes={r.get("initial_trainable_sha256") for r in pair.values()}
+        if hashes=={None} and (stage,phase)==("stories","pilot"):
+            # Early scratch pilots recorded the seed and first ordinary update before weight digests existed.
+            first=[next((e for e in r.get("events",[]) if e.get("step")==1),{}) for r in pair.values()]
+            fields=("tokens","loss","accuracy","gradient_norm")
+            if any(not all(finite(e.get(k)) for e in first) or len({e[k] for e in first})!=1 for k in fields):
+                continue
+        elif len(hashes)!=1 or not all(hashes):
             continue
         if methods==PRIMARY:
             timed=_time_match(seed,{(seed,m):r for m,r in pair.items()})
@@ -188,6 +197,10 @@ def comparison_sections(study):
                       +f"[Strength selection](results/selection/{stage}.json) · [Experiment ledger](reports/experiments/experiments.md)")
         metrics=((TEST,TEST_ACC) if final else ())+ (NLL,ACCURACY,EQUAL_TIME,SPEED,MEMORY)
         detail.append(_score_table(pairs,PRIMARY,metrics,(("third","ce"),("third","trace"))))
+        if not pairs[0]["ce"].get("initial_trainable_sha256"):
+            detail.append("These early TinyStories pilots share the initialization seed and identical "
+                          "first-update token count, loss, accuracy and gradient norm. Initial weight digests "
+                          "were first recorded in later runs. [First-update records](reports/experiments/experiments.md)")
         samples.append(_sample_panel(pairs,PRIMARY,name))
         timed=[p for p in pairs if "equal_time_cutoff" in p["ce"]]
         if timed:
