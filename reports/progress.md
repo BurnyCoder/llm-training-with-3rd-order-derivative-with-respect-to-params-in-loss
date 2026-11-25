@@ -1,12 +1,12 @@
 # Study progress
 
-Updated 2026-11-25T06:52:26+00:00.
+Updated 2026-11-25T06:54:09+00:00.
 
-7 training/control records and 0 final evaluations are complete. This is 5.8% of 120 planned model milestones.
+8 training/control records and 0 final evaluations are complete. This is 6.7% of 120 planned model milestones.
 
 ## Current record
 
-**stories** has 7 completed runs. The next milestone is determined by the run matrix.
+**stories** has 8 completed runs. The next milestone is determined by the run matrix.
 
 Statistical status: pending. Awaiting confirmatory runs.
 
