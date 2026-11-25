@@ -36,6 +36,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 22 | Fixed late hybrid | [2048](../../results/stories-hybrid-s22-late-r01/width-2048.json) | 15.40259 | 15.40137 | 15.40381 | 0 | 2.81658 | 5.80 |
 | 22 | Fixed late hybrid | [3072](../../results/stories-hybrid-s22-late-r01/width-3072.json) | 13.98975 | 13.98877 | 13.99072 | 0 | 2.65451 | 5.89 |
 | 22 | Fixed late hybrid | [4096](../../results/stories-hybrid-s22-late-r01/width-4096.json) | 13.26758 | 13.26660 | 13.26855 | 0 | 2.60476 | 5.90 |
+| 22 | Cross-seed replay | [2048](../../results/stories-hybrid-s22-replay-r01/width-2048.json) | 15.40259 | 15.40137 | 15.40381 | 0 | 2.81658 | 5.80 |
 | 22 | Stronger trace | [2048](../../results/stories-hybrid-s22-strong-r01/width-2048.json) | 15.40259 | 15.40137 | 15.40381 | 0 | 2.81658 | 5.80 |
 | 22 | Stronger trace | [3072](../../results/stories-hybrid-s22-strong-r01/width-3072.json) | 13.96240 | 13.96143 | 13.96338 | 0 | 2.65431 | 6.13 |
 | 22 | Stronger trace | [4096](../../results/stories-hybrid-s22-strong-r01/width-4096.json) | 13.23291 | 13.23193 | 13.23389 | 0 | 2.60456 | 6.56 |
