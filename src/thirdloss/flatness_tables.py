@@ -1,5 +1,6 @@
 """Describe checkpoint widths, directional variation and local curvature without treating rays as seeds."""
 
+from math import ceil,floor
 from statistics import median
 
 from .flatness_stats import quantile_bounds
@@ -7,19 +8,29 @@ from .records import HORIZONS,RATIOS
 from .report_records import METHODS,completed,markdown_table
 
 
-def _bound_text(interval,censored=False):
+def _search_bracket(lower,upper,digits=5):
+    """Round the measured lower and upper radii outward, including a right-censored endpoint."""
+    scale=10**digits
+    low=floor(lower*scale)/scale
+    if upper is None:
+        return f"≥{low:.{digits}f}"
+    high=ceil(upper*scale)/scale
+    return f"[{low:.{digits}f}, {high:.{digits}f}]"
+
+
+def _bound_text(interval,censored=False,digits=3):
     low,high=interval
     if high is None:
-        return f"≥{low:.3f}"
-    if censored and f"{low:.3f}"!=f"{high:.3f}":
-        return f"[{low:.3f}, {high:.3f}]"
-    return f"{(low+high)/2:.3f}"
+        return _search_bracket(low,high,digits)
+    if censored and f"{low:.{digits}f}"!=f"{high:.{digits}f}":
+        return _search_bracket(low,high,digits)
+    return f"{(low+high)/2:.{digits}f}"
 
 
-def _width_stat(points,fraction):
+def _width_stat(points,fraction,digits=3):
     """Use each registered midpoint when available and keep the lower bound of every censored seed."""
     bounds=[[p["width"],p["width"]] if p["width"] is not None else [p["width_lower"],None] for p in points]
-    return _bound_text(quantile_bounds(bounds,fraction),any(b[1] is None for b in bounds))
+    return _bound_text(quantile_bounds(bounds,fraction),any(b[1] is None for b in bounds),digits)
 
 
 def _spread(points):
@@ -44,15 +55,18 @@ def checkpoint_table(method,weight,score):
     weight=weight or {}
     score=score or {}
     missing="N/A · no trainable weights" if method=="unigram" else "Pending"
-    def width(point,absent):
-        return _width_stat([point],.5) if "width" in point else absent
+    def width(point,absent,digits=3):
+        return _width_stat([point],.5,digits) if "width" in point else absent
     def number(point,key,absent):
         return f"{point[key]:.6g}" if key in point else absent
     rows=[
         ["Weight width",width(weight,missing),"↑ Wider is flatter in these weight coordinates"],
         ["RMS weight curvature",number(weight,"rms_curvature",missing),"↓ Lower means less local bending"],
         ["Signed Hessian trace / parameter",number(weight,"trace_per_parameter",missing),"No general better direction"],
-        ["Common score width",width(score,"Pending"),"↑ Wider tolerates larger changes in token scores"],
+        ["Common score width",width(score,"Pending",4),"↑ Wider tolerates larger changes in token scores"],
+        ["Common score-width search bracket",
+         _search_bracket(score["width_lower"],score["width_upper"]) if "width_lower" in score else "Pending",
+         "Numerical resolution of the median two-sided crossing"],
         ["Mean directional score curvature",number(score,"mean_directional_curvature","Pending"),
          "↓ Lower means less local bending in score space"],
     ]
@@ -141,7 +155,7 @@ def all_arm_groups(study):
             cohort=str(seeds[0]) if len(seeds)==1 else f"{seeds[0]}–{seeds[-1]}"
             native=value(widths,lambda items:_width_stat(items,.5)) if method!="unigram" else "N/A · no weights"
             rms=value(curvature,lambda items:f"{median(items):.5g}") if method!="unigram" else "N/A · no weights"
-            return [label or METHODS[method],f"{budget:,}",cohort,native,rms,value(scores,lambda items:_width_stat(items,.5))]
+            return [label or METHODS[method],f"{budget:,}",cohort,native,rms,value(scores,lambda items:_width_stat(items,.5,4))]
         one=(0,); confirm=range(1,9); follow=range(21,29)
         rows=[line("control",m,0.,0,one) for m in ("initial","unigram")]
         arms={"ce":0.,"trace":ratios.get("trace"),"third":ratios.get("third"),"hessian_norm":.03,
@@ -188,7 +202,8 @@ def flatness_ledger(study):
             rows.append([r["stage"],r["phase"],r["seed"],METHODS[r["method"]],f"{r['ratio']:.0%}",
                          *([_width_stat([p],.5),_spread([p]),_ray_count([p]),f"{p['rms_curvature']:.6g}",
                             f"{p['trace_per_parameter']:+.6g}"] if p else ["N/A" if r["method"]=="unigram" else "Pending"]*5),
-                         *([_width_stat([s],.5),_spread([s]),_ray_count([s]),f"{s['mean_directional_curvature']:.6g}"] if s else ["Pending"]*4),
+                         *([_width_stat([s],.5,4)+"<br>"+_search_bracket(s["width_lower"],s["width_upper"]),
+                            _spread([s]),_ray_count([s]),f"{s['mean_directional_curvature']:.6g}"] if s else ["Pending"]*4),
                          " · ".join(links)])
     text=["# Flatness at saved checkpoints",
           "Widths are measured in each model’s trainable coordinates. A larger width is flatter at the specified "
@@ -201,7 +216,7 @@ def flatness_ledger(study):
           "[Shared score perturbations](amendments/all-model-flatness.md)",*all_arm_tables(study),
           "## Per-run checkpoint measurements"]
     text.append(markdown_table(rows,["Stage","Horizon","Seed","Arm","Strength","Weight width ↑","Weight middle 50%",
-                                    "Weight rays at limit","RMS curvature ↓","Signed trace / parameter","Score width ↑",
+                                    "Weight rays at limit","RMS curvature ↓","Signed trace / parameter","Score width ↑<br>Search bracket",
                                     "Score middle 50%","Score rays at limit","Mean score curvature","Evidence"])
                 if rows else "Awaiting the first saved primary-checkpoint measurement.")
     return "\n\n".join(text)+"\n"
