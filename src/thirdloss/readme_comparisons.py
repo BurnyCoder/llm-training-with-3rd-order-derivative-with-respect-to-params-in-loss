@@ -279,7 +279,9 @@ def comparison_sections(study):
                    "Larger **weight width** means greater tolerance to moving the model’s trainable parameters. "
                    "Larger **common score width** means that all token scores can tolerate a larger shared bias before NLL rises "
                    "by 0.1 nats, measured in RMS logit units. The unigram has zero trainable model weights and shares the score test "
-                   "with every neural predictor. Both widths have an unknown relationship to better held-out prediction. "
+                   "with every neural predictor. Small differences can fall inside the numerical search brackets. "
+                   "Both widths have an unknown relationship to better held-out prediction. "
+                   "[Per-run search brackets](reports/flatness.md#per-run-checkpoint-measurements) · "
                    "[All-model measurement design](reports/amendments/all-model-flatness.md)",*all_arm_tables(study)])
     if geometry_tables:
         detail.extend(geometry_tables)

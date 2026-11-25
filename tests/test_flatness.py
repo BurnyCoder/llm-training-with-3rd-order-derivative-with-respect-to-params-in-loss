@@ -139,10 +139,19 @@ def test_all_arm_table_keeps_weightless_reference_and_every_control(tmp_path):
     study["runs"]=[{"stage":"stories","phase":"control","method":"unigram","status":"complete",
                     "ratio":0.,"seed":0,"tokens":0,"score_flatness":point}]
     text="\n".join(all_arm_tables(study))
-    assert "| Unigram | 0 | 0 | N/A · no weights | N/A · no weights | 0.900 (1/1) |" in text
+    assert "| Unigram | 0 | 0 | N/A · no weights | N/A · no weights | 0.9000 (1/1) |" in text
     assert all(name in text for name in ("Squared Hessian norm","Randomized gradient signs","Trace + third derivative",
                                          "Cross-seed replay","Shared trace checkpoint","Always-on hybrid"))
     assert "Hessian trace (10%)" in text and "Third derivative (1%)" in text
+
+
+def test_score_card_keeps_small_width_differences_and_outward_bisection_bounds():
+    from thirdloss.flatness_tables import checkpoint_table
+    score={"width":1.0928345,"width_lower":1.0927429,"width_upper":1.0929261}
+    text=checkpoint_table("third",None,score)
+    assert "1.0928" in text and "[1.09274, 1.09293]" in text
+    censored=checkpoint_table("unigram",None,{"width":None,"width_lower":128.125687,"width_upper":None})
+    assert "≥128.12568" in censored
 
 
 def test_geometry_milestone_retries_missing_receipt_and_skips_a_verified_unigram(tmp_path,monkeypatch):
