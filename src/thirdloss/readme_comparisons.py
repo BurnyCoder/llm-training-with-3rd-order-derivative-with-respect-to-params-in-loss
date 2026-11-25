@@ -18,15 +18,22 @@ class Metric:
     scale: float = 1.
     suffix: str = ""
 
+    @property
+    def direction(self):
+        """State the objective beside each score, including the narrower meaning of geometric width."""
+        if self.key=="width_gain":
+            return "↑ More retained is better for the width test"
+        return "↑ Higher is better" if self.larger else "↓ Lower is better"
 
-NLL = Metric("dev_nll","Development NLL ↓",6)
-ACCURACY = Metric("dev_accuracy","Dev top-1 accuracy ↑",3,True,100.,"%")
-SPEED = Metric("tokens_per_sec","Training speed ↑ (targets/s)",0,True)
-MEMORY = Metric("peak_vram_mb","Peak GPU allocation ↓ (MiB)",1)
-WIDTH = Metric("width_gain","Width change after switch ↑",4,True)
-EQUAL_TIME = Metric("equal_time_nll","Equal-time probe NLL ↓",5)
-TEST = Metric("test_nll","Final test NLL ↓",6)
-TEST_ACC = Metric("test_accuracy","Final test accuracy ↑",3,True,100.,"%")
+
+NLL = Metric("dev_nll","Development NLL",6)
+ACCURACY = Metric("dev_accuracy","Dev top-1 accuracy",3,True,100.,"%")
+SPEED = Metric("tokens_per_sec","Training speed (targets/s)",0,True)
+MEMORY = Metric("peak_vram_mb","Peak GPU allocation (MiB)",1)
+WIDTH = Metric("width_gain","Width change after switch",4,True)
+EQUAL_TIME = Metric("equal_time_nll","Equal-time probe NLL",5)
+TEST = Metric("test_nll","Final test NLL",6)
+TEST_ACC = Metric("test_accuracy","Final test accuracy",3,True,100.,"%")
 STAGES = {"stories":"TinyStories pretraining","abstracts":"Pythia-410M adapters"}
 PRIMARY = ("ce","trace","third")
 SHORT = {"ce":"AdamW","trace":"Hessian trace","third":"Third order","hessian_norm":"Squared Hessian",
@@ -75,7 +82,7 @@ def _score_table(pairs,methods,metrics,comparisons=()):
         best=formatted[values.index((max if metric.larger else min)(values))]
         cells=[f"**{v}**" if v==best and len(set(formatted))>1 else v for v in formatted]
         label=metric.title if len(eligible)==len(pairs) else f"{metric.title} ({len(eligible)} paired)"
-        rows.append([label,*cells,*[_effect(eligible,metric,m,b) for m,b in comparisons]])
+        rows.append([label+"<br>"+metric.direction,*cells,*[_effect(eligible,metric,m,b) for m,b in comparisons]])
     return markdown_table(rows,["Metric",*[SHORT.get(m,METHODS.get(m,m)) for m in methods],
                                 *["vs "+SHORT.get(b,b) for _,b in comparisons]])
 
@@ -172,8 +179,8 @@ def comparison_sections(study):
     """Return a short opening scorecard and the detailed, regenerable comparisons for the README."""
     top=[]
     samples=[]
-    detail=["## Side-by-side comparisons","↓ means lower is preferred. ↑ means higher is preferred. "
-            "Bold highlights the best observed value when methods differ at the displayed precision. A tie means the paired difference rounds to zero. "
+    detail=["## Side-by-side comparisons","Each row states which direction is better for that metric. "
+            "Bold highlights the best observed value at the displayed precision. A tie means the paired difference rounds to zero. "
             "NLL is negative log-likelihood in nats per target. Accuracy differences use percentage points (pp)."]
     for stage,name in STAGES.items():
         pairs=_paired_runs(study,stage,"confirm",PRIMARY)
@@ -213,7 +220,7 @@ def comparison_sections(study):
                           "development checkpoint at or before the shared cutoff.")
         if stage=="abstracts" and all(finite(p[m].get("process_peak_rss_mib")) for p in pairs for m in PRIMARY):
             highwater=", ".join(f"{SHORT[m]} {median(p[m]['process_peak_rss_mib'] for p in pairs)/1024:.2f} GiB" for m in PRIMARY)
-            detail.append("Observed host-process memory high-water marks were "+highwater+
+            detail.append("Peak host memory (lower uses less RAM) was "+highwater+
                           ". This measure includes earlier work in each interpreter.")
         detail.append(verdict_text(outcome))
         if final:
@@ -223,13 +230,17 @@ def comparison_sections(study):
                 rows.append([SHORT[m],f"{stats['median_delta']:+.6f}",f"[{lo:+.6f}, {hi:+.6f}]",
                              f"{stats['wins']}/{stats['ties']}/{stats['losses']}",f"{stats['p_holm']:.5f}"])
             detail.append(markdown_table(rows,["Against","Paired Δtest NLL","Median interval","Wins/ties/losses","Holm p"]))
+            detail.append("A negative difference favors third order. A positive difference favors the named baseline. "
+                          "The interval shows uncertainty in the median difference. A smaller Holm-adjusted p-value "
+                          "gives stronger evidence for the registered improvement. [Test decision rule](reports/preregistration.md)")
         top.append([name+" · "+("test" if final else "dev"),cohort,_effect(pairs,metric,"third","ce"),
                     _effect(pairs,metric,"third","trace"),_effect(pairs,SPEED,"third","ce")])
-    quick=["## Results at a glance","Lower next-token loss (NLL) means a model assigned more probability to "
-           "the words that actually came next. Training speed counts target tokens per second."]
+    quick=["## Results at a glance","**Lower next-token loss (NLL) is better** because the model assigns more probability "
+           "to the tokens that actually came next. **Higher top-1 accuracy is better** because the model’s first guess is correct "
+           "more often. Higher speed means more training targets per second. Lower peak memory uses fewer resources."]
     if top:
-        quick.append(markdown_table(top,["Model and split","Matched evidence","Third-order NLL vs AdamW",
-                                        "Third-order NLL vs trace","Speed vs AdamW"]))
+        quick.append(markdown_table(top,["Model and split","Matched evidence","Third-order NLL vs AdamW<br>"+NLL.direction,
+                                        "Third-order NLL vs trace<br>"+NLL.direction,"Speed vs AdamW<br>"+SPEED.direction]))
     detail.append("The equal-time row uses the last available fixed-window development score at or before "
                   "the fastest run’s finish time in each seed. Full-split NLL uses every development target. "
                   "Training speed includes regularizer probes. Adapter derivatives use CPU float64 with one GPU reserved. "
@@ -248,10 +259,12 @@ def comparison_sections(study):
         loss_change=_effect(fixed,NLL,"adaptive","late")
         prediction=("The two schedules had equal development NLL at the displayed precision." if loss_change=="Tie"
                     else f"Adaptive development NLL was {loss_change}.")
-        quick.append(f"**Adaptive vs fixed-ramp hybrid** · {n}/8 paired seeds. {prediction} {geometry}")
+        quick.append(f"**Adaptive vs fixed-ramp hybrid** · {n}/8 paired seeds. {prediction} {geometry} "
+                     "More width is better for the registered geometry test. Whether more width improves prediction is unknown.")
         detail.append(f"**Adaptive vs fixed ramp · {n}/8 paired seeds · {fixed[0]['adaptive']['tokens']:,} targets per run.** "
                       "Both arms resume the same trace-trained checkpoint. Width change is final width minus width at "
-                      "the switch. A larger change means more width retained at the fixed loss tolerance.")
+                      "the switch. A larger change means more width retained at the fixed loss tolerance. "
+                      "For two negative changes, the one closer to zero lost less width.")
         detail.append(_score_table(fixed,("adaptive","late"),(NLL,ACCURACY,WIDTH,SPEED,MEMORY),(("adaptive","late"),)))
         samples.append(_sample_panel(fixed,("adaptive","late"),"TinyStories hybrid schedules"))
     else:
@@ -263,9 +276,14 @@ def comparison_sections(study):
                      *([_effect(pairs,k,"adaptive",m) for k in (NLL,WIDTH,SPEED)] if pairs else ["Pending","—","—"])])
     detail.append("The remaining controls are paired independently. Each row uses only seeds that finished both arms. "
                   "The always-on arm has its own measured width at the switch.")
-    detail.append(markdown_table(rows,["Adaptive versus","Paired seeds","Adaptive NLL","Adaptive width change","Adaptive speed"]))
+    detail.append(markdown_table(rows,["Adaptive versus","Paired seeds","Adaptive NLL<br>"+NLL.direction,
+                                      "Adaptive width change<br>"+WIDTH.direction,"Adaptive speed<br>"+SPEED.direction]))
     detail.append(f"**Registered width decision** · {study['hybrid']['status'].capitalize()}. Width probes use fixed training windows. "
                   "[Every width, training-fit flag, replay and paired difference](reports/hybrid/results.md)")
+    detail.append("**Training diagnostics have no established better direction for held-out prediction.** "
+                  "A smaller derivative penalty meets its training objective more closely. The raw Hessian trace, "
+                  "third-derivative estimate, gradient norm and penalty strength describe the training process. "
+                  "Their predictive value is assessed separately by held-out NLL. [Objectives and endpoints](reports/preregistration.md)")
     controls=[_controls(study,stage) for stage in STAGES]
     zero=[]
     for stage,name in STAGES.items():
@@ -276,12 +294,13 @@ def comparison_sections(study):
                          *[f"{100*runs[m]['dev_accuracy']:.3f}%" for m in ("initial","unigram")]])
     if zero:
         controls+=["**Untrained references · zero training targets**",
-                   markdown_table(zero,["Stage","Initial NLL ↓","Unigram NLL ↓","Initial accuracy ↑","Unigram accuracy ↑"])]
+                   markdown_table(zero,["Stage","Initial NLL<br>"+NLL.direction,"Unigram NLL<br>"+NLL.direction,
+                                        "Initial accuracy<br>"+ACCURACY.direction,"Unigram accuracy<br>"+ACCURACY.direction])]
     detail.append("<details><summary>Squared-Hessian, scrambled-gradient, combined and untrained controls</summary>\n\n"
                   +"\n\n".join(controls)+"\n\n</details>")
     if any(samples):
         detail.extend(["### Same-prompt continuations","Each panel shows the first saved prompt and full continuations "
-                       "from the lowest matched seed. The method names link to the raw generations.",
+                       "from the lowest matched seed. These examples have no quality rating. The method names link to the raw generations.",
                        *(panel for panel in samples if panel)])
     quick.append("[Side-by-side scores, accuracy, speed, memory and width](#side-by-side-comparisons) · "
                  "[Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · "

@@ -22,7 +22,10 @@ def test_pilot_comparison_excludes_unselected_runs_and_unsealed_scores(tmp_path)
     assert "0.250000 lower" in top and "0.250000 higher" in top and "50.0% slower" in top
     assert "**2.500000**" in detail and "50.0% slower" in detail
     assert "0.123456" not in detail and "98.765432" not in detail
-    assert "| Dev top-1 accuracy ↑ | 40.000% | 40.000% | 40.000%" in detail
+    assert "| Dev top-1 accuracy<br>↑ Higher is better | 40.000% | 40.000% | 40.000%" in detail
+    assert "Third-order NLL vs AdamW<br>↓ Lower is better" in top
+    assert "Speed vs AdamW<br>↑ Higher is better" in top
+    assert "Peak GPU allocation (MiB)<br>↓ Lower is better" in detail
     rows[1]["tokens"]-=1
     _,detail=comparison_sections(study)
     assert "**2.500000**" not in detail
@@ -42,6 +45,9 @@ def test_hybrid_effects_use_each_comparators_own_pairs_and_width_gains(tmp_path)
     assert "0.5000 less directional width" in top and "1.000000 lower" in top
     assert "2.0000 more retained" in detail and "0.123456" not in detail
     assert "Cross-seed replay" in detail and "Pending" in detail
+    assert "Width change after switch<br>↑ More retained is better for the width test" in detail
+    assert "Whether more width improves prediction is unknown" in top
+    assert "no established better direction for held-out prediction" in detail
 
 
 def test_final_scorecard_uses_all_eight_seeds_and_shows_holm_and_median_interval(tmp_path):
@@ -57,8 +63,9 @@ def test_final_scorecard_uses_all_eight_seeds_and_shows_holm_and_median_interval
     study["stages"]["stories"]=analyze_stage(study["runs"],"stories")
     top,detail=comparison_sections(study)
     assert "TinyStories pretraining · test" in top and "8/8 full-budget seeds" in top
-    assert "| Final test NLL ↓ | 4.000000 | 3.900000 | **3.800000** |" in detail
+    assert "| Final test NLL<br>↓ Lower is better | 4.000000 | 3.900000 | **3.800000** |" in detail
     assert "Median interval" in detail and "Holm p" in detail and "0.00781" in detail
+    assert "A negative difference favors third order" in detail
 
 
 def test_output_panel_requires_identical_prompts_and_escapes_generated_markup(tmp_path):
