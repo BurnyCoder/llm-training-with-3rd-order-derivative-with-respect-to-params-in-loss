@@ -2,7 +2,7 @@
 // Browser APIs: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
 "use strict";
 const element = id => document.getElementById(id);
-const repository = "https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss";
+const repository = document.querySelector("a.source").href;
 const local = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname) ||
   new URL(location.href).searchParams.get("live") === "1";
 const metrics = {

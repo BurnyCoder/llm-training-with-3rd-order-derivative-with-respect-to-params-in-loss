@@ -9,10 +9,9 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from .analysis import analyze_stage
+from .records import GITHUB as REPOSITORY, PAGES
 
 
-REPOSITORY = "https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss"
-PAGES = "https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/"
 STAGES = {"stories": "TinyStories", "abstracts": "Research abstracts"}
 METHODS = {
     "ce": "Ordinary AdamW",
