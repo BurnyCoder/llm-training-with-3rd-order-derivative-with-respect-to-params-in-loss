@@ -12,6 +12,7 @@ Lower next-token loss (NLL) means a model assigned more probability to the words
 
 | Model and split | Matched evidence | Third-order NLL vs AdamW | Third-order NLL vs trace | Speed vs AdamW |
 | --- | --- | --- | --- | --- |
+| TinyStories pretraining · dev | one development pilot seed | 0.000045 lower | 0.000338 lower | 65.7% slower |
 | Pythia-410M adapters · dev | one development pilot seed | 0.000300 higher | 0.000273 higher | 88.6% slower |
 
 **Adaptive vs fixed-ramp hybrid** · 2/8 paired seeds. Adaptive development NLL was 0.000174 lower. It retained 0.0554 less directional width after the switch.
@@ -72,7 +73,21 @@ A same-probe check on pretrained Pythia found that single-precision arithmetic m
 
 ### TinyStories pretraining
 
-Awaiting matched checkpoints for AdamW, Hessian trace and third order.
+**Full development split · one development pilot seed · 2,097,152 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. The pilot also selected the derivative strengths. [Strength selection](results/selection/stories.json) · [Experiment ledger](reports/experiments/experiments.md)
+
+| Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
+| --- | --- | --- | --- | --- | --- |
+| Development NLL ↓ | 3.876976 | 3.877269 | **3.876931** | 0.000045 lower | 0.000338 lower |
+| Dev top-1 accuracy ↑ | **32.337%** | 32.329% | 32.326% | 0.011 pp lower | 0.003 pp lower |
+| Equal-time probe NLL ↓ | **3.82905** | 4.04765 | 4.95277 | 1.12372 higher | 0.90512 higher |
+| Training speed ↑ (targets/s) | **123,871** | 73,185 | 42,481 | 65.7% slower | 42.0% slower |
+| Peak GPU allocation ↓ (MiB) | 608.2 | 608.2 | 608.2 | Tie | Tie |
+
+These early TinyStories pilots share the initialization seed and identical first-update token count, loss, accuracy and gradient norm. Initial weight digests were first recorded in later runs. [First-update records](reports/experiments/experiments.md)
+
+The common training-time cutoff had a median of 16.9 seconds. The furthest checkpoint used for this row was 2.3 seconds before its cutoff.
+
+Awaiting paired test results (0 of 8 full-horizon training triplets).
 
 ### Pythia-410M adapters
 
@@ -118,7 +133,14 @@ The remaining controls are paired independently. Each row uses only seeds that f
 
 <details><summary>Squared-Hessian, scrambled-gradient, combined and untrained controls</summary>
 
-**TinyStories pretraining** · Secondary pilot comparisons are pending.
+**TinyStories pretraining** · Pilot seed, 2,097,152 training targets.
+
+| Metric | Third order | Squared Hessian | Scrambled signs | Trace + third |
+| --- | --- | --- | --- | --- |
+| Development NLL ↓ | **3.876931** | 3.878680 | 3.877253 | 3.877172 |
+| Dev top-1 accuracy ↑ | 32.326% | 32.299% | **32.331%** | 32.317% |
+| Training speed ↑ (targets/s) | 42,481 | **83,790** | 50,914 | 41,030 |
+| Peak GPU allocation ↓ (MiB) | **608.2** | **608.2** | 608.6 | 619.3 |
 
 **Pythia-410M adapters** · Secondary pilot comparisons are pending.
 
@@ -134,6 +156,16 @@ The remaining controls are paired independently. Each row uses only seeds that f
 ### Same-prompt continuations
 
 Each panel shows the first saved prompt and full continuations from the lowest matched seed. The method names link to the raw generations.
+
+<details><summary>TinyStories pretraining · same prompt, seed 0</summary>
+
+**Prompt** <samp>Once upon a time, there was a clever little dog named Max. Max loved</samp>
+
+| [AdamW](results/stories-pilot-s00-ce-r00/samples.jsonl) | [Hessian trace](results/stories-pilot-s00-trace-r01/samples.jsonl) | [Third order](results/stories-pilot-s00-third-r01/samples.jsonl) |
+| --- | --- | --- |
+| <samp> to play on the cat.</samp> | <samp> to play on the cat.</samp> | <samp> to play on the cat.</samp> |
+
+</details>
 
 <details><summary>Pythia-410M adapters · same prompt, seed 0</summary>
 

@@ -70,3 +70,16 @@ def test_output_panel_requires_identical_prompts_and_escapes_generated_markup(tm
     assert "same prompt, seed 0" in detail and "&lt;bird&gt; \\| sang" in detail
     study["runs"][1]["samples"][0]["prompt"]="A different bird"
     assert "same prompt, seed 0" not in comparison_sections(study)[1]
+
+
+def test_legacy_stories_pilots_require_matching_first_update_when_initial_hash_is_absent(tmp_path):
+    study=study_snapshot(tmp_path)
+    for method in ("ce","trace","third"):
+        row=pilot(method,3.,100,0. if method=="ce" else .03)
+        del row["initial_trainable_sha256"]
+        row["events"]=[{"step":1,"tokens":4096,"loss":8.35,"accuracy":.003,"gradient_norm":1.88}]
+        study["runs"].append(row)
+    top,detail=comparison_sections(study)
+    assert "TinyStories pretraining · dev" in top and "first-update" in detail
+    study["runs"][1]["events"][0]["gradient_norm"]+=.01
+    assert "TinyStories pretraining · dev" not in comparison_sections(study)[0]
