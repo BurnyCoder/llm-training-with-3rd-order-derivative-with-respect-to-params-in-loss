@@ -2,6 +2,7 @@
 
 from datetime import datetime
 
+from .flatness_progress import geometry_progress
 from .records import HORIZONS, json_lines, read_json, time_now, write_json
 from .report_records import atomic_text, study_snapshot
 
@@ -110,6 +111,7 @@ def progress(project):
                          f"{normal['combined_hours']:.2f} hours with the original confirmations and scoring. "
                          "Both forecasts use actual observed wall time and apply from the first-seed checkpoint. "
                          "[Restart-adjusted timing](../results/feasibility/hybrid-uptime.json)")
+    lines += geometry_progress(project,study)
     lines += ["## Monitoring","Inspect runs lasting over 10, 30 and 60 minutes at 5, 15 and 30 minute intervals "
               "respectively. The live dashboard refreshes between those checks. "
               "[Study design](plan.md) · [Run matrix](planned-runs.md) · [Experiment ledger](experiments/experiments.md)"]
