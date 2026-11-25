@@ -12,7 +12,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | [abstracts-pilot-s00-third-r01-fp64](./abstracts-pilot-s00-third-r01-fp64/experiment.md) | Research abstracts | Third derivative | pilot | 0 | 0.010 | 65,536 | 3.1142 | — | 189 | complete |
 | [abstracts-pilot-s00-third-r03](./abstracts-pilot-s00-third-r03/experiment.md) | Research abstracts | Third derivative | diagnostic | 0 | 0.030 | 65,536 | 3.1168 | — | 907 | complete |
 | [abstracts-pilot-s00-third-r03-fp64](./abstracts-pilot-s00-third-r03-fp64/experiment.md) | Research abstracts | Third derivative | pilot | 0 | 0.030 | 65,536 | 3.1149 | — | 188 | complete |
-| [abstracts-pilot-s00-third-r10-fp64](./abstracts-pilot-s00-third-r10-fp64/experiment.md) | Research abstracts | Third derivative | pilot | 0 | 0.100 | 65,536 | 3.0907 | — | — | scoring development |
+| [abstracts-pilot-s00-third-r10-fp64](./abstracts-pilot-s00-third-r10-fp64/experiment.md) | Research abstracts | Third derivative | pilot | 0 | 0.100 | 65,536 | 3.1163 | — | 193 | complete |
 | [abstracts-pilot-s00-trace-r01-fp64](./abstracts-pilot-s00-trace-r01-fp64/experiment.md) | Research abstracts | Hessian trace | pilot | 0 | 0.010 | 65,536 | 3.1140 | — | 435 | complete |
 | [abstracts-pilot-s00-trace-r03-fp64](./abstracts-pilot-s00-trace-r03-fp64/experiment.md) | Research abstracts | Hessian trace | pilot | 0 | 0.030 | 65,536 | 3.1141 | — | 427 | complete |
 | [abstracts-pilot-s00-trace-r10-fp64](./abstracts-pilot-s00-trace-r10-fp64/experiment.md) | Research abstracts | Hessian trace | pilot | 0 | 0.100 | 65,536 | 3.1143 | — | 431 | complete |

@@ -7,3 +7,6 @@
 {"timestamp": "2026-11-25T10:23:08+00:00", "split": "dev", "targets_scored": 3145728, "targets_to_score": 5124071, "nll_so_far": 3.1033516257637834, "accuracy_so_far": 0.4140634536743164, "score_seconds": 423.72429640000337}
 {"timestamp": "2026-11-25T10:24:08+00:00", "split": "dev", "targets_scored": 3573760, "targets_to_score": 5124071, "nll_so_far": 3.1070032285982716, "accuracy_so_far": 0.413781003760745, "score_seconds": 483.87572309999814}
 {"timestamp": "2026-11-25T10:25:08+00:00", "split": "dev", "targets_scored": 4026368, "targets_to_score": 5124071, "nll_so_far": 3.1088467530799853, "accuracy_so_far": 0.41361569533634285, "score_seconds": 543.9910557999974}
+{"timestamp": "2026-11-25T10:26:09+00:00", "split": "dev", "targets_scored": 4444160, "targets_to_score": 5124071, "nll_so_far": 3.110847912692521, "accuracy_so_far": 0.4134122083813364, "score_seconds": 604.2656050000005}
+{"timestamp": "2026-11-25T10:27:09+00:00", "split": "dev", "targets_scored": 4868096, "targets_to_score": 5124071, "nll_so_far": 3.113439052330164, "accuracy_so_far": 0.4131898795750947, "score_seconds": 664.3534438999995}
+{"timestamp": "2026-11-25T10:27:43+00:00", "split": "dev", "targets_scored": 5124071, "targets_to_score": 5124071, "nll_so_far": 3.116312030307629, "accuracy_so_far": 0.4128209776952739, "score_seconds": 698.2159821000023}
