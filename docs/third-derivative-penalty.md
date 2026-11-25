@@ -6,7 +6,7 @@ The model assigns a probability to each possible next token. Its **loss** is the
 
 Hochreiter and Schmidhuber compared solutions that fit the training examples about equally well. They searched for a wide box of acceptable weight settings around a solution. The tolerated range for each weight determines how many digits can be discarded while preserving the fit. Under their encoding, a larger box can give a shorter description of the network. Their hypothesis was that these simpler fits would, on average, overfit less. [Box construction](https://people.idsia.ch/~juergen/fm/node2.html) · [Description-length argument](https://people.idsia.ch/~juergen/fm/node5.html) · [Assumptions about generalization](https://people.idsia.ch/~juergen/fm/node16.html)
 
-This project compares two local quantities. The Hessian trace sums the curvatures along the principal directions. The third derivative measures changes in the full Hessian, including changes that leave the trace constant. Dinh et al. showed that rescaling a ReLU network can change measured sharpness while preserving every prediction. For that reason the proposed TinyStories follow-up measures perturbations in the same weight coordinates across runs. Wider measured directions with unchanged held-out token loss would show greater tolerance to those perturbations without evidence of better prediction. [Dinh et al., §4](https://proceedings.mlr.press/v70/dinh17b.pdf) · [Follow-up measurements](../reports/plan.md#late-third-derivative-regularization)
+This project compares two local quantities. The Hessian trace sums the curvatures along the principal directions. The third derivative measures changes in the full Hessian, including changes that leave the trace constant. Dinh et al. showed that rescaling a ReLU network can change measured sharpness while preserving every prediction. For that reason the TinyStories follow-up measures perturbations in the same weight coordinates across runs. Wider measured directions with unchanged held-out token loss would show greater tolerance to those perturbations without evidence of better prediction. [Dinh et al., §4](https://proceedings.mlr.press/v70/dinh17b.pdf) · [Registered width measurements](../reports/hybrid/preregistration.md#endpoints-and-falsification)
 
 ## When can the penalty favor a wider minimum?
 
@@ -43,19 +43,79 @@ Small initial curvature and slowly changing curvature across the interval togeth
 
 ### Weighting the penalty by curvature
 
-The proposed TinyStories schedule keeps the Hessian-trace penalty active. Its hypothesis is that, after training has reached low loss and small curvature, it is worth penalizing rapid changes in that curvature more strongly. A small Hessian can also occur on a slope. For example, $L(w)=w$ has zero Hessian and unit gradient everywhere. The follow-up therefore records training loss and gradient norm and tests width by perturbing the weights. [Experiment design](../reports/plan.md#curvature-dependent-penalty-weight)
+The adaptive arm of the registered TinyStories follow-up keeps the Hessian-trace penalty active. Its hypothesis is that, after training has reached low loss and small curvature, it is worth penalizing rapid changes in that curvature more strongly. A small Hessian can also occur on a slope. For example, $L(w)=w$ has zero Hessian and unit gradient everywhere. The follow-up therefore records training loss and gradient norm and tests width by perturbing the weights. [Registered experiment](../reports/hybrid/preregistration.md)
 
 Direct division changes the objective. For $L(w)=w^4$, the existing penalty is $(L''')^2=576w^2$. The squared relative change $(L'''/L'')^2=4/w^2$ for $w\ne0$ diverges toward the minimum and is undefined at zero. Descending that ratio pushes a displaced weight outward. In many dimensions $H$ is a matrix and $D H$ is a third-order tensor, so a ratio also requires a choice of norms or contraction. A positive floor prevents division by zero, but a differentiable denominator can still reward increasing the curvature magnitude. [Quartic gradient check](../tests/test_derivatives.py)
 
 One testable rule uses the magnitude of the Hessian of unregularized training loss. For $d$ trainable coordinates and an independent random sign vector $v$, $\mathbb E_v\lVert Hv\rVert_2^2=\operatorname{tr}(H^\top H)=\lVert H\rVert_F^2$. This counts curvature of either sign and can be estimated with the project’s existing Hessian-vector probe. Let $c_t$ be the square root of the mean of $\lVert Hv\rVert_2^2/d$ over the last $m$ completed training-only probe measurements before update $t$. This measures typical curvature in fixed weight coordinates. A few sharp directions can coexist with a small average. [Hessian-norm estimator](../src/thirdloss/penalties.py) · [Trace identity](https://arxiv.org/pdf/2010.09649#page=2)
 
-After a trace-only warm-up, once the prespecified training-loss criterion is met and the probe window is full, one possible update for the coefficient is
+After a trace-only warm-up, once the prespecified training-loss criterion is met and the probe window is full, the adaptive arm updates the coefficient using
 
 $$
 \lambda_{3,t}=\max\!\left(\lambda_{3,t-1},\ \lambda_{\max}\max\!\left(0,1-\frac{c_t}{c_*}\right)\right).
 $$
 
-Start at zero, with fixed $c_*>0$ and $\lambda_{\max}>0$. Lower measured curvature can raise the weight up to $\lambda_{\max}$. Retaining the highest value reached keeps the penalty active if curvature rebounds. For the existing squared third-derivative estimate $\widehat P_3$, holding the coefficient fixed during differentiation gives $\nabla_\theta(\lambda_{3,t}\widehat P_3)=\lambda_{3,t}\nabla_\theta\widehat P_3$. The usual sampled-update scaling still applies. If the estimate increases toward the edge, this penalty gradient can oppose an outward step. [Study objective and gradient](#the-actual-training-update) · [Proposed controls](../reports/plan.md#curvature-dependent-penalty-weight)
+Start at zero, with fixed $c_*>0$ and $\lambda_{\max}>0$. Lower measured curvature can raise the weight up to $\lambda_{\max}$. Retaining the highest value reached keeps the penalty active if curvature rebounds. For the existing squared third-derivative estimate $\widehat P_3$, holding the coefficient fixed during differentiation gives $\nabla_\theta(\lambda_{3,t}\widehat P_3)=\lambda_{3,t}\nabla_\theta\widehat P_3$. The usual sampled-update scaling still applies. If the estimate increases toward the edge, this penalty gradient can oppose an outward step. [Study objective and gradient](#the-actual-training-update) · [Registered controls](../reports/hybrid/preregistration.md#run-matrix)
+
+#### Worked example from curvature to training loss
+
+Follow one weight through four hypothetical curvature measurements after warm-up, with the low-loss criterion already met. The paper writes $\lambda_t$ for the third-derivative coefficient $\lambda_{3,t}$ above. Its final appendix gives the two equations used here under **Curvature-dependent coefficient** and **Shared training objective**. [Current paper](../reports/paper.pdf) · [Equation appendix, p. 11 in the registered version](https://raw.githubusercontent.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/70f7d4bea0c8f092a4bc8eb6b1d3a36f2dbbb33c/reports/paper.pdf#page=11)
+
+**1. Measure curvature before the update.** Let $d$ count the weights and let $S(t)$ contain the last $m$ completed measurements. At measurement $j$, $H_j$ is the Hessian and $z_j$ is its random sign probe. Take one weight and one past measurement ($d=m=1$) with $z=+1$. Then
+
+$$
+\begin{aligned}
+c_t
+&=\sqrt{\frac{1}{md}\sum_{j\in S(t)}\lVert H_jz_j\rVert_2^2}
+ =\sqrt{\frac{1}{1\cdot1}(H\cdot1)^2}
+ =\sqrt{H^2}=|H|.
+\end{aligned}
+$$
+
+Suppose the four scalar Hessian measurements are $1.00,\ 0.50,\ 0.25,\ 0.75$. Each is positive, so each gives the same number for $c_t$. The TinyStories runs compute root-mean-square curvature from eight past measurements, fix $c_*$ at each seed’s trace-trained checkpoint and use a calibrated coefficient cap. [Registered curvature rule](../reports/hybrid/preregistration.md#curvature-rule) · [Schedule implementation](../src/thirdloss/hybrid.py)
+
+**2. Carry the weight forward.** For this example set the threshold $c_*=1$, the cap $\lambda_{\max}=1$, and the initial weight $\lambda_0=0$. Substituting these into the rule gives
+
+$$
+\begin{aligned}
+\lambda_t
+&=\max\!\left(\lambda_{t-1},\,1\cdot\max(0,1-c_t/1)\right)\\
+&=\max\!\left(\lambda_{t-1},\,\max(0,1-c_t)\right).
+\end{aligned}
+$$
+
+| Update $t$ | Measured $c_t$ | Previous weight $\lambda_{t-1}$ | Candidate $\max(0,1-c_t)$ | Weight used $\lambda_t$ |
+|---|---:|---:|---|---|
+| 1 | 1.00 | 0 | $\max(0,1-1.00)=\max(0,0)=0$ | $\max(0,0)=0$ |
+| 2 | 0.50 | 0 | $\max(0,1-0.50)=\max(0,0.50)=0.50$ | $\max(0,0.50)=0.50$ |
+| 3 | 0.25 | 0.50 | $\max(0,1-0.25)=\max(0,0.75)=0.75$ | $\max(0.50,0.75)=0.75$ |
+| 4 | 0.75 | 0.75 | $\max(0,1-0.75)=\max(0,0.25)=0.25$ | $\max(0.75,0.25)=0.75$ |
+
+Between updates 2 and 3, curvature falls from $0.50$ to $0.25$ and the weight rises from $0.50$ to $0.75$. At update 4, curvature rebounds. The previous peak wins the outer maximum, so the penalty keeps its weight of $0.75$.
+
+**3. Square the third derivative and apply the weight.** Consider two possible points $A$ and $B$ at update 4 with the same token loss $L$, the same sampled Hessian trace $h$ and the same coefficient history. Suppose curvature changes twice as fast at $B$, with scalar third derivatives $T_A=1$ and $T_B=2$. In one dimension the paper’s $P_3=\lVert T[u,v,\cdot]\rVert_2^2$ simplifies to $(Tuv)^2$. Take both sign probes to be $+1$. [Penalty estimator](../src/thirdloss/penalties.py)
+
+$$
+\begin{aligned}
+P_{3,A}&=(1\cdot1\cdot1)^2=1,
+&\lambda_4 P_{3,A}&=0.75\cdot1=0.75,\\
+P_{3,B}&=(2\cdot1\cdot1)^2=4,
+&\lambda_4 P_{3,B}&=0.75\cdot4=3.
+\end{aligned}
+$$
+
+**4. Substitute into the full training objective.** The trace has coefficient $\alpha$. On an active update the gate is $I=1$ with sampling probability $p=1/8$, so $I/p=1/(1/8)=8$. The gate scales both penalty terms. [Training update](#the-actual-training-update)
+
+$$
+\begin{aligned}
+J &= L+\frac{I}{p}\left[\alpha h+\lambda_4 P_3\right],\\
+J_A &= L+8(\alpha h+0.75)=L+8\alpha h+6,\\
+J_B &= L+8(\alpha h+3)=L+8\alpha h+24,\\
+J_B-J_A &=(L+8\alpha h+24)-(L+8\alpha h+6)=24-6=18.
+\end{aligned}
+$$
+
+The third-derivative contribution is four times as large at $B$ ($24/6=4$). If $B$ lies nearer the edge of a flat region, this difference favors the interior point $A$ at equal loss and curvature. The experiment tests that geometric hypothesis by perturbing the trained weights and measuring how far they can move before token loss rises. [Width measurements and comparison across training arms](../reports/hybrid/results.md)
 
 ## What gets differentiated?
 
@@ -173,7 +233,7 @@ Hochreiter and Schmidhuber’s original flatness penalty used first derivatives 
 <details>
 <summary>Reproduce the worked examples and the dense storage estimates</summary>
 
-Run this Python block from the repository root in the project’s locked environment. It differentiates both polynomials, enumerates every probe pair and reads the real models’ coordinate counts from their archived summaries. [SymPy differentiation](https://docs.sympy.org/latest/tutorials/intro-tutorial/calculus.html#derivatives)
+Run this Python block from the repository root in the project’s locked environment. It differentiates both polynomials, enumerates every probe pair, reproduces the four adaptive weights and the active-update loss difference, and reads the models’ coordinate counts from their archived summaries. [SymPy differentiation](https://docs.sympy.org/latest/tutorials/intro-tutorial/calculus.html#derivatives)
 
 ~~~python
 from collections import Counter
@@ -198,6 +258,19 @@ for loss in ((x + y)**3 / 3, x**2 * y / 2):
     mean = sum(value * count for value, count in counts.items()) / counts.total()
     assert mean == exact
     print(loss, "exact", exact, "frequencies", sorted(counts.items()), "mean", mean)
+
+weight = 0
+for scalar_hessian in (1, 0.50, 0.25, 0.75):
+    curvature = abs(scalar_hessian)
+    candidate = max(0, 1 - curvature)
+    weight = max(weight, candidate)
+    print("curvature", curvature, "candidate", candidate, "weight used", weight)
+
+gate_probability = 1 / 8
+for third_derivative in (1, 2):
+    weighted_penalty = weight * third_derivative**2
+    print("weighted penalty", weighted_penalty, "active contribution", weighted_penalty / gate_probability)
+print("active objective difference", weight * (2**2 - 1**2) / gate_probability)
 
 for run, bytes_per_entry in (("stories-pilot-s00-third-r03", 4),
                              ("abstracts-pilot-s00-third-r03", 8)):
