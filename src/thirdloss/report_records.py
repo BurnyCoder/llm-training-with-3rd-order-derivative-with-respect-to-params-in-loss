@@ -11,8 +11,8 @@ from tempfile import NamedTemporaryFile
 from .analysis import analyze_stage
 
 
-REPOSITORY = "https://github.com/BurnyCoder/llm-training-with-3rd-order-derivative-with-respect-to-params-in-loss"
-PAGES = "https://burnycoder.github.io/llm-training-with-3rd-order-derivative-with-respect-to-params-in-loss/"
+REPOSITORY = "https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss"
+PAGES = "https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/"
 STAGES = {"stories": "TinyStories", "abstracts": "Research abstracts"}
 METHODS = {
     "ce": "Ordinary AdamW",

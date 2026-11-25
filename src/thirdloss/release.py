@@ -10,7 +10,7 @@ from .records import read_json, sha256, write_json
 OWNER = "BurnyCoder"
 STUDY_HUB = f"{OWNER}/thirdloss-study"
 COLLECTION = f"{OWNER}/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378"
-GITHUB = "https://github.com/BurnyCoder/llm-training-with-3rd-order-derivative-with-respect-to-params-in-loss"
+GITHUB = "https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss"
 STAGE_HUB = {"stories":f"{OWNER}/thirdloss-stories", "abstracts":f"{OWNER}/thirdloss-pythia-410m-adapters"}
 
 
