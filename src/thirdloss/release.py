@@ -5,12 +5,8 @@ from pathlib import Path
 
 from huggingface_hub import HfApi
 
-from .records import GITHUB, read_json, sha256, write_json
-
-OWNER = "BurnyCoder"
-STUDY_HUB = f"{OWNER}/thirdloss-study"
-COLLECTION = f"{OWNER}/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378"
-STAGE_HUB = {"stories":f"{OWNER}/thirdloss-stories", "abstracts":f"{OWNER}/thirdloss-pythia-410m-adapters"}
+from .hub_archive import COLLECTION, STAGE_HUB, publish_archive
+from .records import GITHUB, read_json, sha256, storage_root, write_json
 
 
 def publish_snapshot(project, message):
@@ -24,34 +20,9 @@ def publish_snapshot(project, message):
     if git("diff","--cached","--name-only"):
         git("commit","-m",message,"--",*public)
     git("push","origin","main")
-    # Allowlist tracked files, excluding the dataset bytes, .env, logs and local environments.
-    from huggingface_hub import CommitOperationAdd, CommitOperationDelete
-    tracked = git("ls-files").splitlines()
-    api = HfApi()
-    operations = [CommitOperationAdd(path_in_repo="research/"+name, path_or_fileobj=project/name)
-                  for name in tracked if (project/name).is_file()
-                  and (name in {"README.md","uv.lock","pyproject.toml",".env.example",".python-version","AGENTS.md"}
-                       or name.startswith(("src/","tests/","reports/","docs/","results/")))]
-    # A full mirror is appropriate for the first publication. Subsequent commits transfer changes only.
-    cursor = project / ".cache" / "hub-mirror.json"
-    previous = read_json(cursor) if cursor.exists() else {}
-    hashes = {op.path_in_repo:sha256(op.path_or_fileobj) for op in operations}
-    changed = [op for op in operations if hashes[op.path_in_repo]!=previous.get(op.path_in_repo)]
-    # Mirror deletions too, e.g. a transient failure marker archived under attempts.json after recovery.
-    changed.extend(CommitOperationDelete(path_in_repo=name) for name in previous.keys()-hashes.keys()
-                   if name.startswith("research/"))
-    if changed:
-        api.create_commit(repo_id=STUDY_HUB,operations=changed,commit_message=message)
-        write_json(cursor,hashes)
-    card = ("---\nlanguage: [en]\ntags: [scientific-research, causal-language-modeling]\n---\n"
-            "# Third derivatives in language-model training\n\n"
-            "This repository preserves the preregistration, exact source, raw observations and generated reports. "
-            "The primary comparison is final test NLL over paired training seeds at equal token counts. "
-            "Read the [current study summary](research/reports/summary.md), [paper](research/reports/paper.pdf), "
-            f"[GitHub project]({GITHUB}), or [collection of checkpoints](https://huggingface.co/collections/{COLLECTION}).\n")
-    api.upload_file(repo_id=STUDY_HUB,path_or_fileobj=card.encode(),path_in_repo="README.md",
-                    commit_message="Describe the research archive and evidence")
-    return git("rev-parse","HEAD")
+    revision = git("rev-parse","HEAD")
+    publish_archive(project,storage_root(project),revision,message)
+    return revision
 
 
 def publish_weights(project, storage, summary):
