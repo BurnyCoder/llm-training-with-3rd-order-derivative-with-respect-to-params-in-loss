@@ -210,12 +210,12 @@ The remaining controls are paired independently. Each row uses only seeds that f
 
 **Pythia-410M adapters** · Pilot seed, 65,536 training targets.
 
-| Metric | Third order | Squared Hessian |
-| --- | --- | --- |
-| Development NLL<br>↓ Lower is better | 3.114247 | **3.113905** |
-| Dev top-1 accuracy<br>↑ Higher is better | 41.315% | **41.321%** |
-| Training speed (targets/s)<br>↑ Higher is better | 189 | **413** |
-| Peak GPU allocation (MiB)<br>↓ Lower is better | 2,346.3 | 2,346.3 |
+| Metric | Third order | Squared Hessian | Scrambled signs |
+| --- | --- | --- | --- |
+| Development NLL<br>↓ Lower is better | 3.114247 | **3.113905** | 3.114196 |
+| Dev top-1 accuracy<br>↑ Higher is better | 41.315% | **41.321%** | 41.316% |
+| Training speed (targets/s)<br>↑ Higher is better | 189 | **413** | 171 |
+| Peak GPU allocation (MiB)<br>↓ Lower is better | 2,346.3 | 2,346.3 | 2,346.3 |
 
 **Zero-update references** · The unigram uses training-split frequencies. Initial Pythia uses its pretrained weights.
 
