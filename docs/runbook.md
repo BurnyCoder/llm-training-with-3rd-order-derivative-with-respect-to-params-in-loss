@@ -55,6 +55,10 @@ Run `uv run thirdloss audit-hub` at the Git revision in `publication.json` to ve
 
 With `study --publish`, the local trainer sends active loss, accuracy, probe estimates, calibration progress and examples to the public explorer about every two minutes. GitHub Pages and the Hugging Face Space read that feed between full releases. The local dashboard reads the training records directly. [Public live feed](https://huggingface.co/BurnyCoder/thirdloss-study/resolve/main/live.json)
 
+## Execution order
+
+The complete study defers seed sensitivity to the end. Both stages’ pilot variants and controls and a full-budget first seed per stage come first. The remaining primary comparisons, frozen test scores, hybrid replications and all checkpoint geometry precede the final seed analysis. `uv run --locked thirdloss seed-sensitivity` reruns that final stage from a complete checkout. Once the inputs are sealed, `uv run --locked thirdloss report` also regenerates the seed summaries. For a standalone hybrid example use `thirdloss hybrid --cohort example`. The deferred replay uses its registered donor. [Ordering and prerequisites](../reports/amendments/seed-sensitivity-last.md)
+
 ## Checkpoint flatness
 
 Run `uv run --locked thirdloss flatness --stage both --phase pilot --publish` for all pilot strengths and zero-update controls. Use `--phase hybrid` for the shared trunks and six hybrid arms, `--phase confirm` for the eight-seed primary runs, or `--phase all` for the complete research ledger. `--run-id RUN` restricts the command to one checkpoint. Every predictor receives the common logit test, including the empirical unigram. Neural predictors also receive the weight-space width and Hessian tests. Each call checks the training stream and exported weights and resumes from its saved probe files. Run it between timed training runs on a shared GPU. Run `uv run --locked thirdloss report` to rebuild the comparisons. [Weight probes](../reports/amendments/checkpoint-flatness.md) · [All-model comparison](../reports/amendments/all-model-flatness.md) · [Results and raw probes](../reports/flatness.md)

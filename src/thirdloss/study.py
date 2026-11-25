@@ -205,7 +205,7 @@ def feasibility(project, stage):
 
 
 def run_study(project,storage,stages,device,publish,with_hybrid=False,with_flatness=False):
-    """Retry-safe complete study. Cached milestones allow continuation after reboot or network loss."""
+    """Finish the single-seed comparisons across both families before the final replication work."""
     def run(stage,method,phase,seed,ratio):
         row = run_one(project,storage,stage,method,phase,seed,ratio,device)
         milestone(project,storage,row,publish,device if with_flatness else None)
@@ -226,17 +226,31 @@ def run_study(project,storage,stages,device,publish,with_hybrid=False,with_flatn
         feasibility(project,stage)
         for method,ratio in (("hessian_norm",0.03),("sham",selected["third"]),("combined",selected["third"])):
             run(stage,method,"pilot",0,ratio)
-        if with_hybrid and stage=="stories":
-            from .hybrid import run_hybrids
-            run_hybrids(project,storage,device,publish,with_flatness=with_flatness)
+    if with_flatness:
+        from .checkpoint_flatness import flatness_study
+        flatness_study(project,storage,stages,"pilot",device,publish)
+    if with_hybrid and "stories" in stages:
+        from .hybrid import run_hybrids
+        run_hybrids(project,storage,device,publish,with_flatness=with_flatness,cohort="example")
+    def full_seed(stage,seed,selected):
+        for method in ("third","ce","trace"):
+            run(stage,method,"confirm",seed,selected.get(method,0))
+    for stage in stages:
+        full_seed(stage,1,select(project,stage))
     for stage in stages:
         selected = select(project,stage)
-        for seed in range(1,9):
-            for method in ("third","ce","trace"):
-                run(stage,method,"confirm",seed,selected.get(method,0))
+        for seed in range(2,9):
+            full_seed(stage,seed,selected)
         sealed = freeze(project,storage,stage)
         if publish:
             publish_snapshot(project,f"Freeze all {stage} confirmatory checkpoints before test evaluation")
         for run_id in sealed["runs"]:
             row = evaluate_one(project,storage,run_id,device)
             milestone(project,storage,row,publish,device if with_flatness else None)
+    if with_hybrid and "stories" in stages:
+        run_hybrids(project,storage,device,publish,with_flatness=with_flatness,cohort="replications")
+    if with_flatness:
+        flatness_study(project,storage,stages,"all",device,publish)
+    if with_hybrid and with_flatness and set(stages)==set(HORIZONS):
+        from .seed_sensitivity import finish_seed_sensitivity
+        finish_seed_sensitivity(project,publish)
