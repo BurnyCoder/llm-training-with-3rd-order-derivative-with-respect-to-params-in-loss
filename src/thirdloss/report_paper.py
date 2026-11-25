@@ -320,14 +320,25 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "two tokenization schemes bound the interpretation. More tokens per GPU hour can change "
       "the practical ranking. "
       f"{_cite('coordinates')} · {_link(REPOSITORY + '/blob/main/reports/preregistration.md', 'Scope of inference')}")
-    p("Proposed curvature-dependent schedule", "subheading")
-    p("A TinyStories follow-up would keep the trace active and increase the weight on squared third "
+    p("Registered curvature-dependent schedule", "subheading")
+    p("The TinyStories follow-up keeps the trace active and increases the weight on squared third "
       "derivatives once training loss and measured curvature are low. Retaining the highest weight reached "
       "could oppose later drift if curvature changes faster at the edge. Direct division can reverse "
       "the incentive. For the quartic loss above, the squared ratio of third to second derivative "
       "is 4/w<super>2</super> away from zero and grows toward the flat bottom. The final appendix "
-      "specifies both schedules and the proposed width test. "
-      f"{_link(REPOSITORY + '/blob/main/reports/plan.md#curvature-dependent-penalty-weight', 'Follow-up design')}")
+      "specifies both schedules and the width test. "
+      f"{_link(REPOSITORY + '/blob/main/reports/hybrid/preregistration.md', 'Frozen follow-up design')}")
+    hybrid = study["hybrid"]
+    if "hybrid_width" in figures:
+        flow.append(_figure(figure_dir/figures["hybrid_width"],max_height=285))
+    p(f"{hybrid['completed_arms']} of 48 full hybrid arms and {hybrid['completed_trunks']} of 8 shared "
+      f"checkpoints have completed. Geometric endpoint: {hybrid['status']}. "
+      f"{_link(REPOSITORY + '/blob/main/reports/hybrid/results.md', 'All observed widths, development scores and fit differences')}")
+    for comparator,s in hybrid["comparisons"].items():
+        lo,hi = s["median_ci"]
+        p(f"Adaptive minus {METHODS[comparator]} median width gain {fmt(s['median_delta'],5)} "
+          f"[{fmt(lo,5)}, {fmt(hi,5)}]; one-sided sign p = {fmt(s['p_raw'],5)}, Holm p = {fmt(s.get('p_holm'),5)}. "
+          "Cross-seed replay shares schedule information across pairs, limiting the independent-sign approximation.","caption")
     p("Conclusion", "heading")
     if all(outcome.get("complete") for outcome in study["stages"].values()):
         confirmed = [STAGES[s] for s, outcome in study["stages"].items() if outcome.get("success")]
@@ -413,10 +424,9 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
     p(f"Rebuild tables, figures, the explorer and this paper with <b>uv run thirdloss report</b>. "
       f"{_link(REPOSITORY, 'Code and versioned protocol')}", "caption")
     flow.append(PageBreak())
-    p("Appendix · Proposed TinyStories schedules", "heading")
+    p("Appendix · Registered TinyStories schedules", "heading")
     p("The follow-up asks whether changing the third-derivative coefficient in response to low curvature "
-      "helps retain a wider low-loss neighborhood. The equations below specify candidate arms for a "
-      "separate preregistration.")
+      "helps retain a wider low-loss neighborhood. Eight paired seeds compare six arms at equal training tokens.")
     p("Shared training objective", "subheading")
     p("J<sub>t</sub> = L<sub>t</sub> + (I<sub>t</sub>/p) [α<sub>t</sub> h<sub>t</sub> + λ<sub>t</sub> P<sub>3,t</sub>]", "equation")
     p("h<sub>t</sub> = a<super>T</super>H<sub>t</sub>a, &nbsp;&nbsp; "

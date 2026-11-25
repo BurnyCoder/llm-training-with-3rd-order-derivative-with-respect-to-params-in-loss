@@ -27,9 +27,9 @@ def inner(left, right):
     return torch.stack([(a * b).sum() for a, b in zip(left, right, strict=True)]).sum()
 
 
-def hessian_vector(loss, parameters, direction):
+def hessian_vector(loss, parameters, direction, *, create_graph=True):
     """Apply the parameter Hessian through the gradient's directional contraction."""
-    return partials(inner(partials(loss, parameters), direction), parameters)
+    return partials(inner(partials(loss, parameters), direction), parameters, create_graph=create_graph)
 
 
 def third_contraction(loss, parameters, u, v, *, create_graph=True):

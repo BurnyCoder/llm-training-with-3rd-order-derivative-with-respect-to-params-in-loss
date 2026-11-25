@@ -15,6 +15,10 @@ const metrics = {
   raw_third: ["Third-derivative norm estimate", "squared Frobenius estimate"],
   raw_trace: ["Hessian trace estimate", "signed trace estimate"],
   raw_hessian_norm: ["Squared Hessian norm estimate", "squared Frobenius estimate"],
+  width: ["Directional width", "Euclidean weight distance"], width_probe_nll: ["Width-probe loss", "nats / target token"],
+  curvature_rms: ["Rolling RMS curvature", "RMS Hessian eigenvalue estimate"],
+  third_lambda: ["Third-derivative coefficient", "coefficient"], trace_lambda: ["Trace coefficient", "coefficient"],
+  gradient_norm: ["Unclipped gradient norm", "Euclidean gradient norm"],
 };
 const axes = {tokens: "training target tokens", train_seconds: "training seconds", step: "optimizer steps"};
 const numeric = value => typeof value === "number" && Number.isFinite(value);
@@ -67,7 +71,8 @@ function rebuildFilters() {
 function showTotals() {
   element("runs-count").textContent = number(study.runs.filter(isComplete).length, 0);
   for (const [field, target] of [["tokens", "tokens-count"], ["train_seconds", "hours-count"]]) {
-    const values = study.runs.map(run => run[field]).filter(numeric);
+    const values = study.runs.filter(run => numeric(run[field])).map(run =>
+      Math.max(0,run[field] - (run["inherited_" + field] || 0)));
     const total = values.reduce((a, b) => a + b, 0);
     element(target).textContent = values.length ? (field === "tokens" ? compact(total) : number(total / 3600, 2) + " h") : "—";
     if (values.length) element(target).title = number(total, 0) + (field === "tokens" ? " training tokens" : " seconds");
@@ -155,7 +160,7 @@ function draw() {
   if (metric.endsWith("accuracy")) {
     low = 0; high = 100;
   } else {
-    const pad = (high - low || Math.max(Math.abs(high) * .1, .01)) * .09;
+    const pad = (high - low || Math.abs(high) * .1 || .01) * .09;
     low -= pad; high += pad;
     if (["dev_nll", "loss", "raw_third", "raw_hessian_norm"].includes(metric)) low = Math.max(0, low);
   }
@@ -205,7 +210,7 @@ function draw() {
     ctx.fillStyle = "white"; ctx.strokeStyle = methodColor(p.run.method); ctx.lineWidth = 2.3;
     ctx.beginPath(); ctx.arc(p.px, p.py, 4.7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
     element("point").textContent = p.run.id + " · " + number(p.x, axis === "train_seconds" ? 1 : 0) +
-      " " + axes[axis] + " · " + number(p.y, 4) + " " + metrics[metric][1];
+      " " + axes[axis] + " · " + (p.y !== 0 && Math.abs(p.y)<.0001 ? p.y.toExponential(4) : number(p.y, 4)) + " " + metrics[metric][1];
   }
 }
 

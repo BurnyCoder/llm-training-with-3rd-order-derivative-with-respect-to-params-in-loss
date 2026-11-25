@@ -165,7 +165,7 @@ def feasibility(project, stage):
     return result
 
 
-def run_study(project,storage,stages,device,publish):
+def run_study(project,storage,stages,device,publish,with_hybrid=False):
     """Retry-safe complete study. Cached milestones allow continuation after reboot or network loss."""
     def run(stage,method,phase,seed,ratio):
         row = run_one(project,storage,stage,method,phase,seed,ratio,device)
@@ -187,6 +187,9 @@ def run_study(project,storage,stages,device,publish):
         feasibility(project,stage)
         for method,ratio in (("hessian_norm",0.03),("sham",selected["third"]),("combined",selected["third"])):
             run(stage,method,"pilot",0,ratio)
+        if with_hybrid and stage=="stories":
+            from .hybrid import run_hybrids
+            run_hybrids(project,storage,device,publish)
     for stage in stages:
         selected = select(project,stage)
         for seed in range(1,9):
