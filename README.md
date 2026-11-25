@@ -15,7 +15,7 @@ The research background includes flat minima, Hessian measurements and third der
 | TinyStories pretraining · dev | one development pilot seed | 0.000045 lower | 0.000338 lower | 65.7% slower |
 | Pythia-410M adapters · dev | one development pilot seed | 0.000300 higher | 0.000273 higher | 88.6% slower |
 
-**Adaptive vs fixed-ramp hybrid** · 3/8 paired seeds. Adaptive development NLL was 0.000204 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.157 (adaptive) and 13.215 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
+**Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
 
 Both primary test decisions are pending. Each stage requires eight paired test seeds and superiority over both baselines under Holm correction.
 
@@ -117,7 +117,7 @@ How far can the weights move before next-token loss rises by 0.1 nats on eight f
 | Hybrid arm | Seeds | Switch width<br>↑ Wider is flatter | Final width<br>↑ Wider is flatter | Final seed range | Middle 50% of final directions | Rays at limit / tested |
 | --- | --- | --- | --- | --- | --- | --- |
 | Curvature-dependent hybrid | 21, 22, 23, 24 | 15.172 | 13.103 | 13.001–13.215 | 12.933–13.331 | 0/128 |
-| Fixed late hybrid | 21, 22, 23 | 15.143 | 13.215 | 13.103–13.268 | 13.036–13.411 | 0/96 |
+| Fixed late hybrid | 21, 22, 23, 24 | 15.172 | 13.159 | 13.056–13.268 | 12.984–13.380 | 0/128 |
 | Hessian trace | 21, 22, 23 | 15.143 | 13.154 | 13.046–13.215 | 12.984–13.366 | 0/96 |
 | Stronger trace | 21, 22, 23 | 15.143 | 13.175 | 13.069–13.233 | 13.002–13.387 | 0/96 |
 | Cross-seed replay | 22, 23 | 15.198 | 13.133 | 13.047–13.218 | 12.933–13.431 | 0/64 |
@@ -144,7 +144,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Third derivative · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
 | Shared trace checkpoint | 8,388,608 | 21–28 | 15.172 (4/8) | 0.44445 (4/8) | 1.0618 (4/8) |
 | Curvature-dependent hybrid · hybrid study | 16,777,216 | 21–28 | 13.103 (4/8) | 0.57782 (4/8) | 1.0824 (4/8) |
-| Fixed late hybrid · hybrid study | 16,777,216 | 21–28 | 13.215 (3/8) | 0.5776 (3/8) | 1.0823 (3/8) |
+| Fixed late hybrid · hybrid study | 16,777,216 | 21–28 | 13.159 (4/8) | 0.5776 (3/8) | 1.0823 (3/8) |
 | Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.154 (3/8) | 0.5854 (3/8) | 1.0825 (3/8) |
 | Stronger trace · hybrid study | 16,777,216 | 21–28 | 13.175 (3/8) | 0.58362 (3/8) | 1.0826 (3/8) |
 | Cross-seed replay · hybrid study | 16,777,216 | 21–28 | 13.133 (2/8) | 0.5891 (2/8) | 1.0824 (2/8) |
@@ -217,14 +217,14 @@ For the primary comparison, TinyStories uses all weights and Pythia uses the LoR
 
 ### TinyStories hybrid schedules
 
-**Adaptive vs fixed ramp · 3/8 paired seeds · 16,777,216 targets per run.** Both arms resume the same trace-trained checkpoint. Width change is final width minus width at the switch. A larger change means more width retained at the fixed loss tolerance. For two negative changes, the one closer to zero lost less width.
+**Adaptive vs fixed ramp · 4/8 paired seeds · 16,777,216 targets per run.** Both arms resume the same trace-trained checkpoint. Width change is final width minus width at the switch. A larger change means more width retained at the fixed loss tolerance. For two negative changes, the one closer to zero lost less width.
 
 | Metric | Adaptive | Fixed ramp | vs Fixed ramp |
 | --- | --- | --- | --- |
-| Development NLL<br>↓ Lower is better | **2.545908** | 2.546113 | 0.000204 lower |
-| Dev top-1 accuracy<br>↑ Higher is better | 46.256% | **46.258%** | 0.001 pp lower |
-| Width change after switch<br>↑ More retained is better for the width test | -1.9854 | **-1.9272** | 0.0542 less retained |
-| Training speed (targets/s)<br>↑ Higher is better | 37,992 | **40,662** | 3.9% slower |
+| Development NLL<br>↓ Lower is better | **2.546107** | 2.546281 | 0.000203 lower |
+| Dev top-1 accuracy<br>↑ Higher is better | 46.205% | **46.208%** | 0.002 pp higher |
+| Width change after switch<br>↑ More retained is better for the width test | -2.0865 | **-2.0311** | 0.0542 less retained |
+| Training speed (targets/s)<br>↑ Higher is better | 39,820 | **40,902** | 2.6% slower |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 617.3 | 617.3 | Tie |
 
 The remaining controls are paired independently. Each row uses only seeds that finished both arms. The always-on arm has its own measured width at the switch.
@@ -298,9 +298,9 @@ Each panel shows the first saved prompt and full continuations from the lowest m
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 45 runs, including 44 with a completed summary.
+Recorded 46 runs, including 45 with a completed summary.
 
-TinyStories hybrid follow-up: 18 of 48 full runs and 4 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
+TinyStories hybrid follow-up: 19 of 48 full runs and 4 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
 [Full score table, strength search and per-seed test differences](reports/summary.md)
 

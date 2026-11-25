@@ -1,6 +1,6 @@
 # Hybrid schedules on TinyStories
 
-TinyStories hybrid follow-up: 18 of 48 full runs and 4 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
+TinyStories hybrid follow-up: 19 of 48 full runs and 4 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
 
 [Frozen protocol and decision rule](preregistration.md) · [Interactive measurement and run selector](../../docs/index.html#curves)
 
@@ -68,6 +68,9 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 24 | Curvature-dependent hybrid | [2048](../../results/stories-hybrid-s24-adaptive-r01/width-2048.json) | 15.20142 | 15.20020 | 15.20264 | 0 | 2.79983 | 6.09 |
 | 24 | Curvature-dependent hybrid | [3072](../../results/stories-hybrid-s24-adaptive-r01/width-3072.json) | 13.85303 | 13.85205 | 13.85400 | 0 | 2.66510 | 6.14 |
 | 24 | Curvature-dependent hybrid | [4096](../../results/stories-hybrid-s24-adaptive-r01/width-4096.json) | 13.00146 | 13.00049 | 13.00244 | 0 | 2.61916 | 5.90 |
+| 24 | Fixed late hybrid | [2048](../../results/stories-hybrid-s24-late-r01/width-2048.json) | 15.20142 | 15.20020 | 15.20264 | 0 | 2.79983 | 6.09 |
+| 24 | Fixed late hybrid | [3072](../../results/stories-hybrid-s24-late-r01/width-3072.json) | 13.88916 | 13.88818 | 13.89014 | 0 | 2.66526 | 6.18 |
+| 24 | Fixed late hybrid | [4096](../../results/stories-hybrid-s24-late-r01/width-4096.json) | 13.05566 | 13.05469 | 13.05664 | 0 | 2.61935 | 6.12 |
 
 ![Median directional width by seed and training arm](../../docs/figures/hybrid_width.png)
 
@@ -97,6 +100,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 23 | Stronger trace | 2.542354 | 0.46314 | 0.45587 | [4096](../../results/stories-hybrid-s23-strong-r01/schedule.json) | 0 | 60,806 | 608.2 | 2,089.5 |
 | 23 | Hessian trace | 2.542257 | 0.46318 | 0.45587 | [4096](../../results/stories-hybrid-s23-trace-r01/schedule.json) | 0 | 59,471 | 608.2 | 2,034.6 |
 | 24 | Curvature-dependent hybrid | 2.554469 | 0.46067 | 0.41159 | [2064](../../results/stories-hybrid-s24-adaptive-r01/schedule.json) | 3.36329e-17 | 41,647 | 617.3 | 3,043.0 |
+| 24 | Fixed late hybrid | 2.554672 | 0.46061 | 0.41159 | [2049](../../results/stories-hybrid-s24-late-r01/schedule.json) | 3.01905e-14 | 42,225 | 617.3 | 3,043.0 |
 
 ## Stronger trace at the common checkpoint
 
@@ -115,6 +119,7 @@ Positive Δwidth favors the adaptive schedule. Negative ΔNLL favors its predict
 | 21 | Fixed late hybrid | -0.058105 | -0.000205 | -0.000104 | yes |
 | 22 | Fixed late hybrid | -0.052734 | -0.000143 | -0.000277 | yes |
 | 23 | Fixed late hybrid | -0.054199 | -0.000204 | 0.000159 | yes |
+| 24 | Fixed late hybrid | -0.054199 | -0.000203 | -0.000192 | yes |
 | 22 | Cross-seed replay | -0.002930 | -0.000002 | -0.000018 | yes |
 | 23 | Cross-seed replay | 0.000977 | 0.000003 | -0.000008 | yes |
 | 21 | Hessian trace | 0.002930 | 0.000005 | 0.000008 | yes |
@@ -127,4 +132,4 @@ Positive Δwidth favors the adaptive schedule. Negative ΔNLL favors its predict
 | 22 | Always-on hybrid | -0.063965 | 0.000337 | 0.000030 | yes |
 | 23 | Always-on hybrid | 0.050781 | -0.000626 | 0.001359 | yes |
 
-The completed branches reused 92,274,688 targets of optimization compared with independently training each branch from initialization. The replay permutation couples different seeds through their coefficient histories. The sign-test reference for this comparison assumes exchangeable independent pair signs. Shared donor histories make that assumption approximate. All raw pairs are reported for inspection.
+The completed branches reused 100,663,296 targets of optimization compared with independently training each branch from initialization. The replay permutation couples different seeds through their coefficient histories. The sign-test reference for this comparison assumes exchangeable independent pair signs. Shared donor histories make that assumption approximate. All raw pairs are reported for inspection.
