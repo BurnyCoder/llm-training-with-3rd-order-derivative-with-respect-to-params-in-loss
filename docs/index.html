@@ -92,7 +92,10 @@
     </section>
     <section id="method">
       <div class="section-title"><h2>Method</h2><a href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/blob/main/reports/paper.pdf">Read the paper ↗</a></div>
-      <p class="prose">The Hessian describes local loss curvature. Its derivative describes how that curvature changes as weights move. Two independent random sign vectors estimate the squared size of all third partial derivatives, including interactions between weights.</p>
+      <p class="prose">The Hessian describes local loss curvature. On active updates, two independent random sign vectors estimate how quickly that curvature changes for the next-token loss of two text windows. The derivatives cover all TinyStories decoder weights or only Pythia’s trainable attention adapters, including interactions between trainable weights.</p>
+      <p class="prose">When moving away from a flat bottom makes curvature change faster, the third-derivative penalty can pull the weights back. A steep bowl with constant curvature receives zero penalty from this term. Whether the optimizer finds wider minima is a separate question from the measured next-token loss.</p>
+      <img class="architecture" src="figures/penalty-directions.png" alt="Analytic loss curves. Trace and third-derivative penalties push in opposite directions at an asymmetric minimum. They pull displaced weights back in a flat quartic and give zero update in a steep quadratic." loading="lazy">
+      <p class="curve-note">Circles mark the ordinary loss minima. Arrows show downhill directions for each penalty. The vertical scales vary by panel. <a href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/blob/main/docs/third-derivative-penalty.md#when-can-the-penalty-favor-a-wider-minimum">Worked examples and the basin-width bound ↗</a></p>
       <img class="architecture" src="figures/architecture.png" alt="TinyStories full-weight training and Pythia QKV adaptation feed next-token cross-entropy, a Hessian contraction, a third derivative and the regularized objective." loading="lazy">
       <div class="method-links">
         <a href="https://doi.org/10.1007/BFb0086566">Derivative roughness ↗</a>

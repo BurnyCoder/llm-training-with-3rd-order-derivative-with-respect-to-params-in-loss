@@ -33,6 +33,8 @@ def test_report_before_first_run_keeps_readme_and_emits_protocol_paper(tmp_path)
     study = build_report(tmp_path)
     assert not study["runs"]
     assert (tmp_path / "docs" / "figures" / "architecture.png").is_file()
+    # The geometry examples have exact formulas and can be drawn before any training run.
+    assert (tmp_path / "docs" / "figures" / "penalty-directions.png").is_file()
     assert not (tmp_path / "docs" / "figures" / "paired.png").exists()
     assert "Related work." in readme.read_text(encoding="utf-8")
     assert "## Reproduction" in readme.read_text(encoding="utf-8")

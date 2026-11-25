@@ -1,9 +1,10 @@
-"""Publication figures from the same raw-run snapshot served by the interactive explorer."""
+"""Analytic method diagrams and publication figures from the explorer's raw-run snapshot."""
 
 import os
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
+import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 from matplotlib.patches import FancyBboxPatch
@@ -73,6 +74,49 @@ def _axes_style(ax, xlabel, ylabel):
     ax.tick_params(labelsize=8, color="#91a09c")
 
 
+def penalty_directions(path: Path) -> None:
+    """Illustrate local penalty gradients on known losses, independently of training data."""
+    w = np.linspace(-0.75, 0.75, 301)
+    # Integrate L'' = 2 sqrt(1+w) twice, fixing the loss and its slope at zero at the origin.
+    asymmetric = (8 / 15) * ((1 + w)**2.5 - 1) - (4 / 3) * w
+    examples = (
+        ("Asymmetric minimum\n" + r"$L''=2\sqrt{1+w}$", (asymmetric, 2 * np.sqrt(1 + w), 1 / (1 + w))),
+        ("Flat quartic\n" + r"$L=w^4$", (w**4, 12 * w**2, (24 * w)**2)),
+        ("Steep quadratic\n" + r"$L=100w^2$", (100 * w**2, np.full_like(w, 200), np.zeros_like(w))),
+    )
+    labels = ("Ordinary loss $L$", "Hessian trace $L''$", "Third-derivative penalty $[L''']^2$")
+    colors = (COLORS["ce"], COLORS["trace"], COLORS["third"])
+    fig = Figure(figsize=(10.2, 5.9), layout="constrained")
+    axes = fig.subplots(3, 3, sharex=True)
+    for column, (title, curves) in enumerate(examples):
+        axes[0, column].set_title(title, fontsize=13, color=INK)
+        for row, values in enumerate(curves):
+            ax = axes[row, column]
+            _axes_style(ax, "Weight $w$" if row == 2 else "", labels[row] if column == 0 else "")
+            ax.locator_params(axis="y", nbins=4)
+            ax.set_xticks([-.5, 0, .5])
+            ax.axvline(0, color="#9eaaa5", lw=.85, linestyle=":")
+            ax.plot(w, values, lw=2.2, color=colors[row])
+            ax.plot(0, np.interp(0, w, values), "o", ms=5, mfc="white", mec=colors[row], mew=1.5)
+
+            # Arrows indicate the algebraic descent direction. Their length is for legibility.
+            if row and column == 0:
+                steps = [(0, -.23 if row == 1 else .23)]
+            elif row and column == 1:
+                steps = [(-.55, -.32), (.55, .32)]
+            else:
+                steps = []
+            for start, end in steps:
+                y_start, y_end = np.interp([start, end], w, values)
+                ax.annotate("", (end, y_end), (start, y_start),
+                            arrowprops={"arrowstyle": "-|>", "mutation_scale": 17,
+                                        "lw": 2.2, "color": colors[row], "shrinkA": 3, "shrinkB": 0})
+    # Common zero references make constant positive curvature and a zero penalty easy to read.
+    axes[1, 2].set(ylim=(-12, 232), yticks=[0, 100, 200])
+    axes[2, 2].set(ylim=(-.12, 1.05), yticks=[0, .5, 1])
+    _save(fig, path)
+
+
 def _curves(study, path) -> bool:
     """Draw actual development measurements in stage/phase panels, preserving run identity."""
     groups = {}
@@ -128,10 +172,11 @@ def _paired(study, path) -> bool:
 
 
 def build_figures(study: dict, directory: Path) -> dict:
-    """Emit the architecture always and measured plots only when observations exist."""
+    """Always emit the method illustrations and add measured plots when observations exist."""
     directory.mkdir(parents=True, exist_ok=True)
     architecture(directory / "architecture.png")
-    products = {"architecture": "architecture.png"}
+    penalty_directions(directory / "penalty-directions.png")
+    products = {"architecture": "architecture.png", "penalty_directions": "penalty-directions.png"}
     for key, draw in (("curves", _curves), ("paired", _paired)):
         file = directory / f"{key}.png"
         if draw(study, file):
