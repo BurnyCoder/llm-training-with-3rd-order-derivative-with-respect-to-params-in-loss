@@ -113,7 +113,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | --- | --- | --- | --- | --- | --- |
 | Hessian trace (3%) | 2,097,152 | 0 | Pending | Pending | Pending |
 | Hessian trace (10%) | 2,097,152 | 0 | Pending | Pending | Pending |
-| Third derivative (3%) | 2,097,152 | 0 | Pending | Pending | Pending |
+| Third derivative (3%) | 2,097,152 | 0 | 15.777 (1/1) | 0.43692 (1/1) | 0.989 (1/1) |
 | Third derivative (10%) | 2,097,152 | 0 | Pending | Pending | Pending |
 
 </details>

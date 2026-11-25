@@ -48,7 +48,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | --- | --- | --- | --- | --- | --- |
 | Hessian trace (3%) | 2,097,152 | 0 | Pending | Pending | Pending |
 | Hessian trace (10%) | 2,097,152 | 0 | Pending | Pending | Pending |
-| Third derivative (3%) | 2,097,152 | 0 | Pending | Pending | Pending |
+| Third derivative (3%) | 2,097,152 | 0 | 15.777 (1/1) | 0.43692 (1/1) | 0.989 (1/1) |
 | Third derivative (10%) | 2,097,152 | 0 | Pending | Pending | Pending |
 
 </details>
@@ -95,4 +95,5 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | stories | pilot | 0 | Squared Hessian norm | 3% | 15.901 | 15.638–16.320 | 0/32 | 0.429575 | +0.00343614 | Pending | Pending | Pending | Pending | [Weight probes](../results/stories-pilot-s00-hessian_norm-r03/flatness.json) |
 | stories | pilot | 0 | Randomized gradient signs | 1% | 15.571 | 15.297–16.031 | 0/32 | 0.453605 | +0.00362814 | Pending | Pending | Pending | Pending | [Weight probes](../results/stories-pilot-s00-sham-r01/flatness.json) |
 | stories | pilot | 0 | Third derivative | 1% | 15.640 | 15.382–16.118 | 0/32 | 0.447394 | +0.00357761 | Pending | Pending | Pending | Pending | [Weight probes](../results/stories-pilot-s00-third-r01/flatness.json) |
+| stories | pilot | 0 | Third derivative | 3% | 15.777 | 15.530–16.252 | 0/32 | 0.436925 | +0.00348104 | 0.989 | 0.985–0.996 | 0/32 | 0.843304 | [Weight probes](../results/stories-pilot-s00-third-r03/flatness.json) · [Score probes](../results/stories-pilot-s00-third-r03/score-flatness.json) |
 | stories | pilot | 0 | Hessian trace | 1% | 15.686 | 15.431–16.102 | 0/32 | 0.447721 | +0.00356145 | Pending | Pending | Pending | Pending | [Weight probes](../results/stories-pilot-s00-trace-r01/flatness.json) |
