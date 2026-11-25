@@ -4,8 +4,8 @@ import statistics
 import torch
 
 from .models import build_model, logits_of, token_loss, token_nll
-from .penalties import estimate, partials, random_signs
-from .records import BATCHES, read_json, sha256, write_json
+from .penalties import estimate, inner, partials, random_signs, third_contraction
+from .records import BATCHES, read_json, sha256, time_now, write_json
 from .windows import TrainingWindows, generator, probe_rows
 
 
@@ -24,13 +24,44 @@ def ce_backward(model, inputs, targets, microbatch):
 
 
 def vector_norm(values):
-    return torch.linalg.vector_norm(torch.stack([torch.linalg.vector_norm(x.detach()) for x in values]))
+    """Preserve the ordinary reduction and widen it when finite FP32 coordinates overflow."""
+    blocks = tuple(x.detach() for x in values)
+    def norm(dtype=None):
+        return torch.linalg.vector_norm(torch.stack([torch.linalg.vector_norm(x, dtype=dtype) for x in blocks]))
+    ordinary = norm()
+    return ordinary if torch.isfinite(ordinary) and ordinary != 0 else norm(torch.float64)
+
+
+def two_window_third_gradient(model, parameters, inputs, targets, u, v):
+    """Keep one large fourth-order graph at a time, retaining the exact joint penalty gradient.
+
+    Write R=(r0+r1)/2 for the two equal-length windows, using the same two probes for both.
+    The derivative of ||R||² with respect to *each* r_i is R. Backpropagate that cotangent
+    through both live third-derivative graphs, recomputing the first window only. This is
+    the gradient-caching chain rule of https://arxiv.org/abs/2101.06983 applied to D³L.
+    """
+    if len(inputs)!=2 or targets.shape!=inputs.shape:
+        raise ValueError("Two equal-length input/target windows are required for an adapter probe")
+    def contraction(index, through_fourth):
+        loss = token_loss(logits_of(model, inputs[index:index+1]), targets[index:index+1])
+        return third_contraction(loss, parameters, u, v, create_graph=through_fourth)
+    first = contraction(0,False)
+    second = contraction(1,True)
+    mean = tuple((a+b.detach())*0.5 for a,b in zip(first,second,strict=True))
+    del first
+    grad_second = partials(inner(second,mean),parameters,create_graph=False)
+    del second
+    grad_first = partials(inner(contraction(0,True),mean),parameters,create_graph=False)
+    return inner(mean,mean), tuple(a+b for a,b in zip(grad_first,grad_second,strict=True))
 
 
 def probe_gradient(model, parameters, inputs, targets, kind, seed, step):
     """Differentiate the sampled penalty, including the fourth-order contraction."""
     rng = generator(inputs.device, seed, step, 827)
     rows = probe_rows(seed, step, len(inputs))
+    if kind == "third" and hasattr(model, "peft_config"):
+        u, v = random_signs(parameters,rng), random_signs(parameters,rng)
+        return two_window_third_gradient(model,parameters,inputs[rows],targets[rows],u,v)
     base = token_loss(logits_of(model, inputs[rows]), targets[rows])
     value = estimate(base, parameters, kind, generator=rng)
     return value.detach(), partials(value, parameters, create_graph=False)
@@ -49,8 +80,17 @@ def calibrate(project, storage, stage, kind, device, microbatch):
     model = build_model(stage, 0, device, storage)
     parameters = tuple(p for p in model.parameters() if p.requires_grad)
     windows = TrainingWindows(data/"train.bin", 6247, BATCHES[stage])
-    rows = []
-    for step in range(16):
+    # Each draw has its own data/probe address. A reboot can resume a long calibration
+    # without mixing corpora, physical batching or old estimator implementations.
+    work = storage/"calibration"/f"{stage}-{kind}-draws.json"
+    identity = {"data_manifest_sha256":fingerprint,"microbatch":microbatch,"version":2}
+    partial = read_json(work) if work.exists() else {**identity,"draws":[]}
+    if any(partial.get(k)!=v for k,v in identity.items()):
+        raise ValueError(f"Different settings in partial calibration for {stage} {kind}")
+    rows = partial["draws"]
+    if [row["draw"] for row in rows] != list(range(len(rows))) or len(rows)>16:
+        raise ValueError(f"Discontinuous calibration record for {stage} {kind}")
+    for step in range(len(rows),16):
         inputs, targets = windows.get(step, device)
         model.zero_grad(set_to_none=True)
         ce_backward(model, inputs, targets, microbatch)
@@ -62,10 +102,14 @@ def calibrate(project, storage, stage, kind, device, microbatch):
             raise FloatingPointError(f"Nonfinite or zero {kind} calibration norm at draw {step}: {norm}")
         rows.append({"draw":step, "ce_grad_norm":ce_norm, "penalty_grad_norm":norm,
                      "value":value.item(), "norm_ratio":ce_norm/norm})
+        write_json(work,partial)
+        print(f"{time_now()} [calibration] {stage} {kind} draw {step+1}/16 CE gradient norm "
+              f"{ce_norm:.6g}, penalty gradient norm {norm:.6g}",flush=True)
         del grads
     result = statistics.median(row["norm_ratio"] for row in rows)
     write_json(path, {"stage":stage, "kind":kind, "data_manifest_sha256":fingerprint,
                       "unit_lambda":result, "draws":rows})
+    work.unlink(missing_ok=True)
     return result
 
 

@@ -270,3 +270,31 @@ def test_pythia_adapter_fourth_derivative_and_portable_checkpoint(tmp_path, monk
     assert set(payload) == set(get_peft_model_state_dict(fresh))
     set_peft_model_state_dict(fresh, payload)
     torch.testing.assert_close(logits_of(fresh, ids), logits_of(model, ids), rtol=0, atol=0)
+
+
+def test_large_finite_gradient_norm_survives_squaring():
+    """The real adapter calibration exposed overflow only in the FP32 norm reduction."""
+    from thirdloss.objectives import vector_norm
+    blocks = (torch.tensor([3e20]), torch.tensor([4e20]))
+    actual = vector_norm(x for x in blocks)
+    torch.testing.assert_close(actual.double(), torch.tensor(5e20, dtype=torch.float64), rtol=1e-7, atol=0)
+
+
+def test_sequential_windows_reproduce_joint_penalty_and_training_gradient():
+    """Shared probes preserve every cross-window term in the norm of the mean derivative."""
+    from thirdloss.models import StoryConfig, StoryTransformer, token_loss
+    from thirdloss.objectives import two_window_third_gradient
+    from thirdloss.penalties import random_signs
+    torch.manual_seed(23)
+    model = StoryTransformer(StoryConfig(vocab_size=7,width=8,heads=2,layers=1,hidden=12,context=4)).double()
+    params = tuple(model.parameters())
+    x = torch.tensor([[2,3,1,0],[4,2,5,3]])
+    y = (x+1)%7
+    rng = torch.Generator().manual_seed(7)
+    u,v = random_signs(params,rng),random_signs(params,rng)
+    joint = estimate(token_loss(model(x),y),params,"third",u=u,v=v)
+    reference = torch.autograd.grad(joint,params)
+    value,gradient = two_window_third_gradient(model,params,x,y,u,v)
+    torch.testing.assert_close(value,joint.detach(),rtol=3e-10,atol=1e-8)
+    for cached,full in zip(gradient,reference,strict=True):
+        torch.testing.assert_close(cached,full,rtol=1e-8,atol=1e-5)

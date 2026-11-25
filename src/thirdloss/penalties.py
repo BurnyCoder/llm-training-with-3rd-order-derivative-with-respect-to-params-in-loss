@@ -27,6 +27,16 @@ def inner(left, right):
     return torch.stack([(a * b).sum() for a, b in zip(left, right, strict=True)]).sum()
 
 
+def hessian_vector(loss, parameters, direction):
+    """Apply the parameter Hessian through the gradient's directional contraction."""
+    return partials(inner(partials(loss, parameters), direction), parameters)
+
+
+def third_contraction(loss, parameters, u, v, *, create_graph=True):
+    """Return the weight-shaped vector D³L[u,v,:], optionally retaining its fourth derivative."""
+    return partials(inner(hessian_vector(loss, parameters, u), v), parameters, create_graph=create_graph)
+
+
 def estimate(loss, parameters, kind, u=None, v=None, generator=None):
     """Return one differentiable estimate of trace(H), ||H||² or ||D³loss||².
 
@@ -37,16 +47,13 @@ def estimate(loss, parameters, kind, u=None, v=None, generator=None):
     if not parameters or kind not in {"trace", "hessian_norm", "third"}:
         raise ValueError(f"Expected trainable parameters and a derivative penalty, received {kind!r}")
     u = random_signs(parameters, generator) if u is None else tuple(x.detach() for x in u)
-    gradient = partials(loss, parameters)
-    hu = partials(inner(gradient, u), parameters)
-    if kind == "trace":
-        value = inner(hu, u)
-    elif kind == "hessian_norm":
-        value = inner(hu, hu)
-    else:
+    if kind == "third":
         v = random_signs(parameters, generator) if v is None else tuple(x.detach() for x in v)
-        third_vector = partials(inner(hu, v), parameters)
+        third_vector = third_contraction(loss, parameters, u, v)
         value = inner(third_vector, third_vector)
+    else:
+        hu = hessian_vector(loss, parameters, u)
+        value = inner(hu, u if kind == "trace" else hu)
     # A constant cubic tensor still needs an explicitly verifiable zero training gradient.
     anchor = torch.stack([p.reshape(-1)[0] for p in parameters]).sum() * 0
     return value + anchor

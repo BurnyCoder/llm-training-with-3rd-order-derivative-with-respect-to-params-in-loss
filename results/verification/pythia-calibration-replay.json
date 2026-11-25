@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-11-25T07:03:26+00:00",
+  "stage": "abstracts",
+  "method": "third",
+  "calibration_seed": 6247,
+  "draw": 0,
+  "trainable_coordinates": 786432,
+  "nonfinite_coordinates": 0,
+  "max_abs_gradient_repr": "4.378450575069125e+19",
+  "penalty_repr": "467331297837056.0",
+  "fp32_global_norm_repr": "inf",
+  "fp64_global_norm_repr": "3.02625175616504e+20",
+  "seconds": 63.49903899999845,
+  "peak_allocated_mib": 10961.75390625
+}
