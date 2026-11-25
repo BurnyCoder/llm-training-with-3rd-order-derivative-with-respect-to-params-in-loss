@@ -5,7 +5,7 @@ from math import ceil
 from statistics import median
 
 from .flatness_progress import geometry_coverage,published_pilot_timings
-from .records import HORIZONS,read_json,sha256,storage_root,time_now,write_json
+from .records import BATCHES,CONTEXT,HORIZONS,read_json,sha256,storage_root,time_now,write_json
 from .report_records import completed
 
 
@@ -23,6 +23,41 @@ def primary_work(arms,runs):
         hours+=train_left*(arm["projected_hours_all_seeds"]/8-test_hours)+test_left*test_hours
         publications+=train_left+test_left
     return hours,publications
+
+
+def adapter_gate_timing(arms, runs):
+    """Replace the pilot's extrapolated host-probe time with the cost of the known gated updates."""
+    from .windows import gate
+    stage = "abstracts"
+    steps = HORIZONS[stage] // (BATCHES[stage] * CONTEXT)
+    calls = {seed: sum(bool(gate(seed, step)) for step in range(steps)) for seed in range(1, 9)}
+    by_id = {r["id"]: r for r in runs}
+    timings = {}
+    for arm in arms:
+        if arm["stage"] != stage or arm["method"] not in {"trace", "third"}:
+            continue
+        method = arm["method"]
+        pilot = by_id.get(arm["pilot_run"])
+        if not pilot or not pilot.get("steps") or not pilot.get("host_probe_seconds"):
+            continue
+        pilot_calls = sum(bool(gate(pilot["seed"], step)) for step in range(pilot["steps"]))
+        if not pilot_calls:
+            continue
+        fitted = {r["seed"]: r for r in runs if r["stage"] == stage and r["method"] == method and
+                  r["phase"] == "confirm" and completed(r) and r["tokens"] == HORIZONS[stage]}
+        remaining = sorted(calls.keys() - fitted.keys())
+        timed = [r for r in fitted.values() if r.get("host_probe_seconds") and r.get("steps") == steps]
+        observed_calls = pilot_calls + sum(calls[r["seed"]] for r in timed)
+        mean_seconds = (pilot["host_probe_seconds"] + sum(r["host_probe_seconds"] for r in timed)) / observed_calls
+        remaining_calls = sum(calls[s] for s in remaining)
+        scale = len(remaining) * steps / pilot["steps"]
+        # The original whole-loop forecast already includes this scaled copy of the pilot's host time.
+        adjustment = (remaining_calls * mean_seconds - scale * pilot["host_probe_seconds"]) / 3600
+        timings[method] = {"pilot_run": pilot["id"], "pilot_calls": pilot_calls, "observed_calls": observed_calls,
+                           "mean_host_seconds_per_call": mean_seconds, "registered_calls_by_seed": calls,
+                           "remaining_seeds": remaining, "remaining_calls": remaining_calls,
+                           "extrapolated_pilot_calls": scale * pilot_calls, "adjustment_hours": adjustment}
+    return timings
 
 
 def _release_benchmark(project,runs):
@@ -72,6 +107,9 @@ def remaining_work(project,study,primary,followup,uptime,original_done,original_
         return text
     arms=primary["arms"]
     confirm_hours,publications=primary_work(arms,runs)
+    gate_timing=adapter_gate_timing(arms,runs)
+    gate_adjustment=sum(t["adjustment_hours"] for t in gate_timing.values())
+    confirm_hours+=gate_adjustment
     auxiliary_hours=0.
     for stage in HORIZONS:
         missing=sum(not any(r["stage"]==stage and r["phase"]=="pilot" and r["method"]==m for r in runs)
@@ -100,7 +138,7 @@ def remaining_work(project,study,primary,followup,uptime,original_done,original_
     write_json(project/"results"/"feasibility"/"remaining-work.json",
                {"as_of":now,"completed":covered,"planned":total,"remaining":total-covered,"remaining_hours_in_week":available,
                 "hybrid_blocks_left_including_partial":blocks,"replays_left":replays,"remaining_primary_publications":publications,
-                "geometry":counts,"scenarios":scenarios})
+                "geometry":counts,"adapter_gate_timing":gate_timing,"scenarios":scenarios})
     low,high=(scenarios[k]["total_hours"] for k in ("typical","slower"))
     text.append(f"Projected remaining machine time is **{low:.2f}–{high:.2f} hours**, including model publication and "
                 f"geometry. There are {available:.2f} hours left in the original week. These are two timing scenarios. "
@@ -108,4 +146,13 @@ def remaining_work(project,study,primary,followup,uptime,original_done,original_
                 "for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network "
                 "interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · "
                 "[Observed release times](../results/feasibility/checkpoint-publication-time.json)")
+    if gate_timing:
+        actual=sum(t["remaining_calls"] for t in gate_timing.values())
+        scaled=sum(t["extrapolated_pilot_calls"] for t in gate_timing.values())
+        text.append(f"The registered adapter schedules require {actual:,} host derivative calls across unfinished "
+                    f"runs. Scaling the pilot by token count alone gives {scaled:,.0f}. Pricing the scheduled calls "
+                    f"at each method’s measured mean changes the forecast by {gate_adjustment:+.2f} hours. "
+                    "The original pre-test feasibility record retains its initial estimate. "
+                    "[Per-arm counts and observed costs](../results/feasibility/remaining-work.json) · "
+                    "[Training gate](../src/thirdloss/windows.py)")
     return text
