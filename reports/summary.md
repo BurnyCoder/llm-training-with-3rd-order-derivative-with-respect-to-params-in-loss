@@ -1,12 +1,12 @@
 # Study summary
 
-Recorded 47 runs, including 46 with a completed summary.
+Recorded 48 runs, including 47 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
 **Research abstracts.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
-TinyStories hybrid follow-up: 20 of 48 full runs and 4 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid outcomes](hybrid/results.md)
+TinyStories hybrid follow-up: 21 of 48 full runs and 4 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid outcomes](hybrid/results.md)
 
 [Interactive explorer](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Per-run ledger](experiments/experiments.md) · [Preregistration](preregistration.md) · [Paper](paper.pdf)
 
@@ -36,7 +36,7 @@ TinyStories hybrid follow-up: 20 of 48 full runs and 4 of 8 shared checkpoints c
 | TinyStories | hybrid | Curvature-dependent hybrid | 0.010 | 16,777,216 | 4 | 2.5461 | — |
 | TinyStories | hybrid | Always-on hybrid | 0.010 | 16,777,216 | 3 | 2.5459 | — |
 | TinyStories | hybrid | Fixed late hybrid | 0.010 | 16,777,216 | 4 | 2.5463 | — |
-| TinyStories | hybrid | Stronger trace | 0.010 | 16,777,216 | 3 | 2.5460 | — |
+| TinyStories | hybrid | Stronger trace | 0.010 | 16,777,216 | 4 | 2.5462 | — |
 | TinyStories | hybrid | Hessian trace | 0.010 | 16,777,216 | 4 | 2.5461 | — |
 | TinyStories | hybrid | Cross-seed replay | 0.010 | 16,777,216 | 2 | 2.5443 | — |
 | TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |
