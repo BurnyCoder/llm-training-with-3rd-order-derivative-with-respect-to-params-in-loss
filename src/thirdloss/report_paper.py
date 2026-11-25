@@ -320,6 +320,14 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "two tokenization schemes bound the interpretation. More tokens per GPU hour can change "
       "the practical ranking. "
       f"{_cite('coordinates')} · {_link(REPOSITORY + '/blob/main/reports/preregistration.md', 'Scope of inference')}")
+    p("Proposed curvature-dependent schedule", "subheading")
+    p("A TinyStories follow-up would keep the trace active and increase the weight on squared third "
+      "derivatives once training loss and measured curvature are low. Retaining the highest weight reached "
+      "could oppose later drift if curvature changes faster at the edge. Direct division can reverse "
+      "the incentive. For the quartic loss above, the squared ratio of third to second derivative "
+      "is 4/w<super>2</super> away from zero and grows toward the flat bottom. The final appendix "
+      "specifies both schedules and the proposed width test. "
+      f"{_link(REPOSITORY + '/blob/main/reports/plan.md#curvature-dependent-penalty-weight', 'Follow-up design')}")
     p("Conclusion", "heading")
     if all(outcome.get("complete") for outcome in study["stages"].values()):
         confirmed = [STAGES[s] for s, outcome in study["stages"].items() if outcome.get("success")]
@@ -404,6 +412,43 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
         p(_link(url, title), "caption")
     p(f"Rebuild tables, figures, the explorer and this paper with <b>uv run thirdloss report</b>. "
       f"{_link(REPOSITORY, 'Code and versioned protocol')}", "caption")
+    flow.append(PageBreak())
+    p("Appendix · Proposed TinyStories schedules", "heading")
+    p("The follow-up asks whether changing the third-derivative coefficient in response to low curvature "
+      "helps retain a wider low-loss neighborhood. The equations below specify candidate arms for a "
+      "separate preregistration.")
+    p("Shared training objective", "subheading")
+    p("J<sub>t</sub> = L<sub>t</sub> + (I<sub>t</sub>/p) [α<sub>t</sub> h<sub>t</sub> + λ<sub>t</sub> P<sub>3,t</sub>]", "equation")
+    p("h<sub>t</sub> = a<super>T</super>H<sub>t</sub>a, &nbsp;&nbsp; "
+      "P<sub>3,t</sub> = ‖T<sub>t</sub>[u, v, ·]‖²", "equation")
+    p("L<sub>t</sub> is the full update’s next-token loss. H<sub>t</sub> and T<sub>t</sub> are the Hessian "
+      "and third derivative of the unregularized two-window loss in the trainable weights. The trace probe "
+      "a and the two independent third-derivative probes u, v have random sign entries. I<sub>t</sub> is "
+      "the Bernoulli gate with activation probability p = 1/8. Both coefficients are held fixed in each weight update.")
+    p("Fixed-token ramp and controls", "subheading")
+    p("s<sub>t</sub> = min(1, max(0, (n<sub>t</sub> − n<sub>0</sub>)/R)), &nbsp;&nbsp; "
+      "λ<sub>t</sub> = λ<sub>max</sub> s<sub>t</sub>", "equation")
+    p("Here n<sub>t</sub> counts training targets before update t, n<sub>0</sub> is the switch point, "
+      "and R is the positive ramp length in tokens. The trace coefficient stays at α. Trace alone sets "
+      "λ<sub>t</sub> = 0. Stronger trace sets λ<sub>t</sub> = 0 and α<sub>t</sub> = α + Δα s<sub>t</sub>, "
+      "with Δα calibrated to the added penalty-gradient norm. The always-on comparison sets "
+      "λ<sub>t</sub> = λ<sub>max</sub> from the start.")
+    p("Curvature-dependent coefficient", "subheading")
+    p("c<sub>t</sub> = [(1/(md)) ∑<sub>j∈S(t)</sub> ‖H<sub>j</sub>z<sub>j</sub>‖²]<super>1/2</super>", "equation")
+    p("λ<sub>t</sub> = max(λ<sub>t−1</sub>, λ<sub>max</sub> max(0, 1 − c<sub>t</sub>/c<sub>*</sub>))", "equation")
+    p("S(t) contains the last m training-only measurements before the update. Each z<sub>j</sub> is a random "
+      "sign probe and d is the number of trainable weights. Start λ at zero. Enable this rule after warm-up "
+      "once the loss criterion is met and the window is full. Below the fixed positive threshold c<sub>*</sub>, "
+      "smaller curvature can raise λ up to λ<sub>max</sub>. Retaining the peak keeps the penalty active "
+      "when curvature rebounds. A control replays other seeds’ coefficient histories in a prespecified permutation.")
+    p("Directional width", "subheading")
+    p("r<sub>±</sub>(θ, e) = inf { r &gt; 0 | L<sub>probe</sub>(θ ± re) − L<sub>probe</sub>(θ) ≥ δ }", "equation")
+    p("W<sub>δ</sub>(θ) = median<sub>e</sub> [r<sub>+</sub>(θ, e) + r<sub>−</sub>(θ, e)]", "equation")
+    p("Use fixed unit directions e, fixed training examples, unregularized loss L<sub>probe</sub>, and a "
+      "positive loss tolerance δ. Compare changes in W<sub>δ</sub> from a common trace-trained checkpoint "
+      "at matched token counts. Held-out development loss tests prediction separately. "
+      f"{_link(REPOSITORY + '/blob/main/docs/third-derivative-penalty.md#weighting-the-penalty-by-curvature', 'Derivation')} · "
+      f"{_link(REPOSITORY + '/blob/main/reports/plan.md#curvature-dependent-penalty-weight', 'Controls and readouts')}")
     p("AI statement", "subheading")
     p("Codex wrote the codebase and paper from the exact specification provided by a human. "
       "Human cleanup and rewriting are in progress.", "caption")

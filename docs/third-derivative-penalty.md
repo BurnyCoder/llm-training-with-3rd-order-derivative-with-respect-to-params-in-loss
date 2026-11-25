@@ -41,6 +41,22 @@ $$
 
 Small initial curvature and slowly changing curvature across the interval together limit the loss increase. The training code samples the third derivative of two-window cross-entropy at the **current weights**. For TinyStories these coordinates include the whole decoder. For research abstracts they include only the trainable low-rank attention factors of Pythia-410M. A width measurement would therefore need a fixed loss tolerance and perturbations in the corresponding stage’s trainable coordinates. The logged penalty estimates describe local curvature change. The preregistered test compares held-out next-token loss across matched seeds at equal training tokens. [Taylor remainder, equation 22](https://link.springer.com/article/10.1007/s10288-023-00541-9) · [Stage definitions](../reports/planned-runs.md) · [Preregistered comparison](../reports/preregistration.md)
 
+### Weighting the penalty by curvature
+
+The proposed TinyStories schedule keeps the Hessian-trace penalty active. Its hypothesis is that, after training has reached low loss and small curvature, it is worth penalizing rapid changes in that curvature more strongly. A small Hessian can also occur on a slope. For example, $L(w)=w$ has zero Hessian and unit gradient everywhere. The follow-up therefore records training loss and gradient norm and tests width by perturbing the weights. [Experiment design](../reports/plan.md#curvature-dependent-penalty-weight)
+
+Direct division changes the objective. For $L(w)=w^4$, the existing penalty is $(L''')^2=576w^2$. The squared relative change $(L'''/L'')^2=4/w^2$ for $w\ne0$ diverges toward the minimum and is undefined at zero. Descending that ratio pushes a displaced weight outward. In many dimensions $H$ is a matrix and $D H$ is a third-order tensor, so a ratio also requires a choice of norms or contraction. A positive floor prevents division by zero, but a differentiable denominator can still reward increasing the curvature magnitude. [Quartic gradient check](../tests/test_derivatives.py)
+
+One testable rule uses the magnitude of the Hessian of unregularized training loss. For $d$ trainable coordinates and an independent random sign vector $v$, $\mathbb E_v\lVert Hv\rVert_2^2=\operatorname{tr}(H^\top H)=\lVert H\rVert_F^2$. This counts curvature of either sign and can be estimated with the project’s existing Hessian-vector probe. Let $c_t$ be the square root of the mean of $\lVert Hv\rVert_2^2/d$ over the last $m$ completed training-only probe measurements before update $t$. This measures typical curvature in fixed weight coordinates. A few sharp directions can coexist with a small average. [Hessian-norm estimator](../src/thirdloss/penalties.py) · [Trace identity](https://arxiv.org/pdf/2010.09649#page=2)
+
+After a trace-only warm-up, once the prespecified training-loss criterion is met and the probe window is full, one possible update for the coefficient is
+
+$$
+\lambda_{3,t}=\max\!\left(\lambda_{3,t-1},\ \lambda_{\max}\max\!\left(0,1-\frac{c_t}{c_*}\right)\right).
+$$
+
+Start at zero, with fixed $c_*>0$ and $\lambda_{\max}>0$. Lower measured curvature can raise the weight up to $\lambda_{\max}$. Retaining the highest value reached keeps the penalty active if curvature rebounds. For the existing squared third-derivative estimate $\widehat P_3$, holding the coefficient fixed during differentiation gives $\nabla_\theta(\lambda_{3,t}\widehat P_3)=\lambda_{3,t}\nabla_\theta\widehat P_3$. The usual sampled-update scaling still applies. If the estimate increases toward the edge, this penalty gradient can oppose an outward step. [Study objective and gradient](#the-actual-training-update) · [Proposed controls](../reports/plan.md#curvature-dependent-penalty-weight)
+
 ## What gets differentiated?
 
 Let $\theta=(\theta_1,\ldots,\theta_d)$ be the $d$ trainable numbers. Let $B$ be the fixed **minibatch**, the training examples whose mean loss is $\ell_B(\theta)$. Write $\partial_i$ for the rate of change as weight $\theta_i$ moves with all other weights held fixed.
