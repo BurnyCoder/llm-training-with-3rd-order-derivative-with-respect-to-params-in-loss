@@ -10,18 +10,6 @@ Training time is 25.0 seconds. Peak allocated GPU memory is 608.2 MiB. Developme
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-pilot-s00-hessian_norm-r03/config.json)
 
-## Checkpoint flatness
-
-| Training-window measurement | Value | Interpretation |
-| --- | --- | --- |
-| Weight width | 15.901 | ↑ Wider is flatter in these weight coordinates |
-| RMS weight curvature | 0.429575 | ↓ Lower means less local bending |
-| Signed Hessian trace / parameter | 0.00343614 | No general better direction |
-| Common score width | Pending | ↑ Wider tolerates larger changes in token scores |
-| Mean directional score curvature | Pending | ↓ Lower means less local bending in score space |
-
-The connection between width and better held-out prediction is unknown. [Compare against every variant and baseline](../../flatness.md#every-variant-and-baseline).
-
 ## Fixed-prompt generations
 
 **Prompt**

@@ -10,18 +10,6 @@ Training time is 0.0 seconds. Peak allocated GPU memory is 0.8 MiB. Development 
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/abstracts-control-s00-unigram-r00/config.json)
 
-## Checkpoint flatness
-
-| Training-window measurement | Value | Interpretation |
-| --- | --- | --- |
-| Weight width | N/A · no trainable weights | ↑ Wider is flatter in these weight coordinates |
-| RMS weight curvature | N/A · no trainable weights | ↓ Lower means less local bending |
-| Signed Hessian trace / parameter | N/A · no trainable weights | No general better direction |
-| Common score width | 0.915 | ↑ Wider tolerates larger changes in token scores |
-| Mean directional score curvature | 0.993798 | ↓ Lower means less local bending in score space |
-
-The connection between width and better held-out prediction is unknown. [Compare against every variant and baseline](../../flatness.md#every-variant-and-baseline).
-
 The process working-set high-water mark was 3,402.7 MiB. This OS measure includes earlier work in the same interpreter.
 
 ## Fixed-prompt generations
