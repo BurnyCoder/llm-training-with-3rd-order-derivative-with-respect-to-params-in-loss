@@ -52,3 +52,7 @@ def test_report_before_first_run_keeps_readme_and_emits_protocol_paper(tmp_path)
     assert "AI statement" in text
     assert "Awaiting paired test results" in text
     assert "Libor" in text
+    # Check that the PDF font preserves the symbols in the proposed schedule and width test.
+    appendix = " ".join(reader.pages[-1].extract_text().split())
+    assert "λt = max(λt−1, λmax max(0, 1 − ct/c*))" in appendix
+    assert "Lprobe(θ ± re) − Lprobe(θ) ≥ δ" in appendix
