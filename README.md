@@ -1,6 +1,8 @@
 # Third derivatives in language-model training
 
-Does a language model predict unseen tokens better when training penalizes rapid changes in the curvature of its loss? This project compares ordinary AdamW, Hessian-trace regularization, and a penalty on the squared third derivatives of next-token loss. It trains a TinyStories decoder from scratch and fine-tunes Pythia-410M’s low-rank attention adapters on research abstracts. [Study design](reports/planned-runs.md)
+Sepp Hochreiter and Jürgen Schmidhuber proposed that **among models that fit the training data equally well, those in flatter minima may generalize better to unseen data**. In a flat minimum, many nearby weight settings still fit. If some weights can be rounded more coarsely without spoiling the fit, a good predictor can take fewer bits to describe under a fixed encoding. Their minimum-description-length argument links that shorter description to a lower risk of overfitting. [Hochreiter and Schmidhuber, *Flat Minima* (1997), §1](https://people.idsia.ch/~juergen/fm/node1.html)
+
+Motivated by that hypothesis, this project asks whether penalizing rapid changes in loss curvature helps a language model predict unseen tokens. It compares ordinary AdamW, Hessian-trace regularization, and a penalty on the squared third derivatives of next-token loss. It trains a TinyStories decoder from scratch and fine-tunes Pythia-410M’s low-rank attention adapters on research abstracts. [Study design](reports/planned-runs.md)
 
 ## Can the penalty favor a wider minimum?
 
@@ -8,7 +10,7 @@ A minimum is **wide** if the weights can move a long way before the loss rises b
 
 The penalty can help weights **stay** near a flat bottom. For $L(w)=w^4$, nudging the weight to either side makes the penalty rise, so a small descent step pulls it back. A steep quadratic such as $L(w)=100w^2$ has constant curvature and receives zero third-derivative penalty everywhere. [Worked examples](docs/third-derivative-penalty.md#when-can-the-penalty-favor-a-wider-minimum)
 
-In the language models, an active update measures curvature change for the next-token cross-entropy of **two text windows**, with respect to all decoder weights for TinyStories or only the adapter weights for Pythia. Differentiating this penalty gives AdamW a fourth-derivative contribution. Whether the models **find wider minima** is a hypothesis. The registered comparison tests whether they predict held-out tokens better at equal training-token counts. [Training update](docs/third-derivative-penalty.md#the-actual-training-update) · [Preregistration](reports/preregistration.md)
+In the language models, an active update measures curvature change for the next-token cross-entropy of **two text windows**, with respect to all decoder weights for TinyStories or only the adapter weights for Pythia. Differentiating this penalty gives AdamW a fourth-derivative contribution. The registered comparison tests prediction on held-out tokens at equal training-token counts. Whether the models reach wider minima is a separate hypothesis. The proposed late-training experiment would measure width in fixed weight coordinates, since rescaling weights can change measured sharpness while preserving predictions. [Training update](docs/third-derivative-penalty.md#the-actual-training-update) · [Preregistration](reports/preregistration.md) · [Follow-up plan](reports/plan.md#late-third-derivative-regularization) · [Dinh et al.](https://proceedings.mlr.press/v70/dinh17b.html)
 
 ![One-weight loss and penalty curves. At the asymmetric minimum the trace pushes left and the third-derivative penalty pushes right. In the quartic both pull displaced weights back. In the steep quadratic both penalty curves are constant.](docs/figures/penalty-directions.png)
 

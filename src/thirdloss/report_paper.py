@@ -26,8 +26,10 @@ from reportlab.platypus import (
 from .report_records import METHODS, REPOSITORY, STAGES, completed, describe_difference, finite, fmt, verdict_text
 
 REFERENCES = {
-    "flat": ("Hochreiter and Schmidhuber, Simplifying neural nets by discovering flat minima",
+    "flat": ("Hochreiter and Schmidhuber (1994), Simplifying neural nets by discovering flat minima",
              "https://proceedings.neurips.cc/paper/1994/hash/01882513d5fa7c329e940dda99b12147-Abstract.html"),
+    "flat_mdl": ("Hochreiter and Schmidhuber (1997), Flat Minima",
+                 "https://people.idsia.ch/~juergen/fm/node1.html"),
     "gpt_trace": ("Zhang, Li and Ju, Noise Stability Optimization for Finding Flat Minima: A Hessian-based Regularization Approach",
                   "https://arxiv.org/pdf/2306.08553#page=12"),
     "roughness": ("Duchon, Splines minimizing rotation-invariant semi-norms in Sobolev spaces",
@@ -182,18 +184,18 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "ordinary AdamW and a signed Hessian-trace penalty. " +
       " ".join(f"{STAGES[s]}: {escape(verdict_text(outcome))}" for s, outcome in study["stages"].items()))
     p("Motivation and related work", "heading")
-    p("A Hessian gives a local quadratic description of loss. Two nearby sets of weights "
-      "can share its trace while individual curvature components vary. Summing squared "
-      "third partials assigns a nonnegative cost to that variation in the chosen coordinates. "
-      "The proposed local density adapts an order-three spline roughness measure. The "
-      "original flat-minima work searched for broad regions of low training error. Liu, Yu and Lin "
-      "proposed a Hessian-trace objective and reported recurrent language-model experiments. Zhang, Li and Ju investigated "
-      "a symmetric approximation to trace regularization in GPT-2 downstream fine-tuning. "
-      f"{_cite('roughness')} · {_cite('flat')} · {_cite('trace')} · {_cite('gpt_trace')}, Table 5 · {_cite('coordinates')}")
-    p("FUT++ approximates third weight derivatives of minibatch language-model loss with "
-      "differences between Hessian estimates at consecutive reference checkpoints. It uses "
-      "these terms to predict the effect of reordering training batches. Here the squared "
-      "norm enters the loss itself, so its gradient changes the training trajectory. "
+    p("Hochreiter and Schmidhuber proposed that flatter minima may generalize better at comparable "
+      "training error. Coarser weights can preserve the fit, so fewer bits can describe it. Their "
+      "minimum-description-length argument predicts less expected overfitting. Rescaling can alter "
+      "sharpness while preserving predictions, so we measure held-out token loss. "
+      f"{_cite('flat')} · {_cite('flat_mdl')} · {_cite('coordinates')}")
+    p("The Hessian can change at constant trace. Squared third partials penalize this variation, "
+      "adapting an order-three spline roughness measure. Earlier work studied trace regularization "
+      "in recurrent language models and a symmetric perturbation approximation in GPT-2 fine-tuning. "
+      f"{_cite('roughness')} · {_cite('trace')} · {_cite('gpt_trace')}, Table 5")
+    p("FUT++ uses differences between Hessian estimates at consecutive checkpoints to approximate "
+      "third weight derivatives and predict the effect of reordering training batches. Here the "
+      "squared norm enters the loss and changes the optimizer update. "
       f"{_cite('fut')}, Appendix A.1, equations 14–15.")
     p("The estimator and its update", "heading")
     p("J(θ) = L(θ) + λ · ‖D³L(θ)‖²<sub>F</sub>", "equation")
