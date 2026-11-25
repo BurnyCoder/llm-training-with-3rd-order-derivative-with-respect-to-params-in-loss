@@ -8,14 +8,14 @@ The research background includes flat minima, Hessian measurements and third der
 
 ## Results at a glance
 
-Lower next-token loss (NLL) means a model assigned more probability to the words that actually came next. Training speed counts target tokens per second.
+**Lower next-token loss (NLL) is better** because the model assigns more probability to the tokens that actually came next. **Higher top-1 accuracy is better** because the model’s first guess is correct more often. Higher speed means more training targets per second. Lower peak memory uses fewer resources.
 
-| Model and split | Matched evidence | Third-order NLL vs AdamW | Third-order NLL vs trace | Speed vs AdamW |
+| Model and split | Matched evidence | Third-order NLL vs AdamW<br>↓ Lower is better | Third-order NLL vs trace<br>↓ Lower is better | Speed vs AdamW<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
 | TinyStories pretraining · dev | one development pilot seed | 0.000045 lower | 0.000338 lower | 65.7% slower |
 | Pythia-410M adapters · dev | one development pilot seed | 0.000300 higher | 0.000273 higher | 88.6% slower |
 
-**Adaptive vs fixed-ramp hybrid** · 2/8 paired seeds. Adaptive development NLL was 0.000174 lower. It retained 0.0554 less directional width after the switch.
+**Adaptive vs fixed-ramp hybrid** · 2/8 paired seeds. Adaptive development NLL was 0.000174 lower. It retained 0.0554 less directional width after the switch. More width is better for the registered geometry test. Whether more width improves prediction is unknown.
 
 Both primary test decisions are pending. Each stage requires eight paired test seeds and superiority over both baselines under Holm correction.
 
@@ -69,7 +69,7 @@ A same-probe check on pretrained Pythia found that single-precision arithmetic m
 
 ## Side-by-side comparisons
 
-↓ means lower is preferred. ↑ means higher is preferred. Bold highlights the best observed value when methods differ at the displayed precision. A tie means the paired difference rounds to zero. NLL is negative log-likelihood in nats per target. Accuracy differences use percentage points (pp).
+Each row states which direction is better for that metric. Bold highlights the best observed value at the displayed precision. A tie means the paired difference rounds to zero. NLL is negative log-likelihood in nats per target. Accuracy differences use percentage points (pp).
 
 ### TinyStories pretraining
 
@@ -77,11 +77,11 @@ A same-probe check on pretrained Pythia found that single-precision arithmetic m
 
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
-| Development NLL ↓ | 3.876976 | 3.877269 | **3.876931** | 0.000045 lower | 0.000338 lower |
-| Dev top-1 accuracy ↑ | **32.337%** | 32.329% | 32.326% | 0.011 pp lower | 0.003 pp lower |
-| Equal-time probe NLL ↓ | **3.82905** | 4.04765 | 4.95277 | 1.12372 higher | 0.90512 higher |
-| Training speed ↑ (targets/s) | **123,871** | 73,185 | 42,481 | 65.7% slower | 42.0% slower |
-| Peak GPU allocation ↓ (MiB) | 608.2 | 608.2 | 608.2 | Tie | Tie |
+| Development NLL<br>↓ Lower is better | 3.876976 | 3.877269 | **3.876931** | 0.000045 lower | 0.000338 lower |
+| Dev top-1 accuracy<br>↑ Higher is better | **32.337%** | 32.329% | 32.326% | 0.011 pp lower | 0.003 pp lower |
+| Equal-time probe NLL<br>↓ Lower is better | **3.82905** | 4.04765 | 4.95277 | 1.12372 higher | 0.90512 higher |
+| Training speed (targets/s)<br>↑ Higher is better | **123,871** | 73,185 | 42,481 | 65.7% slower | 42.0% slower |
+| Peak GPU allocation (MiB)<br>↓ Lower is better | 608.2 | 608.2 | 608.2 | Tie | Tie |
 
 These early TinyStories pilots share the initialization seed and identical first-update token count, loss, accuracy and gradient norm. Initial weight digests were first recorded in later runs. [First-update records](reports/experiments/experiments.md)
 
@@ -95,14 +95,14 @@ Awaiting paired test results (0 of 8 full-horizon training triplets).
 
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
-| Development NLL ↓ | **3.113948** | 3.113974 | 3.114247 | 0.000300 higher | 0.000273 higher |
-| Dev top-1 accuracy ↑ | **41.321%** | **41.321%** | 41.315% | 0.006 pp lower | 0.006 pp lower |
-| Training speed ↑ (targets/s) | **1,659** | 435 | 189 | 88.6% slower | 56.5% slower |
-| Peak GPU allocation ↓ (MiB) | 2,346.3 | 2,346.3 | 2,346.3 | Tie | Tie |
+| Development NLL<br>↓ Lower is better | **3.113948** | 3.113974 | 3.114247 | 0.000300 higher | 0.000273 higher |
+| Dev top-1 accuracy<br>↑ Higher is better | **41.321%** | **41.321%** | 41.315% | 0.006 pp lower | 0.006 pp lower |
+| Training speed (targets/s)<br>↑ Higher is better | **1,659** | 435 | 189 | 88.6% slower | 56.5% slower |
+| Peak GPU allocation (MiB)<br>↓ Lower is better | 2,346.3 | 2,346.3 | 2,346.3 | Tie | Tie |
 
 An equal-time NLL comparison is pending because at least one arm lacks a recorded development checkpoint at or before the shared cutoff.
 
-Observed host-process memory high-water marks were AdamW 3.78 GiB, Hessian trace 10.28 GiB, Third order 13.09 GiB. This measure includes earlier work in each interpreter.
+Peak host memory (lower uses less RAM) was AdamW 3.78 GiB, Hessian trace 10.28 GiB, Third order 13.09 GiB. This measure includes earlier work in each interpreter.
 
 Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -110,19 +110,19 @@ The equal-time row uses the last available fixed-window development score at or 
 
 ### TinyStories hybrid schedules
 
-**Adaptive vs fixed ramp · 2/8 paired seeds · 16,777,216 targets per run.** Both arms resume the same trace-trained checkpoint. Width change is final width minus width at the switch. A larger change means more width retained at the fixed loss tolerance.
+**Adaptive vs fixed ramp · 2/8 paired seeds · 16,777,216 targets per run.** Both arms resume the same trace-trained checkpoint. Width change is final width minus width at the switch. A larger change means more width retained at the fixed loss tolerance. For two negative changes, the one closer to zero lost less width.
 
 | Metric | Adaptive | Fixed ramp | vs Fixed ramp |
 | --- | --- | --- | --- |
-| Development NLL ↓ | **2.546107** | 2.546281 | 0.000174 lower |
-| Dev top-1 accuracy ↑ | 46.205% | **46.208%** | 0.002 pp lower |
-| Width change after switch ↑ | -2.0865 | **-2.0311** | 0.0554 less retained |
-| Training speed ↑ (targets/s) | **40,983** | 40,328 | 1.5% faster |
-| Peak GPU allocation ↓ (MiB) | 617.3 | 617.3 | Tie |
+| Development NLL<br>↓ Lower is better | **2.546107** | 2.546281 | 0.000174 lower |
+| Dev top-1 accuracy<br>↑ Higher is better | 46.205% | **46.208%** | 0.002 pp lower |
+| Width change after switch<br>↑ More retained is better for the width test | -2.0865 | **-2.0311** | 0.0554 less retained |
+| Training speed (targets/s)<br>↑ Higher is better | **40,983** | 40,328 | 1.5% faster |
+| Peak GPU allocation (MiB)<br>↓ Lower is better | 617.3 | 617.3 | Tie |
 
 The remaining controls are paired independently. Each row uses only seeds that finished both arms. The always-on arm has its own measured width at the switch.
 
-| Adaptive versus | Paired seeds | Adaptive NLL | Adaptive width change | Adaptive speed |
+| Adaptive versus | Paired seeds | Adaptive NLL<br>↓ Lower is better | Adaptive width change<br>↑ More retained is better for the width test | Adaptive speed<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
 | Cross-seed replay | 1/8 | 0.000002 lower | 0.0029 less retained | 3.1% faster |
 | Hessian trace | 2/8 | 0.000002 higher | 0.0015 more retained | 35.0% slower |
@@ -131,22 +131,24 @@ The remaining controls are paired independently. Each row uses only seeds that f
 
 **Registered width decision** · Awaiting eight paired width measurements. Width probes use fixed training windows. [Every width, training-fit flag, replay and paired difference](reports/hybrid/results.md)
 
+**Training diagnostics have no established better direction for held-out prediction.** A smaller derivative penalty meets its training objective more closely. The raw Hessian trace, third-derivative estimate, gradient norm and penalty strength describe the training process. Their predictive value is assessed separately by held-out NLL. [Objectives and endpoints](reports/preregistration.md)
+
 <details><summary>Squared-Hessian, scrambled-gradient, combined and untrained controls</summary>
 
 **TinyStories pretraining** · Pilot seed, 2,097,152 training targets.
 
 | Metric | Third order | Squared Hessian | Scrambled signs | Trace + third |
 | --- | --- | --- | --- | --- |
-| Development NLL ↓ | **3.876931** | 3.878680 | 3.877253 | 3.877172 |
-| Dev top-1 accuracy ↑ | 32.326% | 32.299% | **32.331%** | 32.317% |
-| Training speed ↑ (targets/s) | 42,481 | **83,790** | 50,914 | 41,030 |
-| Peak GPU allocation ↓ (MiB) | **608.2** | **608.2** | 608.6 | 619.3 |
+| Development NLL<br>↓ Lower is better | **3.876931** | 3.878680 | 3.877253 | 3.877172 |
+| Dev top-1 accuracy<br>↑ Higher is better | 32.326% | 32.299% | **32.331%** | 32.317% |
+| Training speed (targets/s)<br>↑ Higher is better | 42,481 | **83,790** | 50,914 | 41,030 |
+| Peak GPU allocation (MiB)<br>↓ Lower is better | **608.2** | **608.2** | 608.6 | 619.3 |
 
 **Pythia-410M adapters** · Secondary pilot comparisons are pending.
 
 **Untrained references · zero training targets**
 
-| Stage | Initial NLL ↓ | Unigram NLL ↓ | Initial accuracy ↑ | Unigram accuracy ↑ |
+| Stage | Initial NLL<br>↓ Lower is better | Unigram NLL<br>↓ Lower is better | Initial accuracy<br>↑ Higher is better | Unigram accuracy<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
 | TinyStories pretraining | 8.343680 | 6.003555 | 0.312% | 7.151% |
 | Pythia-410M adapters | 3.251674 | 7.330611 | 39.911% | 6.023% |
@@ -155,7 +157,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 
 ### Same-prompt continuations
 
-Each panel shows the first saved prompt and full continuations from the lowest matched seed. The method names link to the raw generations.
+Each panel shows the first saved prompt and full continuations from the lowest matched seed. These examples have no quality rating. The method names link to the raw generations.
 
 <details><summary>TinyStories pretraining · same prompt, seed 0</summary>
 
@@ -189,7 +191,7 @@ Each panel shows the first saved prompt and full continuations from the lowest m
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 37 runs, including 36 with a completed summary.
+Recorded 38 runs, including 36 with a completed summary.
 
 TinyStories hybrid follow-up: 11 of 48 full runs and 3 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
