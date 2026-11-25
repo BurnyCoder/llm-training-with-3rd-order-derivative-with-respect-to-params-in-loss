@@ -6,6 +6,8 @@
 
 Independent random signs include mixed weight derivatives in the expected penalty. The trace implementation motivating the gradient check converted its estimate to a Python number. [Derivation and references](../literature-review.md)
 
+- [abstracts-pilot-s00-third-r03](./abstracts-pilot-s00-third-r03/experiment.md) — The run recorded a failure. The run ledger contains the error and last metrics.
+
 - [stories-control-s00-initial-r00](./stories-control-s00-initial-r00/experiment.md) — The observed development NLL is 8.3437 nats per target token.
 
 - [stories-control-s00-unigram-r00](./stories-control-s00-unigram-r00/experiment.md) — The observed development NLL is 6.0036 nats per target token.
