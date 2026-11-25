@@ -12,7 +12,7 @@ The research background includes flat minima, Hessian measurements and third der
 
 | Model and split | Matched evidence | Third-order NLL vs AdamW<br>↓ Lower is better | Third-order NLL vs trace<br>↓ Lower is better | Speed vs AdamW<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
-| TinyStories pretraining · dev | 2/8 full-budget seeds | 0.000203 higher | 0.000228 lower | 71.5% slower |
+| TinyStories pretraining · dev | 3/8 full-budget seeds | 0.000003 lower | 0.000254 lower | 71.3% slower |
 | Pythia-410M adapters · dev | 1/8 full-budget seeds | 0.000058 lower | 0.000024 higher | 91.5% slower |
 
 **Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
@@ -73,20 +73,20 @@ Each row states which direction is better for that metric. Bold highlights the b
 
 ### TinyStories pretraining
 
-**Full development split · 2/8 full-budget seeds · 16,777,216 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](results/selection/stories.json) · [Experiment ledger](reports/experiments/experiments.md)
+**Full development split · 3/8 full-budget seeds · 16,777,216 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](results/selection/stories.json) · [Experiment ledger](reports/experiments/experiments.md)
 
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
-| Development NLL<br>↓ Lower is better | **2.545836** | 2.546267 | 2.546039 | 0.000203 higher | 0.000228 lower |
-| Development perplexity<br>↓ Lower is better | **12.7539** | 12.7594 | 12.7565 | 0.0026 higher | 0.0029 lower |
-| Dev top-1 accuracy<br>↑ Higher is better | **46.197%** | 46.184% | 46.187% | 0.010 pp lower | 0.004 pp higher |
-| Equal-time probe NLL<br>↓ Lower is better | **2.54125** | 2.72075 | 3.08692 | 0.54567 higher | 0.36618 higher |
-| Training speed (targets/s)<br>↑ Higher is better | **121,888** | 67,278 | 34,744 | 71.5% slower | 48.4% slower |
+| Development NLL<br>↓ Lower is better | 2.547719 | 2.547969 | **2.547715** | 0.000003 lower | 0.000254 lower |
+| Development perplexity<br>↓ Lower is better | **12.7779** | 12.7811 | **12.7779** | Tie | 0.0032 lower |
+| Dev top-1 accuracy<br>↑ Higher is better | **46.176%** | 46.166% | 46.175% | 0.001 pp lower | 0.009 pp higher |
+| Equal-time probe NLL<br>↓ Lower is better | **2.54429** | 2.76035 | 3.06539 | 0.51960 higher | 0.30206 higher |
+| Training speed (targets/s)<br>↑ Higher is better | **130,533** | 66,757 | 37,471 | 71.3% slower | 45.4% slower |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 608.2 | 608.2 | 608.2 | Tie | Tie |
 
-The common training-time cutoff had a median of 138.3 seconds. The furthest checkpoint used for this row was 8.6 seconds before its cutoff.
+The common training-time cutoff had a median of 128.5 seconds. The furthest checkpoint used for this row was 10.3 seconds before its cutoff.
 
-Awaiting paired test results (2 of 8 full-horizon training triplets).
+Awaiting paired test results (3 of 8 full-horizon training triplets).
 
 ### Pythia-410M adapters
 
@@ -311,7 +311,7 @@ Seed sensitivity is the final stage, after both primary test evaluations, all hy
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 64 runs, including 64 with a completed summary.
+Recorded 65 runs, including 65 with a completed summary.
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 

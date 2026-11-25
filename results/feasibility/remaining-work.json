@@ -1,12 +1,12 @@
 {
-  "as_of": "2026-11-25T23:25:26+00:00",
-  "completed": 127,
+  "as_of": "2026-11-25T23:30:40+00:00",
+  "completed": 128,
   "planned": 305,
-  "remaining": 178,
-  "remaining_hours_in_week": 151.365,
+  "remaining": 177,
+  "remaining_hours_in_week": 151.27777777777777,
   "hybrid_blocks_left_including_partial": 4,
   "replays_left": 5,
-  "remaining_primary_publications": 85,
+  "remaining_primary_publications": 84,
   "geometry": {
     "stories": {
       "planned": 92,
@@ -81,20 +81,20 @@
   },
   "scenarios": {
     "typical": {
-      "confirmatory_training_and_test": 24.00807922250489,
+      "confirmatory_training_and_test": 23.926573088060444,
       "hybrid_training_and_widths": 2.843339459101358,
       "secondary_pilots": 0.0,
       "flatness_and_its_publication": 1.5413888888888887,
-      "original_model_publications": 1.2605553006944443,
-      "total_hours": 29.653362871189582
+      "original_model_publications": 1.2457252383333333,
+      "total_hours": 29.557026674384023
     },
     "slower": {
-      "confirmatory_training_and_test": 24.00807922250489,
+      "confirmatory_training_and_test": 23.926573088060444,
       "hybrid_training_and_widths": 2.843339459101358,
       "secondary_pilots": 0.0,
       "flatness_and_its_publication": 2.266388888888889,
-      "original_model_publications": 1.7000414611111112,
-      "total_hours": 30.817849031606247
+      "original_model_publications": 1.6800409733333335,
+      "total_hours": 30.716342409384023
     }
   }
 }
