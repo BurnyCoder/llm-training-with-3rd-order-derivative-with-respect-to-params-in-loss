@@ -1,6 +1,6 @@
 # Study progress
 
-Updated 2026-11-25T17:03:44+00:00.
+Updated 2026-11-25T17:04:24+00:00.
 
 21 training/control records and 0 final evaluations are complete. This is 17.5% of 120 planned model milestones.
 
