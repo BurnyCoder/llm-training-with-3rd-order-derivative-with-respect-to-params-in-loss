@@ -17,7 +17,8 @@ Training time is 278.4 seconds. Peak allocated GPU memory is 608.2 MiB. Developm
 | Weight width | 13.233 | ↑ Wider is flatter in these weight coordinates |
 | RMS weight curvature | 0.568831 | ↓ Lower means less local bending |
 | Signed Hessian trace / parameter | 0.00450677 | No general better direction |
-| Common score width | 1.082 | ↑ Wider tolerates larger changes in token scores |
+| Common score width | 1.0823 | ↑ Wider tolerates larger changes in token scores |
+| Common score-width search bracket | [1.08218, 1.08240] | Numerical resolution of the median two-sided crossing |
 | Mean directional score curvature | 0.69936 | ↓ Lower means less local bending in score space |
 
 The connection between width and better held-out prediction is unknown. [Compare against every variant and baseline](../../flatness.md#every-variant-and-baseline).
