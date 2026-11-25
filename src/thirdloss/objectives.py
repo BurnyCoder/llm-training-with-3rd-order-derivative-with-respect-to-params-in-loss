@@ -1,6 +1,7 @@
 """Ordinary CE, probe gradients and fair train-only calibration on identical initial weights."""
 
 import statistics
+import time
 import torch
 
 from .models import build_model, logits_of, token_loss, token_nll
@@ -96,15 +97,20 @@ def calibrate(project, storage, stage, kind, device, microbatch):
         ce_backward(model, inputs, targets, microbatch)
         ce_norm = vector_norm(p.grad for p in parameters if p.grad is not None).item()
         model.zero_grad(set_to_none=True)
+        if device.type == "cuda":
+            torch.cuda.reset_peak_memory_stats(device)
+        started = time.perf_counter()
         value, grads = probe_gradient(model, parameters, inputs, targets, kind, 6247, step)
         norm = vector_norm(grads).item()
+        probe_seconds = time.perf_counter()-started
         if not (0 < norm < float("inf") and 0 < ce_norm < float("inf")):
             raise FloatingPointError(f"Nonfinite or zero {kind} calibration norm at draw {step}: {norm}")
         rows.append({"draw":step, "ce_grad_norm":ce_norm, "penalty_grad_norm":norm,
-                     "value":value.item(), "norm_ratio":ce_norm/norm})
+                     "value":value.item(), "norm_ratio":ce_norm/norm,"probe_seconds":probe_seconds,
+                     "peak_allocated_mib":torch.cuda.max_memory_allocated(device)/2**20 if device.type=="cuda" else None})
         write_json(work,partial)
-        print(f"{time_now()} [calibration] {stage} {kind} draw {step+1}/16 CE gradient norm "
-              f"{ce_norm:.6g}, penalty gradient norm {norm:.6g}",flush=True)
+        print(f"{time_now()} [calibration] {stage} {kind} draw {step+1}/16 estimate {value.item():.6g}, "
+              f"CE gradient norm {ce_norm:.6g}, penalty gradient norm {norm:.6g}, {probe_seconds:.2f} s",flush=True)
         del grads
     result = statistics.median(row["norm_ratio"] for row in rows)
     write_json(path, {"stage":stage, "kind":kind, "data_manifest_sha256":fingerprint,
