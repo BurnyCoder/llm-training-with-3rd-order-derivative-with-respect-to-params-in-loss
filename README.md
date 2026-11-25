@@ -118,7 +118,7 @@ How far can the weights move before next-token loss rises by 0.1 nats on eight f
 | --- | --- | --- | --- | --- | --- | --- |
 | Curvature-dependent hybrid | 21, 22, 23, 24 | 15.172 | 13.103 | 13.001–13.215 | 12.933–13.331 | 0/128 |
 | Fixed late hybrid | 21, 22, 23, 24 | 15.172 | 13.159 | 13.056–13.268 | 12.984–13.380 | 0/128 |
-| Hessian trace | 21, 22, 23 | 15.143 | 13.154 | 13.046–13.215 | 12.984–13.366 | 0/96 |
+| Hessian trace | 21, 22, 23, 24 | 15.172 | 13.100 | 13.001–13.215 | 12.932–13.330 | 0/128 |
 | Stronger trace | 21, 22, 23 | 15.143 | 13.175 | 13.069–13.233 | 13.002–13.387 | 0/96 |
 | Cross-seed replay | 22, 23 | 15.198 | 13.133 | 13.047–13.218 | 12.933–13.431 | 0/64 |
 | Always-on hybrid | 21, 22, 23 | 15.256 | 13.229 | 13.060–13.334 | 13.085–13.390 | 0/96 |
@@ -145,7 +145,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Shared trace checkpoint | 8,388,608 | 21–28 | 15.172 (4/8) | 0.44445 (4/8) | 1.0618 (4/8) |
 | Curvature-dependent hybrid · hybrid study | 16,777,216 | 21–28 | 13.103 (4/8) | 0.57782 (4/8) | 1.0824 (4/8) |
 | Fixed late hybrid · hybrid study | 16,777,216 | 21–28 | 13.159 (4/8) | 0.57064 (4/8) | 1.0822 (4/8) |
-| Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.154 (3/8) | 0.5854 (3/8) | 1.0825 (3/8) |
+| Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.100 (4/8) | 0.5854 (3/8) | 1.0825 (3/8) |
 | Stronger trace · hybrid study | 16,777,216 | 21–28 | 13.175 (3/8) | 0.58362 (3/8) | 1.0826 (3/8) |
 | Cross-seed replay · hybrid study | 16,777,216 | 21–28 | 13.133 (2/8) | 0.5891 (2/8) | 1.0824 (2/8) |
 | Always-on hybrid · hybrid study | 16,777,216 | 21–28 | 13.229 (3/8) | 0.57089 (3/8) | 1.0821 (3/8) |
@@ -232,7 +232,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 | Adaptive versus | Paired seeds | Adaptive NLL<br>↓ Lower is better | Adaptive width change<br>↑ More retained is better for the width test | Adaptive speed<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
 | Cross-seed replay | 2/8 | 0.000001 higher | 0.0010 less retained | 5.4% faster |
-| Hessian trace | 3/8 | 0.000004 higher | 0.0020 more retained | 36.3% slower |
+| Hessian trace | 4/8 | 0.000002 higher | 0.0010 more retained | 35.2% slower |
 | Stronger trace | 3/8 | 0.000094 lower | 0.0181 less retained | 37.0% slower |
 | Always-on hybrid | 3/8 | 0.000015 lower | 0.0417 more retained | 44.2% faster |
 
@@ -298,9 +298,9 @@ Each panel shows the first saved prompt and full continuations from the lowest m
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 46 runs, including 45 with a completed summary.
+Recorded 47 runs, including 46 with a completed summary.
 
-TinyStories hybrid follow-up: 19 of 48 full runs and 4 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
+TinyStories hybrid follow-up: 20 of 48 full runs and 4 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
 [Full score table, strength search and per-seed test differences](reports/summary.md)
 
