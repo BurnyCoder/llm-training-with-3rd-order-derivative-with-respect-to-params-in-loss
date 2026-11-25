@@ -1,0 +1,114 @@
+{
+  "format": "thirdloss-packed-v1",
+  "stage": "stories",
+  "sources": [
+    {
+      "repo": "roneneldan/TinyStories",
+      "revision": "f54c09fd23315a6f9c86f9dc80f725de7d8f9c64",
+      "file": "data/train-00000-of-00004-2d5a1467fff1081b.parquet",
+      "bytes": 248731111,
+      "sha256": "77cf780cebe52b6e83e3a2ac84bc56d8059363113e41d17a023f1d8b2ed0fc0b"
+    },
+    {
+      "repo": "roneneldan/TinyStories",
+      "revision": "f54c09fd23315a6f9c86f9dc80f725de7d8f9c64",
+      "file": "data/validation-00000-of-00001-869c898b519ad725.parquet",
+      "bytes": 9989127,
+      "sha256": "33406a6206554cfc279c29c11f4df51528af487aa1a602b075566fc83c49dcab"
+    }
+  ],
+  "selection": {
+    "training_prefix": 160000,
+    "dev_hash_modulus": 50
+  },
+  "audit": {
+    "test": {
+      "input": 21990,
+      "kept": 21990,
+      "exact": 0,
+      "cross_split_near": 0,
+      "empty": 0
+    },
+    "dev": {
+      "input": 3150,
+      "kept": 3106,
+      "exact": 44,
+      "cross_split_near": 0,
+      "empty": 0
+    },
+    "train": {
+      "input": 156850,
+      "kept": 154766,
+      "exact": 2056,
+      "cross_split_near": 0,
+      "empty": 28
+    }
+  },
+  "overlap": {
+    "words": 5,
+    "jaccard_at_least": "4/5",
+    "priority": [
+      "test",
+      "dev",
+      "train"
+    ],
+    "coverage": "All retained cross-split document pairs at this threshold"
+  },
+  "dtype": "<u2",
+  "packing": "one appended EOS per document, no added BOS",
+  "eos_id": 0,
+  "vocab_size": 4096,
+  "tokenizer_entries": 4096,
+  "model_vocab_size": 4096,
+  "token_counts": {
+    "test": 4884131,
+    "dev": 715644,
+    "train": 35478911
+  },
+  "splits": {
+    "test": {
+      "documents": 21990,
+      "tokens": 4884131,
+      "bytes": 9768262,
+      "sha256": "228df80efc7ea7acd95020cf2a4d209d6a5071febe0c62a4b21b3b65b2e1b7c4"
+    },
+    "dev": {
+      "documents": 3106,
+      "tokens": 715644,
+      "bytes": 1431288,
+      "sha256": "91121d0c198e89d3b8771871837d19bbbe2b20c46dd8a79b9b195b2ba2112b41"
+    },
+    "train": {
+      "documents": 154766,
+      "tokens": 35478911,
+      "bytes": 70957822,
+      "sha256": "019c9e93b01e1df5e6b2b767088a30f9a47d010ba29d3f78efa4ce95461e8a10"
+    }
+  },
+  "artifacts": {
+    "test.bin": {
+      "bytes": 9768262,
+      "sha256": "228df80efc7ea7acd95020cf2a4d209d6a5071febe0c62a4b21b3b65b2e1b7c4"
+    },
+    "dev.bin": {
+      "bytes": 1431288,
+      "sha256": "91121d0c198e89d3b8771871837d19bbbe2b20c46dd8a79b9b195b2ba2112b41"
+    },
+    "train.bin": {
+      "bytes": 70957822,
+      "sha256": "019c9e93b01e1df5e6b2b767088a30f9a47d010ba29d3f78efa4ce95461e8a10"
+    },
+    "tokenizer.json": {
+      "bytes": 265287,
+      "sha256": "0c8368bcca1f031bc1d729d8fd5d93eb952ec4098e2994e8fce77ebc83aa00bd"
+    },
+    "documents.jsonl": {
+      "bytes": 26833353,
+      "sha256": "c975c2242c37a9c288187ab2277fd95aa33ad06537d4ebcf5b4e40a34639317f"
+    },
+    "rejections.jsonl": {
+      "bytes": 409823,
+      "sha256": "7e37c842ef4d6b69eb689b3e1c5ba435d086876617f0b22aa29cb0c918762737"
+    }
+  }
+}
