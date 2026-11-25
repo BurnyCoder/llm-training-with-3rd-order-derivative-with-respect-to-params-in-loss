@@ -4,7 +4,7 @@ Run `abstracts-pilot-s00-third-r03` · [raw records](../../../results/abstracts-
 
 | Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Research abstracts | Third derivative | pilot | 0 | 0.030 | 65,536 | 3.1168 | — | 907 | complete |
+| Research abstracts | Third derivative | diagnostic | 0 | 0.030 | 65,536 | 3.1168 | — | 907 | complete |
 
 Training time is 72.3 seconds. Peak allocated GPU memory is 6,369.6 MiB. Development token accuracy is 0.4128. Test token accuracy is —.
 
@@ -15,6 +15,12 @@ Training time is 72.3 seconds. Peak allocated GPU memory is 6,369.6 MiB. Develop
 | Time (UTC) | Recorded exception |
 | --- | --- |
 | 2026-11-25T07:00:21+00:00 | FloatingPointError('Nonfinite or zero third calibration norm at draw 0: inf') |
+
+## Numerical diagnostic
+
+This original FP32 adapter run is preserved as a numerical diagnostic. The same-probe full-checkpoint audit found substantial rounding error in both the penalty and its training gradient. Strength selection and confirmatory inference use separately named FP64 derivative runs.
+
+[Precision amendment](../../amendments/adapter-precision.md)
 
 ## Fixed-prompt generations
 

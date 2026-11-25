@@ -16,7 +16,7 @@ Recorded 14 runs, including 13 with a completed summary.
 
 | Stage | Phase | Method | Ratio | Tokens/run | Runs | Median dev NLL | Median test NLL |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Research abstracts | pilot | Third derivative | 0.030 | 65,536 | 1 | 3.1168 | — |
+| Research abstracts | diagnostic | Third derivative | 0.030 | 65,536 | 1 | 3.1168 | — |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
 | TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |

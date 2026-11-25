@@ -7,7 +7,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | Run | Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | [abstracts-control-s00-initial-r00](./abstracts-control-s00-initial-r00/experiment.md) | Research abstracts | Initial checkpoint | control | 0 | 0.000 | — | — | — | — | configured |
-| [abstracts-pilot-s00-third-r03](./abstracts-pilot-s00-third-r03/experiment.md) | Research abstracts | Third derivative | pilot | 0 | 0.030 | 65,536 | 3.1168 | — | 907 | complete |
+| [abstracts-pilot-s00-third-r03](./abstracts-pilot-s00-third-r03/experiment.md) | Research abstracts | Third derivative | diagnostic | 0 | 0.030 | 65,536 | 3.1168 | — | 907 | complete |
 | [stories-control-s00-initial-r00](./stories-control-s00-initial-r00/experiment.md) | TinyStories | Initial checkpoint | control | 0 | 0.000 | 0 | 8.3437 | — | 0 | complete |
 | [stories-control-s00-unigram-r00](./stories-control-s00-unigram-r00/experiment.md) | TinyStories | Unigram | control | 0 | 0.000 | 0 | 6.0036 | — | 0 | complete |
 | [stories-pilot-s00-ce-r00](./stories-pilot-s00-ce-r00/experiment.md) | TinyStories | Ordinary AdamW | pilot | 0 | 0.000 | 2,097,152 | 3.8770 | — | 123,871 | complete |
