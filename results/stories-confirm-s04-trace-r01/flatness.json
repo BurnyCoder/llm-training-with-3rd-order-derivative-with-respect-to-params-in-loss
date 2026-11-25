@@ -1,0 +1,250 @@
+{
+  "run": "stories-confirm-s04-trace-r01",
+  "checkpoint_file_sha256": "49ebd3e840bc7fa80bc7592a6a8e3264dfeb46869d0620255dfa118a9c498367",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "width_device": "cuda",
+  "split": "train",
+  "probe_windows_sha256": "2b09cf8d13e4e0df411e816e32f1799f1ee165712973c51a09fc75d528c8c2b1",
+  "timestamp": "2026-11-25T23:51:35+00:00",
+  "protocol": "checkpoint-flatness-v1",
+  "width_windows": 8,
+  "curvature_windows": 2,
+  "width": {
+    "baseline_nll": 2.5861122608184814,
+    "delta_nll": 0.1,
+    "directions": [
+      {
+        "direction": 0,
+        "positive": {
+          "lower": 6.388671875,
+          "upper": 6.3896484375
+        },
+        "negative": {
+          "lower": 6.3681640625,
+          "upper": 6.369140625
+        }
+      },
+      {
+        "direction": 1,
+        "positive": {
+          "lower": 6.1142578125,
+          "upper": 6.115234375
+        },
+        "negative": {
+          "lower": 6.2744140625,
+          "upper": 6.275390625
+        }
+      },
+      {
+        "direction": 2,
+        "positive": {
+          "lower": 6.142578125,
+          "upper": 6.1435546875
+        },
+        "negative": {
+          "lower": 6.1044921875,
+          "upper": 6.10546875
+        }
+      },
+      {
+        "direction": 3,
+        "positive": {
+          "lower": 6.4697265625,
+          "upper": 6.470703125
+        },
+        "negative": {
+          "lower": 6.6689453125,
+          "upper": 6.669921875
+        }
+      },
+      {
+        "direction": 4,
+        "positive": {
+          "lower": 6.455078125,
+          "upper": 6.4560546875
+        },
+        "negative": {
+          "lower": 5.9482421875,
+          "upper": 5.94921875
+        }
+      },
+      {
+        "direction": 5,
+        "positive": {
+          "lower": 6.63671875,
+          "upper": 6.6376953125
+        },
+        "negative": {
+          "lower": 5.728515625,
+          "upper": 5.7294921875
+        }
+      },
+      {
+        "direction": 6,
+        "positive": {
+          "lower": 6.435546875,
+          "upper": 6.4365234375
+        },
+        "negative": {
+          "lower": 6.361328125,
+          "upper": 6.3623046875
+        }
+      },
+      {
+        "direction": 7,
+        "positive": {
+          "lower": 6.3291015625,
+          "upper": 6.330078125
+        },
+        "negative": {
+          "lower": 6.5439453125,
+          "upper": 6.544921875
+        }
+      },
+      {
+        "direction": 8,
+        "positive": {
+          "lower": 6.4267578125,
+          "upper": 6.427734375
+        },
+        "negative": {
+          "lower": 6.7060546875,
+          "upper": 6.70703125
+        }
+      },
+      {
+        "direction": 9,
+        "positive": {
+          "lower": 5.705078125,
+          "upper": 5.7060546875
+        },
+        "negative": {
+          "lower": 6.6884765625,
+          "upper": 6.689453125
+        }
+      },
+      {
+        "direction": 10,
+        "positive": {
+          "lower": 6.345703125,
+          "upper": 6.3466796875
+        },
+        "negative": {
+          "lower": 6.5263671875,
+          "upper": 6.52734375
+        }
+      },
+      {
+        "direction": 11,
+        "positive": {
+          "lower": 6.2236328125,
+          "upper": 6.224609375
+        },
+        "negative": {
+          "lower": 5.927734375,
+          "upper": 5.9287109375
+        }
+      },
+      {
+        "direction": 12,
+        "positive": {
+          "lower": 6.24609375,
+          "upper": 6.2470703125
+        },
+        "negative": {
+          "lower": 6.2705078125,
+          "upper": 6.271484375
+        }
+      },
+      {
+        "direction": 13,
+        "positive": {
+          "lower": 6.708984375,
+          "upper": 6.7099609375
+        },
+        "negative": {
+          "lower": 6.44140625,
+          "upper": 6.4423828125
+        }
+      },
+      {
+        "direction": 14,
+        "positive": {
+          "lower": 6.1708984375,
+          "upper": 6.171875
+        },
+        "negative": {
+          "lower": 6.3193359375,
+          "upper": 6.3203125
+        }
+      },
+      {
+        "direction": 15,
+        "positive": {
+          "lower": 6.201171875,
+          "upper": 6.2021484375
+        },
+        "negative": {
+          "lower": 6.7041015625,
+          "upper": 6.705078125
+        }
+      }
+    ],
+    "width_lower": 12.63671875,
+    "width_upper": 12.638671875,
+    "width": 12.6376953125,
+    "censored_rays": 0,
+    "weights_sha256": "23fe1e57ac5197133670b318bfb0c8377b75e2f3303574678e47c424b8477c59",
+    "weights_restored": true,
+    "seconds": 5.969965399999637
+  },
+  "curvature": {
+    "dimensions": 2557632,
+    "draws": [
+      {
+        "index": 0,
+        "trace_per_parameter": 0.004976899921665339,
+        "squared_rms": 0.31760431654787
+      },
+      {
+        "index": 1,
+        "trace_per_parameter": 0.005447596305747845,
+        "squared_rms": 0.3273547374288372
+      },
+      {
+        "index": 2,
+        "trace_per_parameter": 0.005432716104475797,
+        "squared_rms": 0.33158745355673946
+      },
+      {
+        "index": 3,
+        "trace_per_parameter": 0.005386529045540646,
+        "squared_rms": 0.3791516771979116
+      },
+      {
+        "index": 4,
+        "trace_per_parameter": 0.004939095148326762,
+        "squared_rms": 0.3281929536759836
+      },
+      {
+        "index": 5,
+        "trace_per_parameter": 0.004458658317541102,
+        "squared_rms": 0.31766804686423883
+      },
+      {
+        "index": 6,
+        "trace_per_parameter": 0.0058385664749003785,
+        "squared_rms": 0.38718140986819993
+      },
+      {
+        "index": 7,
+        "trace_per_parameter": 0.005650873666705027,
+        "squared_rms": 0.3800902606206878
+      }
+    ],
+    "device": "cuda:0",
+    "dtype": "torch.float64",
+    "trace_per_parameter": 0.005266366873112862,
+    "rms_curvature": 0.5883059212434111
+  }
+}
