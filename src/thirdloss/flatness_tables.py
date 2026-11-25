@@ -39,6 +39,26 @@ def _ray_count(points):
     return f"{sum(p['censored_rays'] for p in points)}/{sum(p['ray_count'] for p in points)}"
 
 
+def checkpoint_table(method,weight,score):
+    """Use the same labels, coordinates and censoring in the experiment report and model card."""
+    weight=weight or {}
+    score=score or {}
+    missing="N/A · no trainable weights" if method=="unigram" else "Pending"
+    def width(point,absent):
+        return _width_stat([point],.5) if "width" in point else absent
+    def number(point,key,absent):
+        return f"{point[key]:.6g}" if key in point else absent
+    rows=[
+        ["Weight width",width(weight,missing),"↑ Wider is flatter in these weight coordinates"],
+        ["RMS weight curvature",number(weight,"rms_curvature",missing),"↓ Lower means less local bending"],
+        ["Signed Hessian trace / parameter",number(weight,"trace_per_parameter",missing),"No general better direction"],
+        ["Common score width",width(score,"Pending"),"↑ Wider tolerates larger changes in token scores"],
+        ["Mean directional score curvature",number(score,"mean_directional_curvature","Pending"),
+         "↓ Lower means less local bending in score space"],
+    ]
+    return markdown_table(rows,["Training-window measurement","Value","Interpretation"])
+
+
 def hybrid_flatness_rows(runs):
     """Show which seeds contributed to each arm; their random directions are shared by design."""
     rows=[]
