@@ -18,7 +18,7 @@ Does penalizing changes in loss curvature improve next-token prediction? The stu
 | TinyStories pretraining · dev | one development pilot seed | 0.000045 lower | 0.000338 lower | 65.7% slower |
 | Pythia-410M adapters · dev | one development pilot seed | 0.000300 higher | 0.000273 higher | 88.6% slower |
 
-**Adaptive vs fixed-ramp hybrid** · 2/8 paired seeds. Adaptive development NLL was 0.000174 lower. It retained 0.0554 less directional width after the switch. More width is better for the registered geometry test. Whether more width improves prediction is unknown.
+**Adaptive vs fixed-ramp hybrid** · 3/8 paired seeds. Adaptive development NLL was 0.000204 lower. It retained 0.0542 less directional width after the switch. More width is better for the registered geometry test. Whether more width improves prediction is unknown.
 
 Both primary test decisions are pending. Each stage requires eight paired test seeds and superiority over both baselines under Holm correction.
 
@@ -67,14 +67,14 @@ The equal-time row uses the last available fixed-window development score at or 
 
 ### TinyStories hybrid schedules
 
-**Adaptive vs fixed ramp · 2/8 paired seeds · 16,777,216 targets per run.** Both arms resume the same trace-trained checkpoint. Width change is final width minus width at the switch. A larger change means more width retained at the fixed loss tolerance. For two negative changes, the one closer to zero lost less width.
+**Adaptive vs fixed ramp · 3/8 paired seeds · 16,777,216 targets per run.** Both arms resume the same trace-trained checkpoint. Width change is final width minus width at the switch. A larger change means more width retained at the fixed loss tolerance. For two negative changes, the one closer to zero lost less width.
 
 | Metric | Adaptive | Fixed ramp | vs Fixed ramp |
 | --- | --- | --- | --- |
-| Development NLL<br>↓ Lower is better | **2.546107** | 2.546281 | 0.000174 lower |
-| Dev top-1 accuracy<br>↑ Higher is better | 46.205% | **46.208%** | 0.002 pp lower |
-| Width change after switch<br>↑ More retained is better for the width test | -2.0865 | **-2.0311** | 0.0554 less retained |
-| Training speed (targets/s)<br>↑ Higher is better | **40,983** | 40,328 | 1.5% faster |
+| Development NLL<br>↓ Lower is better | **2.545908** | 2.546113 | 0.000204 lower |
+| Dev top-1 accuracy<br>↑ Higher is better | 46.256% | **46.258%** | 0.001 pp lower |
+| Width change after switch<br>↑ More retained is better for the width test | -1.9854 | **-1.9272** | 0.0542 less retained |
+| Training speed (targets/s)<br>↑ Higher is better | 37,992 | **40,662** | 3.9% slower |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 617.3 | 617.3 | Tie |
 
 The remaining controls are paired independently. Each row uses only seeds that finished both arms. The always-on arm has its own measured width at the switch.
