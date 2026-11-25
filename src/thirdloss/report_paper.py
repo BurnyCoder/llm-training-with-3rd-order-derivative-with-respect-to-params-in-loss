@@ -26,6 +26,10 @@ from reportlab.platypus import (
 from .report_records import METHODS, REPOSITORY, STAGES, completed, describe_difference, finite, fmt, verdict_text
 
 REFERENCES = {
+    "flat": ("Hochreiter and Schmidhuber, Simplifying neural nets by discovering flat minima",
+             "https://proceedings.neurips.cc/paper/1994/hash/01882513d5fa7c329e940dda99b12147-Abstract.html"),
+    "gpt_trace": ("Zhang, Li and Ju, Noise Stability Optimization for Finding Flat Minima: A Hessian-based Regularization Approach",
+                  "https://arxiv.org/pdf/2306.08553#page=12"),
     "roughness": ("Duchon, Splines minimizing rotation-invariant semi-norms in Sobolev spaces",
                   "https://doi.org/10.1007/BFb0086566"),
     "trace": ("Liu, Yu and Lin, Regularizing deep neural networks with stochastic estimators of Hessian trace",
@@ -54,7 +58,7 @@ def _link(url, label):
 
 def _cite(key):
     label, url = REFERENCES[key]
-    return _link(url, label.split(",")[0] if key != "trace" else "Liu, Yu and Lin")
+    return _link(url, label.rsplit(", ",1)[0])
 
 
 def _styles():
@@ -182,8 +186,10 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "can share its trace while individual curvature components vary. Summing squared "
       "third partials assigns a nonnegative cost to that variation in the chosen coordinates. "
       "The proposed local density adapts an order-three spline roughness measure. The "
-      "published signed-trace language experiments studied recurrent language models. "
-      f"{_cite('roughness')} · {_cite('trace')} · {_cite('coordinates')}")
+      "original flat-minima work searched for broad regions of low training error. Liu, Yu and Lin "
+      "regularized recurrent language models with the Hessian trace. Zhang, Li and Ju investigated "
+      "a symmetric approximation to trace regularization in GPT-2 downstream fine-tuning. "
+      f"{_cite('roughness')} · {_cite('flat')} · {_cite('trace')} · {_cite('gpt_trace')}, Table 5 · {_cite('coordinates')}")
     p("FUT++ approximates third weight derivatives of minibatch language-model loss with "
       "differences between Hessian estimates at consecutive reference checkpoints. It uses "
       "these terms to predict the effect of reordering training batches. Here the squared "

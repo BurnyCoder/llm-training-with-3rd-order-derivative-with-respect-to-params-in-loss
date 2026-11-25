@@ -39,7 +39,7 @@ FIELDS = (
     "token_budget", "batch_windows", "microbatch", "context", "weights_sha256", "dev_tokens",
     "git_revision", "gpu", "torch", "matched_dev_nll", "finished_at", "initial_trainable_sha256",
     "derivative_dtype", "derivative_device", "host_probe_seconds", "training_seconds_excluding_host_probes", "cpu_threads",
-    "process_peak_rss_mib", "evaluation_batch_windows",
+    "process_peak_rss_mib", "evaluation_batch_windows", "test_seconds", "evaluated_at",
 )
 EVENT_FIELDS = (
     "step", "tokens", "train_seconds", "loss", "accuracy", "penalty", "dev_nll",
@@ -130,6 +130,9 @@ def run_record(folder: Path) -> dict:
     record["id"] = folder.name
     if "targets_scored" in state and not summary:
         record["evaluation_progress"] = state
+    test_state = read_json(folder / "test_state.json")
+    if test_state and "test_nll" not in summary:
+        record["evaluation_progress"] = test_state
     failures = read_json(folder / "attempts.json").get("failures", [])
     if last_error and last_error not in failures:
         failures.append(last_error)

@@ -10,7 +10,7 @@ from safetensors.torch import load_file
 from .data import prepare
 from .evaluation import score
 from .models import build_model
-from .records import HORIZONS, RATIOS, read_json, run_name, sha256, time_now, write_json
+from .records import HORIZONS, RATIOS, Recorder, read_json, run_name, sha256, time_now, write_json
 from .release import STAGE_HUB, publish_snapshot, publish_weights
 from .train import run_one
 
@@ -70,12 +70,13 @@ def freeze(project, storage, stage):
                 raise ValueError(f"Different corpus for {name}")
             weights_file(storage,summary)
             frozen["runs"][name] = summary["weights_sha256"]
-            if summary.get("initial_trainable_sha256"):
-                initial.add(summary["initial_trainable_sha256"])
-        if len(initial)>1:
+            digest = summary.get("initial_trainable_sha256")
+            if not digest:
+                raise ValueError(f"Missing initial trainable-weight digest for {name}")
+            initial.add(digest)
+        if len(initial)!=1:
             raise ValueError(f"Initial trainable weights differ across {stage} seed {seed} arms")
-        if initial:
-            frozen.setdefault("initializations",{})[str(seed)] = initial.pop()
+        frozen.setdefault("initializations",{})[str(seed)] = initial.pop()
     frozen["freeze_id"] = hashlib.sha256(json.dumps(frozen,sort_keys=True).encode()).hexdigest()
     path = project/"results"/"freeze"/f"{stage}.json"
     if path.exists() and read_json(path)!=frozen:
@@ -85,6 +86,7 @@ def freeze(project, storage, stage):
 
 
 def evaluate_one(project, storage, run_id, device):
+    from .progress import week_schedule
     path = project/"results"/run_id/"summary.json"
     summary = read_json(path)
     stage = summary["stage"]
@@ -92,11 +94,13 @@ def evaluate_one(project, storage, run_id, device):
     data = storage/"data"/stage
     if sealed["runs"].get(run_id)!=summary.get("weights_sha256") or run_id not in sealed["runs"]:
         raise ValueError("Evaluation requires a checkpoint present in the stage freeze")
-    weights = weights_file(storage,summary)
+    if week_schedule(project) is None:
+        raise ValueError("The one-week timing and memory projection requires selected pilots from both stages before test scoring")
     if "test_nll" in summary:
         if summary["freeze_id"]!=sealed["freeze_id"]:
             raise ValueError("Existing evaluation uses a different freeze")
         return summary
+    weights = weights_file(storage,summary)
     if sha256(data/"test.bin") != sealed["test_sha256"]:
         raise ValueError("Test stream differs from the frozen manifest")
     model = build_model(stage,summary["seed"],device,storage)
@@ -108,11 +112,22 @@ def evaluate_one(project, storage, run_id, device):
         if set(state)!=set(get_peft_model_state_dict(model)):
             raise ValueError("Adapter payload does not match the pinned backbone and target modules")
         set_peft_model_state_dict(model,state)
-    stats = score(model,data/"test.bin",device,summary.get("evaluation_batch_windows",summary["microbatch"]))
+    recorder = Recorder(project,run_id)
+    state = path.parent/"test_state.json"
+    def report_progress(row):
+        # Publish elapsed time and coverage during a sealed evaluation. The full-corpus
+        # NLL and accuracy enter the summary only after every target has been scored.
+        coverage = {key:row[key] for key in ("targets_scored","targets_to_score","score_seconds")}
+        write_json(state,{"split":"test","timestamp":time_now(),**coverage})
+        recorder.emit({"split":"test",**coverage},"test_progress.jsonl")
+    report_progress({"targets_scored":0,"targets_to_score":(data/"test.bin").stat().st_size//2-1,"score_seconds":0.0})
+    stats = score(model,data/"test.bin",device,summary.get("evaluation_batch_windows",summary["microbatch"]),
+                  progress=report_progress)
     summary.update(test_nll=stats["nll"],test_accuracy=stats["accuracy"],test_tokens=stats["tokens"],
                    test_manifest_sha256=sealed["test_sha256"],freeze_id=sealed["freeze_id"],
-                   evaluated_at=time_now())
+                   test_seconds=read_json(state)["score_seconds"],evaluated_at=time_now())
     write_json(path,summary)
+    state.unlink(missing_ok=True)
     return summary
 
 

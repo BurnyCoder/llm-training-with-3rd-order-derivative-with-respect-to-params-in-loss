@@ -50,6 +50,12 @@ def learning_rate(stage, step, steps):
     return peak * (0.1+0.9*0.5*(1+math.cos(math.pi*progress)))
 
 
+def validation_due(stage, phase, step, interval):
+    """Observe the early portion of every adapter confirmatory arm at common data positions."""
+    initial_adapter = stage=="abstracts" and phase=="confirm" and step<interval
+    return (step>0 and step%interval==0) or (initial_adapter and step%4==0)
+
+
 def chosen_coefficients(project, storage, config, device, microbatch):
     method, ratio, stage = (config[k] for k in ("method","ratio","stage"))
     if method in {"ce","initial","unigram"}:
@@ -170,10 +176,19 @@ def _run(project, storage, config, recorder, device, microbatch):
         groups = [{"params":[p for p in parameters if p.ndim>1],"weight_decay":0.1},
                   {"params":[p for p in parameters if p.ndim<=1],"weight_decay":0.0}]
         optimizer = torch.optim.AdamW(groups,lr=1e-4,betas=(0.9,0.95),fused=(device.type=="cuda"))
+        # A restart during the first checkpoint interval must discard measurements from
+        # updates whose weights and optimizer moments were never committed.
+        if not (ckpt/"latest.pt").exists():
+            save_state(ckpt/"latest.pt",model,optimizer,0,0.0,config)
         start,elapsed = restore_state(ckpt/"latest.pt",model,optimizer,config,recorder,device)
-        host_probes = sum(e.get("host_probe_seconds",0.0) for e in json_lines(output/"events.jsonl"))
+        history = json_lines(output/"events.jsonl")
+        host_probes = sum(e.get("host_probe_seconds",0.0) for e in history)
         # Match elapsed-time comparisons with periodic fixed development windows in every arm.
         interval = min(128,max(1,steps//16))
+        if start==0 and validation_due(stage,config["phase"],0,interval) and not history:
+            metrics = score(model,data/"dev.bin",device,score_batch,limit_windows=64)
+            recorder.emit({"step":0,"tokens":0,"train_seconds":0.0,"training_seconds_excluding_host_probes":0.0,
+                           "dev_nll":metrics["nll"],"dev_accuracy":metrics["accuracy"]})
         for step in range(start,steps):
             model.train()
             tic = time.perf_counter()
@@ -194,13 +209,14 @@ def _run(project, storage, config, recorder, device, microbatch):
                 torch.cuda.synchronize(device)
             elapsed += time.perf_counter()-tic
             done = step+1
-            if done % 8 == 0 or active or done == 1 or done % interval == 0 or done == steps:
+            validate = validation_due(stage,config["phase"],done,interval) or done==steps
+            if done % 8 == 0 or active or done == 1 or validate:
                 row = {"step":done, "tokens":done*batch*CONTEXT, "train_seconds":elapsed, "loss":base.item(),
                        "accuracy":accuracy.item(), "lr":lr, "gradient_norm":norm.item(),"derivatives":terms,
                        "host_probe_seconds":host_seconds,"training_seconds_excluding_host_probes":max(0.0,elapsed-host_probes)}
                 if terms:
                     row["penalty"] = sum(8*t["lambda"]*t["estimate"] for t in terms.values())
-                if done%interval == 0 or done==steps:
+                if validate:
                     metrics = score(model,data/"dev.bin",device,score_batch,limit_windows=64)
                     row.update(dev_nll=metrics["nll"],dev_accuracy=metrics["accuracy"])
                 recorder.emit(row)

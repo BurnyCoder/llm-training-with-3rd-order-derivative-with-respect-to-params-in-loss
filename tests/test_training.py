@@ -87,3 +87,23 @@ def test_step_recovery_matches_uninterrupted_weights(tmp_path,monkeypatch):
         assert normal["dev_nll"]==resumed["dev_nll"]
     finally:
         torch.set_num_threads(prior_threads)
+
+
+def test_adapter_confirmation_observes_early_matched_time_checkpoints():
+    """A slow host probe can span the baseline's whole time cutoff before a routine validation."""
+    from thirdloss.train import validation_due
+    expected = [0, 4, 8, 12, 16, 20, 24, 28, 32, 64]
+    assert [step for step in range(65) if validation_due("abstracts","confirm",step,32)] == expected
+    assert [step for step in range(65) if validation_due("stories","confirm",step,32)] == [32,64]
+    assert [step for step in range(17) if validation_due("abstracts","pilot",step,4)] == [4,8,12,16]
+
+
+def test_evaluator_requires_measured_schedule_before_test_reads(tmp_path):
+    """Exercise the standalone entry point without placing any test token bytes on disk."""
+    import pytest
+    from thirdloss.study import evaluate_one
+    run_id = "stories-confirm-s01-ce-r00"
+    write_json(tmp_path/"results"/run_id/"summary.json",{"stage":"stories","id":run_id,"weights_sha256":"abc"})
+    write_json(tmp_path/"results"/"freeze"/"stories.json",{"runs":{run_id:"abc"},"freeze_id":"fixture"})
+    with pytest.raises(ValueError,match="one-week"):
+        evaluate_one(tmp_path,tmp_path/"storage",run_id,torch.device("cpu"))
