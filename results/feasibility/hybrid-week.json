@@ -1,0 +1,21 @@
+{
+  "computed_at": "2026-11-25T15:17:55+00:00",
+  "as_of": "2026-11-25T15:17:48+00:00",
+  "seed": 21,
+  "run_ids": [
+    "stories-branch-s21-trunk-r01",
+    "stories-hybrid-s21-adaptive-r01",
+    "stories-hybrid-s21-late-r01",
+    "stories-hybrid-s21-trace-r01",
+    "stories-hybrid-s21-strong-r01",
+    "stories-hybrid-s21-always-r01"
+  ],
+  "observed_six_jobs_hours": 4.70645986477534,
+  "estimated_one_replay_hours": 0.09194444444444444,
+  "remaining_hybrid_hours": 33.68077460898294,
+  "combined_hours": 56.17709506637662,
+  "hours_left_in_week": 159.4922222222222,
+  "fits_measured_budget": true,
+  "peak_allocated_mib": 621.3154296875,
+  "basis": "Observed wall time includes shared training, calibration, widths, development scoring, intervening publications and interruptions. Repeat the six jobs for seven more seeds. Budget each replay as the elapsed trunk-completion to adaptive-completion interval. Remaining adapter pilots and tool or network interruptions use the residual headroom."
+}

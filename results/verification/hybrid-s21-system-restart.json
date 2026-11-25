@@ -1,0 +1,54 @@
+{
+  "run": "stories-hybrid-s21-always-r01",
+  "verified_at": "2026-11-25T15:17:24+00:00",
+  "resume_checkpoint_step": 3712,
+  "last_observed_pre_restart_step": 3736,
+  "first_observed_restart_step": 3713,
+  "resume_observed_at": "2026-11-25T15:16:38+00:00",
+  "advanced_past_prior_run": true,
+  "replayed_steps": 24,
+  "last_pre_restart_timestamp": "2026-11-25T11:10:00+00:00",
+  "telemetry_fields": [
+    "loss",
+    "accuracy",
+    "lr",
+    "gradient_norm",
+    "trace_lambda",
+    "third_lambda",
+    "curvature_q",
+    "curvature_rms",
+    "raw_penalty_estimates"
+  ],
+  "logged_replay_observations": [
+    {
+      "step": 3713,
+      "same_measurements": true,
+      "absolute_loss_delta": 0.0,
+      "absolute_gradient_norm_delta": 0.0
+    },
+    {
+      "step": 3720,
+      "same_measurements": false,
+      "absolute_loss_delta": 0.0,
+      "absolute_gradient_norm_delta": 1.1920928955078125e-07
+    },
+    {
+      "step": 3721,
+      "same_measurements": false,
+      "absolute_loss_delta": 0.0,
+      "absolute_gradient_norm_delta": 1.1920928955078125e-07
+    },
+    {
+      "step": 3728,
+      "same_measurements": false,
+      "absolute_loss_delta": 2.384185791015625e-07,
+      "absolute_gradient_norm_delta": 0.0
+    },
+    {
+      "step": 3736,
+      "same_measurements": false,
+      "absolute_loss_delta": 2.384185791015625e-07,
+      "absolute_gradient_norm_delta": 0.0
+    }
+  ]
+}
