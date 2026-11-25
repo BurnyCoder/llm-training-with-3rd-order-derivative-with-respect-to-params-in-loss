@@ -204,3 +204,60 @@ def test_production_story_model_exposes_full_weight_penalty_gradient():
     assert penalty.isfinite() and penalty > 0
     assert all(gradient.isfinite().all() for gradient in augmented)
     assert any(not torch.allclose(a, b, atol=1e-10, rtol=1e-9) for a, b in zip(augmented, plain))
+
+
+def test_pythia_adapter_fourth_derivative_and_portable_checkpoint(tmp_path, monkeypatch):
+    """Exercise the production PEFT and GPT-NeoX code on a small, offline CPU backbone.
+
+    Compare the gradient with a finite difference along a fixed direction, then load the
+    updated adapter into a fresh copy. https://huggingface.co/docs/peft/developer_guides/checkpoint
+    """
+    from peft import get_peft_model_state_dict, set_peft_model_state_dict
+    from safetensors.torch import load_file
+    from transformers import AutoModelForCausalLM, GPTNeoXConfig, GPTNeoXForCausalLM
+    from thirdloss.models import build_model, export_weights, logits_of, token_loss
+
+    def local_base(*args, **kwargs):
+        config = GPTNeoXConfig(vocab_size=17, hidden_size=16, num_hidden_layers=1,
+                               num_attention_heads=2, intermediate_size=32, max_position_embeddings=32,
+                               attention_dropout=0.0, hidden_dropout=0.0, use_cache=False)
+        config._attn_implementation = kwargs["attn_implementation"]
+        return GPTNeoXForCausalLM(config)
+
+    monkeypatch.setattr(AutoModelForCausalLM, "from_pretrained", local_base)
+    model = build_model("abstracts", 27, "cpu", tmp_path).double().eval()
+    named = [(name, p) for name, p in model.named_parameters() if p.requires_grad]
+    assert len(named) == 2 and all("query_key_value.lora_" in name for name, _ in named)
+    params = tuple(p for _, p in named)
+    rng = torch.Generator().manual_seed(19)
+    def signs():
+        return tuple(torch.randint(2, p.shape, generator=rng).to(p) * 2 - 1 for p in params)
+
+    u, v, direction = signs(), signs(), signs()
+    ids = torch.tensor([[2, 4, 5, 6], [3, 5, 6, 1]])
+    def penalty():
+        loss = token_loss(logits_of(model, ids), (ids + 1) % 17)
+        return estimate(loss, params, "third", u=u, v=v)
+
+    grad = torch.autograd.grad(penalty(), params)
+    projected = sum((g * d).sum() for g, d in zip(grad, direction, strict=True))
+    initial = tuple(p.detach().clone() for p in params)
+    def set_offset(distance):
+        with torch.no_grad():
+            for p, origin, d in zip(params, initial, direction, strict=True):
+                p.copy_(origin + distance * d)
+
+    h = 2e-6
+    set_offset(h)
+    plus = penalty().detach()
+    set_offset(-h)
+    minus = penalty().detach()
+    assert projected.abs() > 1e-7
+    torch.testing.assert_close(projected, (plus-minus)/(2*h), rtol=2e-5, atol=1e-8)
+
+    path = export_weights(model, tmp_path/"export")
+    payload = load_file(str(path))
+    fresh = build_model("abstracts", 27, "cpu", tmp_path).double().eval()
+    assert set(payload) == set(get_peft_model_state_dict(fresh))
+    set_peft_model_state_dict(fresh, payload)
+    torch.testing.assert_close(logits_of(fresh, ids), logits_of(model, ids), rtol=0, atol=0)
