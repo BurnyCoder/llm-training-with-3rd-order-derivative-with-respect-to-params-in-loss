@@ -24,7 +24,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Variant | Training targets | Seed cohort | Weight width<br>↑ Wider is flatter | RMS weight curvature<br>↓ Less local bending | Common score width<br>↑ More score tolerance |
 | --- | --- | --- | --- | --- | --- |
 | Initial checkpoint | 0 | 0 | Pending | Pending | Pending |
-| Unigram | 0 | 0 | N/A · no weights | N/A · no weights | Pending |
+| Unigram | 0 | 0 | N/A · no weights | N/A · no weights | 0.915 (1/1) |
 | Ordinary AdamW | 2,097,152 | 0 | 15.579 (1/1) | 0.45329 (1/1) | Pending |
 | Hessian trace (1%) | 2,097,152 | 0 | 15.686 (1/1) | 0.44772 (1/1) | Pending |
 | Third derivative (1%) | 2,097,152 | 0 | 15.640 (1/1) | 0.44739 (1/1) | Pending |
@@ -87,6 +87,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | abstracts | pilot | 0 | Ordinary AdamW | 0% | 19.784 | 19.185–20.320 | 0/32 | 1.28684 | +0.00312322 | Pending | Pending | Pending | Pending | [Weight probes](../results/abstracts-pilot-s00-ce-r00/flatness.json) |
 | abstracts | pilot | 0 | Hessian trace | 1% | 19.751 | 19.179–20.260 | 0/32 | 1.18181 | +0.00404879 | Pending | Pending | Pending | Pending | [Weight probes](../results/abstracts-pilot-s00-trace-r01-fp64/flatness.json) |
+| stories | control | 0 | Unigram | 0% | N/A | N/A | N/A | N/A | N/A | 0.915 | 0.913–0.920 | 0/32 | 0.989727 | [Score probes](../results/stories-control-s00-unigram-r00/score-flatness.json) |
 | stories | pilot | 0 | Ordinary AdamW | 0% | 15.579 | 15.297–16.037 | 0/32 | 0.453288 | +0.0036281 | Pending | Pending | Pending | Pending | [Weight probes](../results/stories-pilot-s00-ce-r00/flatness.json) |
 | stories | pilot | 0 | Third derivative | 1% | 15.640 | 15.382–16.118 | 0/32 | 0.447394 | +0.00357761 | Pending | Pending | Pending | Pending | [Weight probes](../results/stories-pilot-s00-third-r01/flatness.json) |
 | stories | pilot | 0 | Hessian trace | 1% | 15.686 | 15.431–16.102 | 0/32 | 0.447721 | +0.00356145 | Pending | Pending | Pending | Pending | [Weight probes](../results/stories-pilot-s00-trace-r01/flatness.json) |
