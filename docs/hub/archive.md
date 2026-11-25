@@ -132,7 +132,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Randomized gradient signs (1%) | 65,536 | 0 | 19.858 (1/1) | 0.73137 (1/1) | 1.0928 (1/1) |
 | Trace + third derivative (1%) | 65,536 | 0 | 19.910 (1/1) | 0.6078 (1/1) | 1.0928 (1/1) |
 | Ordinary AdamW · confirmation | 524,288 | 1–8 | 20.132 (1/8) | 0.55564 (1/8) | 1.1054 (1/8) |
-| Hessian trace · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |
+| Hessian trace · confirmation | 524,288 | 1–8 | 20.270 (1/8) | 0.62496 (1/8) | 1.1057 (1/8) |
 | Third derivative · confirmation | 524,288 | 1–8 | 20.313 (1/8) | 0.60575 (1/8) | 1.1055 (1/8) |
 
 <details><summary>Pythia-410M · adapter weights · other pilot strengths and precision diagnostics</summary>
@@ -159,17 +159,17 @@ Each row uses the same fixed training windows and probe directions within its st
 | RMS Hessian curvature<br>↓ Lower means less local bending | 0.561485 | 0.550762 | 0.550424 |
 | Signed Hessian trace / parameter<br>No general better direction | +0.00418601 | +0.00413246 | +0.0042243 |
 
-**Pythia-410M adapters · development pilots · seeds 0 · 65,536 training targets**
+**Pythia-410M adapters · full-budget checkpoints · seeds 1 · 524,288 training targets**
 
 | Flatness statistic | AdamW | Hessian trace | Third order |
 | --- | --- | --- | --- |
-| Directional width<br>↑ Wider is flatter | 19.784 | 19.751 | 19.922 |
+| Directional width<br>↑ Wider is flatter | 20.132 | 20.270 | 20.313 |
 | Final width range across seeds<br>Descriptive spread | One seed | One seed | One seed |
-| Middle 50% of directions<br>Descriptive spread | 19.185–20.320 | 19.179–20.260 | 19.400–20.421 |
+| Middle 50% of directions<br>Descriptive spread | 19.362–20.737 | 19.558–20.675 | 19.476–20.931 |
 | Rays at limit / tested<br>Measurement coverage | 0/32 | 0/32 | 0/32 |
-| Unperturbed probe NLL<br>↓ Lower fits these windows better | 2.91035 | 2.91018 | 2.91090 |
-| RMS Hessian curvature<br>↓ Lower means less local bending | 1.28684 | 1.18181 | 0.582266 |
-| Signed Hessian trace / parameter<br>No general better direction | +0.00312322 | +0.00404879 | +0.00146738 |
+| Unperturbed probe NLL<br>↓ Lower fits these windows better | 2.84601 | 2.84668 | 2.84606 |
+| RMS Hessian curvature<br>↓ Lower means less local bending | 0.555644 | 0.624955 | 0.605748 |
+| Signed Hessian trace / parameter<br>No general better direction | +0.00201225 | +0.00159403 | +0.00183383 |
 
 For the primary comparison, TinyStories uses all weights and Pythia uses the LoRA factors. Compare widths within each model. The link gives every run, directional bracket and Hessian probe. [Flatness statistics and raw files](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/flatness.md) · [Secondary measurement design](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/amendments/checkpoint-flatness.md)
 
