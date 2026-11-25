@@ -29,7 +29,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Hessian trace (1%) | 2,097,152 | 0 | 15.686 (1/1) | 0.44772 (1/1) | 0.989 (1/1) |
 | Third derivative (1%) | 2,097,152 | 0 | 15.640 (1/1) | 0.44739 (1/1) | 0.989 (1/1) |
 | Squared Hessian norm (3%) | 2,097,152 | 0 | 15.901 (1/1) | 0.42958 (1/1) | 0.989 (1/1) |
-| Randomized gradient signs (1%) | 2,097,152 | 0 | 15.571 (1/1) | 0.4536 (1/1) | Pending |
+| Randomized gradient signs (1%) | 2,097,152 | 0 | 15.571 (1/1) | 0.4536 (1/1) | 0.989 (1/1) |
 | Trace + third derivative (1%) | 2,097,152 | 0 | 15.741 (1/1) | 0.44132 (1/1) | Pending |
 | Ordinary AdamW · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
 | Hessian trace · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
@@ -94,7 +94,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | stories | pilot | 0 | Ordinary AdamW | 0% | 15.579 | 15.297–16.037 | 0/32 | 0.453288 | +0.0036281 | 0.989 | 0.985–0.996 | 0/32 | 0.843296 | [Weight probes](../results/stories-pilot-s00-ce-r00/flatness.json) · [Score probes](../results/stories-pilot-s00-ce-r00/score-flatness.json) |
 | stories | pilot | 0 | Trace + third derivative | 1% | 15.741 | 15.504–16.178 | 0/32 | 0.441322 | +0.00350869 | Pending | Pending | Pending | Pending | [Weight probes](../results/stories-pilot-s00-combined-r01/flatness.json) |
 | stories | pilot | 0 | Squared Hessian norm | 3% | 15.901 | 15.638–16.320 | 0/32 | 0.429575 | +0.00343614 | 0.989 | 0.985–0.996 | 0/32 | 0.843254 | [Weight probes](../results/stories-pilot-s00-hessian_norm-r03/flatness.json) · [Score probes](../results/stories-pilot-s00-hessian_norm-r03/score-flatness.json) |
-| stories | pilot | 0 | Randomized gradient signs | 1% | 15.571 | 15.297–16.031 | 0/32 | 0.453605 | +0.00362814 | Pending | Pending | Pending | Pending | [Weight probes](../results/stories-pilot-s00-sham-r01/flatness.json) |
+| stories | pilot | 0 | Randomized gradient signs | 1% | 15.571 | 15.297–16.031 | 0/32 | 0.453605 | +0.00362814 | 0.989 | 0.985–0.996 | 0/32 | 0.84331 | [Weight probes](../results/stories-pilot-s00-sham-r01/flatness.json) · [Score probes](../results/stories-pilot-s00-sham-r01/score-flatness.json) |
 | stories | pilot | 0 | Third derivative | 1% | 15.640 | 15.382–16.118 | 0/32 | 0.447394 | +0.00357761 | 0.989 | 0.985–0.996 | 0/32 | 0.843216 | [Weight probes](../results/stories-pilot-s00-third-r01/flatness.json) · [Score probes](../results/stories-pilot-s00-third-r01/score-flatness.json) |
 | stories | pilot | 0 | Third derivative | 3% | 15.777 | 15.530–16.252 | 0/32 | 0.436925 | +0.00348104 | 0.989 | 0.985–0.996 | 0/32 | 0.843304 | [Weight probes](../results/stories-pilot-s00-third-r03/flatness.json) · [Score probes](../results/stories-pilot-s00-third-r03/score-flatness.json) |
 | stories | pilot | 0 | Third derivative | 10% | 16.219 | 15.805–16.594 | 0/32 | 0.416066 | +0.00332069 | 0.988 | 0.984–0.996 | 0/32 | 0.844224 | [Weight probes](../results/stories-pilot-s00-third-r10/flatness.json) · [Score probes](../results/stories-pilot-s00-third-r10/score-flatness.json) |
