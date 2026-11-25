@@ -1,6 +1,6 @@
 # Study progress
 
-Updated 2026-11-25T10:27:58+00:00.
+Updated 2026-11-25T10:33:28+00:00.
 
 21 training/control records and 0 final evaluations are complete. This is 17.5% of 120 planned model milestones.
 
@@ -12,9 +12,19 @@ Pilot rates project 1.69 remaining confirmation GPU-hours, excluding validation,
 
 Statistical status: pending. Awaiting confirmatory runs.
 
-**abstracts** has 9 completed runs. The next milestone is determined by the run matrix.
+**abstracts** has 9 completed runs. Current records: abstracts-pilot-s00-hessian_norm-r03-fp64 (initializing, 0 targets).
+
+Pilot rates project 9.54 remaining confirmation GPU-hours, excluding validation, exports and uploads.
 
 Statistical status: pending. Awaiting confirmatory runs.
+
+## One-week feasibility
+
+At the pre-test check on 2026-11-25T10:33:28+00:00, pilot timings projected 22.50 hours for all confirmatory training and scoring, with 141.73 hours of the week available for secondary pilots, setup, publication and interruptions. [Timing and GPU memory by method](../results/feasibility/one-week.json)
+
+## TinyStories hybrid follow-up
+
+0 of 48 full runs and 0 of 8 shared checkpoints complete. awaiting eight paired width measurements. [Per-seed widths and development scores](hybrid/results.md)
 
 ## Monitoring
 

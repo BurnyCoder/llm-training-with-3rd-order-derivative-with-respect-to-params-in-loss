@@ -1,0 +1,43 @@
+{
+  "stage": "abstracts",
+  "candidates": {
+    "trace": [
+      {
+        "ratio": 0.01,
+        "nll": 3.113974483425786,
+        "run": "abstracts-pilot-s00-trace-r01-fp64"
+      },
+      {
+        "ratio": 0.03,
+        "nll": 3.11411782781259,
+        "run": "abstracts-pilot-s00-trace-r03-fp64"
+      },
+      {
+        "ratio": 0.1,
+        "nll": 3.11428017700472,
+        "run": "abstracts-pilot-s00-trace-r10-fp64"
+      }
+    ],
+    "third": [
+      {
+        "ratio": 0.01,
+        "nll": 3.1142473177545655,
+        "run": "abstracts-pilot-s00-third-r01-fp64"
+      },
+      {
+        "ratio": 0.03,
+        "nll": 3.1148602603458824,
+        "run": "abstracts-pilot-s00-third-r03-fp64"
+      },
+      {
+        "ratio": 0.1,
+        "nll": 3.116312030307629,
+        "run": "abstracts-pilot-s00-third-r10-fp64"
+      }
+    ]
+  },
+  "ratios": {
+    "trace": 0.01,
+    "third": 0.01
+  }
+}

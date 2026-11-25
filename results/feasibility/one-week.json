@@ -1,0 +1,77 @@
+{
+  "computed_at": "2026-11-25T10:33:28+00:00",
+  "first_training_update_at": "2026-11-25T06:47:20+00:00",
+  "arms": [
+    {
+      "stage": "stories",
+      "method": "third",
+      "pilot_run": "stories-pilot-s00-third-r01",
+      "pilot_tokens_per_second": 42480.876701096255,
+      "peak_allocated_mib": 608.21533203125,
+      "pilot_loop_seconds": 61.195636899999954,
+      "pilot_finalizing_seconds": 5.0,
+      "projected_test_seconds_per_run": 27.299253957629713,
+      "projected_hours_all_seeds": 1.1596985536836208
+    },
+    {
+      "stage": "stories",
+      "method": "ce",
+      "pilot_run": "stories-pilot-s00-ce-r00",
+      "pilot_tokens_per_second": 123871.07334510093,
+      "peak_allocated_mib": 608.21533203125,
+      "pilot_loop_seconds": 25.10114049999902,
+      "pilot_finalizing_seconds": 4.0,
+      "projected_test_seconds_per_run": 20.474440468222284,
+      "projected_hours_all_seeds": 0.5006301432626987
+    },
+    {
+      "stage": "stories",
+      "method": "trace",
+      "pilot_run": "stories-pilot-s00-trace-r01",
+      "pilot_tokens_per_second": 73185.43191029143,
+      "peak_allocated_mib": 608.21533203125,
+      "pilot_loop_seconds": 36.05276049999884,
+      "pilot_finalizing_seconds": 5.0,
+      "projected_test_seconds_per_run": 27.299253957629713,
+      "projected_hours_all_seeds": 0.7127140843502676
+    },
+    {
+      "stage": "abstracts",
+      "method": "third",
+      "pilot_run": "abstracts-pilot-s00-third-r01-fp64",
+      "pilot_tokens_per_second": 189.1219465392862,
+      "peak_allocated_mib": 2346.30029296875,
+      "pilot_loop_seconds": 367.77427570000145,
+      "pilot_finalizing_seconds": 705.0,
+      "projected_test_seconds_per_run": 670.2049821323709,
+      "projected_hours_all_seeds": 9.594220417183072
+    },
+    {
+      "stage": "abstracts",
+      "method": "ce",
+      "pilot_run": "abstracts-pilot-s00-ce-r00",
+      "pilot_tokens_per_second": 1658.777719349496,
+      "peak_allocated_mib": 2346.30029296875,
+      "pilot_loop_seconds": 60.80243370000244,
+      "pilot_finalizing_seconds": 715.0,
+      "projected_test_seconds_per_run": 679.7930362401302,
+      "projected_hours_all_seeds": 4.180472235200333
+    },
+    {
+      "stage": "abstracts",
+      "method": "trace",
+      "pilot_run": "abstracts-pilot-s00-trace-r01-fp64",
+      "pilot_tokens_per_second": 434.53219157783866,
+      "peak_allocated_mib": 2346.30029296875,
+      "pilot_loop_seconds": 172.96475099999952,
+      "pilot_finalizing_seconds": 755.0,
+      "projected_test_seconds_per_run": 718.1452526711671,
+      "projected_hours_all_seeds": 6.348585023713697
+    }
+  ],
+  "hours_left_in_week": 164.23111111111112,
+  "projected_confirmation_and_scoring_hours": 22.49632045739369,
+  "hours_available_for_other_work": 141.73479065371743,
+  "fits_measured_budget": true,
+  "scope": "All 48 confirmations and test evaluations. Remaining secondary pilots, process startup, publishing, downtime and retries use the reported headroom. Times are observational projections."
+}
