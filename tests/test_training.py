@@ -9,8 +9,8 @@ from safetensors.torch import load_file
 from thirdloss import train
 from thirdloss.models import StoryConfig, StoryTransformer
 from thirdloss.objectives import add_penalty
-from thirdloss.records import read_json, write_json
-from thirdloss.windows import TrainingWindows, gate, generator
+from thirdloss.records import write_json
+from thirdloss.windows import gate
 
 
 def small_model(stage, seed, device, storage):
@@ -77,11 +77,10 @@ def test_step_recovery_matches_uninterrupted_weights(tmp_path,monkeypatch):
         store2 = tmp_path/"store2"
         shutil.copytree(root/"data",store2/"data")
         normal = train.run_one(reference,store2,"stories","third","smoke",seed,0.03,torch.device("cpu"))
-        for path, other in [(root,store2)]:
-            rel = f"checkpoints/{normal['id']}/export/model.safetensors"
-            first, second = load_file(str(path/rel)),load_file(str(other/rel))
-            for name in first:
-                torch.testing.assert_close(first[name],second[name],rtol=0,atol=0)
+        rel = f"checkpoints/{normal['id']}/export/model.safetensors"
+        first, second = load_file(str(root/rel)),load_file(str(store2/rel))
+        for name in first:
+            torch.testing.assert_close(first[name],second[name],rtol=0,atol=0)
         assert normal["dev_nll"]==resumed["dev_nll"]
     finally:
         torch.set_num_threads(prior_threads)

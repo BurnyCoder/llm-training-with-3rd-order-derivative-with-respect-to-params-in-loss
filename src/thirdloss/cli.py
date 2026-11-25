@@ -34,7 +34,7 @@ def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--project",type=Path,default=Path.cwd())
     parsers = p.add_subparsers(dest="action",required=True)
-    for action in ("prepare","train","study","freeze","evaluate","report","dashboard","publish","progress"):
+    for action in ("prepare","train","study","freeze","evaluate","report","dashboard","publish","progress","verify"):
         sub = parsers.add_parser(action)
         if action in {"prepare","study"}:
             sub.add_argument("--stage",choices=(*HORIZONS,"both"),default="both")
@@ -63,6 +63,9 @@ def main(argv=None):
     args = parser().parse_args(argv)
     project = args.project.resolve()
     storage = storage_root(project)
+    if args.action=="verify":
+        from .verification import verify
+        return verify(project)
     if args.action=="dashboard":
         return dashboard(project,args.port)
     if args.action in {"report","progress","publish"}:

@@ -14,6 +14,29 @@ from torch.func import jacfwd
 from thirdloss.penalties import estimate
 
 
+@pytest.mark.skipif(not torch.cuda.is_available(),reason="CUDA hardware unavailable")
+def test_gpu_production_decoder_third_order_update_matches_cpu():
+    """Verify the same fourth derivative on the actual eager CUDA kernels and CPU FP64."""
+    from copy import deepcopy
+    from thirdloss.models import StoryConfig, StoryTransformer, token_loss
+    torch.manual_seed(7)
+    cpu = StoryTransformer(StoryConfig(vocab_size=7,width=8,heads=2,layers=1,hidden=12,context=4)).double()
+    gpu = deepcopy(cpu).cuda()
+    ids = torch.tensor([[2,3,1,0],[4,2,5,3]])
+    u = tuple(torch.randint(2,p.shape).double()*2-1 for p in cpu.parameters())
+    v = tuple(torch.randint(2,p.shape).double()*2-1 for p in cpu.parameters())
+    def calculate(model,device):
+        parameters = tuple(model.parameters())
+        loss = token_loss(model(ids.to(device)),((ids+1)%7).to(device))
+        term = estimate(loss,parameters,"third",tuple(p.to(device) for p in u),tuple(p.to(device) for p in v))
+        gradient = torch.autograd.grad(term,parameters)
+        return term.detach().cpu(),torch.cat([g.flatten() for g in gradient]).detach().cpu()
+    expected = calculate(cpu,"cpu")
+    actual = calculate(gpu,"cuda")
+    for reference,observed in zip(expected,actual,strict=True):
+        torch.testing.assert_close(observed,reference,rtol=2e-8,atol=1e-5)
+
+
 @pytest.fixture(scope="module", autouse=True)
 def small_cpu_tensors():
     """Keep the tiny reference calculations deterministic and inexpensive on a CPU."""
