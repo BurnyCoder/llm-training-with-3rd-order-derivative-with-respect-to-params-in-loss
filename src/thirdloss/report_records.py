@@ -207,9 +207,15 @@ def study_snapshot(root: Path = Path(".")) -> dict:
         if folder.is_dir() and any((folder / f).is_file() for f in ("config.json", "summary.json", "failure.json", "state.json")):
             runs.append(run_record(folder))
     exclusions = read_json(directory/"verification"/"numerical-exclusions.json")
+    restarts = {}
+    for path in sorted((directory/"verification").glob("*-system-restart.json")):
+        audit = read_json(path)
+        restarts.setdefault(audit["run"],[]).append({**audit,"source":path.name})
     for run in runs:
         if run["id"] in exclusions:
             run.update(registered_phase=run["phase"], phase="diagnostic", precision_audit=exclusions[run["id"]])
+        if run["id"] in restarts:
+            run["restart_audits"] = restarts[run["id"]]
     stages = {stage: analyze_stage(runs, stage) for stage in STAGES}
     for run in runs:
         run["events_total"] = len(run["events"])

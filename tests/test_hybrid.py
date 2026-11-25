@@ -150,3 +150,42 @@ def test_joint_week_forecast_counts_shared_prefix_once_and_all_eight_replays(tmp
     assert forecast["remaining_hybrid_hours"]==7*6+8*1
     assert forecast["combined_hours"]==74 and forecast["hours_left_in_week"]==162
     assert forecast["fits_measured_budget"]
+
+
+def test_restart_timing_distinguishes_real_elapsed_time_from_repeated_outages(tmp_path):
+    from thirdloss.progress import hybrid_uptime
+    trunk="stories-branch-s21-trunk-r01"
+    adaptive="stories-hybrid-s21-adaptive-r01"
+    always="stories-hybrid-s21-always-r01"
+    day="2026-11-25T"
+    def at(hour):
+        return f"{day}{hour:02d}:00:00+00:00"
+    def gap(start,end):
+        return {"source":"fixture.json","last_pre_restart_timestamp":at(start),"resume_observed_at":at(end)}
+    forecast={"run_ids":[trunk,adaptive,always],"as_of":at(18),"remaining_hybrid_hours":80.,"combined_hours":100.}
+    study={"runs":[{"id":trunk,"finished_at":at(9)},{"id":adaptive,"finished_at":at(13),"restart_audits":[gap(10,11)]},
+                   {"id":always,"finished_at":at(18),"restart_audits":[gap(14,17)]}]}
+    adjusted=hybrid_uptime(tmp_path,study,forecast)
+    assert adjusted["observed_gap_hours"]==4. and adjusted["replay_proxy_gap_hours"]==1.
+    assert adjusted["combined_hours"]==100-7*4-8
+    assert forecast["combined_hours"]==100.
+
+
+def test_restart_audit_replays_only_uncommitted_logged_updates(tmp_path):
+    import json
+    from thirdloss.records import write_json
+    from thirdloss.verification import audit_restart
+    data=tmp_path/"results"/"run"
+    write_json(data/"config.json",{"id":"run"})
+    logs=tmp_path/"logs"
+    logs.mkdir()
+    def row(step,minute,loss):
+        return {"timestamp":f"2026-11-25T10:{minute:02d}:00+00:00","step":step,"loss":loss,"gradient_norm":1.}
+    old=[row(8,0,2.),row(9,1,1.9),row(10,2,1.8)]
+    new=[row(9,5,1.9),row(10,6,1.80001),row(11,7,1.7)]
+    for path,rows in ((logs/"run-01.jsonl",old),(logs/"run-02.jsonl",new),(data/"events.jsonl",[old[0],*new])):
+        path.write_text("".join(json.dumps(r)+"\n" for r in rows),encoding="utf-8")
+    audit=audit_restart(tmp_path,"run")
+    assert audit["resume_checkpoint_step"]==8 and audit["replayed_steps"]==2
+    assert audit["advanced_past_prior_run"] and audit["previous_log"]=="run-01.jsonl"
+    assert [r["same_measurements"] for r in audit["logged_replay_observations"]]==[True,False]

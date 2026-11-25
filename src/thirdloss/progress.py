@@ -102,6 +102,14 @@ def progress(project):
                      f"confirmations and final scoring, the projected remaining work at the check was "
                      f"{extra['combined_hours']:.2f} hours with {extra['hours_left_in_week']:.2f} hours left in the week. "
                      "[Wall-time assumptions, measured memory and inputs](../results/feasibility/hybrid-week.json)")
+        normal = hybrid_uptime(project,study,extra)
+        if normal:
+            lines.append(f"The first seed included {normal['observed_gap_hours']:.2f} hours between the last "
+                         "pre-restart update and the first resumed update. Excluding repetitions of that gap "
+                         f"projects {normal['remaining_hybrid_hours']:.2f} hours of remaining hybrid work and "
+                         f"{normal['combined_hours']:.2f} hours with the original confirmations and scoring. "
+                         "Both forecasts use actual observed wall time and apply from the first-seed checkpoint. "
+                         "[Restart-adjusted timing](../results/feasibility/hybrid-uptime.json)")
     lines += ["## Monitoring","Inspect runs lasting over 10, 30 and 60 minutes at 5, 15 and 30 minute intervals "
               "respectively. The live dashboard refreshes between those checks. "
               "[Study design](plan.md) · [Run matrix](planned-runs.md) · [Experiment ledger](experiments/experiments.md)"]
@@ -146,3 +154,26 @@ def hybrid_schedule(project,primary):
                       "Remaining adapter pilots and tool or network interruptions use the residual headroom."}
     write_json(out,record)
     return record
+
+
+def hybrid_uptime(project,study,forecast):
+    """Keep the original forecast and expose the effect of extrapolating a documented system outage."""
+    jobs = {r["id"]:r for r in study["runs"] if r["id"] in forecast["run_ids"]}
+    def stamp(value):
+        return datetime.fromisoformat(value).timestamp()
+    gaps = [(stamp(a["last_pre_restart_timestamp"]),stamp(a["resume_observed_at"]),a["source"])
+            for r in jobs.values() for a in r.get("restart_audits",[])]
+    if not gaps:
+        return None
+    replay_start = stamp(jobs["stories-branch-s21-trunk-r01"]["finished_at"])
+    replay_end = stamp(jobs["stories-hybrid-s21-adaptive-r01"]["finished_at"])
+    observed = sum(end-start for start,end,_ in gaps)/3600
+    replay = sum(max(0,min(end,replay_end)-max(start,replay_start)) for start,end,_ in gaps)/3600
+    # Seven future seed blocks repeat the measured six jobs; eight replay suffixes use the adaptive interval.
+    repeated = 7*observed+8*replay
+    result = {"as_of":forecast["as_of"],"observed_gap_hours":observed,"replay_proxy_gap_hours":replay,
+              "sources":[source for _,_,source in gaps],"remaining_hybrid_hours":forecast["remaining_hybrid_hours"]-repeated,
+              "combined_hours":forecast["combined_hours"]-repeated,"basis":"Excludes repeated copies of the observed "
+              "intervals without logged updates. Retains the first actual interruption in elapsed study time."}
+    write_json(project/"results"/"feasibility"/"hybrid-uptime.json",result)
+    return result

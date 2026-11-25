@@ -163,6 +163,18 @@ def _experiments(root, study):
                 material += ["## Recorded interruptions", _table(
                     [[failure["timestamp"],failure["error"]] for failure in run["failures"]],
                     ["Time (UTC)","Recorded exception"])]
+            restarts = []
+            for audit in run.get("restart_audits",[]):
+                samples = audit["logged_replay_observations"]
+                loss_diff = max(row["absolute_loss_delta"] for row in samples)
+                grad_diff = max(row["absolute_gradient_norm_delta"] for row in samples)
+                restarts.append(f"After the system restart, training resumed from update {audit['resume_checkpoint_step']:,} "
+                                f"and replayed {audit['replayed_steps']} updates. Across {len(samples)} logged overlaps, "
+                                f"the maximum absolute training NLL difference was {loss_diff:.4g} nats per target "
+                                f"and the maximum difference in the unclipped gradient norm was {grad_diff:.4g}. "
+                                f"[Replay measurements](../../../results/verification/{audit['source']})")
+            if restarts:
+                material += ["## Restart verification",*restarts]
             if run.get("precision_audit"):
                 material += ["## Numerical diagnostic",run["precision_audit"]["reason"],
                              "[Precision amendment](../../amendments/adapter-precision.md)"]
@@ -174,6 +186,8 @@ def _experiments(root, study):
                              *[_sample(sample) for sample in run["samples"]]]
             atomic_text(base / key / "experiment.md", "\n\n".join(material) + "\n")
             observation = _run_learning(run)
+            if restarts:
+                observation += " "+" ".join(restarts)
             if run.get("precision_audit"):
                 observation = run["precision_audit"]["reason"]
             if run.get("failures"):

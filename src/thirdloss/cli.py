@@ -36,7 +36,7 @@ def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--project",type=Path,default=Path.cwd())
     parsers = p.add_subparsers(dest="action",required=True)
-    for action in ("prepare","train","study","hybrid","freeze","evaluate","report","dashboard","publish","audit-hub","progress","verify"):
+    for action in ("prepare","train","study","hybrid","freeze","evaluate","report","dashboard","publish","audit-hub","audit-restart","progress","verify"):
         sub = parsers.add_parser(action)
         if action in {"prepare","study"}:
             sub.add_argument("--stage",choices=(*HORIZONS,"both"),default="both")
@@ -59,7 +59,7 @@ def parser():
             sub.add_argument("--microbatch",type=int)
         if action in {"train","study","hybrid","evaluate"}:
             sub.add_argument("--publish",action="store_true",help="Publish results to the configured project accounts")
-        if action=="evaluate":
+        if action in {"evaluate","audit-restart"}:
             sub.add_argument("run_id")
         if action=="dashboard":
             sub.add_argument("--port",type=int,default=8765)
@@ -76,6 +76,10 @@ def main(argv=None):
     if args.action=="audit-hub":
         from .hub_archive import audit_archive
         print(json.dumps(audit_archive(project),indent=2))
+        return
+    if args.action=="audit-restart":
+        from .verification import audit_restart
+        print(json.dumps(audit_restart(project,args.run_id),indent=2))
         return
     if args.action=="verify":
         from .verification import verify
