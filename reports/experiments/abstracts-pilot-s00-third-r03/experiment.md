@@ -10,12 +10,8 @@ Training time is — seconds. Peak allocated GPU memory is — MiB. Development 
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/abstracts-pilot-s00-third-r03/config.json)
 
-## Recorded failure
+## Recorded interruptions
 
-**Prompt**
-
-    Error
-
-**Model continuation**
-
-    FloatingPointError('Nonfinite or zero third calibration norm at draw 0: inf')
+| Time (UTC) | Recorded exception |
+| --- | --- |
+| 2026-11-25T07:00:21+00:00 | FloatingPointError('Nonfinite or zero third calibration norm at draw 0: inf') |
