@@ -63,7 +63,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Hessian trace (1%) | 65,536 | 0 | 19.751 (1/1) | 1.1818 (1/1) | 1.0929 (1/1) |
 | Third derivative (1%) | 65,536 | 0 | 19.922 (1/1) | 0.58227 (1/1) | 1.0928 (1/1) |
 | Squared Hessian norm (3%) | 65,536 | 0 | 19.853 (1/1) | 1.4535 (1/1) | 1.0927 (1/1) |
-| Randomized gradient signs (1%) | 65,536 | 0 | Pending | Pending | Pending |
+| Randomized gradient signs (1%) | 65,536 | 0 | 19.858 (1/1) | 0.73137 (1/1) | 1.0928 (1/1) |
 | Trace + third derivative (1%) | 65,536 | 0 | Pending | Pending | Pending |
 | Ordinary AdamW · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |
 | Hessian trace · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |
@@ -89,6 +89,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | abstracts | control | 0 | Unigram | 0% | N/A | N/A | N/A | N/A | N/A | 0.9150<br>[0.91494, 0.91511] | 0.913–0.924 | 0/32 | 0.993798 | [Score probes](../results/abstracts-control-s00-unigram-r00/score-flatness.json) |
 | abstracts | pilot | 0 | Ordinary AdamW | 0% | 19.784 | 19.185–20.320 | 0/32 | 1.28684 | +0.00312322 | 1.0930<br>[1.09295, 1.09314] | 1.090–1.100 | 0/32 | 0.69199 | [Weight probes](../results/abstracts-pilot-s00-ce-r00/flatness.json) · [Score probes](../results/abstracts-pilot-s00-ce-r00/score-flatness.json) |
 | abstracts | pilot | 0 | Squared Hessian norm | 3% | 19.853 | 19.289–20.268 | 0/32 | 1.45346 | +0.0043099 | 1.0927<br>[1.09265, 1.09284] | 1.089–1.100 | 0/32 | 0.692295 | [Weight probes](../results/abstracts-pilot-s00-hessian_norm-r03-fp64/flatness.json) · [Score probes](../results/abstracts-pilot-s00-hessian_norm-r03-fp64/score-flatness.json) |
+| abstracts | pilot | 0 | Randomized gradient signs | 1% | 19.858 | 19.219–20.285 | 0/32 | 0.731368 | +0.000460964 | 1.0928<br>[1.09274, 1.09293] | 1.090–1.100 | 0/32 | 0.692161 | [Weight probes](../results/abstracts-pilot-s00-sham-r01-fp64/flatness.json) · [Score probes](../results/abstracts-pilot-s00-sham-r01-fp64/score-flatness.json) |
 | abstracts | pilot | 0 | Third derivative | 1% | 19.922 | 19.400–20.421 | 0/32 | 0.582266 | +0.00146738 | 1.0928<br>[1.09274, 1.09293] | 1.090–1.100 | 0/32 | 0.692147 | [Weight probes](../results/abstracts-pilot-s00-third-r01-fp64/flatness.json) · [Score probes](../results/abstracts-pilot-s00-third-r01-fp64/score-flatness.json) |
 | abstracts | diagnostic | 0 | Third derivative | 3% | 19.885 | 19.294–20.399 | 0/32 | 0.587972 | +0.00187752 | 1.0932<br>[1.09307, 1.09327] | 1.089–1.100 | 0/32 | 0.691916 | [Weight probes](../results/abstracts-pilot-s00-third-r03/flatness.json) · [Score probes](../results/abstracts-pilot-s00-third-r03/score-flatness.json) |
 | abstracts | pilot | 0 | Third derivative | 3% | 19.968 | 19.416–20.312 | 0/32 | 0.56999 | +0.00201241 | 1.0927<br>[1.09262, 1.09281] | 1.089–1.100 | 0/32 | 0.692521 | [Weight probes](../results/abstracts-pilot-s00-third-r03-fp64/flatness.json) · [Score probes](../results/abstracts-pilot-s00-third-r03-fp64/score-flatness.json) |
