@@ -17,4 +17,6 @@ The seed range and directional spread describe variability. The rays at the limi
 
 ## Secondary checkpoint measurements
 
-Awaiting the first saved primary-checkpoint measurement.
+| Stage | Horizon | Seed | Arm | Width ↑ | Middle 50% of directions | Rays at limit / tested | RMS curvature ↓ | Signed trace / parameter | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| stories | pilot | 0 | Ordinary AdamW | 15.579 | 15.297–16.037 | 0/32 | 0.453288 | +0.0036281 | [All probes](../results/stories-pilot-s00-ce-r00/flatness.json) |
