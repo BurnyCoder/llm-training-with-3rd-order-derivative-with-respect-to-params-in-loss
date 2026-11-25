@@ -170,7 +170,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Ordinary AdamW | 65,536 | 0 | 19.784 (1/1) | 1.2868 (1/1) | 1.0930 (1/1) |
 | Hessian trace (1%) | 65,536 | 0 | 19.751 (1/1) | 1.1818 (1/1) | 1.0929 (1/1) |
 | Third derivative (1%) | 65,536 | 0 | 19.922 (1/1) | 0.58227 (1/1) | 1.0928 (1/1) |
-| Squared Hessian norm (3%) | 65,536 | 0 | Pending | Pending | Pending |
+| Squared Hessian norm (3%) | 65,536 | 0 | 19.853 (1/1) | 1.4535 (1/1) | 1.0927 (1/1) |
 | Randomized gradient signs (1%) | 65,536 | 0 | Pending | Pending | Pending |
 | Trace + third derivative (1%) | 65,536 | 0 | Pending | Pending | Pending |
 | Ordinary AdamW · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |

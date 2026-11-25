@@ -1,6 +1,6 @@
 # Study progress
 
-Updated 2026-11-25T18:55:18+00:00.
+Updated 2026-11-25T19:00:49+00:00.
 
 22 training/control records and 0 final evaluations are complete. This is 18.3% of 120 planned model milestones.
 
@@ -35,17 +35,17 @@ The first seed included 4.11 hours between the last pre-restart update and the f
 | Stage | Weight geometry | Shared score geometry | Median pilot cycle | Longest pilot cycle |
 | --- | --- | --- | --- | --- |
 | stories | 39/91 | 40/92 | 34 s | 37 s |
-| abstracts | 9/36 | 10/37 | 193 s | 311 s |
+| abstracts | 10/36 | 11/37 | 193 s | 311 s |
 
 Weight geometry covers every neural checkpoint. Score geometry also covers the two unigram references. [All arms and their measurements](flatness.md#every-variant-and-baseline)
 
-Giving each predictor still missing a measurement one complete native pilot cycle projects 1.94 additional hours at each stage’s median or 2.87 hours at its longest observed cycle. These scenarios include the observed reporting and upload time. Existing hybrid widths can be reused. The shared score calculation, archive growth and future interruptions can change the total. [Timestamped pilot measurements](../results/feasibility/flatness-pilot-wall-time.json) · [Archived timing log](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/logs/checkpoint-flatness-20261125T163331Z.log)
+Giving each predictor still missing a measurement one complete native pilot cycle projects 1.89 additional hours at each stage’s median or 2.78 hours at its longest observed cycle. These scenarios include the observed reporting and upload time. Existing hybrid widths can be reused. The shared score calculation, archive growth and future interruptions can change the total. [Timestamped pilot measurements](../results/feasibility/flatness-pilot-wall-time.json) · [Archived timing log](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/logs/checkpoint-flatness-20261125T163331Z.log)
 
 ## Overall completion and remaining time
 
-Across training, references, final tests, hybrid runs and flatness evaluations, **100/305 milestones are complete (32.8%)** and 205 remain. Each milestone has equal weight in this count. Data preparation, software and publications are recorded separately.
+Across training, references, final tests, hybrid runs and flatness evaluations, **101/305 milestones are complete (33.1%)** and 204 remain. Each milestone has equal weight in this count. Data preparation, software and publications are recorded separately.
 
-Projected remaining machine time is **29.33–30.76 hours**, including model publication and geometry. There are 155.87 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
+Projected remaining machine time is **29.27–30.68 hours**, including model publication and geometry. There are 155.78 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
 
 The final seed-sensitivity analysis is pending. The queue completes both stages’ single-seed comparisons and original frozen test evaluations before the remaining hybrid replications. All checkpoint measurements precede the final across-seed analysis. [Queue amendment](amendments/seed-sensitivity-last.md) · [Final report](seed-sensitivity.md)
 
