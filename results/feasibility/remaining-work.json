@@ -1,9 +1,9 @@
 {
-  "as_of": "2026-11-25T20:55:58+00:00",
+  "as_of": "2026-11-25T20:58:20+00:00",
   "completed": 111,
   "planned": 305,
   "remaining": 194,
-  "remaining_hours_in_week": 153.85611111111112,
+  "remaining_hours_in_week": 153.81666666666666,
   "hybrid_blocks_left_including_partial": 4,
   "replays_left": 5,
   "remaining_primary_publications": 93,
@@ -21,22 +21,82 @@
       "complete": 13
     }
   },
+  "adapter_gate_timing": {
+    "third": {
+      "pilot_run": "abstracts-pilot-s00-third-r01-fp64",
+      "pilot_calls": 5,
+      "observed_calls": 5,
+      "mean_host_seconds_per_call": 56.75171285999968,
+      "registered_calls_by_seed": {
+        "1": 58,
+        "2": 72,
+        "3": 67,
+        "4": 61,
+        "5": 53,
+        "6": 68,
+        "7": 70,
+        "8": 68
+      },
+      "remaining_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "remaining_calls": 517,
+      "extrapolated_pilot_calls": 320.0,
+      "adjustment_hours": 3.105579842616649
+    },
+    "trace": {
+      "pilot_run": "abstracts-pilot-s00-trace-r01-fp64",
+      "pilot_calls": 5,
+      "observed_calls": 5,
+      "mean_host_seconds_per_call": 20.019096819999685,
+      "registered_calls_by_seed": {
+        "1": 58,
+        "2": 72,
+        "3": 67,
+        "4": 61,
+        "5": 53,
+        "6": 68,
+        "7": 70,
+        "8": 68
+      },
+      "remaining_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "remaining_calls": 517,
+      "extrapolated_pilot_calls": 320.0,
+      "adjustment_hours": 1.0954894648722049
+    }
+  },
   "scenarios": {
     "typical": {
-      "confirmatory_training_and_test": 22.220543706504806,
+      "confirmatory_training_and_test": 26.42161301399366,
       "hybrid_training_and_widths": 2.843339459101358,
       "secondary_pilots": 0.0,
       "flatness_and_its_publication": 1.7494444444444444,
       "original_model_publications": 1.3791957995833335,
-      "total_hours": 28.192523409633942
+      "total_hours": 32.39359271712279
     },
     "slower": {
-      "confirmatory_training_and_test": 22.220543706504806,
+      "confirmatory_training_and_test": 26.42161301399366,
       "hybrid_training_and_widths": 2.843339459101358,
       "secondary_pilots": 0.0,
       "flatness_and_its_publication": 2.5769444444444445,
       "original_model_publications": 1.8600453633333334,
-      "total_hours": 29.50087297338394
+      "total_hours": 33.7019422808728
     }
   }
 }
