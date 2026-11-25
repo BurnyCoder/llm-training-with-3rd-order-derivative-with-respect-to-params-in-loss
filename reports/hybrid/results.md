@@ -1,6 +1,6 @@
 # Hybrid schedules on TinyStories
 
-TinyStories hybrid follow-up: 11 of 48 full runs and 3 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
+TinyStories hybrid follow-up: 12 of 48 full runs and 3 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
 
 [Frozen protocol and decision rule](preregistration.md) · [Interactive measurement and run selector](../../docs/index.html#curves)
 
@@ -46,6 +46,9 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 22 | Hessian trace | [2048](../../results/stories-hybrid-s22-trace-r01/width-2048.json) | 15.40259 | 15.40137 | 15.40381 | 0 | 2.81658 | 5.80 |
 | 22 | Hessian trace | [3072](../../results/stories-hybrid-s22-trace-r01/width-3072.json) | 13.94922 | 13.94824 | 13.95020 | 0 | 2.65428 | 5.98 |
 | 22 | Hessian trace | [4096](../../results/stories-hybrid-s22-trace-r01/width-4096.json) | 13.21484 | 13.21387 | 13.21582 | 0 | 2.60448 | 5.89 |
+| 23 | Curvature-dependent hybrid | [2048](../../results/stories-hybrid-s23-adaptive-r01/width-2048.json) | 14.99414 | 14.99316 | 14.99512 | 0 | 2.80132 | 7.17 |
+| 23 | Curvature-dependent hybrid | [3072](../../results/stories-hybrid-s23-adaptive-r01/width-3072.json) | 13.89697 | 13.89600 | 13.89795 | 0 | 2.64069 | 6.27 |
+| 23 | Curvature-dependent hybrid | [4096](../../results/stories-hybrid-s23-adaptive-r01/width-4096.json) | 13.04834 | 13.04736 | 13.04932 | 0 | 2.59710 | 6.49 |
 
 ![Median directional width by seed and training arm](../../docs/figures/hybrid_width.png)
 
@@ -67,6 +70,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 22 | Cross-seed replay | 2.546307 | 0.46256 | 0.40627 | [2176](../../results/stories-hybrid-s22-replay-r01/schedule.json) | 1.38036e-15 | 36,853 | 617.3 | 2,090.3 |
 | 22 | Stronger trace | 2.546388 | 0.46254 | 0.40627 | [4096](../../results/stories-hybrid-s22-strong-r01/schedule.json) | 0 | 60,263 | 608.2 | 2,090.3 |
 | 22 | Hessian trace | 2.546305 | 0.46257 | 0.40627 | [4096](../../results/stories-hybrid-s22-trace-r01/schedule.json) | 0 | 61,689 | 608.2 | 2,088.9 |
+| 23 | Curvature-dependent hybrid | 2.542260 | 0.46318 | 0.45587 | [2064](../../results/stories-hybrid-s23-adaptive-r01/schedule.json) | 1.00616e-15 | 37,872 | 617.3 | 2,090.3 |
 
 ## Stronger trace at the common checkpoint
 
