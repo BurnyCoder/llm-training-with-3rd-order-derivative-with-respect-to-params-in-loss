@@ -132,7 +132,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Trace + third derivative (1%) | 65,536 | 0 | 19.910 (1/1) | 0.6078 (1/1) | 1.0928 (1/1) |
 | Ordinary AdamW · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |
 | Hessian trace · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |
-| Third derivative · confirmation | 524,288 | 1–8 | Pending | Pending | Pending |
+| Third derivative · confirmation | 524,288 | 1–8 | 20.313 (1/8) | 0.60575 (1/8) | 1.1055 (1/8) |
 
 <details><summary>Pythia-410M · adapter weights · other pilot strengths and precision diagnostics</summary>
 
