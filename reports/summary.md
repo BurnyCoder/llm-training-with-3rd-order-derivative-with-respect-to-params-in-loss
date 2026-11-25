@@ -1,6 +1,6 @@
 # Study summary
 
-Recorded 41 runs, including 40 with a completed summary.
+Recorded 42 runs, including 40 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
