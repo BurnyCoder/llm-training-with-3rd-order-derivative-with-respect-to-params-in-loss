@@ -1,6 +1,6 @@
 # Study summary
 
-Recorded 57 runs, including 57 with a completed summary.
+Recorded 58 runs, including 58 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (1 of 8 full-horizon training triplets).
 
@@ -20,6 +20,7 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 
 | Stage | Phase | Method | Ratio | Tokens/run | Runs | Median dev NLL | Median dev PPL | Median test NLL | Median test PPL |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Research abstracts | confirm | Ordinary AdamW | 0.000 | 524,288 | 1 | 3.0368 | 20.8387 | — | — |
 | Research abstracts | confirm | Third derivative | 0.010 | 524,288 | 1 | 3.0368 | 20.8375 | — | — |
 | Research abstracts | control | Initial checkpoint | 0.000 | 0 | 1 | 3.2517 | 25.8335 | — | — |
 | Research abstracts | control | Unigram | 0.000 | 0 | 1 | 7.3306 | 1,526.3141 | — | — |
