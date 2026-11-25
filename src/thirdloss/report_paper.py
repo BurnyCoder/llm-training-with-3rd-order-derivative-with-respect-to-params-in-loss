@@ -246,6 +246,17 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "development checkpoint within the shortest final training time of that seed triple. "
       f"{_cite('seeds')} · {_link(REPOSITORY + '/blob/main/reports/preregistration.md', 'Decision rule')}")
     p("Results", "heading")
+    numerical = study.get("numerics",{})
+    single = numerical.get("pythia-joint-cuda",{})
+    double = numerical.get("pythia-fp64-agreement",{})
+    if single and double:
+        p("Numerical accuracy on the pretrained checkpoint", "subheading")
+        p(f"For identical Pythia weights and probe signs, changing the FP32 CUDA batching gave a "
+          f"{100*single['relative_gradient_difference']:.1f}% relative discrepancy in the training gradient. "
+          f"In FP64 the CPU and GPU gradients agreed to relative error {double['relative_gradient_difference']:.2g}. "
+          "The initial FP32 pilot is retained as a diagnostic. The amended adapter arms compute their "
+          "penalties in FP64 on the CPU and use CUDA for the ordinary loss and optimizer updates. "
+          f"{_link(REPOSITORY + '/blob/main/reports/amendments/adapter-precision.md','Pre-test amendment and raw checks')}")
     run_count = len(study["runs"])
     done_count = sum(completed(run) for run in study["runs"])
     p(f"The ledger contains {run_count} runs and {done_count} completed summaries. "

@@ -19,6 +19,17 @@ def time_now():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+def peak_process_mib():
+    """OS process working-set high-water mark, including earlier activity in this interpreter."""
+    if os.name=="nt":
+        import psutil
+        return psutil.Process().memory_info().peak_wset/2**20
+    import resource
+    import sys
+    usage = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return usage/(2**20 if sys.platform=="darwin" else 1024)
+
+
 def storage_root(project):
     load_dotenv(project / ".env")
     root = Path(os.environ.get("THIRDLOSS_STORAGE", "storage")).expanduser()
@@ -70,7 +81,10 @@ class Recorder:
 
 
 def run_name(stage, method, phase, seed, ratio):
-    return f"{stage}-{phase}-s{seed:02d}-{method}-r{round(ratio * 100):02d}"
+    # Preserve the original FP32 adapter pilot under its published ID. Amended derivative
+    # runs have distinct records, weights, RNG checkpoints and calibrated coefficients.
+    suffix = "-fp64" if stage=="abstracts" and method in METHODS and method!="ce" else ""
+    return f"{stage}-{phase}-s{seed:02d}-{method}-r{round(ratio * 100):02d}{suffix}"
 
 
 def setup_device(requested):

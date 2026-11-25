@@ -78,3 +78,32 @@ def verify_pretrained(project,device):
     write_json(project/"results"/"verification"/f"pythia-joint-{device.type}.json",result)
     print(result,flush=True)
     return result
+
+
+def benchmark_scoring(project,device):
+    """Measure physical inference batch sizes on the same spaced *training* windows."""
+    from .evaluation import score
+    storage=storage_root(project)
+    model=build_model("abstracts",0,device,storage).eval()
+    path=storage/"data"/"abstracts"/"train.bin"
+    records=[]
+    for batch in (2,8,16,32):
+        score(model,path,device,batch,limit_windows=16)
+        if device.type=="cuda":
+            torch.cuda.reset_peak_memory_stats(device)
+        start=time.perf_counter()
+        metrics=score(model,path,device,batch,limit_windows=256)
+        seconds=time.perf_counter()-start
+        records.append(dict(batch=batch,seconds=seconds,targets_per_second=metrics["tokens"]/seconds,
+                            peak_allocated_mib=torch.cuda.max_memory_allocated(device)/2**20 if device.type=="cuda" else None,**metrics))
+    reference=records[0]
+    qualified=[r for r in records[1:] if abs(r["nll"]-reference["nll"])<=2e-6
+               and abs(r["accuracy"]-reference["accuracy"])*r["tokens"]<=1
+               and r["targets_per_second"]>=1.1*reference["targets_per_second"]
+               and (r["peak_allocated_mib"] is None or r["peak_allocated_mib"]<=7*1024)]
+    chosen=max(qualified,key=lambda r:r["targets_per_second"]) if qualified else reference
+    result={"timestamp":time_now(),"split":"train","device":str(device),"initial_trainable_sha256":trainable_digest(model),
+            "records":records,"selected_batch":chosen["batch"]}
+    write_json(project/"results"/"verification"/"pythia-scoring-batches.json",result)
+    print(result,flush=True)
+    return result

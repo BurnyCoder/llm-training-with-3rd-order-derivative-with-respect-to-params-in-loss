@@ -38,10 +38,13 @@ FIELDS = (
     "freeze_id", "test_manifest_sha256", "test_tokens", "data_manifest_sha256",
     "token_budget", "batch_windows", "microbatch", "context", "weights_sha256", "dev_tokens",
     "git_revision", "gpu", "torch", "matched_dev_nll", "finished_at", "initial_trainable_sha256",
+    "derivative_dtype", "derivative_device", "host_probe_seconds", "training_seconds_excluding_host_probes", "cpu_threads",
+    "process_peak_rss_mib", "evaluation_batch_windows",
 )
 EVENT_FIELDS = (
     "step", "tokens", "train_seconds", "loss", "accuracy", "penalty", "dev_nll",
     "dev_accuracy", "timestamp", "status", "peak_vram_mb",
+    "training_seconds_excluding_host_probes", "host_probe_seconds",
 )
 
 
@@ -111,7 +114,7 @@ def run_record(folder: Path) -> dict:
     events = read_lines(folder / "events.jsonl")
     record = {key: config[key] for key in FIELDS if key in config}
     # Calibration can fail before the trainer writes the final configuration.
-    identity = re.fullmatch(r"(stories|abstracts)-(\w+)-s(\d+)-(\w+)-r(\d+)", folder.name)
+    identity = re.fullmatch(r"(stories|abstracts)-(\w+)-s(\d+)-(\w+)-r(\d+)(?:-fp64)?", folder.name)
     if identity and not config:
         stage, phase, seed, method, ratio = identity.groups()
         record.update(stage=stage, phase=phase, seed=int(seed), method=method, ratio=int(ratio) / 100)
@@ -185,6 +188,10 @@ def study_snapshot(root: Path = Path(".")) -> dict:
     for folder in sorted(directory.glob("*")):
         if folder.is_dir() and any((folder / f).is_file() for f in ("config.json", "summary.json", "failure.json", "state.json")):
             runs.append(run_record(folder))
+    exclusions = read_json(directory/"verification"/"numerical-exclusions.json")
+    for run in runs:
+        if run["id"] in exclusions:
+            run.update(registered_phase=run["phase"], phase="diagnostic", precision_audit=exclusions[run["id"]])
     stages = {stage: analyze_stage(runs, stage) for stage in STAGES}
     for run in runs:
         run["events_total"] = len(run["events"])
@@ -192,10 +199,12 @@ def study_snapshot(root: Path = Path(".")) -> dict:
     context = {stage: {key: read_json(directory / key / f"{stage}.json")
                        for key in ("datasets", "selection", "feasibility")} for stage in STAGES}
     pilots = {s: pilot_differences(runs, s, context[s]["selection"]) for s in STAGES}
+    numerics = {key:read_json(directory/"verification"/(key+".json")) for key in
+                ("pythia-joint-cuda","pythia-fp64-agreement","pythia-fp64-cpu","pythia-fp64-cuda","stories-full-gradient")}
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "runs": runs, "stages": stages, "method_names": METHODS, "stage_names": STAGES,
-        "colors": COLORS, "context": context, "pilot_comparisons": pilots,
+        "colors": COLORS, "context": context, "pilot_comparisons": pilots,"numerics":numerics,
     }
 
 

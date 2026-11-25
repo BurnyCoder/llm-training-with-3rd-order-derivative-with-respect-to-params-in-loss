@@ -81,6 +81,8 @@ def publish_weights(project, storage, summary):
     api.upload_file(repo_id=repo,path_or_fileobj=restart,path_in_repo=f"runs/{run_id}/training_state.pt",
                     commit_message=f"Archive optimizer, data cursor and random state for {run_id}")
     prior = "EleutherAI/pythia-410m" if stage=="abstracts" else "Random initialization"
+    exclusions = project/"results"/"verification"/"numerical-exclusions.json"
+    diagnostic = read_json(exclusions).get(run_id) if exclusions.exists() else None
     card = (f"# {run_id}\n\n"
             f"Research checkpoint for {stage} using the {summary['method']} objective. Base: {prior}. "
             f"The run processed {summary['tokens']:,} training targets. Full development NLL was "
@@ -90,6 +92,9 @@ def publish_weights(project, storage, summary):
             f"[machine-readable results]({GITHUB}/tree/main/results/{run_id}). "
             f"The [restart manifest](restart.json) identifies the saved optimizer, data cursor and RNG state. "
             f"Use the pinned base and loading instructions in [the guide]({GITHUB}/blob/main/docs/runbook.md).\n")
+    if diagnostic:
+        card += f"\n{diagnostic['reason']} [Numerical audit]({GITHUB}/blob/main/reports/amendments/adapter-precision.md)\n"
+    card = "---\nlanguage: [en]\npipeline_tag: text-generation\n---\n" + card
     (folder/"README.md").write_text(card,encoding="utf-8")
     write_json(folder/"training_summary.json",summary)
     api.upload_folder(repo_id=repo,folder_path=folder,path_in_repo="runs/"+run_id,
