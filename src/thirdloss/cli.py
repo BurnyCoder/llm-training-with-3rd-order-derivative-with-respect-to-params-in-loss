@@ -44,6 +44,7 @@ def parser():
             sub.add_argument("--device",default="cuda")
         if action=="verify":
             sub.add_argument("--pretrained",action="store_true",help="Also compare a full joint derivative on the prepared adapter training corpus")
+            sub.add_argument("--reference",action="store_true",help="Compute the FP64 pretrained reference using the original CUDA signs")
             sub.add_argument("--device",default="cuda",help="Device for the optional full pretrained cross-check")
         if action=="train":
             sub.add_argument("--method",choices=(*METHODS,"unigram","initial"),required=True)
@@ -74,6 +75,10 @@ def main(argv=None):
             from .probe_check import verify_pretrained
             from .records import setup_device
             verify_pretrained(project,setup_device(args.device))
+        if args.reference:
+            from .precision import reference_gradient
+            from .records import setup_device
+            reference_gradient(project,setup_device(args.device))
         return
     if args.action=="dashboard":
         return dashboard(project,args.port)
