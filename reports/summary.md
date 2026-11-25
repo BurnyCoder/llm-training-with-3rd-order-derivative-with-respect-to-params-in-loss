@@ -1,8 +1,8 @@
 # Study summary
 
-Recorded 61 runs, including 61 with a completed summary.
+Recorded 62 runs, including 62 with a completed summary.
 
-**TinyStories.** Awaiting paired test results (1 of 8 full-horizon training triplets).
+**TinyStories.** Awaiting paired test results (2 of 8 full-horizon training triplets).
 
 **Research abstracts.** Awaiting paired test results (1 of 8 full-horizon training triplets).
 
@@ -39,7 +39,7 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 | TinyStories | branch | Shared trace checkpoint | 0.010 | 8,388,608 | 5 | 2.7577 | 15.7633 | — | — |
 | TinyStories | confirm | Ordinary AdamW | 0.000 | 16,777,216 | 2 | 2.5458 | 12.7539 | — | — |
 | TinyStories | confirm | Third derivative | 0.010 | 16,777,216 | 2 | 2.5460 | 12.7565 | — | — |
-| TinyStories | confirm | Hessian trace | 0.010 | 16,777,216 | 1 | 2.5480 | 12.7811 | — | — |
+| TinyStories | confirm | Hessian trace | 0.010 | 16,777,216 | 2 | 2.5463 | 12.7594 | — | — |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | 4,203.5319 | — | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | 404.8654 | — | — |
 | TinyStories | hybrid | Curvature-dependent hybrid | 0.010 | 16,777,216 | 4 | 2.5461 | 12.7573 | — | — |
@@ -68,6 +68,9 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 | 1 | 148.2 | Ordinary AdamW | 148.2 | 16,777,216 | 2.53821 |
 | 1 | 148.2 | Hessian trace | 147.7 | 9,961,472 | 2.68115 |
 | 1 | 148.2 | Third derivative | 146.2 | 5,767,168 | 2.95676 |
+| 2 | 128.5 | Ordinary AdamW | 128.5 | 16,777,216 | 2.54429 |
+| 2 | 128.5 | Hessian trace | 125.3 | 8,388,608 | 2.76035 |
+| 2 | 128.5 | Third derivative | 119.9 | 3,670,016 | 3.21709 |
 
 ### Research abstracts at equal training time
 

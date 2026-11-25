@@ -15,7 +15,7 @@ Does penalizing changes in loss curvature improve next-token prediction? The stu
 
 | Model and split | Matched evidence | Third-order NLL vs AdamW<br>↓ Lower is better | Third-order NLL vs trace<br>↓ Lower is better | Speed vs AdamW<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
-| TinyStories pretraining · dev | 1/8 full-budget seeds | 0.000003 lower | 0.000254 lower | 71.7% slower |
+| TinyStories pretraining · dev | 2/8 full-budget seeds | 0.000203 higher | 0.000228 lower | 71.5% slower |
 | Pythia-410M adapters · dev | 1/8 full-budget seeds | 0.000058 lower | 0.000024 higher | 91.5% slower |
 
 **Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
@@ -30,20 +30,20 @@ Each row states which direction is better for that metric. Bold highlights the b
 
 ### TinyStories pretraining
 
-**Full development split · 1/8 full-budget seeds · 16,777,216 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/selection/stories.json) · [Experiment ledger](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/experiments/experiments.md)
+**Full development split · 2/8 full-budget seeds · 16,777,216 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/selection/stories.json) · [Experiment ledger](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/experiments/experiments.md)
 
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
-| Development NLL<br>↓ Lower is better | 2.547719 | 2.547969 | **2.547715** | 0.000003 lower | 0.000254 lower |
-| Development perplexity<br>↓ Lower is better | **12.7779** | 12.7811 | **12.7779** | Tie | 0.0032 lower |
-| Dev top-1 accuracy<br>↑ Higher is better | 46.151% | 46.141% | **46.153%** | 0.002 pp higher | 0.012 pp higher |
-| Equal-time probe NLL<br>↓ Lower is better | **2.53821** | 2.68115 | 2.95676 | 0.41855 higher | 0.27561 higher |
-| Training speed (targets/s)<br>↑ Higher is better | **113,244** | 65,975 | 32,018 | 71.7% slower | 51.5% slower |
+| Development NLL<br>↓ Lower is better | **2.545836** | 2.546267 | 2.546039 | 0.000203 higher | 0.000228 lower |
+| Development perplexity<br>↓ Lower is better | **12.7539** | 12.7594 | 12.7565 | 0.0026 higher | 0.0029 lower |
+| Dev top-1 accuracy<br>↑ Higher is better | **46.197%** | 46.184% | 46.187% | 0.010 pp lower | 0.004 pp higher |
+| Equal-time probe NLL<br>↓ Lower is better | **2.54125** | 2.72075 | 3.08692 | 0.54567 higher | 0.36618 higher |
+| Training speed (targets/s)<br>↑ Higher is better | **121,888** | 67,278 | 34,744 | 71.5% slower | 48.4% slower |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 608.2 | 608.2 | 608.2 | Tie | Tie |
 
-The common training-time cutoff had a median of 148.2 seconds. The furthest checkpoint used for this row was 1.9 seconds before its cutoff.
+The common training-time cutoff had a median of 138.3 seconds. The furthest checkpoint used for this row was 8.6 seconds before its cutoff.
 
-Awaiting paired test results (1 of 8 full-horizon training triplets).
+Awaiting paired test results (2 of 8 full-horizon training triplets).
 
 ### Pythia-410M adapters
 
