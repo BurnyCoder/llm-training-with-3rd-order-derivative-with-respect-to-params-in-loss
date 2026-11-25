@@ -67,6 +67,19 @@ def publish_weights(project, storage, summary):
     folder = storage/"checkpoints"/run_id/"export"
     if sha256(folder/summary["weights_name"]) != summary["weights_sha256"]:
         raise ValueError(f"Checkpoint integrity failure for {run_id}")
+    # Keep exports directly loadable for inference and publish the restart payload alongside
+    # them. The original state includes AdamW moments, RNGs and the next deterministic data step.
+    import torch
+    restart = folder.parent/"latest.pt"
+    state = torch.load(restart,map_location="cpu",weights_only=True)
+    if (state["next_step"]!=summary["steps"] or state["config"]["id"]!=run_id
+            or state["config"]["data_manifest_sha256"]!=summary["data_manifest_sha256"]):
+        raise ValueError(f"Restart state differs from the completed run {run_id}")
+    write_json(folder/"restart.json",{"filename":"training_state.pt","sha256":sha256(restart),
+                                    "next_step":state["next_step"],"data_manifest_sha256":summary["data_manifest_sha256"]})
+    del state
+    api.upload_file(repo_id=repo,path_or_fileobj=restart,path_in_repo=f"runs/{run_id}/training_state.pt",
+                    commit_message=f"Archive optimizer, data cursor and random state for {run_id}")
     prior = "EleutherAI/pythia-410m" if stage=="abstracts" else "Random initialization"
     card = (f"# {run_id}\n\n"
             f"Research checkpoint for {stage} using the {summary['method']} objective. Base: {prior}. "
@@ -75,6 +88,7 @@ def publish_weights(project, storage, summary):
             + (f"Sealed test NLL was {summary['test_nll']:.6f}. " if "test_nll" in summary else "")
             + f"See the [protocol]({GITHUB}/blob/main/reports/preregistration.md) and "
             f"[machine-readable results]({GITHUB}/tree/main/results/{run_id}). "
+            f"The [restart manifest](restart.json) identifies the saved optimizer, data cursor and RNG state. "
             f"Use the pinned base and loading instructions in [the guide]({GITHUB}/blob/main/docs/runbook.md).\n")
     (folder/"README.md").write_text(card,encoding="utf-8")
     write_json(folder/"training_summary.json",summary)
@@ -85,6 +99,6 @@ def publish_weights(project, storage, summary):
              + ("base_model: EleutherAI/pythia-410m\nlibrary_name: peft\n" if stage=="abstracts" else "library_name: pytorch\n")
              + f"---\n# Third-derivative study · {stage}\n\n{description} are stored under "
              f"[runs](https://huggingface.co/{repo}/tree/main/runs). Each directory includes its model card, "
-             f"weights, tokenizer and machine-readable scores. [Study and reproduction guide]({GITHUB})\n")
+             f"weights, restart state, tokenizer and machine-readable scores. [Study and reproduction guide]({GITHUB})\n")
     api.upload_file(repo_id=repo,path_or_fileobj=index.encode(),path_in_repo="README.md",
                     commit_message=f"Index {stage} checkpoint collection")

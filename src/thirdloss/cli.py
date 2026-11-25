@@ -59,6 +59,7 @@ def parser():
             sub.add_argument("--port",type=int,default=8765)
         if action=="publish":
             sub.add_argument("--message",default="Update third-derivative study records")
+            sub.add_argument("--checkpoints",action="store_true",help="Republish the fitted checkpoints and restart states in the collection")
     return p
 
 
@@ -85,7 +86,11 @@ def main(argv=None):
         build_report(project)
         progress(project)
         if args.action == "publish":
-            from .release import publish_snapshot
+            from .release import publish_snapshot, publish_weights
+            if args.checkpoints:
+                from .records import read_json
+                for path in sorted((project/"results").glob("*/summary.json")):
+                    publish_weights(project,storage,read_json(path))
             print(publish_snapshot(project,args.message))
         return
     from .study import evaluate_one,freeze,milestone,prepare_stage,run_study

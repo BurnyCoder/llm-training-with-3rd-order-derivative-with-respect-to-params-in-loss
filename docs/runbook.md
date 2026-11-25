@@ -38,3 +38,5 @@ tokenizer = Tokenizer.from_file(str(folder / "tokenizer.json"))
 ```
 
 For adapter snapshots use `AutoModelForCausalLM.from_pretrained("EleutherAI/pythia-410m", revision="9879c9b5f8bea9051dcb0e68dff21493d67e9d4f")` and load the adapter directory with `PeftModel.from_pretrained(base, folder)`. The published stage repo is `BurnyCoder/thirdloss-pythia-410m-adapters`. [PEFT](https://huggingface.co/docs/peft/en/package_reference/lora)
+
+Each fitted run also publishes `training_state.pt` and `restart.json`. The manifest identifies the SHA-256 digest and next data step. This PyTorch checkpoint includes the fitted weights, AdamW state, RNG states and run configuration. Local interruptions resume from `THIRDLOSS_STORAGE/checkpoints/RUN_ID/latest.pt`. To recover a published state on a new machine, regenerate the identical stage data, verify the downloaded checkpoint against `restart.json`, and put it at that location. A completed checkpoint retains the state of the last scheduled update. [Checkpoint and restoration code](../src/thirdloss/train.py)
