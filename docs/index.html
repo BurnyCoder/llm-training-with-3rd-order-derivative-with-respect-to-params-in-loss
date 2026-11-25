@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Training curves, paired comparisons and generated text from the third-derivative language-model study.">
+  <title>Third derivatives in language-model training</title>
+  <link rel="stylesheet" href="explorer.css">
+  <script src="explorer.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#curves">Skip to training curves</a>
+  <header>
+    <div class="rail">
+      <a class="signature" href="#top" aria-label="Study overview">∂<sup>3</sup></a>
+      <nav aria-label="Study sections">
+        <a href="#curves">Training</a><a href="#evidence">Evidence</a><a href="#outputs">Outputs</a><a href="#method">Method</a>
+      </nav>
+      <a class="source" href="https://github.com/BurnyCoder/llm-training-with-3rd-order-derivative-with-respect-to-params-in-loss">Repository ↗</a>
+    </div>
+  </header>
+  <main id="top">
+    <section class="intro">
+      <div>
+        <h1>Third derivatives in<br>language-model training</h1>
+        <p>Does penalizing changes in loss curvature improve next-token predictions? Compare ordinary training, Hessian-trace regularization, and a third-derivative penalty at equal training tokens.</p>
+        <a class="protocol" href="https://github.com/BurnyCoder/llm-training-with-3rd-order-derivative-with-respect-to-params-in-loss/blob/main/reports/preregistration.md">Read the preregistration <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="summary" aria-label="Study totals">
+        <div><span>Completed runs</span><strong id="runs-count">—</strong></div>
+        <div><span>Training tokens logged</span><strong id="tokens-count">—</strong></div>
+        <div><span>Recorded training time</span><strong id="hours-count">—</strong></div>
+      </div>
+    </section>
+    <div id="feed-status" class="feed" role="status">Loading the study ledger…</div>
+
+    <section id="curves">
+      <div class="section-title"><h2>Training curves</h2><p>One trajectory per run</p></div>
+      <div class="filters">
+        <label>Stage<select id="stage"><option value="stories">TinyStories</option><option value="abstracts">Research abstracts</option></select></label>
+        <label>Phase<select id="phase"><option value="">All phases</option></select></label>
+        <label class="run-filter">Run<select id="run"><option value="">All runs</option></select></label>
+      </div>
+      <div class="curve-panel">
+        <div class="curve-tools">
+          <label>Measurement<select id="metric">
+            <option value="dev_nll">Development NLL</option><option value="loss">Training NLL</option>
+            <option value="dev_accuracy">Development accuracy</option><option value="accuracy">Training accuracy</option>
+            <option value="penalty">Weighted active penalty</option><option value="raw_third">Third-derivative norm estimate</option>
+            <option value="raw_trace">Hessian trace estimate</option><option value="raw_hessian_norm">Squared Hessian norm estimate</option>
+          </select></label>
+          <label>Horizontal axis<select id="axis"><option value="tokens">Training tokens</option><option value="train_seconds">Training time</option><option value="step">Optimizer steps</option></select></label>
+        </div>
+        <div class="chart-frame">
+          <canvas id="chart" tabindex="0" aria-label="Training curve. Focus and use left and right arrows to inspect points."></canvas>
+          <p id="chart-empty" class="chart-empty" hidden></p>
+        </div>
+        <output id="point" aria-live="polite"></output>
+        <div id="legend" class="legend"></div>
+        <p class="curve-note">Development curves use fixed probe windows. Completed-run tables show full development scores. The raw run logs retain every observation.</p>
+      </div>
+      <details class="run-ledger"><summary>Run ledger <span id="ledger-count"></span></summary>
+        <div class="table-wrap">
+          <table><caption class="sr">Measurements from runs matching the filters</caption><thead><tr>
+            <th>Run</th><th>Method</th><th>Seed</th><th>Ratio</th><th>Tokens</th><th>Dev NLL</th><th>Test NLL</th><th>Tokens/s</th><th>Peak MiB</th><th>Status</th>
+          </tr></thead><tbody id="ledger"></tbody></table>
+        </div>
+      </details>
+    </section>
+
+    <section id="evidence">
+      <div class="section-title"><h2>Paired evidence</h2><p id="evidence-stage"></p></div>
+      <p class="prose">The registered comparison uses held-out loss at equal training tokens. A negative difference favors the third-order objective. Both baseline comparisons must pass the corrected sign tests.</p>
+      <div id="verdict" class="verdict"></div>
+      <div id="stats"></div>
+    </section>
+    <section id="outputs">
+      <div class="section-title"><h2>Output examples</h2><p>Fixed development prompts</p></div>
+      <div id="sample-controls" class="sample-controls" hidden>
+        <label>Archived sample<select id="sample"></select></label>
+        <a id="raw-sample" href="#">Raw generation ↗</a>
+      </div>
+      <p id="samples-empty" class="empty"></p>
+      <div id="sample-view" hidden>
+        <div class="prompt"><h3>Prompt</h3><p id="prompt-text"></p></div>
+        <div class="sample-pair">
+          <article><h3>Reference continuation</h3><p id="reference-text"></p></article>
+          <article><h3>Model continuation</h3><p id="generated-text"></p></article>
+        </div>
+      </div>
+    </section>
+    <section id="method">
+      <div class="section-title"><h2>Method</h2><a href="https://github.com/BurnyCoder/llm-training-with-3rd-order-derivative-with-respect-to-params-in-loss/blob/main/reports/paper.pdf">Read the paper ↗</a></div>
+      <p class="prose">The Hessian describes local loss curvature. Its derivative describes how that curvature changes as weights move. Two independent random sign vectors estimate the squared size of all third partial derivatives, including interactions between weights.</p>
+      <img class="architecture" src="figures/architecture.png" alt="TinyStories full-weight training and Pythia QKV adaptation feed next-token cross-entropy, a Hessian contraction, a third derivative and the regularized objective." loading="lazy">
+      <div class="method-links">
+        <a href="https://doi.org/10.1007/BFb0086566">Derivative roughness ↗</a>
+        <a href="https://arxiv.org/pdf/2208.05924">Hessian baseline ↗</a>
+        <a href="https://arxiv.org/pdf/2004.06433">Random probe estimator ↗</a>
+      </div>
+    </section>
+  </main>
+  <footer><span>Libor “Burny” Burian</span><a href="study.json">Download displayed records</a></footer>
+</body>
+</html>
