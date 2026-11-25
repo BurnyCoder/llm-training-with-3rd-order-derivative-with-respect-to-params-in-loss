@@ -19,7 +19,15 @@ The third-order term measures how the Hessian changes as weights move. Two indep
 **Study record.** The protocol and run matrix precede model execution. Experiments, scientific conclusions, and generated examples will be recorded from raw artifacts here. [Preregistration](reports/preregistration.md) · [Run matrix](reports/planned-runs.md) · [Literature](reports/literature-review.md) · [State of the art](reports/state-of-the-art-review.md) · [Progress](reports/progress.md)
 
 <!-- RESULTS:START -->
-The preregistration is the first milestone. Model outcomes are pending.
+[Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
+
+Recorded 0 runs, including 0 with a completed summary.
+
+**TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
+
+**Research abstracts.** Awaiting paired test results (0 of 8 full-horizon training triplets).
+
+![Parameter-space computation graph](docs/figures/architecture.png)
 <!-- RESULTS:END -->
 
 ## Reproduce the study
