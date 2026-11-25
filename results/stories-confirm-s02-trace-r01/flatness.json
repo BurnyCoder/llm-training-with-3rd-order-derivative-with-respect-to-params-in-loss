@@ -1,0 +1,250 @@
+{
+  "run": "stories-confirm-s02-trace-r01",
+  "checkpoint_file_sha256": "8ee43a4835e375e9f0e801aab5301ce46407bb93f1e9d538f8ca2afab787c25d",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "width_device": "cuda",
+  "split": "train",
+  "probe_windows_sha256": "2b09cf8d13e4e0df411e816e32f1799f1ee165712973c51a09fc75d528c8c2b1",
+  "timestamp": "2026-11-25T23:11:19+00:00",
+  "protocol": "checkpoint-flatness-v1",
+  "width_windows": 8,
+  "curvature_windows": 2,
+  "width": {
+    "baseline_nll": 2.6043522357940674,
+    "delta_nll": 0.1,
+    "directions": [
+      {
+        "direction": 0,
+        "positive": {
+          "lower": 5.9658203125,
+          "upper": 5.966796875
+        },
+        "negative": {
+          "lower": 6.900390625,
+          "upper": 6.9013671875
+        }
+      },
+      {
+        "direction": 1,
+        "positive": {
+          "lower": 6.0576171875,
+          "upper": 6.05859375
+        },
+        "negative": {
+          "lower": 7.1376953125,
+          "upper": 7.138671875
+        }
+      },
+      {
+        "direction": 2,
+        "positive": {
+          "lower": 6.6455078125,
+          "upper": 6.646484375
+        },
+        "negative": {
+          "lower": 6.9775390625,
+          "upper": 6.978515625
+        }
+      },
+      {
+        "direction": 3,
+        "positive": {
+          "lower": 6.4248046875,
+          "upper": 6.42578125
+        },
+        "negative": {
+          "lower": 6.4697265625,
+          "upper": 6.470703125
+        }
+      },
+      {
+        "direction": 4,
+        "positive": {
+          "lower": 5.9208984375,
+          "upper": 5.921875
+        },
+        "negative": {
+          "lower": 7.2568359375,
+          "upper": 7.2578125
+        }
+      },
+      {
+        "direction": 5,
+        "positive": {
+          "lower": 5.90234375,
+          "upper": 5.9033203125
+        },
+        "negative": {
+          "lower": 7.275390625,
+          "upper": 7.2763671875
+        }
+      },
+      {
+        "direction": 6,
+        "positive": {
+          "lower": 6.7451171875,
+          "upper": 6.74609375
+        },
+        "negative": {
+          "lower": 6.7255859375,
+          "upper": 6.7265625
+        }
+      },
+      {
+        "direction": 7,
+        "positive": {
+          "lower": 6.0,
+          "upper": 6.0009765625
+        },
+        "negative": {
+          "lower": 6.91796875,
+          "upper": 6.9189453125
+        }
+      },
+      {
+        "direction": 8,
+        "positive": {
+          "lower": 6.123046875,
+          "upper": 6.1240234375
+        },
+        "negative": {
+          "lower": 6.8642578125,
+          "upper": 6.865234375
+        }
+      },
+      {
+        "direction": 9,
+        "positive": {
+          "lower": 6.4169921875,
+          "upper": 6.41796875
+        },
+        "negative": {
+          "lower": 6.40234375,
+          "upper": 6.4033203125
+        }
+      },
+      {
+        "direction": 10,
+        "positive": {
+          "lower": 5.998046875,
+          "upper": 5.9990234375
+        },
+        "negative": {
+          "lower": 6.8037109375,
+          "upper": 6.8046875
+        }
+      },
+      {
+        "direction": 11,
+        "positive": {
+          "lower": 6.3525390625,
+          "upper": 6.353515625
+        },
+        "negative": {
+          "lower": 6.19921875,
+          "upper": 6.2001953125
+        }
+      },
+      {
+        "direction": 12,
+        "positive": {
+          "lower": 6.982421875,
+          "upper": 6.9833984375
+        },
+        "negative": {
+          "lower": 6.228515625,
+          "upper": 6.2294921875
+        }
+      },
+      {
+        "direction": 13,
+        "positive": {
+          "lower": 6.3232421875,
+          "upper": 6.32421875
+        },
+        "negative": {
+          "lower": 6.7333984375,
+          "upper": 6.734375
+        }
+      },
+      {
+        "direction": 14,
+        "positive": {
+          "lower": 6.2353515625,
+          "upper": 6.236328125
+        },
+        "negative": {
+          "lower": 6.78125,
+          "upper": 6.7822265625
+        }
+      },
+      {
+        "direction": 15,
+        "positive": {
+          "lower": 6.849609375,
+          "upper": 6.8505859375
+        },
+        "negative": {
+          "lower": 6.26171875,
+          "upper": 6.2626953125
+        }
+      }
+    ],
+    "width_lower": 13.03662109375,
+    "width_upper": 13.03857421875,
+    "width": 13.03759765625,
+    "censored_rays": 0,
+    "weights_sha256": "304e94e12ba0129fe340d5c2a35079c907ebb206879ff267231f2d63d76f8d64",
+    "weights_restored": true,
+    "seconds": 5.664803699997719
+  },
+  "curvature": {
+    "dimensions": 2557632,
+    "draws": [
+      {
+        "index": 0,
+        "trace_per_parameter": 0.004077646908646498,
+        "squared_rms": 0.36272983409719517
+      },
+      {
+        "index": 1,
+        "trace_per_parameter": 0.004180815058472115,
+        "squared_rms": 0.30733028581170924
+      },
+      {
+        "index": 2,
+        "trace_per_parameter": 0.0035403706137299767,
+        "squared_rms": 0.31886805802688833
+      },
+      {
+        "index": 3,
+        "trace_per_parameter": 0.004527802438634126,
+        "squared_rms": 0.3309223306141845
+      },
+      {
+        "index": 4,
+        "trace_per_parameter": 0.004168177918807054,
+        "squared_rms": 0.36064271799255937
+      },
+      {
+        "index": 5,
+        "trace_per_parameter": 0.003794429221103866,
+        "squared_rms": 0.3349547846611286
+      },
+      {
+        "index": 6,
+        "trace_per_parameter": 0.0038528912825610442,
+        "squared_rms": 0.310091235823083
+      },
+      {
+        "index": 7,
+        "trace_per_parameter": 0.004965590494903832,
+        "squared_rms": 0.3439579328761864
+      }
+    ],
+    "device": "cuda:0",
+    "dtype": "torch.float64",
+    "trace_per_parameter": 0.004138465492107314,
+    "rms_curvature": 0.5776565999691052
+  }
+}
