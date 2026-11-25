@@ -1,8 +1,8 @@
 # Study progress
 
-Updated 2026-11-25T08:43:46+00:00.
+Updated 2026-11-25T08:56:59+00:00.
 
-15 training/control records and 0 final evaluations are complete. This is 12.5% of 120 planned model milestones.
+16 training/control records and 0 final evaluations are complete. This is 13.3% of 120 planned model milestones.
 
 ## Current record
 
@@ -12,7 +12,7 @@ Pilot rates project 1.69 remaining confirmation GPU-hours, excluding validation,
 
 Statistical status: pending. Awaiting confirmatory runs.
 
-**abstracts** has 3 completed runs. The next milestone is determined by the run matrix.
+**abstracts** has 4 completed runs. The next milestone is determined by the run matrix.
 
 Statistical status: pending. Awaiting confirmatory runs.
 

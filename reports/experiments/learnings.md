@@ -10,6 +10,8 @@ Independent random signs include mixed weight derivatives in the expected penalt
 
 - [abstracts-control-s00-unigram-r00](./abstracts-control-s00-unigram-r00/experiment.md) — The observed development NLL is 7.3306 nats per target token.
 
+- [abstracts-pilot-s00-ce-r00](./abstracts-pilot-s00-ce-r00/experiment.md) — Development NLL changed by -0.1172 nats per target token from 4,096 to 65,536 training targets. Attribution to the regularizer uses matched comparisons across seeds.
+
 - [abstracts-pilot-s00-third-r03](./abstracts-pilot-s00-third-r03/experiment.md) — This original FP32 adapter run is preserved as a numerical diagnostic. The same-probe full-checkpoint audit found substantial rounding error in both the penalty and its training gradient. Strength selection and confirmatory inference use separately named FP64 derivative runs. The run ledger records 1 interrupted attempt(s).
 
 - [abstracts-pilot-s00-third-r03-fp64](./abstracts-pilot-s00-third-r03-fp64/experiment.md) — Development NLL changed by -0.1165 nats per target token from 4,096 to 65,536 training targets. Attribution to the regularizer uses matched comparisons across seeds.

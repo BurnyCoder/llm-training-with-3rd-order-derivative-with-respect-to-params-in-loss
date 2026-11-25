@@ -35,7 +35,7 @@ A same-probe check on pretrained Pythia found that single-precision arithmetic m
 <!-- RESULTS:START -->
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 16 runs, including 16 with a completed summary.
+Recorded 17 runs, including 17 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -43,12 +43,15 @@ Recorded 16 runs, including 16 with a completed summary.
 
 **TinyStories development pilot.** At 2,097,152 training targets, the third-order run recorded 0.00004 nats per target token lower against Ordinary AdamW, 0.00024 nats per target token lower against Trace + third derivative, 0.00175 nats per target token lower against Squared Hessian norm, 0.00032 nats per target token lower against Randomized gradient signs, 0.00034 nats per target token lower against Hessian trace. These are single-seed descriptions using selected on development.
 
+**Research abstracts development pilot.** At 65,536 training targets, the third-order run recorded 0.00091 nats per target token higher against Ordinary AdamW. These are single-seed descriptions using initial pilot strengths.
+
 ### Measured scores
 
 | Stage | Phase | Method | Ratio | Tokens/run | Runs | Median dev NLL | Median test NLL |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Research abstracts | control | Initial checkpoint | 0.000 | 0 | 1 | 3.2517 | — |
 | Research abstracts | control | Unigram | 0.000 | 0 | 1 | 7.3306 | — |
+| Research abstracts | pilot | Ordinary AdamW | 0.000 | 65,536 | 1 | 3.1139 | — |
 | Research abstracts | diagnostic | Third derivative | 0.030 | 65,536 | 1 | 3.1168 | — |
 | Research abstracts | pilot | Third derivative | 0.030 | 65,536 | 1 | 3.1149 | — |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
@@ -119,6 +122,29 @@ First archived sample in run-ID order per stage and method. [All continuations](
     purpose,) was} standards
      of
      radio.
+
+</details>
+
+<details><summary>Research abstracts · Ordinary AdamW</summary>
+
+**Prompt**
+
+    One of the central objectives of contemporary neuroimaging research is to
+    create predictive models
+
+**Reference continuation**
+
+     that can disentangle the connection between patterns
+    of functional connectivity across the entire brain and various behavioral
+    traits. Previous studies have shown that models trained to predict behavioral
+    features from the individual's functional
+
+**Model continuation**
+
+     that will accurately predict the behavior of
+    patient-specific neurological disorders such as epilepsy. In this paper, we
+    present a novel dataset of EEG data recorded from children with focal
+    subcortical epilepsy
 
 </details>
 
