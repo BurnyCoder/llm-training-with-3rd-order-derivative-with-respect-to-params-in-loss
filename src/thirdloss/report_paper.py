@@ -348,6 +348,13 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "The checkpoint ledger gives their finite widths, signed trace per parameter, RMS curvature and raw probes. "
       f"{_link(REPOSITORY + '/blob/main/reports/flatness.md','Flatness measurements')} · "
       f"{_link(REPOSITORY + '/blob/main/reports/amendments/checkpoint-flatness.md','Secondary protocol')}")
+    from .readme_comparisons import primary_geometry
+    for stage in STAGES:
+        caption,statistics=primary_geometry(study,stage)
+        if statistics:
+            p(caption,"subheading")
+            flow.append(_grid(styles,["Flatness statistic","AdamW","Hessian trace","Third order"],
+                              [[row[0].split("<br>")[0],*row[1:]] for row in statistics],[164,100,100,100]))
     for comparator,s in hybrid["comparisons"].items():
         lo,hi = s["median_ci"]
         p(f"Adaptive minus {METHODS[comparator]} median width gain {fmt(s['median_delta'],5)} "

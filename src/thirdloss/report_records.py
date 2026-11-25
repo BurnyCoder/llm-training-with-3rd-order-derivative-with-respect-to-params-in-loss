@@ -182,12 +182,17 @@ def run_record(folder: Path) -> dict:
         record["events"].sort(key=lambda row:row.get("step",0))
     diagnostic=read_json(folder/"flatness.json")
     if diagnostic:
-        if diagnostic["checkpoint_file_sha256"]!=record.get("weights_sha256"):
-            raise ValueError(f"Geometry belongs to different checkpoint weights for {folder.name}")
+        if (diagnostic["run"]!=folder.name or diagnostic["checkpoint_file_sha256"]!=record.get("weights_sha256")
+                or diagnostic["data_manifest_sha256"]!=record.get("data_manifest_sha256")
+                or diagnostic["split"]!="train" or not diagnostic["width"]["weights_restored"]):
+            raise ValueError(f"Checkpoint geometry provenance differs for {folder.name}")
         record["flatness"]={**compact_width(diagnostic["width"]),
                             **{k:diagnostic[k] for k in ("protocol","probe_windows_sha256","width_device")},
                             **{k:diagnostic["curvature"][k] for k in ("rms_curvature","trace_per_parameter")},
                             "hessian_device":diagnostic["curvature"]["device"]}
+        record["events"].append({"step":record["steps"],"tokens":record["tokens"],"train_seconds":record["train_seconds"],
+                                 "width":diagnostic["width"]["width"],"checkpoint_rms":diagnostic["curvature"]["rms_curvature"],
+                                 "checkpoint_signed_trace":diagnostic["curvature"]["trace_per_parameter"]})
     record["samples"] = read_lines(folder / "samples.jsonl")
     return record
 
