@@ -1,0 +1,26 @@
+{
+  "stage": "stories",
+  "phase": "hybrid",
+  "id": "stories-hybrid-s22-late-r01",
+  "method": "late",
+  "seed": 22,
+  "ratio": 0.01,
+  "token_budget": 16777216,
+  "batch_windows": 32,
+  "context": 128,
+  "schedule_steps": 4096,
+  "protocol": "hybrid-v1",
+  "alpha": 9.169227719425724e-08,
+  "cap": 3.0190450056526336e-14,
+  "parent": "stories-branch-s22-trunk-r01",
+  "parent_weights_sha256": "2c29d0875ddda9ec0821270e3e771d7e08f68c46fc10e5fdeb8a1e2ed3ed3815",
+  "inherited_tokens": 8388608,
+  "inherited_train_seconds": 135.50772570003392,
+  "parent_restart_sha256": "a17dc63a12bb1923f8f6823cf879bb252eab7f857249ca471927b7a4a3321e7d",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "microbatch": 32,
+  "coefficients": {
+    "trace": 9.169227719425724e-08,
+    "third": 3.0190450056526336e-14
+  }
+}
