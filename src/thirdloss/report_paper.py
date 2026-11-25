@@ -32,6 +32,8 @@ REFERENCES = {
               "https://arxiv.org/pdf/2208.05924"),
     "sketch": ("Bujanović and Kressner, Norm and trace estimation with random rank-one vectors",
                "https://arxiv.org/pdf/2004.06433"),
+    "fut": ("Yang et al., Estimating the effects of sample training orders for large language models without retraining",
+            "https://arxiv.org/pdf/2505.22042#page=16"),
     "stories": ("Eldan and Li, TinyStories", "https://arxiv.org/pdf/2305.07759"),
     "pythia": ("Biderman et al., Pythia", "https://arxiv.org/pdf/2304.01373"),
     "lora": ("Hu et al., Low-rank adaptation of large language models", "https://arxiv.org/pdf/2106.09685"),
@@ -107,21 +109,49 @@ def _figure(path, max_width=477, max_height=240):
     return image
 
 
-def _score_rows(study):
-    """Separate tuning strengths and token horizons before any descriptive aggregation."""
+def _result_tables(study):
+    """Group scores at equal token horizons and compare resource use on like hardware."""
     groups = {}
     for run in study["runs"]:
         if completed(run):
             key = (run.get("stage"), run.get("phase"), run.get("method"),
                    run.get("ratio"), run.get("tokens"))
             groups.setdefault(key, []).append(run)
-    rows = []
+    scores, resources = [], {}
+
+    def middle(runs, key, digits):
+        values = [r[key] for r in runs if finite(r.get(key))]
+        return fmt(median(values), digits) if values else "—"
+
     for (stage, phase, method, ratio, tokens), runs in groups.items():
-        def middle(key):
-            values = [r[key] for r in runs if finite(r.get(key))]
-            return fmt(median(values), 4) if values else "—"
-        rows.append([STAGES.get(stage, stage), phase, METHODS.get(method, method),
-                     fmt(ratio), len(runs), fmt(tokens, 0), middle("dev_nll"), middle("test_nll")])
+        arm = [STAGES.get(stage, stage), phase, METHODS.get(method, method), fmt(ratio)]
+        scores.append([*arm, len(runs), fmt(tokens, 0), middle(runs, "dev_nll", 4), middle(runs, "test_nll", 4)])
+        devices = {}
+        for run in runs:
+            hardware = run.get("gpu") or run.get("device") or "Hardware unrecorded"
+            devices.setdefault(hardware, []).append(run)
+        for device, subset in devices.items():
+            timed = [r for r in subset if finite(r.get("train_seconds")) and r["train_seconds"] > 0]
+            gpu = [r for r in subset if r.get("gpu") or str(r.get("device", "")).startswith("cuda")]
+            resources.setdefault(device, []).append([
+                *arm, len(subset), fmt(tokens, 0), middle(timed, "train_seconds", 1),
+                middle(timed, "tokens_per_sec", 0), middle(gpu, "peak_vram_mb", 1),
+            ])
+    return scores, resources
+
+
+def _matched_rows(study):
+    """Print every matched seed, including each arm's distance from the shared cutoff."""
+    rows = []
+    for stage, outcome in study["stages"].items():
+        for entry in outcome.get("matched_time", []):
+            cutoff = entry["cutoff_seconds"]
+            losses = []
+            for method in ("ce", "trace", "third"):
+                point = entry["by_method"][method]
+                lag = cutoff - point["train_seconds"]
+                losses.append(f"{fmt(point['dev_nll'], 4)} ({fmt(lag, 1)})")
+            rows.append([STAGES[stage], entry["seed"], fmt(cutoff, 1), *losses])
     return rows
 
 
@@ -154,6 +184,11 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "The proposed local density adapts an order-three spline roughness measure. The "
       "published signed-trace language experiments studied recurrent language models. "
       f"{_cite('roughness')} · {_cite('trace')} · {_cite('coordinates')}")
+    p("FUT++ approximates third weight derivatives of minibatch language-model loss with "
+      "differences between Hessian estimates at consecutive reference checkpoints. It uses "
+      "these terms to predict the effect of reordering training batches. Here the squared "
+      "norm enters the loss itself, so its gradient changes the training trajectory. "
+      f"{_cite('fut')}, Appendix A.1, equations 14–15.")
     p("The estimator and its update", "heading")
     p("J(θ) = L(θ) + λ · ‖D³L(θ)‖²<sub>F</sub>", "equation")
     p("For independent Rademacher vectors u and v, form r = ∇(uᵀHv). Squaring and summing "
@@ -182,6 +217,12 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "test derivative order, gradient direction and incremental benefit. Initial checkpoints "
       "and token unigrams supply untrained references. "
       f"{_link(REPOSITORY + '/blob/main/reports/planned-runs.md', 'Run matrix')}")
+    p("Each update averages 32 windows for stories or eight for adapters. AdamW uses β₁ = 0.9, "
+      "β₂ = 0.95, matrix weight decay 0.1 and gradient norm clipping at one. Peak learning "
+      "rates are 0.0003 and 0.0001, respectively, with 5% warmup and cosine decay to 10% of peak. "
+      "Across 16 batches at the shared pilot initialization, the median ordinary-to-penalty "
+      "gradient-norm ratio sets the scale. Both regularizers try 1%, 3% and 10% of this scale. "
+      f"{_link(REPOSITORY + '/blob/main/reports/preregistration.md', 'Training and selection protocol')}")
     p("Normalize and deduplicate whole documents before fitting the stories tokenizer. Prioritize "
       "evaluation records when removing overlaps, and audit word-shingle similarity between "
       "splits. Pack documents with an end-of-sequence token. Full evaluation counts each valid "
@@ -230,7 +271,7 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
             p(f"In the development pilot at {pilots[0]['tokens']:,} training targets, third-order "
               f"training recorded {changes}. The comparison uses one seed and "
               f"{pilots[0]['strength_basis']}.")
-    evaluated = _score_rows(study)
+    evaluated, resources = _result_tables(study)
     if evaluated:
         p("Scores across methods", "subheading")
         flow.append(_grid(styles, ["Corpus", "Phase", "Method", "Ratio", "Runs", "Tokens/run", "Dev NLL", "Test NLL"],
@@ -265,6 +306,34 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
     else:
         p("The outstanding paired evaluations determine which claims can be made about prediction quality "
           "at the registered horizons. The run ledger preserves every available observation and implementation failure.")
+    p("Appendix · Computational cost", "heading")
+    if resources:
+        for device, rows in resources.items():
+            p(escape(str(device)), "subheading")
+            flow.append(_grid(styles, ["Corpus", "Phase", "Method", "Ratio", "Runs", "Targets/run",
+                                       "Train (s)", "Targets/s", "Peak GPU (MiB)"],
+                              rows, [56, 49, 78, 35, 34, 64, 48, 57, 54]))
+        p("Times and rates are per-run medians within each hardware, method, phase, strength and "
+          "target budget. The clock sums synchronized training steps, including batch transfer and "
+          "the optimizer update. Evaluation, checkpointing and uploads take additional time. Peak "
+          "memory is PyTorch’s recorded maximum allocated GPU tensor memory during the run, including "
+          "evaluation. Untrained controls have no training speed.", "caption")
+    else:
+        p("Hardware, training speed and peak allocated memory will appear with the first completed run.")
+    p("Development NLL at matched GPU training time", "subheading")
+    p("For each seed the cutoff is the shortest completed training time across AdamW, trace and "
+      "third-order training. Fixed-window development evaluations occur at discrete checkpoints. "
+      "We take the latest checkpoint at or before the cutoff. Each cell gives NLL in nats per target "
+      "token, followed by its lag behind the cutoff in seconds. Larger lags make the time comparison "
+      "coarser. The archived per-seed table also records the token count at each checkpoint. "
+      f"{_link(REPOSITORY + '/blob/main/reports/summary.md', 'Per-seed timing records')}", "caption")
+    matched = _matched_rows(study)
+    if matched:
+        flow.append(_grid(styles, ["Corpus", "Seed", "Cutoff (s)", "AdamW NLL (lag s)",
+                                   "Trace NLL (lag s)", "Third NLL (lag s)"],
+                          matched, [82, 34, 65, 98, 98, 98]))
+    else:
+        p("Awaiting a complete, timed three-method confirmatory seed with eligible development checkpoints.", "caption")
     pair_rows = [[STAGES[stage], METHODS.get(base, base), pair["seed"],
                   fmt(pair["third_nll"], 5), fmt(pair["baseline_nll"], 5), fmt(pair["delta"], 5)]
                  for stage, outcome in study["stages"].items()
@@ -292,12 +361,14 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
                 continue
             seen.add(key)
             sample = run["samples"][0]
-            p(f"{STAGES.get(key[0], key[0])} · {METHODS.get(key[1], key[1])}", "subheading")
+            label = f"{STAGES.get(key[0], key[0])} · {METHODS.get(key[1], key[1])}"
+            example = [Paragraph(escape(label), styles["subheading"])]
             for field, name in (("prompt", "Prompt"), ("reference", "Reference"), ("continuation", "Prediction")):
                 if sample.get(field) is not None:
                     value = str(sample[field])
                     excerpt = value[:420] + (" […]" if len(value) > 420 else "")
-                    p(f"<b>{name}.</b> {escape(excerpt)}", "caption")
+                    example.append(Paragraph(f"<b>{name}.</b> {escape(excerpt)}", styles["caption"]))
+            flow.append(KeepTogether(example))
     p("References and reproducibility", "heading")
     for title, url in REFERENCES.values():
         p(_link(url, title), "caption")
