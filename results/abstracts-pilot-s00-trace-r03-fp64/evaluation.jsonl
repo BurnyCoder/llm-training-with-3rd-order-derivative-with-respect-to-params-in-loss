@@ -1,0 +1,4 @@
+{"timestamp": "2026-11-25T09:23:04+00:00", "split": "dev", "targets_scored": 428032, "targets_to_score": 5124071, "nll_so_far": 3.108243330600159, "accuracy_so_far": 0.4124341170753589, "score_seconds": 60.13073129999975}
+{"timestamp": "2026-11-25T09:24:04+00:00", "split": "dev", "targets_scored": 854016, "targets_to_score": 5124071, "nll_so_far": 3.1070146722489036, "accuracy_so_far": 0.413103501573741, "score_seconds": 120.2883948000017}
+{"timestamp": "2026-11-25T09:25:04+00:00", "split": "dev", "targets_scored": 1265664, "targets_to_score": 5124071, "nll_so_far": 3.1018533033671454, "accuracy_so_far": 0.4137030049049353, "score_seconds": 180.4415474999987}
+{"timestamp": "2026-11-25T09:26:05+00:00", "split": "dev", "targets_scored": 1662976, "targets_to_score": 5124071, "nll_so_far": 3.1042621866544695, "accuracy_so_far": 0.4134822150169335, "score_seconds": 240.70859909999854}
