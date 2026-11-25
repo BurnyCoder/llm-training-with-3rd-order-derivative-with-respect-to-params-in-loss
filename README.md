@@ -1,5 +1,28 @@
 # Third derivatives in language-model training
 
+Does a language model predict unseen tokens better when training penalizes rapid changes in loss curvature? We test this on a TinyStories decoder trained from scratch and on Pythia-410M attention adapters. A second TinyStories experiment compares a fixed late start with a schedule that increases the penalty as measured curvature falls. [Study design](reports/planned-runs.md)
+
+The research background includes flat minima, Hessian measurements and third derivatives in language modeling and other fields. [Original flat-minima paper](https://people.idsia.ch/~juergen/fm/node1.html) · [Hessian regularization in GPT-2](https://arxiv.org/pdf/2306.08553#page=12) · [Hessians in image classification](https://arxiv.org/pdf/2012.03801) · [Third derivatives in language-model training dynamics](https://arxiv.org/pdf/2505.22042) · [Derivative penalties in splines](https://doi.org/10.1007/BFb0086566)
+
+<!-- READOUT:START -->
+
+## Results at a glance
+
+Lower next-token loss (NLL) means a model assigned more probability to the words that actually came next. Training speed counts target tokens per second.
+
+| Model and split | Matched evidence | Third-order NLL vs AdamW | Third-order NLL vs trace | Speed vs AdamW |
+| --- | --- | --- | --- | --- |
+| TinyStories pretraining · dev | one development pilot seed | 0.000045 lower | 0.000338 lower | 65.7% slower |
+| Pythia-410M adapters · dev | one development pilot seed | 0.000300 higher | 0.000273 higher | 88.6% slower |
+
+**Adaptive vs fixed-ramp hybrid** · 2/8 paired seeds. Adaptive development NLL was 0.000174 lower. It retained 0.0554 less directional width after the switch.
+
+Both primary test decisions are pending. Each stage requires eight paired test seeds and superiority over both baselines under Holm correction.
+
+[Side-by-side scores, accuracy, speed, memory and width](#side-by-side-comparisons) · [Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Paired tests and intervals](reports/summary.md)
+
+<!-- READOUT:END -->
+
 Sepp Hochreiter and Jürgen Schmidhuber proposed that **among models that fit the training data equally well, those in flatter minima may generalize better to unseen data**. In a flat minimum, many nearby weight settings still fit. If some weights can be rounded more coarsely without spoiling the fit, a good predictor can take fewer bits to describe under a fixed encoding. Their minimum-description-length argument links that shorter description to a lower risk of overfitting. [Hochreiter and Schmidhuber, *Flat Minima* (1997), §1](https://people.idsia.ch/~juergen/fm/node1.html)
 
 **Why did earlier papers use the Hessian?** At a smooth minimum the gradient is zero, whether the valley is sharp or flat. The Hessian gives a quadratic approximation to how much training loss rises when the weights move. For small steps of equal size in uniformly random directions, the predicted average rise is proportional to the **Hessian trace**, the sum of second derivatives along the weight coordinates. The researchers penalized the trace to favor fits that tolerate small weight changes and tested whether those fits generalize better. [Liu, Yu and Lin, §§3.2–3.3](https://arxiv.org/pdf/2208.05924#page=3) · [Zhang, Li and Ju, equation 4](https://arxiv.org/pdf/2306.08553#page=5)
@@ -7,8 +30,6 @@ Sepp Hochreiter and Jürgen Schmidhuber proposed that **among models that fit th
 Sankar et al. observed that layerwise traces fell during image-classifier training and tried penalizing them directly. Liu, Yu and Lin drew on a generalization bound for linear classifiers to motivate a stochastic trace penalty and reported WikiText-2 experiments with LSTMs and GRUs. Zhang, Li and Ju paired opposite weight perturbations so the first-order loss changes would cancel, giving them a way to target curvature during GPT-2 fine-tuning for question answering. [Sankar et al., Figure 5 and Table 1](https://arxiv.org/pdf/2012.03801#page=6) · [Liu, Yu and Lin, §5.2](https://arxiv.org/pdf/2208.05924#page=10) · [Zhang, Li and Ju, Table 5](https://arxiv.org/pdf/2306.08553#page=12)
 
 **Why third derivatives?** Two minima can have the same small curvature at the bottom, yet one can steepen much sooner. The third derivatives of next-token loss measure how its Hessian changes as the weights move. The training penalty estimates their sum of squares, so rapid changes of either sign carry a cost. If curvature starts small and changes slowly throughout a neighborhood, the weights can move farther while loss stays low. [Worked examples and width bound](docs/third-derivative-penalty.md#when-can-the-penalty-favor-a-wider-minimum) · [Taylor remainder, equation 22](https://link.springer.com/article/10.1007/s10288-023-00541-9)
-
-The registered study tests whether this penalty improves prediction on unseen tokens compared with ordinary AdamW and Hessian-trace regularization at equal training-token counts. It trains a TinyStories decoder from scratch and fine-tunes Pythia-410M’s low-rank attention adapters on research abstracts. [Study design](reports/planned-runs.md)
 
 **Why add the third-derivative penalty late?** Even a steep valley can have constant curvature. The registered TinyStories follow-up first trains with the Hessian-trace penalty to favor low average curvature. Its fixed-ramp arm keeps the trace active and gradually adds the third-derivative penalty after the midpoint. If curvature changes faster toward the edge of a flat region, the penalty can increase outward and oppose that movement. Delaying it also avoids early fourth-derivative computations. If the schedule preserves a wider region, its final weights should tolerate larger perturbations than the trace controls at the same allowed increase in unregularized loss. [Timing controls and width measurement](reports/hybrid/preregistration.md) · [Measured widths](reports/hybrid/results.md)
 
@@ -45,442 +66,145 @@ The protocol and run matrix were published before model execution. The scores, c
 A same-probe check on pretrained Pythia found that single-precision arithmetic materially changed the third-order training gradient. The first adapter pilot is archived as a numerical diagnostic. The corrected adapter arms evaluate derivatives in double precision while ordinary training and prediction use the GPU. [Pre-test precision amendment](reports/amendments/adapter-precision.md) · [Full-model numerical checks](results/verification)
 
 <!-- RESULTS:START -->
+
+## Side-by-side comparisons
+
+↓ means lower is preferred. ↑ means higher is preferred. Bold highlights the best observed value when methods differ at the displayed precision. A tie means the paired difference rounds to zero. NLL is negative log-likelihood in nats per target. Accuracy differences use percentage points (pp).
+
+### TinyStories pretraining
+
+**Full development split · one development pilot seed · 2,097,152 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. The pilot also selected the derivative strengths. [Strength selection](results/selection/stories.json) · [Experiment ledger](reports/experiments/experiments.md)
+
+| Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
+| --- | --- | --- | --- | --- | --- |
+| Development NLL ↓ | 3.876976 | 3.877269 | **3.876931** | 0.000045 lower | 0.000338 lower |
+| Dev top-1 accuracy ↑ | **32.337%** | 32.329% | 32.326% | 0.011 pp lower | 0.003 pp lower |
+| Equal-time probe NLL ↓ | **3.82905** | 4.04765 | 4.95277 | 1.12372 higher | 0.90512 higher |
+| Training speed ↑ (targets/s) | **123,871** | 73,185 | 42,481 | 65.7% slower | 42.0% slower |
+| Peak GPU allocation ↓ (MiB) | 608.2 | 608.2 | 608.2 | Tie | Tie |
+
+The common training-time cutoff had a median of 16.9 seconds. The furthest checkpoint used for this row was 2.3 seconds before its cutoff.
+
+Awaiting paired test results (0 of 8 full-horizon training triplets).
+
+### Pythia-410M adapters
+
+**Full development split · one development pilot seed · 65,536 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. The pilot also selected the derivative strengths. [Strength selection](results/selection/abstracts.json) · [Experiment ledger](reports/experiments/experiments.md)
+
+| Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
+| --- | --- | --- | --- | --- | --- |
+| Development NLL ↓ | **3.113948** | 3.113974 | 3.114247 | 0.000300 higher | 0.000273 higher |
+| Dev top-1 accuracy ↑ | **41.321%** | **41.321%** | 41.315% | 0.006 pp lower | 0.006 pp lower |
+| Training speed ↑ (targets/s) | **1,659** | 435 | 189 | 88.6% slower | 56.5% slower |
+| Peak GPU allocation ↓ (MiB) | 2,346.3 | 2,346.3 | 2,346.3 | Tie | Tie |
+
+An equal-time NLL comparison is pending because at least one arm lacks a recorded development checkpoint at or before the shared cutoff.
+
+Observed host-process memory high-water marks were AdamW 3.78 GiB, Hessian trace 10.28 GiB, Third order 13.09 GiB. This measure includes earlier work in each interpreter.
+
+Awaiting paired test results (0 of 8 full-horizon training triplets).
+
+The equal-time row uses the last available fixed-window development score at or before the fastest run’s finish time in each seed. Full-split NLL uses every development target. Training speed includes regularizer probes. Adapter derivatives use CPU float64 with one GPU reserved. [Timing definitions and checkpoint lags](reports/summary.md)
+
+### TinyStories hybrid schedules
+
+**Adaptive vs fixed ramp · 2/8 paired seeds · 16,777,216 targets per run.** Both arms resume the same trace-trained checkpoint. Width change is final width minus width at the switch. A larger change means more width retained at the fixed loss tolerance.
+
+| Metric | Adaptive | Fixed ramp | vs Fixed ramp |
+| --- | --- | --- | --- |
+| Development NLL ↓ | **2.546107** | 2.546281 | 0.000174 lower |
+| Dev top-1 accuracy ↑ | 46.205% | **46.208%** | 0.002 pp lower |
+| Width change after switch ↑ | -2.0865 | **-2.0311** | 0.0554 less retained |
+| Training speed ↑ (targets/s) | **40,983** | 40,328 | 1.5% faster |
+| Peak GPU allocation ↓ (MiB) | 617.3 | 617.3 | Tie |
+
+The remaining controls are paired independently. Each row uses only seeds that finished both arms. The always-on arm has its own measured width at the switch.
+
+| Adaptive versus | Paired seeds | Adaptive NLL | Adaptive width change | Adaptive speed |
+| --- | --- | --- | --- | --- |
+| Cross-seed replay | 0/8 | Pending | — | — |
+| Hessian trace | 2/8 | 0.000002 higher | 0.0015 more retained | 35.0% slower |
+| Stronger trace | 2/8 | 0.000092 lower | 0.0178 less retained | 35.5% slower |
+| Always-on hybrid | 1/8 | 0.000015 lower | 0.0417 more retained | 44.2% faster |
+
+**Registered width decision** · Awaiting eight paired width measurements. Width probes use fixed training windows. [Every width, training-fit flag, replay and paired difference](reports/hybrid/results.md)
+
+<details><summary>Squared-Hessian, scrambled-gradient, combined and untrained controls</summary>
+
+**TinyStories pretraining** · Pilot seed, 2,097,152 training targets.
+
+| Metric | Third order | Squared Hessian | Scrambled signs | Trace + third |
+| --- | --- | --- | --- | --- |
+| Development NLL ↓ | **3.876931** | 3.878680 | 3.877253 | 3.877172 |
+| Dev top-1 accuracy ↑ | 32.326% | 32.299% | **32.331%** | 32.317% |
+| Training speed ↑ (targets/s) | 42,481 | **83,790** | 50,914 | 41,030 |
+| Peak GPU allocation ↓ (MiB) | **608.2** | **608.2** | 608.6 | 619.3 |
+
+**Pythia-410M adapters** · Secondary pilot comparisons are pending.
+
+**Untrained references · zero training targets**
+
+| Stage | Initial NLL ↓ | Unigram NLL ↓ | Initial accuracy ↑ | Unigram accuracy ↑ |
+| --- | --- | --- | --- | --- |
+| TinyStories pretraining | 8.343680 | 6.003555 | 0.312% | 7.151% |
+| Pythia-410M adapters | 3.251674 | 7.330611 | 39.911% | 6.023% |
+
+</details>
+
+### Same-prompt continuations
+
+Each panel shows the first saved prompt and full continuations from the lowest matched seed. The method names link to the raw generations.
+
+<details><summary>TinyStories pretraining · same prompt, seed 0</summary>
+
+**Prompt** <samp>Once upon a time, there was a clever little dog named Max. Max loved</samp>
+
+| [AdamW](results/stories-pilot-s00-ce-r00/samples.jsonl) | [Hessian trace](results/stories-pilot-s00-trace-r01/samples.jsonl) | [Third order](results/stories-pilot-s00-third-r01/samples.jsonl) |
+| --- | --- | --- |
+| <samp> to play on the cat.</samp> | <samp> to play on the cat.</samp> | <samp> to play on the cat.</samp> |
+
+</details>
+
+<details><summary>Pythia-410M adapters · same prompt, seed 0</summary>
+
+**Prompt** <samp>One of the central objectives of contemporary neuroimaging research is to<br>create predictive models</samp>
+
+| [AdamW](results/abstracts-pilot-s00-ce-r00/samples.jsonl) | [Hessian trace](results/abstracts-pilot-s00-trace-r01-fp64/samples.jsonl) | [Third order](results/abstracts-pilot-s00-third-r01-fp64/samples.jsonl) |
+| --- | --- | --- |
+| <samp> that will accurately predict the behavior of<br>patient-specific neurological disorders such as epilepsy. In this paper, we<br>present a novel dataset of EEG data recorded from children with focal<br>subcortical epilepsy</samp> | <samp> that will be used to assess the cognitive<br>performance of neurological disorders. We will focus on three major areas:<br>(1) the nervous system as a whole, (2) the brain regions that</samp> | <samp> that will accurately predict the behavior of<br>patient-specific neurological disorders such as epilepsy. In this paper, we<br>present a novel dataset of EEG data recorded from children with focal<br>subcortical epilepsy</samp> |
+
+</details>
+
+<details><summary>TinyStories hybrid schedules · same prompt, seed 21</summary>
+
+**Prompt** <samp>Once upon a time, there was a clever little dog named Max. Max loved</samp>
+
+| [Adaptive](results/stories-hybrid-s21-adaptive-r01/samples.jsonl) | [Fixed ramp](results/stories-hybrid-s21-late-r01/samples.jsonl) |
+| --- | --- |
+| <samp> to play on the swings and slide. His owner liked to run and play outside. Lily was happy to see his dog and play.<br><br>One day, Max found a big hole in his house</samp> | <samp> to play on the swings and slide. His owner liked to run and play outside. Lily was happy to see his dog and play.<br><br>One day, Max found a big hole in his mail</samp> |
+
+</details>
+
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 34 runs, including 33 with a completed summary.
-
-**TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
-
-**Research abstracts.** Awaiting paired test results (0 of 8 full-horizon training triplets).
+Recorded 35 runs, including 33 with a completed summary.
 
 TinyStories hybrid follow-up: 9 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
+[Full score table, strength search and per-seed test differences](reports/summary.md)
+
 ![Directional width by TinyStories arm and seed](docs/figures/hybrid_width.png)
-
-**TinyStories development pilot.** At 2,097,152 training targets, the third-order run recorded 0.00004 nats per target token lower against Ordinary AdamW, 0.00024 nats per target token lower against Trace + third derivative, 0.00175 nats per target token lower against Squared Hessian norm, 0.00032 nats per target token lower against Randomized gradient signs, 0.00034 nats per target token lower against Hessian trace. These are single-seed descriptions using strengths selected on development.
-
-**Research abstracts development pilot.** At 65,536 training targets, the third-order run recorded 0.00030 nats per target token higher against Ordinary AdamW, 0.00027 nats per target token higher against Hessian trace. These are single-seed descriptions using strengths selected on development.
-
-### Measured scores
-
-| Stage | Phase | Method | Ratio | Tokens/run | Runs | Median dev NLL | Median test NLL |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Research abstracts | control | Initial checkpoint | 0.000 | 0 | 1 | 3.2517 | — |
-| Research abstracts | control | Unigram | 0.000 | 0 | 1 | 7.3306 | — |
-| Research abstracts | pilot | Ordinary AdamW | 0.000 | 65,536 | 1 | 3.1139 | — |
-| Research abstracts | pilot | Third derivative | 0.010 | 65,536 | 1 | 3.1142 | — |
-| Research abstracts | diagnostic | Third derivative | 0.030 | 65,536 | 1 | 3.1168 | — |
-| Research abstracts | pilot | Third derivative | 0.030 | 65,536 | 1 | 3.1149 | — |
-| Research abstracts | pilot | Third derivative | 0.100 | 65,536 | 1 | 3.1163 | — |
-| Research abstracts | pilot | Hessian trace | 0.010 | 65,536 | 1 | 3.1140 | — |
-| Research abstracts | pilot | Hessian trace | 0.030 | 65,536 | 1 | 3.1141 | — |
-| Research abstracts | pilot | Hessian trace | 0.100 | 65,536 | 1 | 3.1143 | — |
-| TinyStories | branch | Shared trace checkpoint | 0.010 | 8,388,608 | 2 | 2.7575 | — |
-| TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
-| TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
-| TinyStories | hybrid | Curvature-dependent hybrid | 0.010 | 16,777,216 | 2 | 2.5461 | — |
-| TinyStories | hybrid | Always-on hybrid | 0.010 | 16,777,216 | 1 | 2.5459 | — |
-| TinyStories | hybrid | Fixed late hybrid | 0.010 | 16,777,216 | 2 | 2.5463 | — |
-| TinyStories | hybrid | Stronger trace | 0.010 | 16,777,216 | 2 | 2.5462 | — |
-| TinyStories | hybrid | Hessian trace | 0.010 | 16,777,216 | 2 | 2.5461 | — |
-| TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |
-| TinyStories | pilot | Trace + third derivative | 0.010 | 2,097,152 | 1 | 3.8772 | — |
-| TinyStories | pilot | Squared Hessian norm | 0.030 | 2,097,152 | 1 | 3.8787 | — |
-| TinyStories | pilot | Randomized gradient signs | 0.010 | 2,097,152 | 1 | 3.8773 | — |
-| TinyStories | pilot | Third derivative | 0.010 | 2,097,152 | 1 | 3.8769 | — |
-| TinyStories | pilot | Third derivative | 0.030 | 2,097,152 | 1 | 3.8778 | — |
-| TinyStories | pilot | Third derivative | 0.100 | 2,097,152 | 1 | 3.8827 | — |
-| TinyStories | pilot | Hessian trace | 0.010 | 2,097,152 | 1 | 3.8773 | — |
-| TinyStories | pilot | Hessian trace | 0.030 | 2,097,152 | 1 | 3.8802 | — |
-| TinyStories | pilot | Hessian trace | 0.100 | 2,097,152 | 1 | 3.8979 | — |
 
 ![Parameter-space computation graph](docs/figures/architecture.png)
 
 ![Development NLL](docs/figures/curves.png)
 
-### Recorded predictions
+### Full generations by method
 
-First registered checkpoint and sample in run-ID order per stage and method. [All continuations](reports/experiments/experiments.md)
+**TinyStories** · [Initial checkpoint](reports/experiments/stories-control-s00-initial-r00/experiment.md#fixed-prompt-generations) · [Unigram](reports/experiments/stories-control-s00-unigram-r00/experiment.md#fixed-prompt-generations) · [Curvature-dependent hybrid](reports/experiments/stories-hybrid-s21-adaptive-r01/experiment.md#fixed-prompt-generations) · [Always-on hybrid](reports/experiments/stories-hybrid-s21-always-r01/experiment.md#fixed-prompt-generations) · [Fixed late hybrid](reports/experiments/stories-hybrid-s21-late-r01/experiment.md#fixed-prompt-generations) · [Stronger trace](reports/experiments/stories-hybrid-s21-strong-r01/experiment.md#fixed-prompt-generations) · [Hessian trace](reports/experiments/stories-hybrid-s21-trace-r01/experiment.md#fixed-prompt-generations) · [Ordinary AdamW](reports/experiments/stories-pilot-s00-ce-r00/experiment.md#fixed-prompt-generations) · [Trace + third derivative](reports/experiments/stories-pilot-s00-combined-r01/experiment.md#fixed-prompt-generations) · [Squared Hessian norm](reports/experiments/stories-pilot-s00-hessian_norm-r03/experiment.md#fixed-prompt-generations) · [Randomized gradient signs](reports/experiments/stories-pilot-s00-sham-r01/experiment.md#fixed-prompt-generations) · [Third derivative](reports/experiments/stories-pilot-s00-third-r01/experiment.md#fixed-prompt-generations)
 
-<details><summary>Research abstracts · Initial checkpoint · control, seed 0</summary>
+**Research abstracts** · [Initial checkpoint](reports/experiments/abstracts-control-s00-initial-r00/experiment.md#fixed-prompt-generations) · [Unigram](reports/experiments/abstracts-control-s00-unigram-r00/experiment.md#fixed-prompt-generations) · [Ordinary AdamW](reports/experiments/abstracts-pilot-s00-ce-r00/experiment.md#fixed-prompt-generations) · [Third derivative](reports/experiments/abstracts-pilot-s00-third-r01-fp64/experiment.md#fixed-prompt-generations) · [Hessian trace](reports/experiments/abstracts-pilot-s00-trace-r01-fp64/experiment.md#fixed-prompt-generations)
 
-[Recorded sample](results/abstracts-control-s00-initial-r00/samples.jsonl)
-
-**Prompt**
-
-    One of the central objectives of contemporary neuroimaging research is to
-    create predictive models
-
-**Reference continuation**
-
-     that can disentangle the connection between patterns
-    of functional connectivity across the entire brain and various behavioral
-    traits. Previous studies have shown that models trained to predict behavioral
-    features from the individual's functional
-
-**Model continuation**
-
-     that will be used by neuroscience researchers to
-    identify cases of a disease or to select appropriate therapeutic intervention.
-    
-    The research of Peter Seager and colleagues has demonstrated that the brain
-    can
-
-</details>
-
-<details><summary>Research abstracts · Unigram · control, seed 0</summary>
-
-[Recorded sample](results/abstracts-control-s00-unigram-r00/samples.jsonl)
-
-**Prompt**
-
-    One of the central objectives of contemporary neuroimaging research is to
-    create predictive models
-
-**Reference continuation**
-
-     that can disentangle the connection between patterns
-    of functional connectivity across the entire brain and various behavioral
-    traits. Previous studies have shown that models trained to predict behavioral
-    features from the individual's functional
-
-**Model continuation**
-
-     neural. is novel In used describe sacrific the theruction
-     To their
-    zo than chronic current the the factor an( simultaneouslyrelated
-    exchange
-    purpose,) was} standards
-     of
-     radio.
-
-</details>
-
-<details><summary>Research abstracts · Ordinary AdamW · pilot, seed 0</summary>
-
-[Recorded sample](results/abstracts-pilot-s00-ce-r00/samples.jsonl)
-
-**Prompt**
-
-    One of the central objectives of contemporary neuroimaging research is to
-    create predictive models
-
-**Reference continuation**
-
-     that can disentangle the connection between patterns
-    of functional connectivity across the entire brain and various behavioral
-    traits. Previous studies have shown that models trained to predict behavioral
-    features from the individual's functional
-
-**Model continuation**
-
-     that will accurately predict the behavior of
-    patient-specific neurological disorders such as epilepsy. In this paper, we
-    present a novel dataset of EEG data recorded from children with focal
-    subcortical epilepsy
-
-</details>
-
-<details><summary>Research abstracts · Third derivative · pilot, seed 0</summary>
-
-[Recorded sample](results/abstracts-pilot-s00-third-r01-fp64/samples.jsonl)
-
-**Prompt**
-
-    One of the central objectives of contemporary neuroimaging research is to
-    create predictive models
-
-**Reference continuation**
-
-     that can disentangle the connection between patterns
-    of functional connectivity across the entire brain and various behavioral
-    traits. Previous studies have shown that models trained to predict behavioral
-    features from the individual's functional
-
-**Model continuation**
-
-     that will accurately predict the behavior of
-    patient-specific neurological disorders such as epilepsy. In this paper, we
-    present a novel dataset of EEG data recorded from children with focal
-    subcortical epilepsy
-
-</details>
-
-<details><summary>Research abstracts · Hessian trace · pilot, seed 0</summary>
-
-[Recorded sample](results/abstracts-pilot-s00-trace-r01-fp64/samples.jsonl)
-
-**Prompt**
-
-    One of the central objectives of contemporary neuroimaging research is to
-    create predictive models
-
-**Reference continuation**
-
-     that can disentangle the connection between patterns
-    of functional connectivity across the entire brain and various behavioral
-    traits. Previous studies have shown that models trained to predict behavioral
-    features from the individual's functional
-
-**Model continuation**
-
-     that will be used to assess the cognitive
-    performance of neurological disorders. We will focus on three major areas:
-    (1) the nervous system as a whole, (2) the brain regions that
-
-</details>
-
-<details><summary>TinyStories · Initial checkpoint · control, seed 0</summary>
-
-[Recorded sample](results/stories-control-s00-initial-r00/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     break painted pleaseerp gif neat lead bro comfort rid shr search impressedosairs try ants oss note daughter woodLater rest independent stars stonesiver mixaybe Le spoon readMe fingersiew embar bached mail
-
-</details>
-
-<details><summary>TinyStories · Unigram · control, seed 0</summary>
-
-[Recorded sample](results/stories-control-s00-unigram-r00/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     it said her mom girlan he said that fell flut back's hard. a them into work protectt hug?" his and little teeth "What sky some Timmy and on 
-     down As's
-     very
-
-</details>
-
-<details><summary>TinyStories · Curvature-dependent hybrid · hybrid, seed 21</summary>
-
-[Recorded sample](results/stories-hybrid-s21-adaptive-r01/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     to play on the swings and slide. His owner liked to run and play outside. Lily was happy to see his dog and play.
-    
-    One day, Max found a big hole in his house
-
-</details>
-
-<details><summary>TinyStories · Always-on hybrid · hybrid, seed 21</summary>
-
-[Recorded sample](results/stories-hybrid-s21-always-r01/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     to play on the swings and slide. His owner liked to run and play outside. Lily was happy to see his dog and play.
-    
-    One day, Max found a big hole in his mail
-
-</details>
-
-<details><summary>TinyStories · Fixed late hybrid · hybrid, seed 21</summary>
-
-[Recorded sample](results/stories-hybrid-s21-late-r01/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     to play on the swings and slide. His owner liked to run and play outside. Lily was happy to see his dog and play.
-    
-    One day, Max found a big hole in his mail
-
-</details>
-
-<details><summary>TinyStories · Stronger trace · hybrid, seed 21</summary>
-
-[Recorded sample](results/stories-hybrid-s21-strong-r01/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     to play on the swings and slide. His owner liked to run and play outside. Lily was happy to see his dog and play.
-    
-    One day, Max found a big hole in his house
-
-</details>
-
-<details><summary>TinyStories · Hessian trace · hybrid, seed 21</summary>
-
-[Recorded sample](results/stories-hybrid-s21-trace-r01/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     to play on the swings and slide. His owner liked to run and play outside. Lily was happy to see his dog and play.
-    
-    One day, Max found a big hole in his house
-
-</details>
-
-<details><summary>TinyStories · Ordinary AdamW · pilot, seed 0</summary>
-
-[Recorded sample](results/stories-pilot-s00-ce-r00/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     to play on the cat.
-
-</details>
-
-<details><summary>TinyStories · Trace + third derivative · pilot, seed 0</summary>
-
-[Recorded sample](results/stories-pilot-s00-combined-r01/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     to play on the cat.
-
-</details>
-
-<details><summary>TinyStories · Squared Hessian norm · pilot, seed 0</summary>
-
-[Recorded sample](results/stories-pilot-s00-hessian_norm-r03/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     to play on the cat.
-
-</details>
-
-<details><summary>TinyStories · Randomized gradient signs · pilot, seed 0</summary>
-
-[Recorded sample](results/stories-pilot-s00-sham-r01/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     to play on the cat.
-
-</details>
-
-<details><summary>TinyStories · Third derivative · pilot, seed 0</summary>
-
-[Recorded sample](results/stories-pilot-s00-third-r01/samples.jsonl)
-
-**Prompt**
-
-    Once upon a time, there was a clever little dog named Max. Max loved
-
-**Reference continuation**
-
-     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
-    
-    Max went to his friend, the wise old owl,
-
-**Model continuation**
-
-     to play on the cat.
-
-</details>
 <!-- RESULTS:END -->
 
 ## Reproduce the study

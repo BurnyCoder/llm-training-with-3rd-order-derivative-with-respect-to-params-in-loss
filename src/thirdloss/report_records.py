@@ -111,6 +111,17 @@ def fmt(value, digits: int = 3) -> str:
     return f"{value:,.{digits}f}" if finite(value) else "—"
 
 
+def markdown_cell(value):
+    """Keep arbitrary labels and run identifiers inside one GitHub Markdown table cell."""
+    return str(value).replace("|","\\|").replace("\n"," ")
+
+
+def markdown_table(rows,headings):
+    def row(values):
+        return "| "+" | ".join(markdown_cell(value) for value in values)+" |"
+    return "\n".join([row(headings),row(["---"]*len(headings)),*(row(values) for values in rows)])
+
+
 def run_record(folder: Path) -> dict:
     """Join configuration, events and final summary with explicit completion state."""
     state = read_json(folder / "state.json")

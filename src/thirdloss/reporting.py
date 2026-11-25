@@ -7,22 +7,12 @@ from statistics import median
 from urllib.parse import quote
 
 from .report_figures import build_figures
+from .readme_comparisons import comparison_sections
 from .report_paper import write_paper
 from .report_records import (
     METHODS, PAGES, STAGES, atomic_text, completed, describe_difference, example_runs, finite, fmt, study_snapshot,
-    verdict_text,
+    verdict_text,markdown_cell as _cell,markdown_table as _table,
 )
-
-
-def _cell(value) -> str:
-    """Keep arbitrary run annotations and identifiers inside one Markdown table cell."""
-    return str(value).replace("|", "\\|").replace("\n", " ")
-
-
-def _table(rows: list[list], headings: list[str]) -> str:
-    def row(values):
-        return "| " + " | ".join(_cell(v) for v in values) + " |"
-    return "\n".join([row(headings), row(["---"] * len(headings)), *(row(v) for v in rows)])
 
 
 def _method(run: dict) -> str:
@@ -220,17 +210,20 @@ def _compact_table(study: dict) -> str:
                          "Median dev NLL", "Median test NLL"]) if rows else ""
 
 
-def _update_readme(root: Path, body: str) -> None:
-    """Preserve all hand-authored material, including edits made between report builds."""
-    path = root / "README.md"
+def _update_sections(path,sections):
+    """Replace only the named report sections, preserving the author's surrounding text."""
     if not path.exists():
         return
-    before = path.read_text(encoding="utf-8-sig")
-    pattern = r"<!-- RESULTS:START -->.*?<!-- RESULTS:END -->"
-    if len(re.findall(pattern, before, re.DOTALL)) != 1:
-        raise ValueError(f"{path} requires exactly one pair of results markers")
-    replacement = "<!-- RESULTS:START -->\n" + body.strip() + "\n<!-- RESULTS:END -->"
-    atomic_text(path, re.sub(pattern, lambda _: replacement, before, flags=re.DOTALL))
+    content = path.read_text(encoding="utf-8-sig")
+    for label,generated,required in sections:
+        if not required and f"<!-- {label}:" not in content:
+            continue
+        pattern=f"<!-- {label}:START -->.*?<!-- {label}:END -->"
+        if len(re.findall(pattern,content,re.DOTALL))!=1:
+            raise ValueError(f"{path} requires exactly one pair of {label} markers")
+        replacement=f"<!-- {label}:START -->\n\n"+generated.strip()+f"\n\n<!-- {label}:END -->"
+        content=re.sub(pattern,lambda _:replacement,content,flags=re.DOTALL)
+    atomic_text(path,content)
 
 
 def _hybrid_report(root,study):
@@ -331,25 +324,28 @@ def build_report(root: Path = Path(".")) -> dict:
     badge = (f"[Explore the results]({PAGES}) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · "
              "[Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · "
              "[Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)")
-    readme = [badge, overview, _stage_summary(study),hybrid+" [Width measurements, scores and controls](reports/hybrid/results.md)"]
+    opening,side_by_side=comparison_sections(study)
+    readme = [side_by_side,badge,overview,hybrid+" [Width measurements, scores and controls](reports/hybrid/results.md)",
+              "[Full score table, strength search and per-seed test differences](reports/summary.md)"]
     if "hybrid_width" in figures:
         readme.append("![Directional width by TinyStories arm and seed](docs/figures/hybrid_width.png)")
-    if pilots:
-        readme.append(pilots)
-    if compact:
-        readme.extend(["### Measured scores", compact])
     readme.append("![Parameter-space computation graph](docs/figures/architecture.png)")
     for key in ("paired", "curves"):
         if key in figures:
             readme.append(f"![{'Paired test differences' if key == 'paired' else 'Development NLL'}](docs/figures/{figures[key]})")
-    panels = []
-    for run in example_runs(study["runs"]):
-        panels.append(f"<details><summary>{_stage(run)} · {_method(run)} · {run['phase']}, seed {run['seed']}</summary>\n\n"
-                      + f"[Recorded sample](results/{run['id']}/samples.jsonl)\n\n"
-                      + _sample(run["samples"][0]) + "\n\n</details>")
-    if panels:
-        readme += ["### Recorded predictions", "First registered checkpoint and sample in run-ID order per "
-                   "stage and method. [All continuations](reports/experiments/experiments.md)", *panels]
-    _update_readme(root, "\n\n".join(readme))
+    examples=example_runs(study["runs"])
+    if examples:
+        readme.append("### Full generations by method")
+        for stage,name in STAGES.items():
+            links=[f"[{_method(r)}](reports/experiments/{r['id']}/experiment.md#fixed-prompt-generations)"
+                   for r in examples if r["stage"]==stage]
+            if links:
+                readme.append(f"**{name}** · "+" · ".join(links))
+    _update_sections(root/"README.md",[("RESULTS","\n\n".join(readme),True),("READOUT",opening,False)])
+    # The collection's landing card shows the same tables with native Hub evidence links.
+    hub_base="https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/"
+    hub_tables=re.sub(r"\]\(((?:reports|results)/)",lambda match:"]("+hub_base+match.group(1),
+                      opening+"\n\n"+side_by_side)
+    _update_sections(root/"docs"/"hub"/"archive.md",[("COMPARISONS",hub_tables,True)])
     write_paper(study, root / "reports" / "paper.pdf", root / "docs" / "figures", figures)
     return study
