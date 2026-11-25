@@ -492,6 +492,20 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "at matched token counts. Held-out development loss tests prediction separately. "
       f"{_link(REPOSITORY + '/blob/main/docs/third-derivative-penalty.md#weighting-the-penalty-by-curvature', 'Derivation')} · "
       f"{_link(REPOSITORY + '/blob/main/reports/plan.md#curvature-dependent-penalty-weight', 'Controls and readouts')}")
+    p("Final seed sensitivity", "subheading")
+    sensitivity=study.get("seed_sensitivity")
+    if sensitivity:
+        rows=[]
+        for r in sensitivity["rows"]:
+            if r["metric"] in {"Δtest NLL","Δwidth retained"}:
+                loo=r.get("leave_one_out_medians")
+                rows.append([STAGES[r["stage"]],r["arm"],r["metric"],f"{r['sample_sd']:.5g}" if loo else "Censored",
+                             f"{min(loo):.5g} to {max(loo):.5g}" if loo else "Censored"])
+        flow.append(_grid(styles,["Corpus","Paired contrast","Metric","Seed SD","Leave-one-out median range"],
+                          rows,[83,130,68,67,116]))
+    else:
+        p("The final seed analysis follows the original frozen test evaluations, hybrid replications and checkpoint geometry.", "caption")
+    p(f"{_link(REPOSITORY+'/blob/main/reports/seed-sensitivity.md','Full seed results and execution order')}", "caption")
     p("AI statement", "subheading")
     p("Codex wrote the codebase and paper from the exact specification provided by a human. "
       "Human cleanup and rewriting are in progress.", "caption")

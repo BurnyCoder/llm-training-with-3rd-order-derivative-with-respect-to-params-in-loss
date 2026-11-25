@@ -171,7 +171,7 @@ def match_stronger_trace(project,storage,trunk,cap,device):
     return delta
 
 
-def run_hybrids(project,storage,device,publish,with_flatness=False):
+def run_hybrids(project,storage,device,publish,with_flatness=False,cohort="all"):
     """Run each trunk once; delay seed 21 replay until seed 28 has published its schedule."""
     from .study import milestone, parent_restart_file
     from .train import run_config
@@ -207,9 +207,11 @@ def run_hybrids(project,storage,device,publish,with_flatness=False):
                 replay = read_json(path)["changes"]
         row = run_config(project,storage,config,device,protocol=HybridProtocol(project,storage,config,replay))
         milestone(project,storage,row,publish,device if with_flatness else None)
-    for seed in SEEDS:
+    seeds={"example":SEEDS[:1],"replications":SEEDS[1:],"all":SEEDS}[cohort]
+    for seed in seeds:
         for arm in ("trunk","adaptive","late","trace","strong","always"):
             run(seed,arm)
         if seed!=SEEDS.start:
             run(seed,"replay")
-    run(SEEDS.start,"replay")
+    if cohort!="example":
+        run(SEEDS.start,"replay")

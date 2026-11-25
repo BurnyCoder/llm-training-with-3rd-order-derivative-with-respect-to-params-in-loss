@@ -18,6 +18,8 @@ Evaluate seed-paired final test predictions only when the stage has all planned 
 
 ## Registered hybrid follow-up
 
+The full queue completes both stages’ pilots and trained controls before additional seed replication. Both families receive a full-budget first seed before the remaining primary confirmations. The remaining hybrid seeds and cyclic replay follow the original test evaluations. The dedicated seed-sensitivity analysis runs last. [Execution order and descriptive statistics](amendments/seed-sensitivity-last.md)
+
 The six TinyStories arms share eight paired seeds. Five branch from a common trace-trained checkpoint and one uses both penalties from initialization. Directional width is measured at three token counts. The curvature rule, replay donors, cap, stronger-trace calibration and decision threshold were fixed before follow-up outcomes. [Hybrid run matrix and decision rule](hybrid/preregistration.md) · [Research question](plan.md#curvature-dependent-penalty-weight)
 
 ## Secondary flatness measurements

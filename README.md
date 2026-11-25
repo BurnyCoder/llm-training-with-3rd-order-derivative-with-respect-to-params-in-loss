@@ -334,6 +334,8 @@ The pipeline pins the source texts, splits by document, learns the stories token
 
 ## Milestones
 
+**Seed sensitivity runs last.** Both stages complete their single-seed variants, controls and first full-budget comparison before the remaining primary confirmations. After the frozen tests, hybrid replications and checkpoint flatness, the final report measures how much the outcomes change across seeds. [Execution order](reports/amendments/seed-sensitivity-last.md) · [Final seed-sensitivity report](reports/seed-sensitivity.md)
+
 - Publish the protocol, references and analysis decisions.
 - Verify the scalar objective and its training gradient on analytical functions and a small Transformer.
 - Train the pilot, publish throughput and establish feasibility on the local GPU.

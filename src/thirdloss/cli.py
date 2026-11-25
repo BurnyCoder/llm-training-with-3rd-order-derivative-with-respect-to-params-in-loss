@@ -36,7 +36,7 @@ def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--project",type=Path,default=Path.cwd())
     parsers = p.add_subparsers(dest="action",required=True)
-    for action in ("prepare","train","study","hybrid","flatness","freeze","evaluate","report","dashboard","publish","audit-hub","audit-restart","progress","verify"):
+    for action in ("prepare","train","study","hybrid","flatness","freeze","evaluate","seed-sensitivity","report","dashboard","publish","audit-hub","audit-restart","progress","verify"):
         sub = parsers.add_parser(action)
         if action in {"prepare","study","flatness"}:
             sub.add_argument("--stage",choices=(*HORIZONS,"both"),default="both")
@@ -49,6 +49,9 @@ def parser():
             sub.add_argument("--run-id",help="Measure a single completed run in the selected phase")
         if action=="study":
             sub.add_argument("--with-hybrid",action="store_true",help="Include the registered TinyStories hybrid follow-up on the same GPU")
+        if action=="hybrid":
+            sub.add_argument("--cohort",choices=("example","replications","all"),default="all",
+                             help="Run the first seed, the remaining seeds and cyclic replay, or the standalone full follow-up")
         if action in {"study","hybrid"}:
             sub.add_argument("--with-flatness",action="store_true",help="Measure comparable training-window geometry at each completed checkpoint")
         if action=="verify":
@@ -62,7 +65,7 @@ def parser():
             sub.add_argument("--seed",type=int,default=0)
             sub.add_argument("--ratio",type=float,default=0.03)
             sub.add_argument("--microbatch",type=int)
-        if action in {"train","study","hybrid","evaluate","flatness"}:
+        if action in {"train","study","hybrid","evaluate","flatness","seed-sensitivity"}:
             sub.add_argument("--publish",action="store_true",help="Publish results to the configured project accounts")
         if action in {"evaluate","audit-restart"}:
             sub.add_argument("run_id")
@@ -78,6 +81,10 @@ def main(argv=None):
     args = parser().parse_args(argv)
     project = args.project.resolve()
     storage = storage_root(project)
+    if args.action=="seed-sensitivity":
+        from .seed_sensitivity import finish_seed_sensitivity
+        finish_seed_sensitivity(project,args.publish)
+        return
     if args.action=="audit-hub":
         from .hub_archive import audit_archive
         print(json.dumps(audit_archive(project),indent=2))
@@ -142,12 +149,9 @@ def main(argv=None):
             if args.action=="hybrid":
                 from .hybrid import run_hybrids
                 prepare_stage(project,storage,"stories")
-                run_hybrids(project,storage,device,args.publish,with_flatness=args.with_flatness)
+                run_hybrids(project,storage,device,args.publish,with_flatness=args.with_flatness,cohort=args.cohort)
             else:
                 run_study(project,storage,stages,device,args.publish,with_hybrid=args.with_hybrid,with_flatness=args.with_flatness)
-                if args.with_flatness:
-                    from .checkpoint_flatness import flatness_study
-                    flatness_study(project,storage,stages,"all",device,args.publish)
         return
     if args.action=="evaluate":
         summary = evaluate_one(project,storage,args.run_id,device)

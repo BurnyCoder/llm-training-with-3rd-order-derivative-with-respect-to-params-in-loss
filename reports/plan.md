@@ -14,6 +14,8 @@ Hochreiter and Schmidhuber hypothesized that, at comparable training loss, a mod
 
 The dated progress record gives completed milestones and outstanding work. Source code, token-stream digests, restartable checkpoint settings and reload instructions are available from the reproduction guide. [Progress](progress.md) · [Reproduction guide](../docs/runbook.md)
 
+Seed sensitivity is the final analysis. Complete all single-seed variants and controls in both model families, run the first full-budget paired seed in each, finish the registered primary studies and their frozen tests, and then finish the pending hybrid replications. After every checkpoint has its geometry, seal the inputs and summarize variability across seeds. [Execution-order amendment](amendments/seed-sensitivity-last.md) · [Final report](seed-sensitivity.md)
+
 ## Late third-derivative regularization
 
 The fixed late ramp, curvature-dependent rule, cross-seed replay and controls are now registered for execution. [Hybrid preregistration and run matrix](hybrid/preregistration.md)

@@ -300,6 +300,9 @@ def build_report(root: Path = Path(".")) -> dict:
     """Regenerate README results, PDF, experiment ledger, figures and the static dashboard."""
     root = Path(root).resolve()
     study = study_snapshot(root)
+    from .seed_sensitivity import render_seed_sensitivity
+    sensitivity=render_seed_sensitivity(root,study)
+    study["seed_sensitivity"]=sensitivity
     hybrid = _hybrid_report(root,study)
     atomic_text(root/"reports"/"flatness.md",flatness_ledger(study))
     figures = build_figures(study, root / "docs" / "figures")
@@ -312,7 +315,7 @@ def build_report(root: Path = Path(".")) -> dict:
     counts = len(study["runs"])
     done = sum(completed(run) for run in study["runs"])
     overview = f"Recorded {counts} runs, including {done} with a completed summary."
-    documents = [f"[Interactive explorer]({PAGES})", "[Per-run ledger](experiments/experiments.md)",
+    documents = [f"[Interactive explorer]({PAGES})", "[Per-run ledger](experiments/experiments.md)", "[Final seed sensitivity](seed-sensitivity.md)",
                  "[Preregistration](preregistration.md)", "[Paper](paper.pdf)"]
     summary = ["# Study summary", overview, _stage_summary(study), hybrid+" [Hybrid outcomes](hybrid/results.md)", " · ".join(documents)]
     pilots = _pilot_summary(study)
@@ -331,6 +334,10 @@ def build_report(root: Path = Path(".")) -> dict:
              "[Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · "
              "[Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)")
     opening,side_by_side=comparison_sections(study)
+    seed_status=("The final seed analysis is complete. It gives the across-seed spread and the range of medians "
+                 "when each paired seed is omitted in turn." if sensitivity else
+                 "Seed sensitivity is the final stage, after both primary test evaluations, all hybrid replications and checkpoint flatness.")
+    side_by_side+="\n\n"+seed_status+" [Final seed-sensitivity report](reports/seed-sensitivity.md)"
     readme = [side_by_side,badge,overview,hybrid+" [Width measurements, scores and controls](reports/hybrid/results.md)",
               "[Full score table, strength search and per-seed test differences](reports/summary.md)"]
     if "hybrid_width" in figures:

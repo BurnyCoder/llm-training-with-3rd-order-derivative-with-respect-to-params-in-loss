@@ -116,6 +116,12 @@ def progress(project):
     lines += geometry_progress(project,study)
     lines += ["## Overall completion and remaining time",
               *remaining_work(project,study,schedule,extra,normal,len(done)+len(tests),total)]
+    final=(project/"results"/"analysis"/"seed-sensitivity.json").is_file()
+    lines.append(("The final seed-sensitivity analysis is complete." if final else
+                  "The final seed-sensitivity analysis is pending. The queue completes both stages’ single-seed "
+                  "comparisons and original frozen test evaluations before the remaining hybrid replications. "
+                  "All checkpoint measurements precede the final across-seed analysis.")
+                 +" [Queue amendment](amendments/seed-sensitivity-last.md) · [Final report](seed-sensitivity.md)")
     lines += ["## Monitoring","Inspect runs lasting over 10, 30 and 60 minutes at 5, 15 and 30 minute intervals "
               "respectively. The live dashboard refreshes between those checks. "
               "[Study design](plan.md) · [Run matrix](planned-runs.md) · [Experiment ledger](experiments/experiments.md)"]
