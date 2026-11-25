@@ -21,11 +21,13 @@ The third-order term measures how the Hessian changes as weights move. Two indep
 <!-- RESULTS:START -->
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 3 runs, including 3 with a completed summary.
+Recorded 4 runs, including 4 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
 **Research abstracts.** Awaiting paired test results (0 of 8 full-horizon training triplets).
+
+**TinyStories development pilot.** At 2,097,152 training targets, the third-order run recorded 0.00080 nats per target token higher against Ordinary AdamW. These are single-seed descriptions using initial pilot strengths.
 
 ### Measured scores
 
@@ -33,6 +35,7 @@ Recorded 3 runs, including 3 with a completed summary.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
+| TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |
 | TinyStories | pilot | Third derivative | 0.030 | 2,097,152 | 1 | 3.8778 | — |
 
 ![Parameter-space computation graph](docs/figures/architecture.png)
@@ -78,6 +81,24 @@ First archived sample in run-ID order per stage and method. [All continuations](
      it said her mom girlan he said that fell flut back's hard. a them into work protectt hug?" his and little teeth "What sky some Timmy and on 
      down As's
      very
+
+</details>
+
+<details><summary>TinyStories · Ordinary AdamW</summary>
+
+**Prompt**
+
+    Once upon a time, there was a clever little dog named Max. Max loved
+
+**Reference continuation**
+
+     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
+    
+    Max went to his friend, the wise old owl,
+
+**Model continuation**
+
+     to play on the cat.
 
 </details>
 

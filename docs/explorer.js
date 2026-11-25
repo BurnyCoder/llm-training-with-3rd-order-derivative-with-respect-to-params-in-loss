@@ -150,6 +150,7 @@ function draw() {
   } else {
     const pad = (high - low || Math.max(Math.abs(high) * .1, .01)) * .09;
     low -= pad; high += pad;
+    if (["dev_nll", "loss", "raw_third", "raw_hessian_norm"].includes(metric)) low = Math.max(0, low);
   }
   maxX = maxX || 1;
   const positionX = value => frame.left + (frame.right - frame.left) * value / maxX;
