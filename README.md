@@ -21,7 +21,7 @@ The third-order term measures how the Hessian changes as weights move. Two indep
 <!-- RESULTS:START -->
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 4 runs, including 4 with a completed summary.
+Recorded 5 runs, including 5 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -37,6 +37,7 @@ Recorded 4 runs, including 4 with a completed summary.
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
 | TinyStories | pilot | Ordinary AdamW | 0.000 | 2,097,152 | 1 | 3.8770 | — |
 | TinyStories | pilot | Third derivative | 0.030 | 2,097,152 | 1 | 3.8778 | — |
+| TinyStories | pilot | Hessian trace | 0.010 | 2,097,152 | 1 | 3.8773 | — |
 
 ![Parameter-space computation graph](docs/figures/architecture.png)
 
@@ -103,6 +104,24 @@ First archived sample in run-ID order per stage and method. [All continuations](
 </details>
 
 <details><summary>TinyStories · Third derivative</summary>
+
+**Prompt**
+
+    Once upon a time, there was a clever little dog named Max. Max loved
+
+**Reference continuation**
+
+     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
+    
+    Max went to his friend, the wise old owl,
+
+**Model continuation**
+
+     to play on the cat.
+
+</details>
+
+<details><summary>TinyStories · Hessian trace</summary>
 
 **Prompt**
 

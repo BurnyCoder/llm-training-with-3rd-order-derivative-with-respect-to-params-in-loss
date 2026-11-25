@@ -10,3 +10,4 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | [stories-control-s00-unigram-r00](./stories-control-s00-unigram-r00/experiment.md) | TinyStories | Unigram | control | 0 | 0.000 | 0 | 6.0036 | — | 0 | complete |
 | [stories-pilot-s00-ce-r00](./stories-pilot-s00-ce-r00/experiment.md) | TinyStories | Ordinary AdamW | pilot | 0 | 0.000 | 2,097,152 | 3.8770 | — | 123,871 | complete |
 | [stories-pilot-s00-third-r03](./stories-pilot-s00-third-r03/experiment.md) | TinyStories | Third derivative | pilot | 0 | 0.030 | 2,097,152 | 3.8778 | — | 46,072 | complete |
+| [stories-pilot-s00-trace-r01](./stories-pilot-s00-trace-r01/experiment.md) | TinyStories | Hessian trace | pilot | 0 | 0.010 | 2,097,152 | 3.8773 | — | 73,185 | complete |
