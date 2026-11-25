@@ -1,6 +1,6 @@
 # Study progress
 
-Updated 2026-11-25T17:19:38+00:00.
+Updated 2026-11-25T17:22:47+00:00.
 
 21 training/control records and 0 final evaluations are complete. This is 17.5% of 120 planned model milestones.
 
@@ -24,7 +24,7 @@ At the pre-test check on 2026-11-25T10:33:28+00:00, pilot timings projected 22.5
 
 ## TinyStories hybrid follow-up
 
-17 of 48 full runs and 3 of 8 shared checkpoints complete. awaiting eight paired width measurements. [Per-seed widths and development scores](hybrid/results.md)
+17 of 48 full runs and 4 of 8 shared checkpoints complete. awaiting eight paired width measurements. [Per-seed widths and development scores](hybrid/results.md)
 
 The first measured set of hybrid arms projects 33.68 further hours from that checkpoint, including the eight replays. With the original confirmations and final scoring, the projected remaining work at the check was 56.18 hours with 159.49 hours left in the week. [Wall-time assumptions, measured memory and inputs](../results/feasibility/hybrid-week.json)
 
