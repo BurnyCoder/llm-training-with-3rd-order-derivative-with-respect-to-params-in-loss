@@ -9,6 +9,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | [abstracts-control-s00-initial-r00](./abstracts-control-s00-initial-r00/experiment.md) | Research abstracts | Initial checkpoint | control | 0 | 0.000 | 0 | 3.2517 | — | 0 | complete |
 | [abstracts-control-s00-unigram-r00](./abstracts-control-s00-unigram-r00/experiment.md) | Research abstracts | Unigram | control | 0 | 0.000 | 0 | 7.3306 | — | 0 | complete |
 | [abstracts-pilot-s00-ce-r00](./abstracts-pilot-s00-ce-r00/experiment.md) | Research abstracts | Ordinary AdamW | pilot | 0 | 0.000 | 65,536 | 3.1139 | — | 1,659 | complete |
+| [abstracts-pilot-s00-combined-r01-fp64](./abstracts-pilot-s00-combined-r01-fp64/experiment.md) | Research abstracts | Trace + third derivative | pilot | 0 | 0.010 | 65,536 | 3.1143 | — | 137 | complete |
 | [abstracts-pilot-s00-hessian_norm-r03-fp64](./abstracts-pilot-s00-hessian_norm-r03-fp64/experiment.md) | Research abstracts | Squared Hessian norm | pilot | 0 | 0.030 | 65,536 | 3.1139 | — | 413 | complete |
 | [abstracts-pilot-s00-sham-r01-fp64](./abstracts-pilot-s00-sham-r01-fp64/experiment.md) | Research abstracts | Randomized gradient signs | pilot | 0 | 0.010 | 65,536 | 3.1142 | — | 171 | complete |
 | [abstracts-pilot-s00-third-r01-fp64](./abstracts-pilot-s00-third-r01-fp64/experiment.md) | Research abstracts | Third derivative | pilot | 0 | 0.010 | 65,536 | 3.1142 | — | 189 | complete |

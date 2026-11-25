@@ -12,6 +12,8 @@ Independent random signs include mixed weight derivatives in the expected penalt
 
 - [abstracts-pilot-s00-ce-r00](./abstracts-pilot-s00-ce-r00/experiment.md) — Development NLL changed by -0.1172 nats per target token from 4,096 to 65,536 training targets. Attribution to the regularizer uses matched comparisons across seeds.
 
+- [abstracts-pilot-s00-combined-r01-fp64](./abstracts-pilot-s00-combined-r01-fp64/experiment.md) — Development NLL changed by -0.1167 nats per target token from 4,096 to 65,536 training targets. Attribution to the regularizer uses matched comparisons across seeds.
+
 - [abstracts-pilot-s00-hessian_norm-r03-fp64](./abstracts-pilot-s00-hessian_norm-r03-fp64/experiment.md) — Development NLL changed by -0.1172 nats per target token from 4,096 to 65,536 training targets. Attribution to the regularizer uses matched comparisons across seeds.
 
 - [abstracts-pilot-s00-sham-r01-fp64](./abstracts-pilot-s00-sham-r01-fp64/experiment.md) — Development NLL changed by -0.1167 nats per target token from 4,096 to 65,536 training targets. Attribution to the regularizer uses matched comparisons across seeds.
