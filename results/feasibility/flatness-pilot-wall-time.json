@@ -1,0 +1,87 @@
+{
+  "source_log": "checkpoint-flatness-20261125T163331Z.log",
+  "rows": [
+    {
+      "run": "stories-pilot-s00-ce-r00",
+      "started_at": "2026-11-25T16:39:38+00:00",
+      "measured_at": "2026-11-25T16:39:52+00:00",
+      "published_by": "2026-11-25T16:40:15+00:00",
+      "stage": "stories",
+      "measurement_seconds": 14.0,
+      "cycle_seconds": 37.0
+    },
+    {
+      "run": "stories-pilot-s00-trace-r01",
+      "started_at": "2026-11-25T16:40:15+00:00",
+      "measured_at": "2026-11-25T16:40:25+00:00",
+      "published_by": "2026-11-25T16:40:49+00:00",
+      "stage": "stories",
+      "measurement_seconds": 10.0,
+      "cycle_seconds": 34.0
+    },
+    {
+      "run": "stories-pilot-s00-third-r01",
+      "started_at": "2026-11-25T16:40:49+00:00",
+      "measured_at": "2026-11-25T16:40:55+00:00",
+      "published_by": "2026-11-25T16:41:21+00:00",
+      "stage": "stories",
+      "measurement_seconds": 6.0,
+      "cycle_seconds": 32.0
+    },
+    {
+      "run": "abstracts-pilot-s00-ce-r00",
+      "started_at": "2026-11-25T16:41:21+00:00",
+      "measured_at": "2026-11-25T16:44:05+00:00",
+      "published_by": "2026-11-25T16:44:34+00:00",
+      "stage": "abstracts",
+      "measurement_seconds": 164.0,
+      "cycle_seconds": 193.0
+    },
+    {
+      "run": "abstracts-pilot-s00-trace-r01-fp64",
+      "started_at": "2026-11-25T16:44:34+00:00",
+      "measured_at": "2026-11-25T16:49:22+00:00",
+      "published_by": "2026-11-25T16:49:45+00:00",
+      "stage": "abstracts",
+      "measurement_seconds": 288.0,
+      "cycle_seconds": 311.0
+    },
+    {
+      "run": "abstracts-pilot-s00-third-r01-fp64",
+      "started_at": "2026-11-25T16:49:45+00:00",
+      "measured_at": "2026-11-25T16:52:21+00:00",
+      "published_by": "2026-11-25T16:52:46+00:00",
+      "stage": "abstracts",
+      "measurement_seconds": 156.0,
+      "cycle_seconds": 181.0
+    },
+    {
+      "run": "stories-pilot-s00-hessian_norm-r03",
+      "started_at": "2026-11-25T16:52:46+00:00",
+      "measured_at": "2026-11-25T16:52:54+00:00",
+      "published_by": "2026-11-25T16:53:18+00:00",
+      "stage": "stories",
+      "measurement_seconds": 8.0,
+      "cycle_seconds": 32.0
+    },
+    {
+      "run": "stories-pilot-s00-sham-r01",
+      "started_at": "2026-11-25T16:53:18+00:00",
+      "measured_at": "2026-11-25T16:53:26+00:00",
+      "published_by": "2026-11-25T16:53:52+00:00",
+      "stage": "stories",
+      "measurement_seconds": 8.0,
+      "cycle_seconds": 34.0
+    },
+    {
+      "run": "stories-pilot-s00-combined-r01",
+      "started_at": "2026-11-25T16:53:52+00:00",
+      "measured_at": "2026-11-25T16:53:59+00:00",
+      "published_by": "2026-11-25T16:54:26+00:00",
+      "stage": "stories",
+      "measurement_seconds": 7.0,
+      "cycle_seconds": 34.0
+    }
+  ],
+  "basis": "Elapsed time between consecutive native-probe starts, or until the last release. Includes checkpoint loading, weight widths, Hessian estimates, report generation and publication. The shared logit test was added subsequently."
+}

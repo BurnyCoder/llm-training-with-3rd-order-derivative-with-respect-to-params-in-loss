@@ -10,6 +10,18 @@ Training time is 251.7 seconds. Peak allocated GPU memory is 608.2 MiB. Developm
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-hybrid-s21-strong-r01/config.json)
 
+## Checkpoint flatness
+
+| Training-window measurement | Value | Interpretation |
+| --- | --- | --- |
+| Weight width | 13.175 | ↑ Wider is flatter in these weight coordinates |
+| RMS weight curvature | 0.58362 | ↓ Lower means less local bending |
+| Signed Hessian trace / parameter | 0.00423557 | No general better direction |
+| Common score width | 1.084 | ↑ Wider tolerates larger changes in token scores |
+| Mean directional score curvature | 0.699349 | ↓ Lower means less local bending in score space |
+
+The connection between width and better held-out prediction is unknown. [Compare against every variant and baseline](../../flatness.md#every-variant-and-baseline).
+
 The process working-set high-water mark was 2,073.2 MiB. This OS measure includes earlier work in the same interpreter.
 
 ## Fixed-prompt generations
