@@ -102,3 +102,22 @@ def test_result_publisher_merges_concurrent_documentation_without_losing_either(
     assert git(remote,"show","main:worked-example.md")=="Derivation"
     assert git(remote,"show","main:width.json")=="{}"
     assert git(owner,"rev-parse","HEAD")==git(remote,"rev-parse","main")
+
+
+def test_result_publication_retries_outages_without_rewriting_history(monkeypatch,tmp_path):
+    import subprocess
+    from thirdloss import release
+    failures=iter(["remote: Internal Server Error","The requested URL returned error: 503",""])
+    calls=[]; delays=[]
+    def once(args,**kwargs):
+        calls.append(args)
+        error=next(failures)
+        return subprocess.CompletedProcess(args,int(bool(error)),stdout="",stderr=error)
+    monkeypatch.setattr(release.subprocess,"run",once)
+    monkeypatch.setattr(release.time,"sleep",delays.append)
+    release.push_main(tmp_path)
+    assert calls==[["git","push","origin","main"]]*3 and delays==[2,4]
+    failures=iter(["permission denied"])
+    with pytest.raises(RuntimeError,match="permission denied"):
+        release.push_main(tmp_path)
+    assert delays==[2,4]

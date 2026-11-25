@@ -1,13 +1,15 @@
 """Publish the explicitly requested study artifacts using existing Git and Hugging Face logins."""
 
 import subprocess
+import re
+import time
 from pathlib import Path
 
 from filelock import FileLock
 from huggingface_hub import HfApi
 
 from .hub_archive import COLLECTION, STAGE_HUB, publish_archive
-from .records import GITHUB, read_json, sha256, storage_root, write_json
+from .records import GITHUB, read_json, sha256, storage_root, time_now, write_json
 
 
 def publish_snapshot(project, message):
@@ -22,14 +24,29 @@ def push_main(project):
     """Preserve concurrent upstream commits when a completed run has a local release commit."""
     def run(*args,check=True):
         return subprocess.run(["git",*args],cwd=project,check=check,capture_output=True,text=True)
+
+    def remote(*args):
+        """A transient server rejection can arrive even over a successful HTTP connection."""
+        for delay in (2,4,8,16,30,60,60,60,60,60,0):
+            result=run(*args,check=False)
+            temporary=re.search(r"internal server error|bad gateway|service unavailable|gateway timeout|"
+                                r"(?:http |returned error: )(?:408|429|500|502|503|504)\b|connection (?:reset|timed out)",
+                                result.stderr,re.IGNORECASE)
+            if not result.returncode or not temporary or not delay:
+                return result
+            # Retrying the identical non-forced push preserves Git's fast-forward checks.
+            # https://git-scm.com/docs/git-push#_note_about_fast_forwards
+            print(f"{time_now()} Git {args[0]} returned {temporary.group()}. Retrying in {delay}s.",flush=True)
+            time.sleep(delay)
+
     for attempt in range(4):
-        pushed = run("push","origin","main",check=False)
+        pushed = remote("push","origin","main")
         if pushed.returncode==0:
             return
         error = pushed.stderr.lower()
         if attempt==3 or ("fetch first" not in error and "non-fast-forward" not in error):
             raise RuntimeError(f"Git release push failed: {pushed.stderr.strip()}")
-        run("fetch","origin","main")
+        remote("fetch","origin","main").check_returncode()
         merged=run("merge","--no-edit","FETCH_HEAD",check=False)
         if merged.returncode:
             conflicts=run("diff","--name-only","--diff-filter=U").stdout.strip()
