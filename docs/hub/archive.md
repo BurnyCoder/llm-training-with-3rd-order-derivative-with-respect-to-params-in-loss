@@ -102,7 +102,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Shared trace checkpoint | 8,388,608 | 21–28 | 15.143 (3/8) | 0.43514 (2/8) | 1.062 (2/8) |
 | Curvature-dependent hybrid · hybrid study | 16,777,216 | 21–28 | 13.157 (3/8) | 0.57757 (2/8) | 1.083 (2/8) |
 | Fixed late hybrid · hybrid study | 16,777,216 | 21–28 | 13.215 (3/8) | 0.57064 (2/8) | 1.083 (2/8) |
-| Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.154 (3/8) | 0.5854 (1/8) | 1.084 (1/8) |
+| Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.154 (3/8) | 0.57779 (2/8) | 1.083 (2/8) |
 | Stronger trace · hybrid study | 16,777,216 | 21–28 | 13.175 (3/8) | 0.58362 (1/8) | 1.084 (1/8) |
 | Cross-seed replay · hybrid study | 16,777,216 | 21–28 | 13.133 (2/8) | Pending | Pending |
 | Always-on hybrid · hybrid study | 16,777,216 | 21–28 | 13.229 (3/8) | 0.57089 (1/8) | 1.083 (1/8) |
