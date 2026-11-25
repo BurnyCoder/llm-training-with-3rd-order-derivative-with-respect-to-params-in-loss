@@ -71,9 +71,9 @@ def derivative_replica(stage,seed,storage):
         return widen_pythia(build_model(stage,seed,adapter_derivative_device(),storage))
 
 
-def probe_gradient(model, parameters, inputs, targets, kind, seed, step, replica=None):
+def probe_gradient(model, parameters, inputs, targets, kind, seed, step, replica=None, *, stream=827):
     """Differentiate the sampled penalty, including the fourth-order contraction."""
-    rng = generator(inputs.device, seed, step, 827)
+    rng = generator(inputs.device, seed, step, stream)
     rows = probe_rows(seed, step, len(inputs))
     if replica is not None:
         # All arms draw the original CUDA signs. Only the arithmetic and storage of
@@ -158,14 +158,15 @@ def calibrate(project, storage, stage, kind, device, microbatch):
     return result
 
 
-def add_penalty(model, parameters, inputs, targets, coefficients, method, seed, step, replica=None):
+def add_penalty(model, parameters, inputs, targets, coefficients, method, seed, step, replica=None, *, streams=None):
     """Add the gated derivative contribution to already-accumulated CE gradients."""
     telemetry = {}
     for kind, weight in coefficients.items():
         if not weight:
             continue
         started = time.perf_counter()
-        value, grads = probe_gradient(model, parameters, inputs, targets, kind, seed, step,replica)
+        value, grads = probe_gradient(model, parameters, inputs, targets, kind, seed, step,replica,
+                                      stream=streams[kind] if streams else 827)
         raw_norm = vector_norm(grads).item()
         if method == "sham":
             signs = random_signs(parameters, generator(inputs.device, seed, step, 839))

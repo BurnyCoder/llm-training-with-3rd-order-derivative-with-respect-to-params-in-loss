@@ -58,7 +58,7 @@ def week_schedule(project):
 
 def progress(project):
     study = study_snapshot(project)
-    runs = [r for r in study["runs"] if r.get("phase") not in {"smoke","diagnostic"}]
+    runs = [r for r in study["runs"] if r.get("phase") in {"control","pilot","confirm"}]
     done = [r for r in runs if r["status"] in {"complete","evaluated"}]
     tests = [r for r in done if "test_nll" in r]
     # Each stage has seven development candidates, two free controls, three ablations,
@@ -91,6 +91,10 @@ def progress(project):
                   f"scoring, with {schedule['hours_available_for_other_work']:.2f} hours of the week available for "
                   "secondary pilots, setup, publication and interruptions. [Timing and GPU memory by method]"
                   "(../results/feasibility/one-week.json)"]
+    followup = study["hybrid"]
+    lines += ["## TinyStories hybrid follow-up",f"{followup['completed_arms']} of 48 full runs and "
+              f"{followup['completed_trunks']} of 8 shared checkpoints complete. "
+              f"{followup['status']}. [Per-seed widths and development scores](hybrid/results.md)"]
     lines += ["## Monitoring","Inspect runs lasting over 10, 30 and 60 minutes at 5, 15 and 30 minute intervals "
               "respectively. The live dashboard refreshes between those checks. "
               "[Study design](plan.md) · [Run matrix](planned-runs.md) · [Experiment ledger](experiments/experiments.md)"]

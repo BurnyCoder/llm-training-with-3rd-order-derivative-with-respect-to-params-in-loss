@@ -27,9 +27,14 @@ def _comparison(records, baseline):
         other = records[seed, baseline]["test_nll"]
         pairs.append({"seed": seed, "third_nll": third, "baseline_nll": other, "delta": third - other})
 
+    return paired_sign(pairs)
+
+
+def paired_sign(pairs, *, larger=False):
+    """Exact conditional paired sign test and symmetric order-statistic median interval."""
     ordered = sorted(pair["delta"] for pair in pairs)
-    wins = sum(d < 0 for d in ordered)
-    losses = sum(d > 0 for d in ordered)
+    wins = sum(d > 0 if larger else d < 0 for d in ordered)
+    losses = sum(d < 0 if larger else d > 0 for d in ordered)
     discordant = wins + losses
     # Exact upper binomial tail under fair signs conditional on discordant pairs.
     # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html
@@ -55,6 +60,14 @@ def _comparison(records, baseline):
         "ci_coverage": coverage, "wins": wins, "ties": n - discordant, "losses": losses,
         "p_raw": p_raw,
     }
+
+
+def holm(comparisons):
+    """Adjust a prespecified family using Holm's monotone step-down procedure."""
+    maximum = 0.
+    for index,row in enumerate(sorted(comparisons.values(),key=lambda item:item["p_raw"])):
+        maximum = max(maximum,row["p_raw"]*(len(comparisons)-index))
+        row["p_holm"] = min(1.,maximum)
 
 
 def _time_match(seed, records, clock="train_seconds"):
@@ -172,10 +185,8 @@ def analyze_stage(summaries: list[dict], stage: str) -> dict:
     comparisons = {baseline: _comparison(records, baseline) for baseline in ("ce", "trace")}
     # Holm step-down: adjusted p-values are monotone in raw-p rank; ties receive equal values.
     # https://stat.ethz.ch/R-manual/R-devel/library/stats/html/p.adjust.html
-    running_max = 0.0
-    for index, stats in enumerate(sorted(comparisons.values(), key=lambda item: item["p_raw"])):
-        running_max = max(running_max, stats["p_raw"] * (len(comparisons) - index))
-        stats["p_holm"] = min(1.0, running_max)
+    holm(comparisons)
+    for stats in comparisons.values():
         if stats["p_holm"] <= 0.05:
             stats["interpretation"] = "improved"
         elif stats["median_ci"][0] > 0:

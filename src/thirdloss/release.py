@@ -73,6 +73,10 @@ def publish_weights(project, storage, summary):
             f"Use the pinned base and loading instructions in [the guide]({GITHUB}/blob/main/docs/runbook.md).\n")
     if diagnostic:
         card += f"\n{diagnostic['reason']} [Numerical audit]({GITHUB}/blob/main/reports/amendments/adapter-precision.md)\n"
+    if summary["phase"] in {"branch","hybrid"}:
+        card += (f"\nThis checkpoint belongs to the [TinyStories hybrid follow-up]({GITHUB}/blob/main/reports/hybrid/preregistration.md). "
+                 f"The [per-seed geometry and development outcomes]({GITHUB}/blob/main/reports/hybrid/results.md) "
+                 "link to full schedules, crossing brackets and the matched controls.\n")
     card = "---\nlanguage: [en]\npipeline_tag: text-generation\n---\n" + card
     (folder/"README.md").write_text(card,encoding="utf-8")
     write_json(folder/"training_summary.json",summary)

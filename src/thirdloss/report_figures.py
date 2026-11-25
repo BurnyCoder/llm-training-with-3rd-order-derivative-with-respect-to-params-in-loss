@@ -171,13 +171,39 @@ def _paired(study, path) -> bool:
     return True
 
 
+def _hybrid_width(study,path):
+    """Plot observed, identifiable widths for each seed in its own panel on a shared scale."""
+    groups = {}
+    for r in study["runs"]:
+        points = [(p["tokens"]/1e6,p["width"]) for p in r.get("widths",{}).values() if finite(p["width"])]
+        if points:
+            groups.setdefault(r["seed"],[]).append((r["method"],sorted(points)))
+    if not groups:
+        return False
+    columns = min(2,len(groups))
+    rows = (len(groups)+columns-1)//columns
+    fig = Figure(figsize=(8,2.7*rows+0.6),layout="constrained")
+    axes = fig.subplots(rows,columns,sharey=True,squeeze=False).ravel()
+    for ax,(seed,records) in zip(axes,sorted(groups.items())):
+        for arm,points in records:
+            x,y = zip(*points)
+            ax.plot(x,y,marker="o",ms=3,color=COLORS[arm],label=METHODS[arm],alpha=.85)
+        ax.set_title(f"TinyStories · seed {seed}",loc="left",fontsize=10)
+        _axes_style(ax,"Training targets (millions)","Directional width")
+        ax.legend(frameon=False,fontsize=6,ncol=2)
+    for ax in axes[len(groups):]:
+        ax.set_visible(False)
+    _save(fig,path)
+    return True
+
+
 def build_figures(study: dict, directory: Path) -> dict:
     """Always emit the method illustrations and add measured plots when observations exist."""
     directory.mkdir(parents=True, exist_ok=True)
     architecture(directory / "architecture.png")
     penalty_directions(directory / "penalty-directions.png")
     products = {"architecture": "architecture.png", "penalty_directions": "penalty-directions.png"}
-    for key, draw in (("curves", _curves), ("paired", _paired)):
+    for key, draw in (("curves", _curves), ("paired", _paired), ("hybrid_width",_hybrid_width)):
         file = directory / f"{key}.png"
         if draw(study, file):
             products[key] = file.name

@@ -68,29 +68,40 @@ def chosen_coefficients(project, storage, config, device, microbatch):
     return {kind: scale*calibrate(project,storage,stage,kind,device,microbatch) for kind,scale in kinds.items()}
 
 
-def save_state(path, model, optimizer, step, elapsed, config):
+def save_state(path, model, optimizer, step, elapsed, config, protocol=None):
     """Atomically persist optimizer, trainable weights, all stochastic state and next data step."""
     state = {"weights":{n:p.detach() for n,p in model.named_parameters() if p.requires_grad},
              "optimizer":optimizer.state_dict(), "next_step":step, "train_seconds":elapsed,
              "config":config, "cpu_rng":torch.get_rng_state(),
              "cuda_rng":torch.cuda.get_rng_state() if next(model.parameters()).is_cuda else None}
+    if protocol is not None:
+        state["hybrid_schedule"] = protocol.schedule.state()
     temp = path.with_suffix(".partial")
     torch.save(state, temp)
     os.replace(temp,path)
 
 
-def restore_state(path, model, optimizer, config, recorder, device):
+def restore_state(path, model, optimizer, config, recorder, device, protocol=None):
     """Recover the last committed checkpoint and ignore telemetry from interrupted later steps."""
     if not path.exists():
         return 0, 0.0
     state = torch.load(path, map_location="cpu", weights_only=True)
-    if state["config"] != config:
+    parent = protocol is not None and path == protocol.parent
+    if parent:
+        original = state["config"]
+        keys = ("seed","stage","data_manifest_sha256","context","batch_windows","microbatch","alpha","cap","schedule_steps","protocol")
+        if (original["id"]!=config["parent"] or state["next_step"]!=config["schedule_steps"]//2
+                or any(original[key]!=config[key] for key in keys) or sha256(path)!=config["parent_restart_sha256"]):
+            raise ValueError("Shared optimizer checkpoint does not match the registered branch")
+    elif state["config"] != config:
         raise ValueError("Resume configuration differs from saved scientific settings")
     model.load_state_dict(state["weights"], strict=False)
     optimizer.load_state_dict(state["optimizer"])
     torch.set_rng_state(state["cpu_rng"])
     if state["cuda_rng"] is not None:
         torch.cuda.set_rng_state(state["cuda_rng"], device)
+    if protocol is not None:
+        protocol.schedule.load(state["hybrid_schedule"])
     step = state["next_step"]
     path = recorder.directory/"events.jsonl"
     if path.exists():
@@ -104,7 +115,12 @@ def restore_state(path, model, optimizer, config, recorder, device):
 
 def run_one(project, storage, stage, method, phase, seed, ratio, device, microbatch=None):
     config = scientific_config(stage,method,phase,seed,ratio)
-    microbatch = microbatch or (32 if stage == "stories" else 2)
+    return run_config(project,storage,config,device,microbatch)
+
+
+def run_config(project, storage, config, device, microbatch=None, protocol=None):
+    """Run one identified checkpoint with mutual exclusion and durable failed-attempt records."""
+    microbatch = microbatch or (32 if config["stage"] == "stories" else 2)
     if microbatch < 1:
         raise ValueError("A physical batch must contain at least one window")
     recorder = Recorder(project, config["id"])
@@ -123,7 +139,7 @@ def run_one(project, storage, stage, method, phase, seed, ratio, device, microba
             remember(read_json(marker))
             marker.unlink()
         try:
-            return _run(project, storage, config, recorder, device, microbatch)
+            return _run(project, storage, config, recorder, device, microbatch,protocol)
         except Exception as exc:
             failure = {"timestamp":time_now(), "error":repr(exc)}
             write_json(marker,failure)
@@ -131,7 +147,7 @@ def run_one(project, storage, stage, method, phase, seed, ratio, device, microba
             raise
 
 
-def _run(project, storage, config, recorder, device, microbatch):
+def _run(project, storage, config, recorder, device, microbatch, protocol=None):
     stage, method, seed, budget = (config[k] for k in ("stage","method","seed","token_budget"))
     data = storage/"data"/stage
     manifest = read_json(data/"manifest.json")
@@ -144,7 +160,8 @@ def _run(project, storage, config, recorder, device, microbatch):
     state_path = output/"state.json"
     if not (output/"summary.json").exists():
         write_json(state_path,{**config,"status":"initializing","timestamp":time_now()})
-    config["coefficients"] = chosen_coefficients(project,storage,config,device,microbatch)
+    config["coefficients"] = ({"trace":config["alpha"],"third":config["cap"]} if protocol is not None
+                              else chosen_coefficients(project,storage,config,device,microbatch))
     if (output/"config.json").exists() and read_json(output/"config.json") != config:
         raise ValueError(f"Existing run configuration conflicts with {config['id']}")
     write_json(output/"config.json",config)
@@ -179,8 +196,14 @@ def _run(project, storage, config, recorder, device, microbatch):
         # A restart during the first checkpoint interval must discard measurements from
         # updates whose weights and optimizer moments were never committed.
         if not (ckpt/"latest.pt").exists():
-            save_state(ckpt/"latest.pt",model,optimizer,0,0.0,config)
-        start,elapsed = restore_state(ckpt/"latest.pt",model,optimizer,config,recorder,device)
+            initial_step,initial_elapsed = 0,0.
+            if protocol is not None and protocol.parent is not None:
+                initial_step,initial_elapsed = restore_state(protocol.parent,model,optimizer,config,recorder,device,protocol)
+                protocol.checkpoint_width(model,initial_step)
+            save_state(ckpt/"latest.pt",model,optimizer,initial_step,initial_elapsed,config,protocol)
+        start,elapsed = restore_state(ckpt/"latest.pt",model,optimizer,config,recorder,device,protocol)
+        if protocol is not None:
+            protocol.checkpoint_width(model,start)
         history = json_lines(output/"events.jsonl")
         host_probes = sum(e.get("host_probe_seconds",0.0) for e in history)
         # Match elapsed-time comparisons with periodic fixed development windows in every arm.
@@ -195,13 +218,20 @@ def _run(project, storage, config, recorder, device, microbatch):
             inputs,targets = windows.get(step,device)
             optimizer.zero_grad(set_to_none=True)
             base,accuracy = ce_backward(model,inputs,targets,microbatch)
-            active = bool(config["coefficients"]) and gate(seed,step)
-            terms = add_penalty(model,parameters,inputs,targets,config["coefficients"],method,seed,step,replica) if active else {}
+            coefficients = protocol.schedule.coefficients(step) if protocol is not None else config["coefficients"]
+            active = bool(coefficients) and gate(seed,step)
+            streams = None
+            diagnostics = {}
+            if protocol is not None:
+                from .hybrid import STREAMS
+                streams = STREAMS
+                diagnostics = protocol.monitor(model,parameters,inputs,targets,step,base)
+            terms = add_penalty(model,parameters,inputs,targets,coefficients,method,seed,step,replica,streams=streams) if active else {}
             host_seconds = (sum(t["probe_seconds"] for t in terms.values())
                             if precise and config["derivative_device"]=="cpu" and device.type=="cuda" else 0.0)
             host_probes += host_seconds
             norm = torch.nn.utils.clip_grad_norm_(parameters,1.0,error_if_nonfinite=True)
-            lr = learning_rate(stage,step,steps)
+            lr = learning_rate(stage,step,config.get("schedule_steps",steps))
             for group in optimizer.param_groups:
                 group["lr"] = lr
             optimizer.step()
@@ -214,6 +244,8 @@ def _run(project, storage, config, recorder, device, microbatch):
                 row = {"step":done, "tokens":done*batch*CONTEXT, "train_seconds":elapsed, "loss":base.item(),
                        "accuracy":accuracy.item(), "lr":lr, "gradient_norm":norm.item(),"derivatives":terms,
                        "host_probe_seconds":host_seconds,"training_seconds_excluding_host_probes":max(0.0,elapsed-host_probes)}
+                if protocol is not None:
+                    row.update(trace_lambda=coefficients["trace"],third_lambda=coefficients["third"],**diagnostics)
                 if terms:
                     row["penalty"] = sum(8*t["lambda"]*t["estimate"] for t in terms.values())
                 if validate:
@@ -221,9 +253,16 @@ def _run(project, storage, config, recorder, device, microbatch):
                     row.update(dev_nll=metrics["nll"],dev_accuracy=metrics["accuracy"])
                 recorder.emit(row)
             if done%interval == 0 or done==steps:
-                save_state(ckpt/"latest.pt",model,optimizer,done,elapsed,config)
+                save_state(ckpt/"latest.pt",model,optimizer,done,elapsed,config,protocol)
+                if protocol is not None:
+                    protocol.checkpoint_width(model,done)
         del optimizer
         summary.update(host_probe_seconds=host_probes,training_seconds_excluding_host_probes=max(0.0,elapsed-host_probes))
+        if protocol is not None:
+            protocol.finish(steps)
+            summary["reference_rms"] = protocol.schedule.reference
+            summary["zero_steps"] = protocol.schedule.at_zero
+            summary["final_third_lambda"] = protocol.schedule.weight
     del replica
     dist = unigram_distribution(data/"train.bin",4096 if stage=="stories" else 50304) if method=="unigram" else None
     write_json(state_path,{"status":"scoring development","timestamp":time_now()})

@@ -1,0 +1,107 @@
+"""Verify the registered schedules, branch pairing and geometric measurement on exact losses."""
+
+import math
+import pytest
+import torch
+
+from thirdloss.hybrid import HybridSchedule, donor_seed
+from thirdloss.width import crossing, measure_width
+
+
+def test_lagged_rms_latch_and_replay_survive_checkpoint():
+    adaptive = HybridSchedule("adaptive", alpha=0.1, cap=0.3)
+    for _ in range(8):
+        adaptive.observe(4.0, 3.8)
+    adaptive.fix_reference()
+    assert adaptive.coefficients(2048) == {"trace": 0.1, "third": 0.0}
+    for _ in range(8):
+        adaptive.observe(1.0, 3.8)
+    assert adaptive.coefficients(2064)["third"] == pytest.approx(0.15)
+    restored = HybridSchedule("adaptive", alpha=0.1, cap=0.3)
+    restored.load(adaptive.state())
+    for _ in range(8):
+        restored.observe(16., 5.)
+    assert restored.coefficients(2080)["third"] == pytest.approx(0.15)
+    replay = HybridSchedule("replay", alpha=0.1, cap=0.3, replay=restored.changes)
+    assert replay.coefficients(2063)["third"] == 0
+    assert replay.coefficients(2064)["third"] == pytest.approx(0.15)
+    assert donor_seed(21) == 28 and donor_seed(22) == 21
+
+
+def test_fixed_and_stronger_trace_apply_only_after_switch():
+    fixed = HybridSchedule("late", alpha=2., cap=6.)
+    strong = HybridSchedule("strong", alpha=2., cap=6., delta=4.)
+    assert [fixed.coefficients(t)["third"] for t in (0,2048,2560,3072,4095)] == [0,0,3,6,6]
+    assert strong.coefficients(2560) == {"trace":4., "third":0.}
+    adaptive = HybridSchedule("adaptive",alpha=2.,cap=6.)
+    for _ in range(8):
+        adaptive.observe(4.,4.5)
+    adaptive.fix_reference()
+    for _ in range(8):
+        adaptive.observe(1.,4.5)
+    assert adaptive.coefficients(3072)["third"] == 0.
+
+
+def test_width_exact_crossing_censor_and_bitwise_restoration():
+    model = torch.nn.Linear(2,1,bias=False,dtype=torch.float64)
+    original = model.weight.detach().clone()
+    model.weight.grad = torch.ones_like(original)
+    rng = torch.get_rng_state().clone()
+    stats = measure_width(model, lambda: (model.weight-original).square().sum(), directions=3)
+    assert stats["width"] == pytest.approx(2*math.sqrt(.1),abs=1e-4)
+    assert stats["weights_restored"] and model.training and torch.equal(model.weight,original)
+    assert torch.equal(model.weight.grad, torch.ones_like(original))
+    assert torch.equal(torch.get_rng_state(),rng)
+    assert crossing(lambda radius: 0.,.1) == {"lower":128.,"upper":None}
+    unbounded = measure_width(model,lambda: model.weight.sum()*0.,directions=2)
+    assert unbounded["width"] is None and unbounded["width_lower"] == 256.
+
+
+def test_branch_restores_adam_moments_rng_cursor_and_monitor(tmp_path):
+    from types import SimpleNamespace
+    from thirdloss.records import sha256
+    from thirdloss.train import restore_state, save_state
+    model = torch.nn.Linear(2,1)
+    optim = torch.optim.AdamW(model.parameters(),lr=.01)
+    x = torch.tensor([[2.,-3.]])
+    model(x).square().sum().backward()
+    optim.step()
+    parent = tmp_path/"parent.pt"
+    cfg = dict(id="trunk",seed=21,stage="stories",data_manifest_sha256="data",context=128,batch_windows=32,
+               microbatch=32,alpha=1.,cap=2.,schedule_steps=4096,protocol="hybrid-v1")
+    schedule = HybridSchedule("trunk",1.,2.)
+    for _ in range(8):
+        schedule.observe(1.,3.2)
+    schedule.fix_reference()
+    save_state(parent,model,optim,2048,123.,cfg,SimpleNamespace(schedule=schedule))
+    control = torch.rand(3)
+    child = torch.nn.Linear(2,1)
+    child_opt = torch.optim.AdamW(child.parameters(),lr=.001)
+    child_protocol = SimpleNamespace(parent=parent,schedule=HybridSchedule("adaptive",1.,2.))
+    child_cfg = {**cfg,"id":"adaptive","parent":"trunk","parent_restart_sha256":sha256(parent)}
+    assert restore_state(parent,child,child_opt,child_cfg,SimpleNamespace(directory=tmp_path),
+                         torch.device("cpu"),child_protocol)==(2048,123.)
+    assert torch.equal(torch.rand(3),control) and child_protocol.schedule.reference==1.
+    for net,optimizer in ((model,optim),(child,child_opt)):
+        optimizer.zero_grad()
+        net(x).square().sum().backward()
+        optimizer.step()
+    assert all(torch.equal(a,b) for a,b in zip(model.parameters(),child.parameters()))
+
+
+def test_width_inference_requires_eight_pairs_and_keeps_censoring():
+    from thirdloss.hybrid_results import hybrid_results
+    records=[]
+    for seed in range(21,29):
+        for arm,w in (("adaptive",3.),("late",2.),("replay",1.)):
+            base={"baseline_nll":2.,"weights_sha256":"same"}
+            records.append(dict(seed=seed,method=arm,phase="hybrid",finished_at="today",tokens=2**24,dev_nll=3.,
+                                initial_trainable_sha256=str(seed),parent_restart_sha256=str(seed),
+                                data_manifest_sha256="data",widths={"2048":{**base,"width":1.},"4096":{**base,"width":w}}))
+    evidence = hybrid_results(records)
+    assert evidence["status"]=="both width comparisons passed"
+    assert evidence["comparisons"]["late"]["p_holm"]==2/256
+    records[-1]["widths"]["4096"]["width"]=None
+    evidence = hybrid_results(records)
+    assert "replay" not in evidence["comparisons"]
+    assert len(evidence["pairs"])==16

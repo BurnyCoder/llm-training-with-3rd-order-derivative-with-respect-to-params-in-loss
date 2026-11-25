@@ -36,14 +36,16 @@ def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--project",type=Path,default=Path.cwd())
     parsers = p.add_subparsers(dest="action",required=True)
-    for action in ("prepare","train","study","freeze","evaluate","report","dashboard","publish","audit-hub","progress","verify"):
+    for action in ("prepare","train","study","hybrid","freeze","evaluate","report","dashboard","publish","audit-hub","progress","verify"):
         sub = parsers.add_parser(action)
         if action in {"prepare","study"}:
             sub.add_argument("--stage",choices=(*HORIZONS,"both"),default="both")
         if action in {"train","freeze"}:
             sub.add_argument("--stage",choices=HORIZONS,required=True)
-        if action in {"train","study","evaluate"}:
+        if action in {"train","study","hybrid","evaluate"}:
             sub.add_argument("--device",default="cuda")
+        if action=="study":
+            sub.add_argument("--with-hybrid",action="store_true",help="Include the registered TinyStories hybrid follow-up on the same GPU")
         if action=="verify":
             sub.add_argument("--pretrained",action="store_true",help="Also compare a full joint derivative on the prepared adapter training corpus")
             sub.add_argument("--reference",action="store_true",help="Compute the FP64 pretrained reference using the original CUDA signs")
@@ -55,7 +57,7 @@ def parser():
             sub.add_argument("--seed",type=int,default=0)
             sub.add_argument("--ratio",type=float,default=0.03)
             sub.add_argument("--microbatch",type=int)
-        if action in {"train","study","evaluate"}:
+        if action in {"train","study","hybrid","evaluate"}:
             sub.add_argument("--publish",action="store_true",help="Publish results to the configured project accounts")
         if action=="evaluate":
             sub.add_argument("run_id")
@@ -120,11 +122,15 @@ def main(argv=None):
         return
     from .records import setup_device
     device = setup_device(args.device)
-    if args.action=="study":
+    if args.action in {"study","hybrid"}:
         from contextlib import nullcontext
         from .live_hub import publish_live
         with publish_live(project,storage) if args.publish else nullcontext():
-            run_study(project,storage,stages,device,args.publish)
+            if args.action=="hybrid":
+                from .hybrid import run_hybrids
+                run_hybrids(project,storage,device,args.publish)
+            else:
+                run_study(project,storage,stages,device,args.publish,with_hybrid=args.with_hybrid)
         return
     if args.action=="evaluate":
         summary = evaluate_one(project,storage,args.run_id,device)

@@ -219,10 +219,67 @@ def _update_readme(root: Path, body: str) -> None:
     atomic_text(path, re.sub(pattern, lambda _: replacement, before, flags=re.DOTALL))
 
 
+def _hybrid_report(root,study):
+    """Report each observed width, censoring, matched fit and preregistered sign comparison."""
+    data = study["hybrid"]
+    headline = (f"TinyStories hybrid follow-up: {data['completed_arms']} of 48 full runs and "
+                f"{data['completed_trunks']} of 8 shared checkpoints complete. "
+                f"Geometric decision: {data['status']}.")
+    material = ["# Hybrid schedules on TinyStories",headline,
+                "[Frozen protocol and decision rule](preregistration.md) · "
+                "[Interactive measurement and run selector](../../docs/index.html#curves)",
+                "Two-sided directional width is measured in the original Euclidean weight coordinates at a "
+                "fixed increase of 0.1 nats per target. Each linked JSON contains all 32 rays and their brackets. "
+                "A missing upper bound means that the search reached its maximum radius before crossing."]
+    widths = []
+    for r in study["runs"]:
+        for w in r.get("widths",{}).values():
+            path = f"../../results/{r['id']}/width-{w['step']}.json"
+            widths.append([r["seed"],_method(r),f"[{w['step']}]({path})",fmt(w["width"],5),
+                           fmt(w["width_lower"],5),fmt(w["width_upper"],5),w["censored_rays"],
+                           fmt(w["baseline_nll"],5),fmt(w["seconds"],2)])
+    if widths:
+        material += ["## Width observations",_table(widths,["Seed","Arm","Step","Width","Lower","Upper",
+                       "Censored rays","Training probe NLL","Probe seconds"])]
+        if any(finite(w["width"]) for r in study["runs"] for w in r.get("widths",{}).values()):
+            material.append("![Median directional width by seed and training arm](../../docs/figures/hybrid_width.png)")
+    arms = []
+    for r in study["runs"]:
+        if r.get("phase") not in {"hybrid","branch"} or not completed(r):
+            continue
+        url = f"../../results/{r['id']}/schedule.json"
+        arms.append([r["seed"],_method(r),fmt(r["dev_nll"],6),fmt(r["dev_accuracy"],5),fmt(r["reference_rms"],5),
+                     f"[{r['zero_steps']}]({url})",f"{r['final_third_lambda']:.6g}",fmt(r["tokens_per_sec"],0),
+                     fmt(r["peak_vram_mb"],1),fmt(r["process_peak_rss_mib"],1)])
+    if arms:
+        material += ["## Full development and resource measurements",_table(arms,["Seed","Arm","Dev NLL","Accuracy",
+                     "Reference RMS","Steps at zero λ₃","Final λ₃","Targets/s","Allocated GPU MiB","Process peak MiB"])]
+    if data["pairs"]:
+        material += ["## Adaptive minus comparator per seed","Positive Δwidth favors the adaptive schedule. "
+                     "Negative ΔNLL favors its prediction. Comparable fit uses the frozen 0.02-nat training threshold.",
+                     _table([[p["seed"],METHODS[p["comparator"]],fmt(p["delta"],6),fmt(p["dev_nll_delta"],6),
+                              fmt(p["train_probe_nll_delta"],6),"yes" if p["comparable_fit"] else "no"]
+                             for p in data["pairs"]],["Seed","Comparator","Δwidth gain","Δdev NLL","Δtrain NLL","Comparable fit"])]
+    for comparator,s in data["comparisons"].items():
+        lo,hi = s["median_ci"]
+        material.append(f"Against {METHODS[comparator]}, the median paired width difference is {fmt(s['median_delta'],6)}, "
+                        f"interval [{fmt(lo,6)}, {fmt(hi,6)}], coverage {fmt(s['ci_coverage'],4)}. "
+                        f"Wins/ties/losses: {s['wins']}/{s['ties']}/{s['losses']}. "
+                        f"One-sided sign p = {fmt(s['p_raw'],5)}, Holm p = {fmt(s.get('p_holm'),5)}.")
+    material += [f"The completed branches reused {data['shared_training_tokens_saved']:,} targets of optimization "
+                 "compared with independently training each branch from initialization. The replay permutation "
+                 "couples different seeds through their coefficient histories. The sign-test reference for this "
+                 "comparison assumes exchangeable independent pair signs; that assumption is approximate here. "
+                 "All raw pairs are reported for inspection."]
+    atomic_text(root/"reports"/"hybrid"/"results.md","\n\n".join(material)+"\n")
+    return headline
+
+
 def build_report(root: Path = Path(".")) -> dict:
     """Regenerate README results, PDF, experiment ledger, figures and the static dashboard."""
     root = Path(root).resolve()
     study = study_snapshot(root)
+    hybrid = _hybrid_report(root,study)
     figures = build_figures(study, root / "docs" / "figures")
     study["figures"] = figures
     static = json.dumps(study, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
@@ -235,7 +292,7 @@ def build_report(root: Path = Path(".")) -> dict:
     overview = f"Recorded {counts} runs, including {done} with a completed summary."
     documents = [f"[Interactive explorer]({PAGES})", "[Per-run ledger](experiments/experiments.md)",
                  "[Preregistration](preregistration.md)", "[Paper](paper.pdf)"]
-    summary = ["# Study summary", overview, _stage_summary(study), " · ".join(documents)]
+    summary = ["# Study summary", overview, _stage_summary(study), hybrid+" [Hybrid outcomes](hybrid/results.md)", " · ".join(documents)]
     pilots = _pilot_summary(study)
     if pilots:
         summary.extend(["## Development observations", pilots])
@@ -251,7 +308,9 @@ def build_report(root: Path = Path(".")) -> dict:
     badge = (f"[Explore the results]({PAGES}) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · "
              "[Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · "
              "[Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)")
-    readme = [badge, overview, _stage_summary(study)]
+    readme = [badge, overview, _stage_summary(study),hybrid+" [Width measurements, scores and controls](reports/hybrid/results.md)"]
+    if "hybrid_width" in figures:
+        readme.append("![Directional width by TinyStories arm and seed](docs/figures/hybrid_width.png)")
     if pilots:
         readme.append(pilots)
     if compact:

@@ -9,6 +9,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from .analysis import analyze_stage
+from .hybrid_results import hybrid_results
 from .records import GITHUB as REPOSITORY, PAGES
 
 
@@ -22,11 +23,14 @@ METHODS = {
     "combined": "Trace + third derivative",
     "initial": "Initial checkpoint",
     "unigram": "Unigram",
+    "trunk":"Shared trace checkpoint","adaptive":"Curvature-dependent hybrid","late":"Fixed late hybrid",
+    "replay":"Cross-seed replay","strong":"Stronger trace","always":"Always-on hybrid",
 }
 COLORS = {
     "ce": "#374d67", "trace": "#ac582a", "third": "#007166",
     "hessian_norm": "#64569c", "sham": "#ac3c66", "combined": "#3974a2",
     "initial": "#674e35", "unigram": "#73736c",
+    "trunk":"#705d43","adaptive":"#007361","late":"#405fa6","replay":"#9b486c","strong":"#a66f0c","always":"#594489",
 }
 FIELDS = (
     "id", "stage", "method", "phase", "seed", "ratio", "tokens", "steps",
@@ -39,11 +43,14 @@ FIELDS = (
     "git_revision", "gpu", "torch", "matched_dev_nll", "finished_at", "initial_trainable_sha256",
     "derivative_dtype", "derivative_device", "host_probe_seconds", "training_seconds_excluding_host_probes", "cpu_threads",
     "process_peak_rss_mib", "evaluation_batch_windows", "test_seconds", "evaluated_at",
+    "parent","parent_restart_sha256","donor","alpha","cap","delta","reference_rms","zero_steps","final_third_lambda",
+    "inherited_tokens","inherited_train_seconds",
 )
 EVENT_FIELDS = (
     "step", "tokens", "train_seconds", "loss", "accuracy", "penalty", "dev_nll",
     "dev_accuracy", "timestamp", "status", "peak_vram_mb",
     "training_seconds_excluding_host_probes", "host_probe_seconds",
+    "curvature_q","curvature_rms","trace_lambda","third_lambda","reference_rms","monitor_mean_nll","gradient_norm",
 )
 
 
@@ -152,6 +159,15 @@ def run_record(folder: Path) -> dict:
             if isinstance(details, dict) and finite(details.get("estimate")):
                 row["raw_" + kind] = details["estimate"]
         record["events"].append(row)
+    if record.get("phase") in {"hybrid","branch"}:
+        record["widths"] = {}
+        for path in sorted(folder.glob("width-*.json")):
+            width = read_json(path)
+            point = {k:v for k,v in width.items() if k!="directions"}
+            record["widths"][str(width["step"])] = point
+            record["events"].append({"step":width["step"],"tokens":width["tokens"],
+                                     "width":width["width"],"width_probe_nll":width["baseline_nll"]})
+        record["events"].sort(key=lambda row:row.get("step",0))
     record["samples"] = read_lines(folder / "samples.jsonl")
     return record
 
@@ -161,7 +177,7 @@ def display_events(events: list[dict], maximum: int = 240) -> list[dict]:
     if len(events) <= maximum:
         return events
     keep = {round(i * (len(events) - 1) / (maximum - 1)) for i in range(maximum)}
-    keep.update(i for i, event in enumerate(events) if finite(event.get("dev_nll")))
+    keep.update(i for i, event in enumerate(events) if finite(event.get("dev_nll")) or "width" in event)
     return [events[i] for i in sorted(keep)]
 
 
@@ -207,6 +223,7 @@ def study_snapshot(root: Path = Path(".")) -> dict:
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "runs": runs, "stages": stages, "method_names": METHODS, "stage_names": STAGES,
         "colors": COLORS, "context": context, "pilot_comparisons": pilots,"numerics":numerics,
+        "hybrid":hybrid_results(runs),
     }
 
 
@@ -218,7 +235,7 @@ def example_runs(runs):
     """Choose one completed registered checkpoint per method independently of sample text or scores."""
     examples = {}
     for run in sorted(runs,key=lambda r:r["id"]):
-        if completed(run) and run["phase"] in {"confirm","pilot","control"} and run["samples"]:
+        if completed(run) and run["phase"] in {"confirm","pilot","control","hybrid"} and run["samples"]:
             examples.setdefault((run["stage"],run["method"]),run)
     return list(examples.values())
 
