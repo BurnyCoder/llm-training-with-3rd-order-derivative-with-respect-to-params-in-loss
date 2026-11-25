@@ -105,3 +105,28 @@ def test_width_inference_requires_eight_pairs_and_keeps_censoring():
     evidence = hybrid_results(records)
     assert "replay" not in evidence["comparisons"]
     assert len(evidence["pairs"])==16
+
+
+def test_missing_parent_uses_pinned_hub_revision_and_checks_bytes(tmp_path,monkeypatch):
+    from thirdloss import study
+    from thirdloss.hub_archive import STUDY_HUB
+    from thirdloss.records import sha256,write_json
+    repo = study.STAGE_HUB["stories"]
+    remote = tmp_path/"remote"
+    remote.mkdir()
+    payload = remote/"training_state.pt"
+    payload.write_bytes(b"fixture checkpoint bytes")
+    digest=sha256(payload)
+    row=dict(id="trunk",stage="stories",steps=2048,data_manifest_sha256="data",weights_name="model.safetensors",weights_sha256="weights")
+    write_json(remote/"restart.json",{"sha256":digest,"next_step":2048,"data_manifest_sha256":"data"})
+    write_json(remote/"publication.json",{"repositories":{repo:{"revision":"pinned","files":{
+        "runs/trunk/model.safetensors":{"sha256":"weights"},"runs/trunk/training_state.pt":{"sha256":digest}}}}})
+    def download(repo_id,filename,**options):
+        if repo_id!=STUDY_HUB:
+            assert repo_id==repo and options["revision"]=="pinned"
+        return str(remote/filename.split("/")[-1])
+    monkeypatch.setattr(study,"hf_hub_download",download)
+    assert study.parent_restart_file(tmp_path/"storage",row).read_bytes()==payload.read_bytes()
+    payload.write_bytes(b"corrupt")
+    with pytest.raises(ValueError,match="checksum"):
+        study.parent_restart_file(tmp_path/"other",row)
