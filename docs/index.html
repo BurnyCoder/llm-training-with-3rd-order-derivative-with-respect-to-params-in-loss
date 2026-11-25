@@ -17,7 +17,7 @@
       <nav aria-label="Study sections">
         <a href="#curves">Training</a><a href="#evidence">Evidence</a><a href="#outputs">Outputs</a><a href="#method">Method</a>
       </nav>
-      <a class="source" href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss">Repository ↗</a>
+      <a class="source" href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian">Repository ↗</a>
     </div>
   </header>
   <main id="top">
@@ -25,7 +25,7 @@
       <div>
         <h1>Third derivatives in<br>language-model training</h1>
         <p>Does penalizing changes in loss curvature improve next-token predictions? Compare ordinary training, Hessian-trace regularization, and a third-derivative penalty at equal training tokens.</p>
-        <a class="protocol" href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/blob/main/reports/preregistration.md">Read the preregistration <span aria-hidden="true">↗</span></a>
+        <a class="protocol" href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/blob/main/reports/preregistration.md">Read the preregistration <span aria-hidden="true">↗</span></a>
       </div>
       <div class="summary" aria-label="Study totals">
         <div><span>Completed runs</span><strong id="runs-count">—</strong></div>
@@ -91,12 +91,12 @@
       </div>
     </section>
     <section id="method">
-      <div class="section-title"><h2>Method</h2><a href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/blob/main/reports/paper.pdf">Read the paper ↗</a></div>
+      <div class="section-title"><h2>Method</h2><a href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/blob/main/reports/paper.pdf">Read the paper ↗</a></div>
       <p class="prose">Hochreiter and Schmidhuber proposed that among equally good training fits, flatter minima may generalize better. If weights can be rounded more coarsely and still fit, a good predictor can take fewer bits to describe. Here the test of generalization is how well the model predicts unseen tokens. <a href="https://people.idsia.ch/~juergen/fm/node1.html">Flat Minima (1997) ↗</a></p>
       <p class="prose">The Hessian describes local loss curvature. On active updates, two independent random sign vectors estimate how quickly that curvature changes for the next-token loss of two text windows. The derivatives cover all TinyStories decoder weights or only Pythia’s trainable attention adapters, including interactions between trainable weights.</p>
       <p class="prose">When moving away from a flat bottom makes curvature change faster, the third-derivative penalty can pull the weights back. A steep bowl with constant curvature receives zero penalty from this term. Whether the optimizer finds wider minima is a separate question from the measured next-token loss.</p>
       <img class="architecture" src="figures/penalty-directions.png" alt="Analytic loss curves. Trace and third-derivative penalties push in opposite directions at an asymmetric minimum. They pull displaced weights back in a flat quartic and give zero update in a steep quadratic." loading="lazy">
-      <p class="curve-note">Circles mark the ordinary loss minima. Arrows show downhill directions for each penalty. The vertical scales vary by panel. <a href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/blob/main/docs/third-derivative-penalty.md#when-can-the-penalty-favor-a-wider-minimum">Worked examples and the basin-width bound ↗</a></p>
+      <p class="curve-note">Circles mark the ordinary loss minima. Arrows show downhill directions for each penalty. The vertical scales vary by panel. <a href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/blob/main/docs/third-derivative-penalty.md#when-can-the-penalty-favor-a-wider-minimum">Worked examples and the basin-width bound ↗</a></p>
       <img class="architecture" src="figures/architecture.png" alt="TinyStories full-weight training and Pythia QKV adaptation feed next-token cross-entropy, a Hessian contraction, a third derivative and the regularized objective." loading="lazy">
       <div class="method-links">
         <a href="https://doi.org/10.1007/BFb0086566">Derivative roughness ↗</a>

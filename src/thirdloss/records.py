@@ -8,6 +8,9 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+GITHUB = "https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian"
+PAGES = "https://burnycoder.github.io/"+GITHUB.rsplit("/",1)[1]+"/"
+
 HORIZONS = {"stories": 2**24, "abstracts": 2**19}
 BATCHES = {"stories": 32, "abstracts": 8}
 METHODS = ("ce", "trace", "third", "hessian_norm", "sham", "combined")
