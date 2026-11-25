@@ -49,6 +49,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | 23 | Curvature-dependent hybrid | [2048](../../results/stories-hybrid-s23-adaptive-r01/width-2048.json) | 14.99414 | 14.99316 | 14.99512 | 0 | 2.80132 | 7.17 |
 | 23 | Curvature-dependent hybrid | [3072](../../results/stories-hybrid-s23-adaptive-r01/width-3072.json) | 13.89697 | 13.89600 | 13.89795 | 0 | 2.64069 | 6.27 |
 | 23 | Curvature-dependent hybrid | [4096](../../results/stories-hybrid-s23-adaptive-r01/width-4096.json) | 13.04834 | 13.04736 | 13.04932 | 0 | 2.59710 | 6.49 |
+| 23 | Fixed late hybrid | [2048](../../results/stories-hybrid-s23-late-r01/width-2048.json) | 14.99414 | 14.99316 | 14.99512 | 0 | 2.80132 | 7.17 |
 
 ![Median directional width by seed and training arm](../../docs/figures/hybrid_width.png)
 
