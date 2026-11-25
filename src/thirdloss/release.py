@@ -3,6 +3,7 @@
 import subprocess
 from pathlib import Path
 
+from filelock import FileLock
 from huggingface_hub import HfApi
 
 from .hub_archive import COLLECTION, STAGE_HUB, publish_archive
@@ -11,6 +12,14 @@ from .records import GITHUB, read_json, sha256, storage_root, write_json
 
 def publish_snapshot(project, message):
     """Commit only curated public study outputs, then mirror tracked research files to the Hub."""
+    cache = project/".cache"
+    cache.mkdir(exist_ok=True)
+    with FileLock(str(cache/"publication.lock")):
+        return _publish_snapshot(project,message)
+
+
+def _publish_snapshot(project,message):
+    """Keep the Git revision and all verified collection receipts together across concurrent releases."""
     def git(*args):
         return subprocess.run(["git",*args],cwd=project,check=True,capture_output=True,text=True).stdout.strip()
     if git("branch","--show-current") != "main":

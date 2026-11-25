@@ -4,6 +4,8 @@
 const element = id => document.getElementById(id);
 const repository = document.querySelector("a.source").href;
 const runDirectory = document.querySelector("a.source").dataset.runs || repository + "/tree/main/results/";
+const hubFeed = "https://huggingface.co/BurnyCoder/thirdloss-study/resolve/main/live.json";
+let downloadUrl;
 const local = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname) ||
   new URL(location.href).searchParams.get("live") === "1";
 const metrics = {
@@ -288,7 +290,7 @@ function showSample() {
   element("prompt-text").textContent = s.prompt ?? "";
   element("reference-text").textContent = s.reference ?? "No reference continuation was recorded for this prompt.";
   element("generated-text").textContent = s.continuation ?? "";
-  element("raw-sample").href = repository + "/blob/main/results/" + encodeURIComponent(entry.run.id) + "/samples.jsonl";
+  element("raw-sample").href = runDirectory.replace("/tree/main/", "/blob/main/") + encodeURIComponent(entry.run.id) + "/samples.jsonl";
 }
 
 function showOutputs() {
@@ -322,13 +324,26 @@ async function refresh() {
     if (local) {
       try { study = await getData("/live.json"); live = true; }
       catch { study = await getData("study.json"); }
-    } else study = await getData("study.json");
+    } else {
+      study = await getData("study.json");
+      try {
+        const update = await getData(hubFeed + "?minute=" + Math.floor(Date.now() / 60000));
+        if (Date.parse(update.generated_at) > Date.parse(study.generated_at)) {
+          const byId = new Map(study.runs.map(run => [run.id, run]));
+          for (const run of update.runs) byId.set(run.id, run);
+          study = {...study, ...update, runs: [...byId.values()].sort((a,b) => a.id.localeCompare(b.id))};
+          live = update.active && Date.now() - Date.parse(update.generated_at) < 300000;
+        }
+      } catch { /* The full published study stays available between live updates. */ }
+    }
     render();
-    element("download-records").href = live ? "/live.json" : "study.json";
+    if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+    downloadUrl = URL.createObjectURL(new Blob([JSON.stringify(study)], {type:"application/json"}));
+    element("download-records").href = downloadUrl;
     const stamp = new Date(study.generated_at);
     const asOf = Number.isNaN(stamp.valueOf()) ? "time unavailable" :
       stamp.toLocaleString(undefined, {dateStyle: "medium", timeStyle: "medium"});
-    status.textContent = (live ? "Live local metrics" : "Published results") + " · Updated " + asOf;
+    status.textContent = (live ? (local ? "Live local metrics" : "Live training metrics") : "Published results") + " · Updated " + asOf;
     status.classList.toggle("live", live);
   } catch (error) {
     status.classList.remove("live");
