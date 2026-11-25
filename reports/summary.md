@@ -1,6 +1,6 @@
 # Study summary
 
-Recorded 6 runs, including 6 with a completed summary.
+Recorded 7 runs, including 7 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
@@ -22,6 +22,7 @@ Recorded 6 runs, including 6 with a completed summary.
 | TinyStories | pilot | Third derivative | 0.030 | 2,097,152 | 1 | 3.8778 | — |
 | TinyStories | pilot | Hessian trace | 0.010 | 2,097,152 | 1 | 3.8773 | — |
 | TinyStories | pilot | Hessian trace | 0.030 | 2,097,152 | 1 | 3.8802 | — |
+| TinyStories | pilot | Hessian trace | 0.100 | 2,097,152 | 1 | 3.8979 | — |
 
 ![Computation graph](../docs/figures/architecture.png)
 
