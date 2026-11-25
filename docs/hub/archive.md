@@ -78,7 +78,7 @@ How far can the weights move before next-token loss rises by 0.1 nats on eight f
 | Hessian trace | 21, 22, 23 | 15.143 | 13.154 | 13.046–13.215 | 12.984–13.366 | 0/96 |
 | Stronger trace | 21, 22, 23 | 15.143 | 13.175 | 13.069–13.233 | 13.002–13.387 | 0/96 |
 | Cross-seed replay | 22 | 15.403 | 13.218 | One seed | 12.987–13.496 | 0/32 |
-| Always-on hybrid | 21, 22 | 15.357 | 13.281 | 13.229–13.334 | 13.091–13.472 | 0/64 |
+| Always-on hybrid | 21, 22, 23 | 15.256 | 13.229 | 13.060–13.334 | 13.085–13.390 | 0/96 |
 
 Matched finite-width and Hessian measurements for the primary AdamW, trace and third-order checkpoints are pending.
 
@@ -103,7 +103,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 | Cross-seed replay | 1/8 | 0.000002 lower | 0.0029 less retained | 3.1% faster |
 | Hessian trace | 3/8 | 0.000004 higher | 0.0020 more retained | 36.3% slower |
 | Stronger trace | 3/8 | 0.000094 lower | 0.0181 less retained | 37.0% slower |
-| Always-on hybrid | 2/8 | 0.000161 higher | 0.0111 less retained | 48.0% faster |
+| Always-on hybrid | 3/8 | 0.000015 lower | 0.0417 more retained | 44.2% faster |
 
 **Registered width decision** · Awaiting eight paired width measurements. Width probes use fixed training windows. [Every width, training-fit flag, replay and paired difference](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/hybrid/results.md)
 

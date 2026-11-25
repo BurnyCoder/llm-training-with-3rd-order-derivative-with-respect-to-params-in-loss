@@ -62,7 +62,7 @@ Independent random signs include mixed weight derivatives in the expected penalt
 
 - [stories-hybrid-s23-adaptive-r01](./stories-hybrid-s23-adaptive-r01/experiment.md) — Development NLL changed by -0.1848 nats per target token from 8,912,896 to 16,777,216 training targets. Attribution to the regularizer uses matched comparisons across seeds.
 
-- [stories-hybrid-s23-always-r01](./stories-hybrid-s23-always-r01/experiment.md) — Development NLL changed by -3.4602 nats per target token from 524,288 to 15,204,352 training targets. Attribution to the regularizer uses matched comparisons across seeds.
+- [stories-hybrid-s23-always-r01](./stories-hybrid-s23-always-r01/experiment.md) — Development NLL changed by -3.4765 nats per target token from 524,288 to 16,777,216 training targets. Attribution to the regularizer uses matched comparisons across seeds.
 
 - [stories-hybrid-s23-late-r01](./stories-hybrid-s23-late-r01/experiment.md) — Development NLL changed by -0.1847 nats per target token from 8,912,896 to 16,777,216 training targets. Attribution to the regularizer uses matched comparisons across seeds.
 

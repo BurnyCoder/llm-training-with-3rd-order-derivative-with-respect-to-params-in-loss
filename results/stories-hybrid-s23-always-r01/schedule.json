@@ -1,0 +1,14 @@
+{
+  "changes": [
+    [
+      0,
+      3.0190450056526336e-14
+    ]
+  ],
+  "zero_steps": 0,
+  "steps": 4096,
+  "reference_rms": 0.44585053273781133,
+  "eligible": false,
+  "final_third_lambda": 3.0190450056526336e-14,
+  "steps_at_cap": 4096
+}
