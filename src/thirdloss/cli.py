@@ -128,6 +128,7 @@ def main(argv=None):
         with publish_live(project,storage) if args.publish else nullcontext():
             if args.action=="hybrid":
                 from .hybrid import run_hybrids
+                prepare_stage(project,storage,"stories")
                 run_hybrids(project,storage,device,args.publish)
             else:
                 run_study(project,storage,stages,device,args.publish,with_hybrid=args.with_hybrid)

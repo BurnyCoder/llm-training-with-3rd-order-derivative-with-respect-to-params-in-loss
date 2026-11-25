@@ -173,7 +173,7 @@ def match_stronger_trace(project,storage,trunk,cap,device):
 
 def run_hybrids(project,storage,device,publish):
     """Run each trunk once; delay seed 21 replay until seed 28 has published its schedule."""
-    from .study import milestone
+    from .study import milestone, parent_restart_file
     from .train import run_config
     selected = read_json(project/"results"/"selection"/"stories.json")["ratios"]
     if any(selected[k]!=.01 for k in STREAMS):
@@ -195,7 +195,7 @@ def run_hybrids(project,storage,device,publish):
                 raise ValueError("Incomplete or unmatched branching checkpoint")
             config.update(parent=parent,parent_weights_sha256=trunk["weights_sha256"],
                           inherited_tokens=trunk["tokens"],inherited_train_seconds=trunk["train_seconds"],
-                          parent_restart_sha256=sha256(storage/"checkpoints"/parent/"latest.pt"))
+                          parent_restart_sha256=sha256(parent_restart_file(storage,trunk)))
             if arm=="strong":
                 config["delta"] = match_stronger_trace(project,storage,trunk,config["cap"],device)
             if arm=="replay":

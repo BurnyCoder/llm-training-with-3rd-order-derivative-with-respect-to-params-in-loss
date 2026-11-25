@@ -56,6 +56,38 @@ def weights_file(storage, summary):
     return path
 
 
+def parent_restart_file(storage,summary):
+    """Recover a missing branch trunk from the collection's pinned, content-addressed receipt."""
+    import shutil
+    from filelock import FileLock
+    from .hub_archive import STUDY_HUB
+    local = storage/"checkpoints"/summary["id"]/"latest.pt"
+    local.parent.mkdir(parents=True,exist_ok=True)
+    with FileLock(str(local)+".restore.lock"):
+        if local.is_file():
+            return local
+        cache = str(storage/"hub")
+        versions = read_json(hf_hub_download(STUDY_HUB,"publication.json",cache_dir=cache))["repositories"]
+        repo = STAGE_HUB[summary["stage"]]
+        entry = versions[repo]
+        prefix = f"runs/{summary['id']}/"
+        def artifact(name):
+            return Path(hf_hub_download(repo,prefix+name,revision=entry["revision"],cache_dir=cache))
+        restart = read_json(artifact("restart.json"))
+        digest = entry["files"][prefix+"training_state.pt"]["sha256"]
+        if (restart["sha256"]!=digest or restart["next_step"]!=summary["steps"]
+                or restart["data_manifest_sha256"]!=summary["data_manifest_sha256"]
+                or entry["files"][prefix+summary["weights_name"]]["sha256"]!=summary["weights_sha256"]):
+            raise ValueError("Published parent restart is inconsistent with the recorded training run")
+        cached = artifact("training_state.pt")
+        if sha256(cached)!=digest:
+            raise ValueError("Downloaded parent optimizer checkpoint failed its checksum")
+        partial = local.with_suffix(".partial")
+        shutil.copyfile(cached,partial)
+        partial.replace(local)
+    return local
+
+
 def freeze(project, storage, stage):
     """Bind all 24 finished checkpoints, split, and selected coefficients before opening test bytes."""
     selection = read_json(project/"results"/"selection"/f"{stage}.json")["ratios"]

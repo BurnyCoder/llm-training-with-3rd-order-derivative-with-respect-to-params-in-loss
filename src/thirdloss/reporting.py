@@ -254,6 +254,14 @@ def _hybrid_report(root,study):
     if arms:
         material += ["## Full development and resource measurements",_table(arms,["Seed","Arm","Dev NLL","Accuracy",
                      "Reference RMS","Steps at zero λ₃","Final λ₃","Targets/s","Allocated GPU MiB","Process peak MiB"])]
+    calibrations=[]
+    for path in sorted((root/"results"/"hybrid"/"calibration").glob("seed-*.json")):
+        cal=json.loads(path.read_text(encoding="utf-8"))
+        calibrations.append([cal["seed"],len(cal["draws"]),f"{cal['delta']:.7g}",fmt(cal["calibration_seconds"],2),
+                             f"[Per-draw gradient norms](../../results/hybrid/calibration/{path.name})"])
+    if calibrations:
+        material += ["## Stronger trace at the common checkpoint",
+                     _table(calibrations,["Seed","Draws","Additional trace coefficient","Seconds","Calibration record"])]
     if data["pairs"]:
         material += ["## Adaptive minus comparator per seed","Positive Δwidth favors the adaptive schedule. "
                      "Negative ΔNLL favors its prediction. Comparable fit uses the frozen 0.02-nat training threshold.",
