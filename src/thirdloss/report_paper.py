@@ -187,7 +187,7 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "third partials assigns a nonnegative cost to that variation in the chosen coordinates. "
       "The proposed local density adapts an order-three spline roughness measure. The "
       "original flat-minima work searched for broad regions of low training error. Liu, Yu and Lin "
-      "regularized recurrent language models with the Hessian trace. Zhang, Li and Ju investigated "
+      "proposed a Hessian-trace objective and reported recurrent language-model experiments. Zhang, Li and Ju investigated "
       "a symmetric approximation to trace regularization in GPT-2 downstream fine-tuning. "
       f"{_cite('roughness')} · {_cite('flat')} · {_cite('trace')} · {_cite('gpt_trace')}, Table 5 · {_cite('coordinates')}")
     p("FUT++ approximates third weight derivatives of minibatch language-model loss with "
@@ -304,6 +304,13 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
             flow.append(KeepTogether([_figure(figure_dir / figures[key]),
                                       Paragraph(caption, styles["caption"])]))
     p("Discussion and limitations", "heading")
+    p("A wide minimum permits large weight displacements at a fixed loss increase. If curvature "
+      "starts small and changes slowly over the displacement, the loss stays low. For the loss "
+      "w<super>4</super>, the squared third derivative grows quadratically with distance from the bottom, so "
+      "a small descent step can pull displaced weights back. A steep quadratic has constant curvature "
+      "and receives zero third-derivative penalty everywhere. Finding wider basins remains a "
+      "geometric hypothesis. "
+      f"{_cite('coordinates')} · {_link(REPOSITORY + '/blob/main/docs/third-derivative-penalty.md#when-can-the-penalty-favor-a-wider-minimum', 'Derivation and examples')}")
     p("Predictive utility requires lower held-out loss against both baselines. A reduction in "
       "the derivative estimate alone describes local geometry. Parameterization changes its "
       "magnitude, including the low-rank factorization used for abstracts. The estimate targets "

@@ -2,11 +2,44 @@
 
 The model assigns a probability to each possible next token. Its **loss** is the mean negative log probability it assigns to the tokens that actually follow. The project differentiates this number **with respect to the trainable weights**. The first derivative gives the slope of the loss, the second gives its curvature, and the third tells us how that curvature changes as a weight moves. The training penalty adds up the **squares** of those changes. [Token loss](../src/thirdloss/models.py) · [Preregistered objective](../reports/preregistration.md)
 
-With one weight $w$, you can just differentiate three times. For $\ell(w)=w^4$, the successive derivatives are $4w^3$, $12w^2$ and $24w$. The penalty is $(24w)^2$. With many weights you also choose **which weight** to differentiate at each step. PyTorch directly differentiates the minibatch loss along the chosen directions by applying the chain rule at the current weights. The estimate enters when one pair of directions stands in for the sum of squares over **all** weight triples. [Project’s scalar derivative check](../tests/test_derivatives.py) · [Penalty code](../src/thirdloss/penalties.py)
+## When can the penalty favor a wider minimum?
+
+Think of moving one weight $w$ while holding the data fixed. Pick a tolerable loss increase $\epsilon$. The width of a minimum is the length of the interval around it where the loss stays within $\epsilon$ of its value at the bottom. In many dimensions one can measure this distance along a specified direction, or the volume of the connected low-loss region. Both depend on the weight coordinates and the chosen tolerance. [Dinh et al., Definition 1 and Figure 1](https://proceedings.mlr.press/v70/dinh17b/dinh17b.pdf#page=2)
+
+For one weight and a positive coefficient $\lambda$, adding a penalty to the ordinary loss $\ell$ changes the gradient as follows. A small gradient-descent step moves opposite the gradient. At a minimum of $\ell$, the ordinary slope is zero, so the penalty can determine the initial direction.
+
+| What the objective penalizes | Term added to the loss | Term added to its gradient |
+|---|---|---|
+| Hessian trace (curvature in one dimension) | $\lambda\ell''$ | $\lambda\ell'''$ |
+| Squared third derivative (how quickly curvature changes) | $\lambda(\ell''')^2$ | $2\lambda\ell'''\ell''''$ |
+
+With many weights, the trace adds the curvatures along the Hessian’s principal directions. Near a smooth minimum, a lower trace means a smaller average loss increase from small, isotropic weight perturbations to second order. The combined training arm adds the trace term and the squared third-derivative estimate with separately calibrated coefficients. The figure illustrates the signs for plain gradient descent. The model runs use sampled minibatches and probes, gradient clipping and AdamW. [Noise stability, equation 4](https://arxiv.org/pdf/2306.08553#page=5) · [Training update](#the-actual-training-update)
+
+![Ordinary loss, trace and squared third derivative for an asymmetric minimum, a flat quartic and a steep quadratic. Arrows mark opposing directions, a pull toward the quartic bottom, and no penalty gradient for the quadratic.](figures/penalty-directions.png)
+
+*The circles mark $w=0$, a minimum of each ordinary loss. Arrows give the direction of a decrease in each penalty. Their lengths are illustrative and the vertical scales differ. The report command draws these curves from their formulas.* [Figure source](../src/thirdloss/report_figures.py)
+
+- **Opposite directions at the same minimum.** The first loss has $\ell(0)=\ell'(0)=0$ and $\ell''(w)=2\sqrt{1+w}$ for $w>-1$. Moving right increases curvature, and its rate of increase slows. The trace penalty therefore pushes left. The squared third derivative is $1/(1+w)$, which decreases to the right, so that penalty pushes right.
+- **A pull back after a displacement.** For $\ell(w)=w^4$, curvature is $12w^2$ and the third derivative is $24w$. The unweighted penalty is $576w^2$. Its gradient $1152w$ vanishes at zero and gives a descent step toward zero from either side. This is a mechanism for staying near a flat bottom after a small perturbation. [Analytic gradient check](../tests/test_derivatives.py)
+- **A sharp minimum with zero penalty.** For $\ell(w)=a w^2$ with $a>0$, curvature is the constant $2a$. Increasing $a$ makes the low-loss interval narrower at any fixed tolerance, yet every member of this family has zero third derivative everywhere. The trace assigns a larger cost to the steeper quadratic, though its own gradient within each quadratic is also zero.
+
+### From a local penalty to basin width
+
+Stretch the same loss horizontally without changing its depth, so $\ell_s(w)=\ell(w/s)$ for $s>1$. At a fixed loss increase the width grows by $s$. At corresponding points the curvature scales by $s^{-2}$ and the third derivative by $s^{-3}$. Thus a wider version of the same valley can score lower on the third-derivative penalty. Even here, $\ell(w)=w^4$ and $16w^4$ both have zero third derivative at the bottom, although the former is twice as wide at a given loss increase.
+
+There is a sufficient condition for the loss to stay low over a displacement $r$. If the curvature at a smooth minimum $w_0$ is $h$ and $|\ell'''|\le M$ **throughout the interval** to $w_0+r$, Taylor’s theorem gives
+
+$$
+\ell(w_0+r)-\ell(w_0)\ \le\ \tfrac12 h r^2+\tfrac16 M|r|^3 .
+$$
+
+Small initial curvature and slowly changing curvature across the interval together limit the loss increase. The training code samples the third derivative of two-window cross-entropy at the **current weights**. For TinyStories these coordinates include the whole decoder. For research abstracts they include only the trainable low-rank attention factors of Pythia-410M. A width measurement would therefore need a fixed loss tolerance and perturbations in the corresponding stage’s trainable coordinates. The logged penalty estimates describe local curvature change. The preregistered test compares held-out next-token loss across matched seeds at equal training tokens. [Taylor remainder, equation 22](https://link.springer.com/article/10.1007/s10288-023-00541-9) · [Stage definitions](../reports/planned-runs.md) · [Preregistered comparison](../reports/preregistration.md)
 
 ## What gets differentiated?
 
 Let $\theta=(\theta_1,\ldots,\theta_d)$ be the $d$ trainable numbers. Let $B$ be the fixed **minibatch**, the training examples whose mean loss is $\ell_B(\theta)$. Write $\partial_i$ for the rate of change as weight $\theta_i$ moves with all other weights held fixed.
+
+With many weights you choose **which weight** to differentiate at each step. PyTorch applies the chain rule at the current weights along the chosen directions. The estimate enters when one pair of directions stands in for the sum of squares over all weight triples. [Penalty implementation](../src/thirdloss/penalties.py)
 
 | Quantity | Meaning |
 |---|---|
@@ -112,6 +145,8 @@ You *can* compute the exact sum without storing all $d^3$ entries. For example, 
 The amended adapter path computes derivatives in double precision on a copy with the current adapter weights. On the study laptop these calculations run on the CPU, and ordinary training uses the GPU. The code processes the two windows sequentially with the **same pair** of probes across windows. If their contractions are $r_1,r_2$, linearity gives $r_B=(r_1+r_2)/2$ for the mean loss. The code squares that mean, preserving the cross-window terms in the registered penalty. The row and column probes **within** the pair are independent. [Two-window implementation](../src/thirdloss/objectives.py) · [Precision and device choices](../reports/amendments/adapter-precision.md)
 
 The ordinary AdamW baseline passes the first gradient straight to clipping and the optimizer. The Hessian-trace arm uses one probe twice in $u^\top Hu$ because its target is the **trace**, the sum of the Hessian’s diagonal entries. The squared-Hessian arm uses $\lVert Hu\rVert_2^2$. The combined arm adds trace and third-order penalties. The sign-randomized control uses additional signs on the **finished penalty gradient**, a separate operation from choosing $u,v$ to measure the third derivative. [Comparator implementations](../src/thirdloss/penalties.py) · [Control and combined updates](../src/thirdloss/objectives.py) · [Planned comparisons](../reports/planned-runs.md)
+
+Hochreiter and Schmidhuber’s original flatness penalty used first derivatives of **network outputs** with respect to weights. Its update used second derivatives of those outputs. Liu, Yu and Lin’s later Hessian-trace objective, if differentiated, contributes third derivatives of the **loss**. Their released estimator converts the trace to a Python number before returning it, which cuts off the gradient through that code path. This project’s trace comparator differentiates through the estimate. [Original flat-minimum update, equations 1–2](https://people.idsia.ch/~juergen/fm/node3.html) · [Hessian-trace objective, equation 10](https://arxiv.org/pdf/2208.05924#page=5) · [Released estimator](https://github.com/Dean-lyc/Hessian-Regularization/blob/7d18787b06ba3e7912bf841ea9ebe4505a6191b3/hess.py#L87-L98) · [Project gradient calculation](../src/thirdloss/objectives.py)
 
 <details>
 <summary>Reproduce the worked examples and the dense storage estimates</summary>
