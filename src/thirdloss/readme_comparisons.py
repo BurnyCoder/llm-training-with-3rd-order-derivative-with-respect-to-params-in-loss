@@ -349,7 +349,7 @@ def comparison_sections(study):
                        "from the lowest matched seed. These examples have no quality rating. The method names link to the raw generations.",
                        *(panel for panel in samples if panel)])
     quick.append("[Side-by-side scores, accuracy, speed and memory](#side-by-side-comparisons) · "
-                 "[Flatness statistics](#flatness-of-the-trained-checkpoints) · "
+                 "[Flatness by variant and baseline](#all-variants-and-baselines) · "
                  "[Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · "
                  "[Paired tests and intervals](reports/summary.md)")
     if not any(o.get("complete") for o in study["stages"].values()):
