@@ -1,0 +1,152 @@
+{
+  "stage": "abstracts",
+  "kind": "third",
+  "data_manifest_sha256": "0638bd23a7d1dc3ecb9138074ecd922211df2637f60736ddfab7e9aec0b3ccb9",
+  "unit_lambda": 2.931663397394149e-20,
+  "draws": [
+    {
+      "draw": 0,
+      "ce_grad_norm": 1.1272474527359009,
+      "penalty_grad_norm": 1.744107653806619e+20,
+      "value": 265727747555328.0,
+      "norm_ratio": 6.4631758841010535e-21,
+      "probe_seconds": 6.6500113000001875,
+      "peak_allocated_mib": 6354.271484375
+    },
+    {
+      "draw": 1,
+      "ce_grad_norm": 1.1757105588912964,
+      "penalty_grad_norm": 4.98717745431209e+21,
+      "value": 3010543904358400.0,
+      "norm_ratio": 2.357466863094545e-22,
+      "probe_seconds": 6.50068470000042,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 2,
+      "ce_grad_norm": 1.2021815776824951,
+      "penalty_grad_norm": 2.7038835357767434e+18,
+      "value": 17962486464512.0,
+      "norm_ratio": 4.446129286915256e-19,
+      "probe_seconds": 6.208909000000858,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 3,
+      "ce_grad_norm": 1.0702996253967285,
+      "penalty_grad_norm": 1.6400195825337523e+20,
+      "value": 296954944815104.0,
+      "norm_ratio": 6.526139302209834e-21,
+      "probe_seconds": 6.415160799999285,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 4,
+      "ce_grad_norm": 1.181842565536499,
+      "penalty_grad_norm": 5.48905451595078e+18,
+      "value": 31501934657536.0,
+      "norm_ratio": 2.1530895022123633e-19,
+      "probe_seconds": 6.108574300000328,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 5,
+      "ce_grad_norm": 1.2219445705413818,
+      "penalty_grad_norm": 2.274370169494697e+19,
+      "value": 27829452406784.0,
+      "norm_ratio": 5.37267234213182e-20,
+      "probe_seconds": 5.9862028999996255,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 6,
+      "ce_grad_norm": 1.1192132234573364,
+      "penalty_grad_norm": 3.59346047387737e+19,
+      "value": 15019091689472.0,
+      "norm_ratio": 3.114583370523893e-20,
+      "probe_seconds": 6.139835399997537,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 7,
+      "ce_grad_norm": 1.0118643045425415,
+      "penalty_grad_norm": 2.757049388682895e+21,
+      "value": 1504090567737344.0,
+      "norm_ratio": 3.670098579648339e-22,
+      "probe_seconds": 6.22955169999841,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 8,
+      "ce_grad_norm": 1.225813627243042,
+      "penalty_grad_norm": 6.602691569608819e+18,
+      "value": 5855106301952.0,
+      "norm_ratio": 1.8565362539199544e-19,
+      "probe_seconds": 5.914080399998056,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 9,
+      "ce_grad_norm": 1.167998194694519,
+      "penalty_grad_norm": 2.1537623831724413e+19,
+      "value": 32228790763520.0,
+      "norm_ratio": 5.423059683000338e-20,
+      "probe_seconds": 6.2061707000029855,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 10,
+      "ce_grad_norm": 1.1549506187438965,
+      "penalty_grad_norm": 1.2663927538607718e+19,
+      "value": 27836349939712.0,
+      "norm_ratio": 9.12000337354167e-20,
+      "probe_seconds": 6.111348800000997,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 11,
+      "ce_grad_norm": 1.0679398775100708,
+      "penalty_grad_norm": 5.172649748649782e+19,
+      "value": 83065531531264.0,
+      "norm_ratio": 2.064589580589398e-20,
+      "probe_seconds": 6.134617499999877,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 12,
+      "ce_grad_norm": 1.2423405647277832,
+      "penalty_grad_norm": 4.519667255084921e+19,
+      "value": 40152789417984.0,
+      "norm_ratio": 2.7487434242644055e-20,
+      "probe_seconds": 6.022774100001698,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 13,
+      "ce_grad_norm": 1.177032709121704,
+      "penalty_grad_norm": 2.6147074281208077e+20,
+      "value": 137183746850816.0,
+      "norm_ratio": 4.501584752706495e-21,
+      "probe_seconds": 5.9077686999989965,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 14,
+      "ce_grad_norm": 1.1937261819839478,
+      "penalty_grad_norm": 7.480117052732963e+19,
+      "value": 202575806726144.0,
+      "norm_ratio": 1.595865644305397e-20,
+      "probe_seconds": 6.179321399999026,
+      "peak_allocated_mib": 6354.27197265625
+    },
+    {
+      "draw": 15,
+      "ce_grad_norm": 1.1019200086593628,
+      "penalty_grad_norm": 6.702447510817866e+18,
+      "value": 7641613991936.0,
+      "norm_ratio": 1.6440561554280656e-19,
+      "probe_seconds": 6.32930209999904,
+      "peak_allocated_mib": 6354.27197265625
+    }
+  ]
+}

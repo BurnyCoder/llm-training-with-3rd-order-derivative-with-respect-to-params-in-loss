@@ -1,5 +1,5 @@
 # Run learnings
 
-The run recorded a failure. The run ledger contains the error and last metrics. The run ledger records 1 interrupted attempt(s).
+Development NLL changed by -0.1143 nats per target token from 4,096 to 65,536 training targets. Attribution to the regularizer uses matched comparisons across seeds. The run ledger records 1 interrupted attempt(s).
 
 [Experiment and source records](experiment.md)

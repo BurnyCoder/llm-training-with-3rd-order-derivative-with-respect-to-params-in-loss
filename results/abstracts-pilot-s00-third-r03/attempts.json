@@ -1,0 +1,8 @@
+{
+  "failures": [
+    {
+      "timestamp": "2026-11-25T07:00:21+00:00",
+      "error": "FloatingPointError('Nonfinite or zero third calibration norm at draw 0: inf')"
+    }
+  ]
+}

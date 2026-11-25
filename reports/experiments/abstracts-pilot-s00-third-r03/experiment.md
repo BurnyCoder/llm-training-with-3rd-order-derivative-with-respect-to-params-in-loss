@@ -4,9 +4,9 @@ Run `abstracts-pilot-s00-third-r03` · [raw records](../../../results/abstracts-
 
 | Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Test NLL | Tokens/s | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Research abstracts | Third derivative | pilot | 0 | 0.030 | — | — | — | — | failed |
+| Research abstracts | Third derivative | pilot | 0 | 0.030 | 65,536 | 3.0909 | — | — | scoring development |
 
-Training time is — seconds. Peak allocated GPU memory is — MiB. Development token accuracy is —. Test token accuracy is —.
+Training time is 72.3 seconds. Peak allocated GPU memory is — MiB. Development token accuracy is 0.4143. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/abstracts-pilot-s00-third-r03/config.json)
 

@@ -1,0 +1,16 @@
+{
+  "id": "abstracts-pilot-s00-third-r03",
+  "stage": "abstracts",
+  "method": "third",
+  "phase": "pilot",
+  "seed": 0,
+  "ratio": 0.03,
+  "token_budget": 65536,
+  "batch_windows": 8,
+  "context": 128,
+  "data_manifest_sha256": "0638bd23a7d1dc3ecb9138074ecd922211df2637f60736ddfab7e9aec0b3ccb9",
+  "microbatch": 2,
+  "coefficients": {
+    "third": 8.794990192182448e-22
+  }
+}
