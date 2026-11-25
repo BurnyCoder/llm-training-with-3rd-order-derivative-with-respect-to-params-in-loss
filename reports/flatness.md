@@ -10,7 +10,7 @@ Widths are measured in each model’s trainable coordinates. A larger width is f
 | Fixed late hybrid | 21, 22, 23 | 15.143 | 13.215 | 13.103–13.268 | 13.036–13.411 | 0/96 |
 | Hessian trace | 21, 22, 23 | 15.143 | 13.154 | 13.046–13.215 | 12.984–13.366 | 0/96 |
 | Stronger trace | 21, 22, 23 | 15.143 | 13.175 | 13.069–13.233 | 13.002–13.387 | 0/96 |
-| Cross-seed replay | 22 | 15.403 | 13.218 | One seed | 12.987–13.496 | 0/32 |
+| Cross-seed replay | 22, 23 | 15.198 | 13.133 | 13.047–13.218 | 12.933–13.431 | 0/64 |
 | Always-on hybrid | 21, 22, 23 | 15.256 | 13.229 | 13.060–13.334 | 13.085–13.390 | 0/96 |
 
 The seed range and directional spread describe variability. The rays at the limit give measurement coverage. Compare matching seeds for differences between arms. [Every crossing and paired comparison](hybrid/results.md)
@@ -39,7 +39,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Fixed late hybrid · hybrid study | 16,777,216 | 21–28 | 13.215 (3/8) | Pending | Pending |
 | Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.154 (3/8) | Pending | Pending |
 | Stronger trace · hybrid study | 16,777,216 | 21–28 | 13.175 (3/8) | Pending | Pending |
-| Cross-seed replay · hybrid study | 16,777,216 | 21–28 | 13.218 (1/8) | Pending | Pending |
+| Cross-seed replay · hybrid study | 16,777,216 | 21–28 | 13.133 (2/8) | Pending | Pending |
 | Always-on hybrid · hybrid study | 16,777,216 | 21–28 | 13.229 (3/8) | Pending | Pending |
 
 <details><summary>TinyStories · all model weights · other pilot strengths and precision diagnostics</summary>
