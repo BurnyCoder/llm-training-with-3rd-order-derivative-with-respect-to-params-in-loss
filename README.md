@@ -320,7 +320,15 @@ TinyStories hybrid follow-up: 17 of 48 full runs and 4 of 8 shared checkpoints c
 
 ## Reproduce the study
 
-Use Python 3.12, uv, and an NVIDIA GPU. Install with `uv sync --locked` and check the implementation with `uv run --locked thirdloss verify`. Run the original experiments and the six-arm follow-up with `uv run --locked thirdloss study --with-hybrid`. Once the TinyStories calibration and pilot selection exist, `uv run --locked thirdloss hybrid` runs the follow-up on its own. In another terminal run `uv run thirdloss dashboard --port 18765` for live accuracy, loss and curvature. Regenerate the paper, plots and tables with `uv run thirdloss report`. [Setup, checkpoints and CLI](docs/runbook.md) · [Document splits](docs/data.md) · [Model collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378)
+Use Python 3.12, uv, and an NVIDIA GPU. From the repository root, install the locked environment, verify the derivatives and start the study.
+
+```sh
+uv sync --locked
+uv run --locked thirdloss verify
+uv run --locked thirdloss study --with-hybrid --with-flatness
+```
+
+This trains both model families, runs the six hybrid variants, evaluates the frozen models, and measures flatness for each checkpoint and reference. Repeating the study command resumes it. To measure existing saved models separately, run `uv run --locked thirdloss flatness --phase all`. In another terminal, `uv run --locked thirdloss dashboard --port 18765` serves live accuracy, loss and curvature. Regenerate the paper, plots and tables with `uv run --locked thirdloss report`. [Setup, checkpoint loading and publication](docs/runbook.md) · [Document splits](docs/data.md) · [Model collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378)
 
 The pipeline pins the source texts, splits by document, learns the stories tokenizer using training documents, and freezes the evaluation definition. Identical initializations and document orders pair the competing objectives. The smaller model trains all weights. The pretrained model trains only attention adapters. Examine both improvement and deterioration across seeds and both computational budgets. [TinyStories](https://arxiv.org/pdf/2305.07759) · [Pythia](https://huggingface.co/EleutherAI/pythia-410m) · [Common Pile](https://huggingface.co/datasets/common-pile/arxiv_abstracts_filtered) · [LoRA](https://arxiv.org/pdf/2106.09685)
 
