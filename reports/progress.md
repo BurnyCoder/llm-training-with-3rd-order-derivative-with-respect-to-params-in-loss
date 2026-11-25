@@ -1,6 +1,6 @@
 # Study progress
 
-Updated 2026-11-25T10:33:28+00:00.
+Updated 2026-11-25T10:34:57+00:00.
 
 21 training/control records and 0 final evaluations are complete. This is 17.5% of 120 planned model milestones.
 
@@ -12,7 +12,7 @@ Pilot rates project 1.69 remaining confirmation GPU-hours, excluding validation,
 
 Statistical status: pending. Awaiting confirmatory runs.
 
-**abstracts** has 9 completed runs. Current records: abstracts-pilot-s00-hessian_norm-r03-fp64 (initializing, 0 targets).
+**abstracts** has 9 completed runs. Current records: abstracts-pilot-s00-hessian_norm-r03-fp64 (queued after hybrid follow-up, 1,024 targets).
 
 Pilot rates project 9.54 remaining confirmation GPU-hours, excluding validation, exports and uploads.
 

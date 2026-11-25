@@ -1,0 +1,1 @@
+{"timestamp": "2026-11-25T10:34:00+00:00", "step": 1, "tokens": 1024, "train_seconds": 0.7638538000028348, "loss": 3.3628768920898438, "accuracy": 0.38671875, "lr": 3.3333333333333335e-05, "gradient_norm": 1.1452151536941528, "derivatives": {}, "host_probe_seconds": 0, "training_seconds_excluding_host_probes": 0.7638538000028348}
