@@ -21,13 +21,43 @@ The third-order term measures how the Hessian changes as weights move. Two indep
 <!-- RESULTS:START -->
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss/) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 0 runs, including 0 with a completed summary.
+Recorded 1 runs, including 1 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
 **Research abstracts.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
+### Measured scores
+
+| Stage | Phase | Method | Ratio | Tokens/run | Runs | Median dev NLL | Median test NLL |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| TinyStories | pilot | Third derivative | 0.030 | 2,097,152 | 1 | 3.8778 | — |
+
 ![Parameter-space computation graph](docs/figures/architecture.png)
+
+![Development NLL](docs/figures/curves.png)
+
+### Recorded predictions
+
+First archived sample in run-ID order per stage and method. [All continuations](reports/experiments/experiments.md)
+
+<details><summary>TinyStories · Third derivative</summary>
+
+**Prompt**
+
+    Once upon a time, there was a clever little dog named Max. Max loved
+
+**Reference continuation**
+
+     to run and play with his friends in the park. One day, Max was running very fast when he fell and hurt his knee.
+    
+    Max went to his friend, the wise old owl,
+
+**Model continuation**
+
+     to play on the cat.
+
+</details>
 <!-- RESULTS:END -->
 
 ## Reproduce the study

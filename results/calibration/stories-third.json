@@ -1,0 +1,120 @@
+{
+  "stage": "stories",
+  "kind": "third",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "unit_lambda": 3.0190450056526333e-12,
+  "draws": [
+    {
+      "draw": 0,
+      "ce_grad_norm": 1.8594133853912354,
+      "penalty_grad_norm": 519103250432.0,
+      "value": 11725321216.0,
+      "norm_ratio": 3.5819721487850893e-12
+    },
+    {
+      "draw": 1,
+      "ce_grad_norm": 1.8862839937210083,
+      "penalty_grad_norm": 515902373888.0,
+      "value": 12627647488.0,
+      "norm_ratio": 3.656280895754342e-12
+    },
+    {
+      "draw": 2,
+      "ce_grad_norm": 1.9330261945724487,
+      "penalty_grad_norm": 379660173312.0,
+      "value": 9509878784.0,
+      "norm_ratio": 5.091464236845069e-12
+    },
+    {
+      "draw": 3,
+      "ce_grad_norm": 1.7213722467422485,
+      "penalty_grad_norm": 530546753536.0,
+      "value": 11880067072.0,
+      "norm_ratio": 3.2445250777044772e-12
+    },
+    {
+      "draw": 4,
+      "ce_grad_norm": 1.973175048828125,
+      "penalty_grad_norm": 1305190203392.0,
+      "value": 26059016192.0,
+      "norm_ratio": 1.5117911885180637e-12
+    },
+    {
+      "draw": 5,
+      "ce_grad_norm": 1.9239611625671387,
+      "penalty_grad_norm": 738469019648.0,
+      "value": 15367791616.0,
+      "norm_ratio": 2.605337680224172e-12
+    },
+    {
+      "draw": 6,
+      "ce_grad_norm": 1.6888813972473145,
+      "penalty_grad_norm": 777386262528.0,
+      "value": 17027704832.0,
+      "norm_ratio": 2.1725125316148537e-12
+    },
+    {
+      "draw": 7,
+      "ce_grad_norm": 1.9961191415786743,
+      "penalty_grad_norm": 574304550912.0,
+      "value": 12149370880.0,
+      "norm_ratio": 3.475715347212245e-12
+    },
+    {
+      "draw": 8,
+      "ce_grad_norm": 1.9122741222381592,
+      "penalty_grad_norm": 659674234880.0,
+      "value": 15858259968.0,
+      "norm_ratio": 2.898815841406959e-12
+    },
+    {
+      "draw": 9,
+      "ce_grad_norm": 1.7994054555892944,
+      "penalty_grad_norm": 560860889088.0,
+      "value": 14235353088.0,
+      "norm_ratio": 3.208291914444697e-12
+    },
+    {
+      "draw": 10,
+      "ce_grad_norm": 1.715667963027954,
+      "penalty_grad_norm": 492194889728.0,
+      "value": 11374327808.0,
+      "norm_ratio": 3.4857492404605785e-12
+    },
+    {
+      "draw": 11,
+      "ce_grad_norm": 1.8957918882369995,
+      "penalty_grad_norm": 603894972416.0,
+      "value": 14475069440.0,
+      "norm_ratio": 3.1392741698983072e-12
+    },
+    {
+      "draw": 12,
+      "ce_grad_norm": 1.9307152032852173,
+      "penalty_grad_norm": 1069936279552.0,
+      "value": 24205223936.0,
+      "norm_ratio": 1.8045141941477484e-12
+    },
+    {
+      "draw": 13,
+      "ce_grad_norm": 2.0412609577178955,
+      "penalty_grad_norm": 756712144896.0,
+      "value": 15450195968.0,
+      "norm_ratio": 2.697539574970664e-12
+    },
+    {
+      "draw": 14,
+      "ce_grad_norm": 1.8266390562057495,
+      "penalty_grad_norm": 828804038656.0,
+      "value": 17613680640.0,
+      "norm_ratio": 2.2039456506122393e-12
+    },
+    {
+      "draw": 15,
+      "ce_grad_norm": 1.7700668573379517,
+      "penalty_grad_norm": 864454377472.0,
+      "value": 18475622400.0,
+      "norm_ratio": 2.047611653624005e-12
+    }
+  ]
+}

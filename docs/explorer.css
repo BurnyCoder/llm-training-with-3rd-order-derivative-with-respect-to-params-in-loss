@@ -90,11 +90,12 @@ footer { display: flex; justify-content: space-between; gap: 1rem; border-top: 1
   .summary { border-left: 0; border-top: 1px solid var(--rule); padding: .85rem 0 0; margin: 1.1rem 0 0; display: flex; justify-content: space-between; gap: .5rem; }
   .summary span { font-size: .68rem; }
   .summary strong { font-size: 1.3rem; }
-  .filters { gap: .5rem; }
-  .run-filter { min-width: 0; flex: 1; }
+  .filters, .curve-tools { display: grid; gap: .6rem; }
+  .filters { grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr)); }
+  .filters label, .curve-tools label { min-width: 0; }
+  .run-filter { grid-column: 1 / -1; }
   .curve-panel { padding: .75rem .65rem; }
-  .curve-tools { gap: .5rem; }
-  .curve-tools label { max-width: 48%; }
+  .curve-tools { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
   .sample-pair { grid-template-columns: 1fr; }
   .section-title { flex-wrap: wrap; }
 }

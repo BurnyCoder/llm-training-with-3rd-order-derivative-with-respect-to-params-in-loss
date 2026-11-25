@@ -309,6 +309,7 @@ async function refresh() {
       catch { study = await getData("study.json"); }
     } else study = await getData("study.json");
     render();
+    element("download-records").href = live ? "/live.json" : "study.json";
     const stamp = new Date(study.generated_at);
     const asOf = Number.isNaN(stamp.valueOf()) ? "time unavailable" :
       stamp.toLocaleString(undefined, {dateStyle: "medium", timeStyle: "medium"});
