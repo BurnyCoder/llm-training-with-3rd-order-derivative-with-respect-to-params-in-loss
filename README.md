@@ -19,7 +19,7 @@ The research background includes flat minima, Hessian measurements and third der
 
 Both primary test decisions are pending. Each stage requires eight paired test seeds and superiority over both baselines under Holm correction.
 
-[Side-by-side scores, accuracy, speed and memory](#side-by-side-comparisons) · [Flatness statistics](#flatness-of-the-trained-checkpoints) · [Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Paired tests and intervals](reports/summary.md)
+[Side-by-side scores, accuracy, speed and memory](#side-by-side-comparisons) · [Flatness by variant and baseline](#all-variants-and-baselines) · [Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Paired tests and intervals](reports/summary.md)
 
 <!-- READOUT:END -->
 
@@ -165,7 +165,7 @@ Each row uses the same fixed training windows and probe directions within its st
 
 | Variant | Training targets | Seed cohort | Weight width<br>↑ Wider is flatter | RMS weight curvature<br>↓ Less local bending | Common score width<br>↑ More score tolerance |
 | --- | --- | --- | --- | --- | --- |
-| Initial checkpoint | 0 | 0 | Pending | Pending | Pending |
+| Initial checkpoint | 0 | 0 | 21.890 (1/1) | 0.69058 (1/1) | 1.086 (1/1) |
 | Unigram | 0 | 0 | N/A · no weights | N/A · no weights | 0.915 (1/1) |
 | Ordinary AdamW | 65,536 | 0 | 19.784 (1/1) | 1.2868 (1/1) | Pending |
 | Hessian trace (1%) | 65,536 | 0 | 19.751 (1/1) | 1.1818 (1/1) | Pending |

@@ -57,7 +57,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 
 | Variant | Training targets | Seed cohort | Weight width<br>↑ Wider is flatter | RMS weight curvature<br>↓ Less local bending | Common score width<br>↑ More score tolerance |
 | --- | --- | --- | --- | --- | --- |
-| Initial checkpoint | 0 | 0 | Pending | Pending | Pending |
+| Initial checkpoint | 0 | 0 | 21.890 (1/1) | 0.69058 (1/1) | 1.086 (1/1) |
 | Unigram | 0 | 0 | N/A · no weights | N/A · no weights | 0.915 (1/1) |
 | Ordinary AdamW | 65,536 | 0 | 19.784 (1/1) | 1.2868 (1/1) | Pending |
 | Hessian trace (1%) | 65,536 | 0 | 19.751 (1/1) | 1.1818 (1/1) | Pending |
@@ -85,6 +85,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 
 | Stage | Horizon | Seed | Arm | Strength | Weight width ↑ | Weight middle 50% | Weight rays at limit | RMS curvature ↓ | Signed trace / parameter | Score width ↑ | Score middle 50% | Score rays at limit | Mean score curvature | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| abstracts | control | 0 | Initial checkpoint | 0% | 21.890 | 21.676–22.687 | 0/32 | 0.690576 | +0.0011406 | 1.086 | 1.081–1.095 | 0/32 | 0.700479 | [Weight probes](../results/abstracts-control-s00-initial-r00/flatness.json) · [Score probes](../results/abstracts-control-s00-initial-r00/score-flatness.json) |
 | abstracts | control | 0 | Unigram | 0% | N/A | N/A | N/A | N/A | N/A | 0.915 | 0.913–0.924 | 0/32 | 0.993798 | [Score probes](../results/abstracts-control-s00-unigram-r00/score-flatness.json) |
 | abstracts | pilot | 0 | Ordinary AdamW | 0% | 19.784 | 19.185–20.320 | 0/32 | 1.28684 | +0.00312322 | Pending | Pending | Pending | Pending | [Weight probes](../results/abstracts-pilot-s00-ce-r00/flatness.json) |
 | abstracts | pilot | 0 | Third derivative | 1% | 19.922 | 19.400–20.421 | 0/32 | 0.582266 | +0.00146738 | Pending | Pending | Pending | Pending | [Weight probes](../results/abstracts-pilot-s00-third-r01-fp64/flatness.json) |

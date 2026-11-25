@@ -1,0 +1,254 @@
+{
+  "run": "abstracts-control-s00-initial-r00",
+  "checkpoint_file_sha256": null,
+  "data_manifest_sha256": "0638bd23a7d1dc3ecb9138074ecd922211df2637f60736ddfab7e9aec0b3ccb9",
+  "width_device": "cuda",
+  "split": "train",
+  "probe_windows_sha256": "33355b4898d409b23633a21a839773f463c5771aaa3a8e2df9840aa647b37e4f",
+  "timestamp": "2026-11-25T17:24:23+00:00",
+  "reference": {
+    "initial_trainable_sha256": "1c45ca4d5b3a6cd1b53eadaa7df8af15e21a040a8a61aa7f0e91d1b6f019320b",
+    "verification": "recorded initial weight digest"
+  },
+  "protocol": "checkpoint-flatness-v1",
+  "width_windows": 8,
+  "curvature_windows": 2,
+  "width": {
+    "baseline_nll": 3.0661816596984863,
+    "delta_nll": 0.1,
+    "directions": [
+      {
+        "direction": 0,
+        "positive": {
+          "lower": 11.578125,
+          "upper": 11.580078125
+        },
+        "negative": {
+          "lower": 11.462890625,
+          "upper": 11.46484375
+        }
+      },
+      {
+        "direction": 1,
+        "positive": {
+          "lower": 10.23046875,
+          "upper": 10.232421875
+        },
+        "negative": {
+          "lower": 10.94921875,
+          "upper": 10.951171875
+        }
+      },
+      {
+        "direction": 2,
+        "positive": {
+          "lower": 10.876953125,
+          "upper": 10.87890625
+        },
+        "negative": {
+          "lower": 10.98828125,
+          "upper": 10.990234375
+        }
+      },
+      {
+        "direction": 3,
+        "positive": {
+          "lower": 10.86328125,
+          "upper": 10.865234375
+        },
+        "negative": {
+          "lower": 11.03125,
+          "upper": 11.033203125
+        }
+      },
+      {
+        "direction": 4,
+        "positive": {
+          "lower": 10.89453125,
+          "upper": 10.896484375
+        },
+        "negative": {
+          "lower": 11.203125,
+          "upper": 11.205078125
+        }
+      },
+      {
+        "direction": 5,
+        "positive": {
+          "lower": 11.083984375,
+          "upper": 11.0859375
+        },
+        "negative": {
+          "lower": 10.796875,
+          "upper": 10.798828125
+        }
+      },
+      {
+        "direction": 6,
+        "positive": {
+          "lower": 10.501953125,
+          "upper": 10.50390625
+        },
+        "negative": {
+          "lower": 10.439453125,
+          "upper": 10.44140625
+        }
+      },
+      {
+        "direction": 7,
+        "positive": {
+          "lower": 10.810546875,
+          "upper": 10.8125
+        },
+        "negative": {
+          "lower": 10.919921875,
+          "upper": 10.921875
+        }
+      },
+      {
+        "direction": 8,
+        "positive": {
+          "lower": 9.98828125,
+          "upper": 9.990234375
+        },
+        "negative": {
+          "lower": 10.92578125,
+          "upper": 10.927734375
+        }
+      },
+      {
+        "direction": 9,
+        "positive": {
+          "lower": 10.8984375,
+          "upper": 10.900390625
+        },
+        "negative": {
+          "lower": 11.626953125,
+          "upper": 11.62890625
+        }
+      },
+      {
+        "direction": 10,
+        "positive": {
+          "lower": 11.671875,
+          "upper": 11.673828125
+        },
+        "negative": {
+          "lower": 10.89453125,
+          "upper": 10.896484375
+        }
+      },
+      {
+        "direction": 11,
+        "positive": {
+          "lower": 11.1796875,
+          "upper": 11.181640625
+        },
+        "negative": {
+          "lower": 12.8984375,
+          "upper": 12.900390625
+        }
+      },
+      {
+        "direction": 12,
+        "positive": {
+          "lower": 13.771484375,
+          "upper": 13.7734375
+        },
+        "negative": {
+          "lower": 11.353515625,
+          "upper": 11.35546875
+        }
+      },
+      {
+        "direction": 13,
+        "positive": {
+          "lower": 10.94921875,
+          "upper": 10.951171875
+        },
+        "negative": {
+          "lower": 10.8046875,
+          "upper": 10.806640625
+        }
+      },
+      {
+        "direction": 14,
+        "positive": {
+          "lower": 11.83984375,
+          "upper": 11.841796875
+        },
+        "negative": {
+          "lower": 11.20703125,
+          "upper": 11.208984375
+        }
+      },
+      {
+        "direction": 15,
+        "positive": {
+          "lower": 10.82421875,
+          "upper": 10.826171875
+        },
+        "negative": {
+          "lower": 10.681640625,
+          "upper": 10.68359375
+        }
+      }
+    ],
+    "width_lower": 21.8876953125,
+    "width_upper": 21.8916015625,
+    "width": 21.8896484375,
+    "censored_rays": 0,
+    "weights_sha256": "1c45ca4d5b3a6cd1b53eadaa7df8af15e21a040a8a61aa7f0e91d1b6f019320b",
+    "weights_restored": true,
+    "seconds": 134.9972901000001
+  },
+  "curvature": {
+    "dimensions": 786432,
+    "draws": [
+      {
+        "index": 0,
+        "trace_per_parameter": 0.00019078998934647447,
+        "squared_rms": 0.5570597606466218
+      },
+      {
+        "index": 1,
+        "trace_per_parameter": 0.0017951003376558653,
+        "squared_rms": 0.43816261371319626
+      },
+      {
+        "index": 2,
+        "trace_per_parameter": 0.0007159733017515598,
+        "squared_rms": 0.469473299727783
+      },
+      {
+        "index": 3,
+        "trace_per_parameter": 0.002082168139031911,
+        "squared_rms": 0.39464092678921164
+      },
+      {
+        "index": 4,
+        "trace_per_parameter": 0.0010635839923581445,
+        "squared_rms": 0.38509176661106764
+      },
+      {
+        "index": 5,
+        "trace_per_parameter": 0.0009547397662817266,
+        "squared_rms": 0.28825198447255174
+      },
+      {
+        "index": 6,
+        "trace_per_parameter": 0.0011049338671442442,
+        "squared_rms": 0.6530048603757258
+      },
+      {
+        "index": 7,
+        "trace_per_parameter": 0.0012175457936534396,
+        "squared_rms": 0.6294758042313172
+      }
+    ],
+    "device": "cpu",
+    "dtype": "torch.float64",
+    "trace_per_parameter": 0.0011406043984029206,
+    "rms_curvature": 0.6905759386707115
+  }
+}
