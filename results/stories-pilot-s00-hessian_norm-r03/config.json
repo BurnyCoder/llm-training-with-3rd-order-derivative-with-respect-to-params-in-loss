@@ -1,0 +1,16 @@
+{
+  "id": "stories-pilot-s00-hessian_norm-r03",
+  "stage": "stories",
+  "method": "hessian_norm",
+  "phase": "pilot",
+  "seed": 0,
+  "ratio": 0.03,
+  "token_budget": 2097152,
+  "batch_windows": 32,
+  "context": 128,
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "microbatch": 32,
+  "coefficients": {
+    "hessian_norm": 3.6254553654824303e-09
+  }
+}

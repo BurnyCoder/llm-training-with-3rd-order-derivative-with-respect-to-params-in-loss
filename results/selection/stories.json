@@ -1,0 +1,43 @@
+{
+  "stage": "stories",
+  "candidates": {
+    "trace": [
+      {
+        "ratio": 0.01,
+        "nll": 3.8772689003319756,
+        "run": "stories-pilot-s00-trace-r01"
+      },
+      {
+        "ratio": 0.03,
+        "nll": 3.880244025806713,
+        "run": "stories-pilot-s00-trace-r03"
+      },
+      {
+        "ratio": 0.1,
+        "nll": 3.897900642381824,
+        "run": "stories-pilot-s00-trace-r10"
+      }
+    ],
+    "third": [
+      {
+        "ratio": 0.01,
+        "nll": 3.8769312387212755,
+        "run": "stories-pilot-s00-third-r01"
+      },
+      {
+        "ratio": 0.03,
+        "nll": 3.877776555228787,
+        "run": "stories-pilot-s00-third-r03"
+      },
+      {
+        "ratio": 0.1,
+        "nll": 3.882709015387265,
+        "run": "stories-pilot-s00-third-r10"
+      }
+    ]
+  },
+  "ratios": {
+    "trace": 0.01,
+    "third": 0.01
+  }
+}

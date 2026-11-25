@@ -1,0 +1,28 @@
+{
+  "stage": "stories",
+  "arms": [
+    {
+      "method": "third",
+      "pilot_run": "stories-pilot-s00-third-r01",
+      "tokens_per_sec": 42480.876701096255,
+      "peak_vram_mb": 608.21533203125,
+      "projected_confirm_hours": 0.8776349528883455
+    },
+    {
+      "method": "ce",
+      "pilot_run": "stories-pilot-s00-ce-r00",
+      "tokens_per_sec": 123871.07334510093,
+      "peak_vram_mb": 608.21533203125,
+      "projected_confirm_hours": 0.30097989155509924
+    },
+    {
+      "method": "trace",
+      "pilot_run": "stories-pilot-s00-trace-r01",
+      "tokens_per_sec": 73185.43191029143,
+      "peak_vram_mb": 608.21533203125,
+      "projected_confirm_hours": 0.5094279182217887
+    }
+  ],
+  "projected_confirm_training_hours": 1.6880427626652335,
+  "basis": "Pilot training time. Data, calibration, evaluation, checkpoint and upload overhead are additional."
+}
