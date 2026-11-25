@@ -124,6 +124,11 @@ def run_record(folder: Path) -> dict:
     if "token_budget" in record:
         record["target_tokens"] = record["token_budget"]
     record["id"] = folder.name
+    failures = read_json(folder / "attempts.json").get("failures", [])
+    if last_error and last_error not in failures:
+        failures.append(last_error)
+    if failures:
+        record["failures"] = failures
     if last_error and not summary:
         record["status"] = "failed"
         record["error"] = str(last_error.get("error", "Recorded failure"))

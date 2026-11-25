@@ -105,10 +105,22 @@ def run_one(project, storage, stage, method, phase, seed, ratio, device, microba
     locks = storage / "locks"
     locks.mkdir(parents=True, exist_ok=True)
     with FileLock(str(locks/(config["id"]+".lock"))):
+        log = recorder.directory/"attempts.json"
+        marker = recorder.directory/"failure.json"
+        def remember(failure):
+            """Keep the original timestamp and exception across successful or repeated retries."""
+            history = read_json(log) if log.exists() else {"failures":[]}
+            if failure not in history["failures"]:
+                history["failures"].append(failure)
+                write_json(log,history)
+        if marker.exists():
+            remember(read_json(marker))
         try:
             return _run(project, storage, config, recorder, device, microbatch)
         except Exception as exc:
-            write_json(recorder.directory/"failure.json", {"timestamp":time_now(), "error":repr(exc)})
+            failure = {"timestamp":time_now(), "error":repr(exc)}
+            write_json(marker,failure)
+            remember(failure)
             raise
 
 

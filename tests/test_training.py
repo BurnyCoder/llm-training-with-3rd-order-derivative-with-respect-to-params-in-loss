@@ -71,6 +71,8 @@ def test_step_recovery_matches_uninterrupted_weights(tmp_path,monkeypatch):
             train.run_one(project,root,"stories","third","smoke",seed,0.03,torch.device("cpu"))
         monkeypatch.setattr(train,"save_state",saved)
         resumed = train.run_one(project,root,"stories","third","smoke",seed,0.03,torch.device("cpu"))
+        history = train.read_json(project/"results"/resumed["id"]/"attempts.json")["failures"]
+        assert len(history) == 1 and "intentional restart fixture" in history[0]["error"]
         import shutil
         reference = tmp_path/"reference"
         shutil.copytree(project/".git",reference/".git")

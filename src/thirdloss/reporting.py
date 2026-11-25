@@ -151,13 +151,17 @@ def _experiments(root, study):
                 "[Design and hyperparameter rationale](../../planned-runs.md) · "
                 f"[Saved configuration]({raw_link}config.json)",
             ]
-            if run.get("error"):
-                material += ["## Recorded failure", _sample({"prompt": "Error", "continuation": run["error"]})]
+            if run.get("failures"):
+                material += ["## Recorded interruptions", _table(
+                    [[failure["timestamp"],failure["error"]] for failure in run["failures"]],
+                    ["Time (UTC)","Recorded exception"])]
             if run["samples"]:
                 material += ["## Fixed-prompt generations",
                              *[_sample(sample) for sample in run["samples"]]]
             atomic_text(base / key / "experiment.md", "\n\n".join(material) + "\n")
             observation = _run_learning(run)
+            if run.get("failures"):
+                observation += f" The run ledger records {len(run['failures'])} interrupted attempt(s)."
             atomic_text(base / key / "learnings.md", f"# Run learnings\n\n{observation}\n\n"
                         "[Experiment and source records](experiment.md)\n")
             learnings.append(f"- [{key}]({link}) — {observation}")

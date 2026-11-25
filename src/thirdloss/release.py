@@ -26,7 +26,7 @@ def publish_snapshot(project, message):
         git("commit","-m",message,"--",*public)
     git("push","origin","main")
     # Allowlist tracked files, excluding the dataset bytes, .env, logs and local environments.
-    from huggingface_hub import CommitOperationAdd
+    from huggingface_hub import CommitOperationAdd, CommitOperationDelete
     tracked = git("ls-files").splitlines()
     api = HfApi()
     operations = [CommitOperationAdd(path_in_repo="research/"+name, path_or_fileobj=project/name)
@@ -38,6 +38,9 @@ def publish_snapshot(project, message):
     previous = read_json(cursor) if cursor.exists() else {}
     hashes = {op.path_in_repo:sha256(op.path_or_fileobj) for op in operations}
     changed = [op for op in operations if hashes[op.path_in_repo]!=previous.get(op.path_in_repo)]
+    # Mirror deletions too, e.g. a transient failure marker archived under attempts.json after recovery.
+    changed.extend(CommitOperationDelete(path_in_repo=name) for name in previous.keys()-hashes.keys()
+                   if name.startswith("research/"))
     if changed:
         api.create_commit(repo_id=STUDY_HUB,operations=changed,commit_message=message)
         write_json(cursor,hashes)
