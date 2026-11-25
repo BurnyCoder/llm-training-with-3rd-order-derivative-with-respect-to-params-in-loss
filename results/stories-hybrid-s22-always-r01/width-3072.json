@@ -1,0 +1,191 @@
+{
+  "step": 3072,
+  "tokens": 12582912,
+  "baseline_nll": 2.6525840759277344,
+  "delta_nll": 0.1,
+  "directions": [
+    {
+      "direction": 0,
+      "positive": {
+        "lower": 6.748046875,
+        "upper": 6.7490234375
+      },
+      "negative": {
+        "lower": 7.5,
+        "upper": 7.5009765625
+      }
+    },
+    {
+      "direction": 1,
+      "positive": {
+        "lower": 6.8291015625,
+        "upper": 6.830078125
+      },
+      "negative": {
+        "lower": 7.603515625,
+        "upper": 7.6044921875
+      }
+    },
+    {
+      "direction": 2,
+      "positive": {
+        "lower": 7.2548828125,
+        "upper": 7.255859375
+      },
+      "negative": {
+        "lower": 6.642578125,
+        "upper": 6.6435546875
+      }
+    },
+    {
+      "direction": 3,
+      "positive": {
+        "lower": 7.9091796875,
+        "upper": 7.91015625
+      },
+      "negative": {
+        "lower": 6.9814453125,
+        "upper": 6.982421875
+      }
+    },
+    {
+      "direction": 4,
+      "positive": {
+        "lower": 7.3046875,
+        "upper": 7.3056640625
+      },
+      "negative": {
+        "lower": 6.806640625,
+        "upper": 6.8076171875
+      }
+    },
+    {
+      "direction": 5,
+      "positive": {
+        "lower": 7.6279296875,
+        "upper": 7.62890625
+      },
+      "negative": {
+        "lower": 6.3193359375,
+        "upper": 6.3203125
+      }
+    },
+    {
+      "direction": 6,
+      "positive": {
+        "lower": 8.03125,
+        "upper": 8.033203125
+      },
+      "negative": {
+        "lower": 6.2900390625,
+        "upper": 6.291015625
+      }
+    },
+    {
+      "direction": 7,
+      "positive": {
+        "lower": 7.1259765625,
+        "upper": 7.126953125
+      },
+      "negative": {
+        "lower": 6.666015625,
+        "upper": 6.6669921875
+      }
+    },
+    {
+      "direction": 8,
+      "positive": {
+        "lower": 7.5,
+        "upper": 7.5009765625
+      },
+      "negative": {
+        "lower": 7.0625,
+        "upper": 7.0634765625
+      }
+    },
+    {
+      "direction": 9,
+      "positive": {
+        "lower": 7.0546875,
+        "upper": 7.0556640625
+      },
+      "negative": {
+        "lower": 7.291015625,
+        "upper": 7.2919921875
+      }
+    },
+    {
+      "direction": 10,
+      "positive": {
+        "lower": 6.4794921875,
+        "upper": 6.48046875
+      },
+      "negative": {
+        "lower": 7.013671875,
+        "upper": 7.0146484375
+      }
+    },
+    {
+      "direction": 11,
+      "positive": {
+        "lower": 6.2451171875,
+        "upper": 6.24609375
+      },
+      "negative": {
+        "lower": 7.5439453125,
+        "upper": 7.544921875
+      }
+    },
+    {
+      "direction": 12,
+      "positive": {
+        "lower": 6.8798828125,
+        "upper": 6.880859375
+      },
+      "negative": {
+        "lower": 7.455078125,
+        "upper": 7.4560546875
+      }
+    },
+    {
+      "direction": 13,
+      "positive": {
+        "lower": 6.798828125,
+        "upper": 6.7998046875
+      },
+      "negative": {
+        "lower": 7.1005859375,
+        "upper": 7.1015625
+      }
+    },
+    {
+      "direction": 14,
+      "positive": {
+        "lower": 7.0673828125,
+        "upper": 7.068359375
+      },
+      "negative": {
+        "lower": 6.291015625,
+        "upper": 6.2919921875
+      }
+    },
+    {
+      "direction": 15,
+      "positive": {
+        "lower": 7.0771484375,
+        "upper": 7.078125
+      },
+      "negative": {
+        "lower": 6.888671875,
+        "upper": 6.8896484375
+      }
+    }
+  ],
+  "width_lower": 14.03857421875,
+  "width_upper": 14.04052734375,
+  "width": 14.03955078125,
+  "censored_rays": 0,
+  "weights_sha256": "a04ff45284617cc71974a34b1e794221c64413b6cfd4922ee8e96b3acccd0fc5",
+  "weights_restored": true,
+  "seconds": 7.395689499999207
+}

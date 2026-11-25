@@ -47,13 +47,13 @@ A same-probe check on pretrained Pythia found that single-precision arithmetic m
 <!-- RESULTS:START -->
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 34 runs, including 33 with a completed summary.
+Recorded 35 runs, including 34 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
 **Research abstracts.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
-TinyStories hybrid follow-up: 9 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
+TinyStories hybrid follow-up: 10 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
 ![Directional width by TinyStories arm and seed](docs/figures/hybrid_width.png)
 
@@ -79,7 +79,7 @@ TinyStories hybrid follow-up: 9 of 48 full runs and 2 of 8 shared checkpoints co
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
 | TinyStories | hybrid | Curvature-dependent hybrid | 0.010 | 16,777,216 | 2 | 2.5461 | — |
-| TinyStories | hybrid | Always-on hybrid | 0.010 | 16,777,216 | 1 | 2.5459 | — |
+| TinyStories | hybrid | Always-on hybrid | 0.010 | 16,777,216 | 2 | 2.5459 | — |
 | TinyStories | hybrid | Fixed late hybrid | 0.010 | 16,777,216 | 2 | 2.5463 | — |
 | TinyStories | hybrid | Stronger trace | 0.010 | 16,777,216 | 2 | 2.5462 | — |
 | TinyStories | hybrid | Hessian trace | 0.010 | 16,777,216 | 2 | 2.5461 | — |
