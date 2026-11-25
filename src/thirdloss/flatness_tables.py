@@ -82,14 +82,19 @@ def hybrid_flatness_table(runs):
                                 "Middle 50% of final directions","Rays at limit / tested"])
 
 
+def _weight_signature(point):
+    """Seeds on different random-number backends need not yield the same weight-space directions."""
+    return (point["protocol"],point["probe_windows_sha256"],point["width_device"],point["hessian_device"],
+            point.get("dimensions"),point.get("hessian_dtype"))
+
+
 def primary_flatness_rows(pairs):
     """Compare the same measured seeds, trainable parameterization, training windows and probe backend."""
     methods=("ce","trace","third")
     measured=[pair for pair in pairs if all("flatness" in pair[m] for m in methods)]
     if not measured:
         return []
-    signatures={(pair[m]["flatness"]["protocol"],pair[m]["flatness"]["probe_windows_sha256"],
-                 pair[m]["flatness"]["width_device"],pair[m]["flatness"]["hessian_device"]) for pair in measured for m in methods}
+    signatures={_weight_signature(pair[m]["flatness"]) for pair in measured for m in methods}
     if len(signatures)!=1:
         raise ValueError("Matched flatness statistics require the same probes and arithmetic")
     groups=[[pair[m]["flatness"] for pair in measured] for m in methods]
@@ -112,6 +117,11 @@ def all_arm_groups(study):
         target=HORIZONS[stage]
         stage_runs=[r for r in study["runs"] if r.get("stage")==stage and completed(r)]
         measured=[r["score_flatness"] for r in stage_runs if "score_flatness" in r]
+        native=[r["flatness"] for r in stage_runs if "flatness" in r]
+        if len({_weight_signature(p) for p in native})>1:
+            raise ValueError(f"The weight-space comparison for {stage} mixes probes, coordinates or arithmetic")
+        if len({p["probe_windows_sha256"] for p in native+measured})>1:
+            raise ValueError(f"The flatness comparison for {stage} mixes different training windows")
         if len({(p["protocol"],p["probe_windows_sha256"],p["direction_sha256"],p["vocab"]) for p in measured})>1:
             raise ValueError(f"The output-space comparison for {stage} mixes probes or vocabularies")
         def line(phase,method,ratio,budget,seeds,label=None):

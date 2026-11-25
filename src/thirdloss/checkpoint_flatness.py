@@ -67,13 +67,16 @@ def _initial_model(project,storage,corpus,row,device):
 
 
 def _native_geometry(model,row,folder,inputs,targets):
-    """Reuse a digest-matched registered hybrid width, then measure local curvature on the fixed batch."""
+    """Reuse registered widths with the same weights and direction backend, then measure local curvature."""
     registered=folder/f"width-{row['steps']}.json"
+    width=None
     if row["phase"] in {"hybrid","branch"}:
-        width=read_json(registered)
-        if width["weights_sha256"]!=trainable_digest(model) or not width["weights_restored"]:
+        prior=read_json(registered)
+        if prior["weights_sha256"]!=trainable_digest(model) or not prior["weights_restored"]:
             raise ValueError("Registered width belongs to different trained weights")
-    else:
+        if torch.device(row["device"]).type==inputs.device.type:
+            width=prior
+    if width is None:
         width=measure_width(model,lambda:token_loss(logits_of(model,inputs),targets))
     if row["stage"]=="abstracts":
         model=widen_pythia(model.cpu())

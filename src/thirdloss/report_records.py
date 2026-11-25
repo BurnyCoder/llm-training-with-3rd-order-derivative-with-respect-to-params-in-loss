@@ -189,7 +189,8 @@ def run_record(folder: Path) -> dict:
         record["flatness"]={**compact_width(diagnostic["width"]),
                             **{k:diagnostic[k] for k in ("protocol","probe_windows_sha256","width_device")},
                             **{k:diagnostic["curvature"][k] for k in ("rms_curvature","trace_per_parameter")},
-                            "hessian_device":diagnostic["curvature"]["device"]}
+                            "hessian_device":diagnostic["curvature"]["device"],"hessian_dtype":diagnostic["curvature"]["dtype"],
+                            "dimensions":diagnostic["curvature"]["dimensions"]}
         record["events"].append({"step":record["steps"],"tokens":record["tokens"],"train_seconds":record["train_seconds"],
                                  "width":diagnostic["width"]["width"],"checkpoint_rms":diagnostic["curvature"]["rms_curvature"],
                                  "checkpoint_signed_trace":diagnostic["curvature"]["trace_per_parameter"]})
