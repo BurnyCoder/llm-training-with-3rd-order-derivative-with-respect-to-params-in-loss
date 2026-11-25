@@ -168,7 +168,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Initial checkpoint | 0 | 0 | 21.890 (1/1) | 0.69058 (1/1) | 1.086 (1/1) |
 | Unigram | 0 | 0 | N/A · no weights | N/A · no weights | 0.915 (1/1) |
 | Ordinary AdamW | 65,536 | 0 | 19.784 (1/1) | 1.2868 (1/1) | 1.093 (1/1) |
-| Hessian trace (1%) | 65,536 | 0 | 19.751 (1/1) | 1.1818 (1/1) | Pending |
+| Hessian trace (1%) | 65,536 | 0 | 19.751 (1/1) | 1.1818 (1/1) | 1.093 (1/1) |
 | Third derivative (1%) | 65,536 | 0 | 19.922 (1/1) | 0.58227 (1/1) | 1.093 (1/1) |
 | Squared Hessian norm (3%) | 65,536 | 0 | Pending | Pending | Pending |
 | Randomized gradient signs (1%) | 65,536 | 0 | Pending | Pending | Pending |
