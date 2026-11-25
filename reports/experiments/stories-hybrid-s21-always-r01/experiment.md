@@ -10,6 +10,10 @@ Training time is 550.0 seconds. Peak allocated GPU memory is 621.3 MiB. Developm
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-hybrid-s21-always-r01/config.json)
 
+## Restart verification
+
+After the system restart, training resumed from update 3,712 and replayed 24 updates. Across 5 logged overlaps, the maximum absolute training NLL difference was 2.384e-07 nats per target and the maximum difference in the unclipped gradient norm was 1.192e-07. [Replay measurements](../../../results/verification/hybrid-s21-system-restart.json)
+
 The process working-set high-water mark was 2,001.6 MiB. This OS measure includes earlier work in the same interpreter.
 
 ## Fixed-prompt generations

@@ -18,6 +18,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | [abstracts-pilot-s00-trace-r03-fp64](./abstracts-pilot-s00-trace-r03-fp64/experiment.md) | Research abstracts | Hessian trace | pilot | 0 | 0.030 | 65,536 | 3.1141 | — | 427 | complete |
 | [abstracts-pilot-s00-trace-r10-fp64](./abstracts-pilot-s00-trace-r10-fp64/experiment.md) | Research abstracts | Hessian trace | pilot | 0 | 0.100 | 65,536 | 3.1143 | — | 431 | complete |
 | [stories-branch-s21-trunk-r01](./stories-branch-s21-trunk-r01/experiment.md) | TinyStories | Shared trace checkpoint | branch | 21 | 0.010 | 8,388,608 | 2.7577 | — | 69,581 | complete |
+| [stories-branch-s22-trunk-r01](./stories-branch-s22-trunk-r01/experiment.md) | TinyStories | Shared trace checkpoint | branch | 22 | 0.010 | 8,388,608 | 2.7573 | — | 61,905 | complete |
 | [stories-control-s00-initial-r00](./stories-control-s00-initial-r00/experiment.md) | TinyStories | Initial checkpoint | control | 0 | 0.000 | 0 | 8.3437 | — | 0 | complete |
 | [stories-control-s00-unigram-r00](./stories-control-s00-unigram-r00/experiment.md) | TinyStories | Unigram | control | 0 | 0.000 | 0 | 6.0036 | — | 0 | complete |
 | [stories-hybrid-s21-adaptive-r01](./stories-hybrid-s21-adaptive-r01/experiment.md) | TinyStories | Curvature-dependent hybrid | hybrid | 21 | 0.010 | 16,777,216 | 2.5459 | — | 43,973 | complete |

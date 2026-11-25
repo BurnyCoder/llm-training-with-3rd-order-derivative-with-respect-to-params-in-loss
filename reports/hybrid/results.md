@@ -1,6 +1,6 @@
 # Hybrid schedules on TinyStories
 
-TinyStories hybrid follow-up: 5 of 48 full runs and 1 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
+TinyStories hybrid follow-up: 5 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
 
 [Frozen protocol and decision rule](preregistration.md) · [Interactive measurement and run selector](../../docs/index.html#curves)
 
@@ -11,6 +11,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | Seed | Arm | Step | Width | Lower | Upper | Censored rays | Training probe NLL | Probe seconds |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 21 | Shared trace checkpoint | [2048](../../results/stories-branch-s21-trunk-r01/width-2048.json) | 15.14258 | 15.14160 | 15.14355 | 0 | 2.77694 | 5.28 |
+| 22 | Shared trace checkpoint | [2048](../../results/stories-branch-s22-trunk-r01/width-2048.json) | 15.40259 | 15.40137 | 15.40381 | 0 | 2.81658 | 5.80 |
 | 21 | Curvature-dependent hybrid | [2048](../../results/stories-hybrid-s21-adaptive-r01/width-2048.json) | 15.14258 | 15.14160 | 15.14355 | 0 | 2.77694 | 5.28 |
 | 21 | Curvature-dependent hybrid | [3072](../../results/stories-hybrid-s21-adaptive-r01/width-3072.json) | 13.95557 | 13.95459 | 13.95654 | 0 | 2.64916 | 5.48 |
 | 21 | Curvature-dependent hybrid | [4096](../../results/stories-hybrid-s21-adaptive-r01/width-4096.json) | 13.15723 | 13.15625 | 13.15820 | 0 | 2.59304 | 5.24 |
@@ -34,6 +35,7 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 | Seed | Arm | Dev NLL | Accuracy | Reference RMS | Steps at zero λ₃ | Final λ₃ | Targets/s | Allocated GPU MiB | Process peak MiB |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 21 | Shared trace checkpoint | 2.757685 | 0.43346 | 0.44853 | [2048](../../results/stories-branch-s21-trunk-r01/schedule.json) | 0 | 69,581 | 608.2 | 2,025.9 |
+| 22 | Shared trace checkpoint | 2.757325 | 0.43399 | 0.40627 | [2048](../../results/stories-branch-s22-trunk-r01/schedule.json) | 0 | 61,905 | 608.2 | 2,077.5 |
 | 21 | Curvature-dependent hybrid | 2.545908 | 0.46154 | 0.44853 | [2176](../../results/stories-hybrid-s21-adaptive-r01/schedule.json) | 1.38036e-15 | 43,973 | 617.3 | 2,072.2 |
 | 21 | Always-on hybrid | 2.545923 | 0.46156 | 0.44052 | [0](../../results/stories-hybrid-s21-always-r01/schedule.json) | 3.01905e-14 | 30,503 | 621.3 | 2,001.6 |
 | 21 | Fixed late hybrid | 2.546113 | 0.46158 | 0.44853 | [2049](../../results/stories-hybrid-s21-late-r01/schedule.json) | 3.01905e-14 | 41,141 | 617.3 | 2,078.0 |

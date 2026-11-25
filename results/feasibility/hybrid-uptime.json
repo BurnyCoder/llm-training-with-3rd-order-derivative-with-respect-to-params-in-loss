@@ -1,0 +1,11 @@
+{
+  "as_of": "2026-11-25T15:17:48+00:00",
+  "observed_gap_hours": 4.110555555555556,
+  "replay_proxy_gap_hours": 0.0,
+  "sources": [
+    "hybrid-s21-system-restart.json"
+  ],
+  "remaining_hybrid_hours": 4.906885720094046,
+  "combined_hours": 27.403206177487732,
+  "basis": "Excludes repeated copies of the observed intervals without logged updates. Retains the first actual interruption in elapsed study time."
+}

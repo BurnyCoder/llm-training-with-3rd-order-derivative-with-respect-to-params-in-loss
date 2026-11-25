@@ -47,13 +47,13 @@ A same-probe check on pretrained Pythia found that single-precision arithmetic m
 <!-- RESULTS:START -->
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 29 runs, including 28 with a completed summary.
+Recorded 30 runs, including 29 with a completed summary.
 
 **TinyStories.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
 **Research abstracts.** Awaiting paired test results (0 of 8 full-horizon training triplets).
 
-TinyStories hybrid follow-up: 5 of 48 full runs and 1 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
+TinyStories hybrid follow-up: 5 of 48 full runs and 2 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
 ![Directional width by TinyStories arm and seed](docs/figures/hybrid_width.png)
 
@@ -75,7 +75,7 @@ TinyStories hybrid follow-up: 5 of 48 full runs and 1 of 8 shared checkpoints co
 | Research abstracts | pilot | Hessian trace | 0.010 | 65,536 | 1 | 3.1140 | — |
 | Research abstracts | pilot | Hessian trace | 0.030 | 65,536 | 1 | 3.1141 | — |
 | Research abstracts | pilot | Hessian trace | 0.100 | 65,536 | 1 | 3.1143 | — |
-| TinyStories | branch | Shared trace checkpoint | 0.010 | 8,388,608 | 1 | 2.7577 | — |
+| TinyStories | branch | Shared trace checkpoint | 0.010 | 8,388,608 | 2 | 2.7575 | — |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | — |
 | TinyStories | hybrid | Curvature-dependent hybrid | 0.010 | 16,777,216 | 1 | 2.5459 | — |
