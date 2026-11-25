@@ -15,7 +15,7 @@ Does a language model predict unseen tokens better when training penalizes rapid
 
 These papers motivate a distinct experiment here: putting the squared norm of the **third derivative of next-token loss with respect to trainable weights** directly in the training objective. The reviewed studies leave its effect on held-out next-token loss open.
 
-The third-order term measures how the Hessian changes as weights move. Two independent random sign vectors estimate its squared Frobenius norm. Differentiating the estimate gives the optimizer a fourth-derivative contribution. This combines an order-three roughness density with matrix-free norm estimation. [Duchon](https://doi.org/10.1007/BFb0086566) · [Bujanović and Kressner](https://arxiv.org/pdf/2004.06433) · [Hessian comparator](https://arxiv.org/pdf/2208.05924)
+The third-order term measures how the Hessian changes as weights move. Two independent random sign vectors estimate its squared Frobenius norm. Differentiating the estimate gives the optimizer a fourth-derivative contribution. This combines an order-three roughness density with matrix-free norm estimation. [Worked examples and the training implementation](docs/third-derivative-penalty.md) · [Duchon](https://doi.org/10.1007/BFb0086566) · [Bujanović and Kressner](https://arxiv.org/pdf/2004.06433) · [Hessian comparator](https://arxiv.org/pdf/2208.05924)
 
 The protocol and run matrix were published before model execution. The scores, comparisons and continuations below are regenerated from each run’s raw records. [Preregistration](reports/preregistration.md) · [Run matrix](reports/planned-runs.md) · [Literature](reports/literature-review.md) · [State of the art](reports/state-of-the-art-review.md) · [Progress](reports/progress.md)
 
