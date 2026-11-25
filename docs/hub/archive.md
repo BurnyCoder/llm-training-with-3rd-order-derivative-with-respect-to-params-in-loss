@@ -77,7 +77,7 @@ How far can the weights move before next-token loss rises by 0.1 nats on eight f
 | Fixed late hybrid | 21, 22, 23, 24 | 15.172 | 13.159 | 13.056–13.268 | 12.984–13.380 | 0/128 |
 | Hessian trace | 21, 22, 23, 24 | 15.172 | 13.100 | 13.001–13.215 | 12.932–13.330 | 0/128 |
 | Stronger trace | 21, 22, 23, 24 | 15.172 | 13.122 | 13.023–13.233 | 12.951–13.351 | 0/128 |
-| Cross-seed replay | 22, 23 | 15.198 | 13.133 | 13.047–13.218 | 12.933–13.431 | 0/64 |
+| Cross-seed replay | 22, 23, 24 | 15.201 | 13.047 | 13.004–13.218 | 12.880–13.366 | 0/96 |
 | Always-on hybrid | 21, 22, 23, 24 | 15.277 | 13.161 | 13.060–13.334 | 13.022–13.389 | 0/128 |
 
 #### All variants and baselines
@@ -104,7 +104,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Fixed late hybrid · hybrid study | 16,777,216 | 21–28 | 13.159 (4/8) | 0.57064 (4/8) | 1.0822 (4/8) |
 | Hessian trace · hybrid study | 16,777,216 | 21–28 | 13.100 (4/8) | 0.57802 (4/8) | 1.0824 (4/8) |
 | Stronger trace · hybrid study | 16,777,216 | 21–28 | 13.122 (4/8) | 0.57648 (4/8) | 1.0824 (4/8) |
-| Cross-seed replay · hybrid study | 16,777,216 | 21–28 | 13.133 (2/8) | 0.5891 (2/8) | 1.0824 (2/8) |
+| Cross-seed replay · hybrid study | 16,777,216 | 21–28 | 13.047 (3/8) | 0.5891 (2/8) | 1.0824 (2/8) |
 | Always-on hybrid · hybrid study | 16,777,216 | 21–28 | 13.161 (4/8) | 0.56515 (4/8) | 1.0821 (4/8) |
 
 <details><summary>TinyStories · all model weights · other pilot strengths and precision diagnostics</summary>
@@ -188,7 +188,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 
 | Adaptive versus | Paired seeds | Adaptive NLL<br>↓ Lower is better | Adaptive width change<br>↑ More retained is better for the width test | Adaptive speed<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
-| Cross-seed replay | 2/8 | 0.000001 higher | 0.0010 less retained | 5.4% faster |
+| Cross-seed replay | 3/8 | 0.000002 lower | 0.0024 less retained | 3.1% faster |
 | Hessian trace | 4/8 | 0.000002 higher | 0.0010 more retained | 35.2% slower |
 | Stronger trace | 4/8 | 0.000094 lower | 0.0193 less retained | 35.6% slower |
 | Always-on hybrid | 4/8 | 0.000127 higher | 0.0234 more retained | 33.4% faster |
