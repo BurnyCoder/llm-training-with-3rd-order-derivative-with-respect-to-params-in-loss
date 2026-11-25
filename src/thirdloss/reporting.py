@@ -155,11 +155,19 @@ def _experiments(root, study):
                 material += ["## Recorded interruptions", _table(
                     [[failure["timestamp"],failure["error"]] for failure in run["failures"]],
                     ["Time (UTC)","Recorded exception"])]
+            if run.get("precision_audit"):
+                material += ["## Numerical diagnostic",run["precision_audit"]["reason"],
+                             "[Precision amendment](../../amendments/adapter-precision.md)"]
+            if finite(run.get("process_peak_rss_mib")):
+                material.append(f"The process working-set high-water mark was {fmt(run['process_peak_rss_mib'],1)} MiB. "
+                                "This OS measure includes earlier work in the same interpreter.")
             if run["samples"]:
                 material += ["## Fixed-prompt generations",
                              *[_sample(sample) for sample in run["samples"]]]
             atomic_text(base / key / "experiment.md", "\n\n".join(material) + "\n")
             observation = _run_learning(run)
+            if run.get("precision_audit"):
+                observation = run["precision_audit"]["reason"]
             if run.get("failures"):
                 observation += f" The run ledger records {len(run['failures'])} interrupted attempt(s)."
             atomic_text(base / key / "learnings.md", f"# Run learnings\n\n{observation}\n\n"

@@ -17,6 +17,8 @@ Use `uv run thirdloss report` to regenerate the README results, PDF, figures, ex
 
 After preparing abstracts, `uv run thirdloss verify --pretrained --device cuda` also compares both implementations of the penalty and its entire training gradient on the same pair of training windows, adapter initialization and sign probes. The diagnostic materializes the original joint graph for comparison. Its GPU allocation exceeded 10 GiB during the original replay. The ordinary adapter training path processes the two windows sequentially. `--device cpu` runs the optional comparison in host memory. [Adapter verification](../reports/reviews/adapter-verification.md)
 
+`uv run thirdloss verify --reference --device cpu` repeats the full-size FP64 calculation using the archived pilot’s CUDA probe stream. The production study uses `THIRDLOSS_ADAPTER_DERIVATIVE_DEVICE=cpu` on the laptop, six host math threads (`OMP_NUM_THREADS=6`, `MKL_NUM_THREADS=6`), and the GPU for cross-entropy, optimizer updates, generation and scoring. The derivative device, arithmetic, calibration and per-update host time are recorded. The `-fp64` suffix identifies amended adapter runs. [Protocol amendment](../reports/amendments/adapter-precision.md)
+
 ## Load a published checkpoint
 
 All models are indexed in the [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378). The run name identifies its objective, phase, seed and penalty strength. Replace the example run name with the desired published checkpoint. Run from a clone with the locked environment.

@@ -13,9 +13,9 @@ from filelock import FileLock
 
 from .evaluation import sample_outputs, score, unigram_distribution
 from .models import build_model, export_weights, trainable_digest
-from .objectives import add_penalty, calibrate, ce_backward
+from .objectives import add_penalty, adapter_derivative_device, calibrate, ce_backward, derivative_replica
 from .records import (BATCHES, CONTEXT, HORIZONS, RATIOS, Recorder, json_lines, read_json,
-                      run_name, sha256, time_now, write_json)
+                      peak_process_mib, run_name, sha256, time_now, write_json)
 from .windows import TrainingWindows, gate
 
 
@@ -131,6 +131,9 @@ def _run(project, storage, config, recorder, device, microbatch):
     manifest = read_json(data/"manifest.json")
     config["data_manifest_sha256"] = sha256(data/"manifest.json")
     config["microbatch"] = microbatch
+    precise = stage=="abstracts" and method not in {"ce","initial","unigram"}
+    if precise:
+        config.update(derivative_dtype="float64",derivative_device=str(adapter_derivative_device()))
     output = recorder.directory
     state_path = output/"state.json"
     if not (output/"summary.json").exists():
@@ -148,10 +151,14 @@ def _run(project, storage, config, recorder, device, microbatch):
         torch.cuda.empty_cache()
         torch.cuda.reset_peak_memory_stats(device)
     model = None if method == "unigram" else build_model(stage,seed,device,storage)
+    replica = derivative_replica(stage,seed,storage) if precise else None
+    bench=project/"results"/"verification"/"pythia-scoring-batches.json"
+    score_batch=read_json(bench)["selected_batch"] if stage=="abstracts" and bench.exists() else microbatch
     parameters = tuple(p for p in model.parameters() if p.requires_grad) if model is not None else ()
     summary = {**config, "device":str(device), "torch":str(torch.__version__), "platform":platform.platform(),
                "gpu":torch.cuda.get_device_name(device) if device.type=="cuda" else None,
                "initial_trainable_sha256":trainable_digest(model) if model is not None else None,
+               "cpu_threads":torch.get_num_threads(),"evaluation_batch_windows":score_batch,
                "git_revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=project,text=True).strip(),
                "trainable_parameters":sum(p.numel() for p in parameters)}
     batch = BATCHES[stage]
@@ -164,6 +171,7 @@ def _run(project, storage, config, recorder, device, microbatch):
                   {"params":[p for p in parameters if p.ndim<=1],"weight_decay":0.0}]
         optimizer = torch.optim.AdamW(groups,lr=1e-4,betas=(0.9,0.95),fused=(device.type=="cuda"))
         start,elapsed = restore_state(ckpt/"latest.pt",model,optimizer,config,recorder,device)
+        host_probes = sum(e.get("host_probe_seconds",0.0) for e in json_lines(output/"events.jsonl"))
         # Match elapsed-time comparisons with periodic fixed development windows in every arm.
         interval = min(128,max(1,steps//16))
         for step in range(start,steps):
@@ -173,7 +181,10 @@ def _run(project, storage, config, recorder, device, microbatch):
             optimizer.zero_grad(set_to_none=True)
             base,accuracy = ce_backward(model,inputs,targets,microbatch)
             active = bool(config["coefficients"]) and gate(seed,step)
-            terms = add_penalty(model,parameters,inputs,targets,config["coefficients"],method,seed,step) if active else {}
+            terms = add_penalty(model,parameters,inputs,targets,config["coefficients"],method,seed,step,replica) if active else {}
+            host_seconds = (sum(t["probe_seconds"] for t in terms.values())
+                            if precise and config["derivative_device"]=="cpu" and device.type=="cuda" else 0.0)
+            host_probes += host_seconds
             norm = torch.nn.utils.clip_grad_norm_(parameters,1.0,error_if_nonfinite=True)
             lr = learning_rate(stage,step,steps)
             for group in optimizer.param_groups:
@@ -185,22 +196,25 @@ def _run(project, storage, config, recorder, device, microbatch):
             done = step+1
             if done % 8 == 0 or active or done == 1 or done % interval == 0 or done == steps:
                 row = {"step":done, "tokens":done*batch*CONTEXT, "train_seconds":elapsed, "loss":base.item(),
-                       "accuracy":accuracy.item(), "lr":lr, "gradient_norm":norm.item(),"derivatives":terms}
+                       "accuracy":accuracy.item(), "lr":lr, "gradient_norm":norm.item(),"derivatives":terms,
+                       "host_probe_seconds":host_seconds,"training_seconds_excluding_host_probes":max(0.0,elapsed-host_probes)}
                 if terms:
                     row["penalty"] = sum(8*t["lambda"]*t["estimate"] for t in terms.values())
                 if done%interval == 0 or done==steps:
-                    metrics = score(model,data/"dev.bin",device,microbatch,limit_windows=64)
+                    metrics = score(model,data/"dev.bin",device,score_batch,limit_windows=64)
                     row.update(dev_nll=metrics["nll"],dev_accuracy=metrics["accuracy"])
                 recorder.emit(row)
             if done%interval == 0 or done==steps:
                 save_state(ckpt/"latest.pt",model,optimizer,done,elapsed,config)
         del optimizer
+        summary.update(host_probe_seconds=host_probes,training_seconds_excluding_host_probes=max(0.0,elapsed-host_probes))
+    del replica
     dist = unigram_distribution(data/"train.bin",4096 if stage=="stories" else 50304) if method=="unigram" else None
     write_json(state_path,{"status":"scoring development","timestamp":time_now()})
     def evaluation_progress(row):
         write_json(state_path,{"status":"scoring development",**row})
         recorder.emit({"split":"dev",**row},"evaluation.jsonl")
-    validation = score(model,data/"dev.bin",device,microbatch,unigram=dist,progress=evaluation_progress)
+    validation = score(model,data/"dev.bin",device,score_batch,unigram=dist,progress=evaluation_progress)
     # A rerun after final-checkpoint interruption writes each documented sample exactly once.
     sample_path = output/"samples.jsonl"
     if sample_path.exists():
@@ -213,6 +227,7 @@ def _run(project, storage, config, recorder, device, microbatch):
         summary["matched_dev_nll"] = next(e["dev_nll"] for e in reversed(json_lines(output/"events.jsonl"))
                                           if "dev_nll" in e)
     summary.update(tokens=budget,steps=steps,train_seconds=elapsed,tokens_per_sec=budget/elapsed if elapsed else 0,
+                   process_peak_rss_mib=peak_process_mib(),
                    peak_vram_mb=torch.cuda.max_memory_allocated(device)/2**20 if device.type=="cuda" else 0,
                    dev_nll=validation["nll"],dev_accuracy=validation["accuracy"],dev_tokens=validation["tokens"],
                    finished_at=time_now(),status="complete")

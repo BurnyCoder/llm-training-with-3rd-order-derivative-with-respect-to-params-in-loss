@@ -2,9 +2,10 @@
 
 import statistics
 import time
+import os
 import torch
 
-from .models import build_model, logits_of, token_loss, token_nll
+from .models import build_model, logits_of, token_loss, token_nll, trainable_digest, widen_pythia
 from .penalties import estimate, inner, partials, random_signs, third_contraction
 from .records import BATCHES, read_json, sha256, time_now, write_json
 from .windows import TrainingWindows, generator, probe_rows
@@ -56,10 +57,41 @@ def two_window_third_gradient(model, parameters, inputs, targets, u, v):
     return inner(mean,mean), tuple(a+b for a,b in zip(grad_first,grad_second,strict=True))
 
 
-def probe_gradient(model, parameters, inputs, targets, kind, seed, step):
+def adapter_derivative_device():
+    """The registered laptop uses host FP64 for adapter probes and CUDA for ordinary training."""
+    return torch.device(os.environ.get("THIRDLOSS_ADAPTER_DERIVATIVE_DEVICE","cpu"))
+
+
+def derivative_replica(stage,seed,storage):
+    """Keep a high-precision frozen backbone for adapter derivatives. Preserve caller RNGs."""
+    if stage!="abstracts":
+        return None
+    devices = [torch.cuda.current_device()] if torch.cuda.is_available() else []
+    with torch.random.fork_rng(devices=devices):
+        return widen_pythia(build_model(stage,seed,adapter_derivative_device(),storage))
+
+
+def probe_gradient(model, parameters, inputs, targets, kind, seed, step, replica=None):
     """Differentiate the sampled penalty, including the fourth-order contraction."""
     rng = generator(inputs.device, seed, step, 827)
     rows = probe_rows(seed, step, len(inputs))
+    if replica is not None:
+        # All arms draw the original CUDA signs. Only the arithmetic and storage of
+        # the small derivative batch change. Sync every factor at the current optimizer step.
+        precise = tuple(p for p in replica.parameters() if p.requires_grad)
+        with torch.no_grad():
+            for dest,source in zip(precise,parameters,strict=True):
+                dest.copy_(source)
+        device = precise[0].device
+        x,y = inputs[rows].to(device),targets[rows].to(device)
+        def signs():
+            return tuple(s.to(device=device,dtype=torch.float64) for s in random_signs(parameters,rng))
+        u = signs()
+        if kind=="third":
+            return two_window_third_gradient(replica,precise,x,y,u,signs())
+        loss = token_loss(logits_of(replica,x),y)
+        value = estimate(loss,precise,kind,u=u)
+        return value.detach(),partials(value,precise,create_graph=False)
     if kind == "third" and hasattr(model, "peft_config"):
         u, v = random_signs(parameters,rng), random_signs(parameters,rng)
         return two_window_third_gradient(model,parameters,inputs[rows],targets[rows],u,v)
@@ -70,21 +102,26 @@ def probe_gradient(model, parameters, inputs, targets, kind, seed, step):
 
 def calibrate(project, storage, stage, kind, device, microbatch):
     """Fix unit-strength scales for all seeds using only training data at pilot initialization."""
-    path = project / "results" / "calibration" / f"{stage}-{kind}.json"
+    suffix = "-fp64" if stage=="abstracts" else ""
+    path = project / "results" / "calibration" / f"{stage}-{kind}{suffix}.json"
     data = storage / "data" / stage
     fingerprint = sha256(data/"manifest.json")
     if path.exists():
         existing = read_json(path)
         if existing["data_manifest_sha256"] != fingerprint:
             raise ValueError(f"Calibration data changed for {stage}")
+        if suffix and existing.get("derivative_device") != str(adapter_derivative_device()):
+            raise ValueError("Adapter calibration uses a different derivative device")
         return existing["unit_lambda"]
     model = build_model(stage, 0, device, storage)
+    replica = derivative_replica(stage,0,storage)
     parameters = tuple(p for p in model.parameters() if p.requires_grad)
     windows = TrainingWindows(data/"train.bin", 6247, BATCHES[stage])
     # Each draw has its own data/probe address. A reboot can resume a long calibration
     # without mixing corpora, physical batching or old estimator implementations.
-    work = storage/"calibration"/f"{stage}-{kind}-draws.json"
-    identity = {"data_manifest_sha256":fingerprint,"microbatch":microbatch,"version":2}
+    work = storage/"calibration"/f"{stage}-{kind}{suffix}-draws.json"
+    identity = {"data_manifest_sha256":fingerprint,"microbatch":microbatch,"version":3,
+                "derivative_device":str(adapter_derivative_device() if replica is not None else device)}
     partial = read_json(work) if work.exists() else {**identity,"draws":[]}
     if any(partial.get(k)!=v for k,v in identity.items()):
         raise ValueError(f"Different settings in partial calibration for {stage} {kind}")
@@ -100,7 +137,7 @@ def calibrate(project, storage, stage, kind, device, microbatch):
         if device.type == "cuda":
             torch.cuda.reset_peak_memory_stats(device)
         started = time.perf_counter()
-        value, grads = probe_gradient(model, parameters, inputs, targets, kind, 6247, step)
+        value, grads = probe_gradient(model, parameters, inputs, targets, kind, 6247, step,replica)
         norm = vector_norm(grads).item()
         probe_seconds = time.perf_counter()-started
         if not (0 < norm < float("inf") and 0 < ce_norm < float("inf")):
@@ -114,26 +151,34 @@ def calibrate(project, storage, stage, kind, device, microbatch):
         del grads
     result = statistics.median(row["norm_ratio"] for row in rows)
     write_json(path, {"stage":stage, "kind":kind, "data_manifest_sha256":fingerprint,
-                      "unit_lambda":result, "draws":rows})
+                      "unit_lambda":result, "draws":rows,"derivative_device":identity["derivative_device"],
+                      "derivative_dtype":"float64" if replica is not None else "float32",
+                      "initial_trainable_sha256":trainable_digest(model)})
     work.unlink(missing_ok=True)
     return result
 
 
-def add_penalty(model, parameters, inputs, targets, coefficients, method, seed, step):
+def add_penalty(model, parameters, inputs, targets, coefficients, method, seed, step, replica=None):
     """Add the gated derivative contribution to already-accumulated CE gradients."""
     telemetry = {}
     for kind, weight in coefficients.items():
         if not weight:
             continue
-        value, grads = probe_gradient(model, parameters, inputs, targets, kind, seed, step)
+        started = time.perf_counter()
+        value, grads = probe_gradient(model, parameters, inputs, targets, kind, seed, step,replica)
         raw_norm = vector_norm(grads).item()
         if method == "sham":
             signs = random_signs(parameters, generator(inputs.device, seed, step, 839))
-            grads = tuple(g * sign for g, sign in zip(grads, signs, strict=True))
+            grads = tuple(g * sign.to(g.device) for g, sign in zip(grads, signs, strict=True))
         with torch.no_grad():
             for param, grad in zip(parameters, grads, strict=True):
                 if param.grad is None:
                     param.grad = torch.zeros_like(param)
-                param.grad.add_(grad, alpha=8*weight)
-        telemetry[kind] = {"estimate":value.item(), "raw_grad_norm":raw_norm, "lambda":weight}
+                if replica is None:
+                    param.grad.add_(grad, alpha=8*weight)
+                else:
+                    # Scale in FP64 before returning the registered contribution to the FP32 optimizer.
+                    param.grad.add_((grad*(8*weight)).to(param))
+        telemetry[kind] = {"estimate":value.item(), "raw_grad_norm":raw_norm, "lambda":weight,
+                           "probe_seconds":time.perf_counter()-started}
     return telemetry

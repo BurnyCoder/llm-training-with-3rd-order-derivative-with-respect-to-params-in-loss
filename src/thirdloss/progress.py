@@ -58,7 +58,7 @@ def week_schedule(project):
 
 def progress(project):
     study = study_snapshot(project)
-    runs = [r for r in study["runs"] if r.get("phase")!="smoke"]
+    runs = [r for r in study["runs"] if r.get("phase") not in {"smoke","diagnostic"}]
     done = [r for r in runs if r["status"] in {"complete","evaluated"}]
     tests = [r for r in done if "test_nll" in r]
     # Each stage has seven development candidates, two free controls, three ablations,

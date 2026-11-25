@@ -271,6 +271,31 @@ def test_pythia_adapter_fourth_derivative_and_portable_checkpoint(tmp_path, monk
     set_peft_model_state_dict(fresh, payload)
     torch.testing.assert_close(logits_of(fresh, ids), logits_of(model, ids), rtol=0, atol=0)
 
+    # The production FP64 replica receives the current optimized factors. Its registered
+    # mask must prevent future tokens influencing earlier logits in the new attention backend.
+    from thirdloss.objectives import derivative_replica, probe_gradient
+    from thirdloss.penalties import random_signs
+    from thirdloss.windows import generator, probe_rows
+    monkeypatch.setenv("THIRDLOSS_ADAPTER_DERIVATIVE_DEVICE","cpu")
+    before = torch.get_rng_state()
+    replica = derivative_replica("abstracts",27,tmp_path)
+    assert torch.equal(before,torch.get_rng_state())
+    y = (ids+1)%17
+    streamed,streamed_grad = probe_gradient(model,params,ids,y,"third",7,0,replica)
+    precise = tuple(p for p in replica.parameters() if p.requires_grad)
+    for source,dest in zip(params,precise,strict=True):
+        torch.testing.assert_close(dest,source,rtol=0,atol=0)
+    rows = probe_rows(7,0,len(ids))
+    probe_rng = generator(ids.device,7,0,827)
+    a,b = random_signs(params,probe_rng),random_signs(params,probe_rng)
+    exact = estimate(token_loss(logits_of(replica,ids[rows]),y[rows]),precise,"third",u=a,v=b)
+    torch.testing.assert_close(streamed,exact.detach(),rtol=1e-10,atol=1e-8)
+    for observed,expected in zip(streamed_grad,torch.autograd.grad(exact,precise),strict=True):
+        torch.testing.assert_close(observed,expected,rtol=1e-7,atol=1e-7)
+    altered=ids.clone()
+    altered[:,-1]=(altered[:,-1]+4)%17
+    torch.testing.assert_close(logits_of(replica,ids)[:,:-1],logits_of(replica,altered)[:,:-1],rtol=0,atol=0)
+
 
 def test_large_finite_gradient_norm_survives_squaring():
     """The real adapter calibration exposed overflow only in the FP32 norm reduction."""

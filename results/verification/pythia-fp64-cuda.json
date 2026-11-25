@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-11-25T07:46:08+00:00",
+  "device": "cuda",
+  "dtype": "float64",
+  "initial_trainable_sha256": "1c45ca4d5b3a6cd1b53eadaa7df8af15e21a040a8a61aa7f0e91d1b6f019320b",
+  "probes_sha256": "7ab2a090e32d3e2d93af10cc9161953f4227dc6e1ff5950d9f59be0a4235da13",
+  "two_window_cross_entropy": 3.2335151449211725,
+  "max_logit_abs_difference": 4.354738791789714e-12,
+  "penalty": 834685852890.465,
+  "gradient_norm": 910726918311241.1,
+  "finite": true,
+  "probe_seconds": 170.7373062000006
+}

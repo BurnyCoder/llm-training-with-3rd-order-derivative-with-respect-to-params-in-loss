@@ -108,7 +108,7 @@ def evaluate_one(project, storage, run_id, device):
         if set(state)!=set(get_peft_model_state_dict(model)):
             raise ValueError("Adapter payload does not match the pinned backbone and target modules")
         set_peft_model_state_dict(model,state)
-    stats = score(model,data/"test.bin",device,summary["microbatch"])
+    stats = score(model,data/"test.bin",device,summary.get("evaluation_batch_windows",summary["microbatch"]))
     summary.update(test_nll=stats["nll"],test_accuracy=stats["accuracy"],test_tokens=stats["tokens"],
                    test_manifest_sha256=sealed["test_sha256"],freeze_id=sealed["freeze_id"],
                    evaluated_at=time_now())
@@ -157,6 +157,9 @@ def run_study(project,storage,stages,device,publish):
         return row
     for stage in stages:
         prepare_stage(project,storage,stage)
+        if stage=="abstracts" and not (project/"results"/"verification"/"pythia-scoring-batches.json").exists():
+            from .probe_check import benchmark_scoring
+            benchmark_scoring(project,device)
         run(stage,"third","pilot",0,0.03)
         for method in ("initial","unigram"):
             run(stage,method,"control",0,0)

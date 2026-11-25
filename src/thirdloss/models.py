@@ -134,6 +134,30 @@ def logits_of(model, ids):
     return out if isinstance(out, torch.Tensor) else out.logits
 
 
+def dtype_attention(module,query,key,value,attention_mask,scaling,dropout=0.0,**kwargs):
+    """The upstream GPT-NeoX eager attention formula, retaining FP64 at softmax.
+
+    https://github.com/huggingface/transformers/blob/main/src/transformers/models/gpt_neox/modeling_gpt_neox.py
+    """
+    scores = (query @ key.transpose(-2,-1))*scaling
+    if attention_mask is not None:
+        scores = scores+attention_mask
+    weights = F.dropout(scores.softmax(-1),p=dropout,training=module.training)
+    return (weights @ value).transpose(1,2).contiguous(),weights
+
+
+def widen_pythia(model):
+    """Use the registered eager mask with dtype-preserving attention on this replica only."""
+    from transformers import AttentionInterface, AttentionMaskInterface
+    from transformers.masking_utils import eager_mask
+    # Register both hooks so attention stays causal. https://huggingface.co/docs/transformers/attention_interface
+    name = "thirdloss_eager_fp64"
+    AttentionInterface.register(name,dtype_attention)
+    AttentionMaskInterface.register(name,eager_mask)
+    model.get_base_model().set_attn_implementation(name)
+    return model.double().eval()
+
+
 def trainable_digest(model):
     """Fingerprint each named trainable tensor at initialization to audit seed pairing."""
     digest = hashlib.sha256()
