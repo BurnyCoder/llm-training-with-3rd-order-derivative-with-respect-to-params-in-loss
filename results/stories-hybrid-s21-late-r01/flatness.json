@@ -1,0 +1,252 @@
+{
+  "run": "stories-hybrid-s21-late-r01",
+  "checkpoint_file_sha256": "3eaf4ba1f1b84b301843f841e2acb158db48c57eb48ef96a3a353bfa83ec19d1",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "width_device": "cuda",
+  "split": "train",
+  "probe_windows_sha256": "2b09cf8d13e4e0df411e816e32f1799f1ee165712973c51a09fc75d528c8c2b1",
+  "timestamp": "2026-11-25T17:09:35+00:00",
+  "protocol": "checkpoint-flatness-v1",
+  "width_windows": 8,
+  "curvature_windows": 2,
+  "width": {
+    "step": 4096,
+    "tokens": 16777216,
+    "baseline_nll": 2.593143939971924,
+    "delta_nll": 0.1,
+    "directions": [
+      {
+        "direction": 0,
+        "positive": {
+          "lower": 6.6865234375,
+          "upper": 6.6875
+        },
+        "negative": {
+          "lower": 6.9130859375,
+          "upper": 6.9140625
+        }
+      },
+      {
+        "direction": 1,
+        "positive": {
+          "lower": 5.5390625,
+          "upper": 5.5400390625
+        },
+        "negative": {
+          "lower": 7.51953125,
+          "upper": 7.5205078125
+        }
+      },
+      {
+        "direction": 2,
+        "positive": {
+          "lower": 6.2958984375,
+          "upper": 6.296875
+        },
+        "negative": {
+          "lower": 6.966796875,
+          "upper": 6.9677734375
+        }
+      },
+      {
+        "direction": 3,
+        "positive": {
+          "lower": 6.029296875,
+          "upper": 6.0302734375
+        },
+        "negative": {
+          "lower": 6.8623046875,
+          "upper": 6.86328125
+        }
+      },
+      {
+        "direction": 4,
+        "positive": {
+          "lower": 5.990234375,
+          "upper": 5.9912109375
+        },
+        "negative": {
+          "lower": 7.1396484375,
+          "upper": 7.140625
+        }
+      },
+      {
+        "direction": 5,
+        "positive": {
+          "lower": 6.595703125,
+          "upper": 6.5966796875
+        },
+        "negative": {
+          "lower": 6.6650390625,
+          "upper": 6.666015625
+        }
+      },
+      {
+        "direction": 6,
+        "positive": {
+          "lower": 6.4697265625,
+          "upper": 6.470703125
+        },
+        "negative": {
+          "lower": 6.798828125,
+          "upper": 6.7998046875
+        }
+      },
+      {
+        "direction": 7,
+        "positive": {
+          "lower": 7.255859375,
+          "upper": 7.2568359375
+        },
+        "negative": {
+          "lower": 6.09765625,
+          "upper": 6.0986328125
+        }
+      },
+      {
+        "direction": 8,
+        "positive": {
+          "lower": 6.58203125,
+          "upper": 6.5830078125
+        },
+        "negative": {
+          "lower": 6.5859375,
+          "upper": 6.5869140625
+        }
+      },
+      {
+        "direction": 9,
+        "positive": {
+          "lower": 6.5888671875,
+          "upper": 6.58984375
+        },
+        "negative": {
+          "lower": 6.783203125,
+          "upper": 6.7841796875
+        }
+      },
+      {
+        "direction": 10,
+        "positive": {
+          "lower": 6.5908203125,
+          "upper": 6.591796875
+        },
+        "negative": {
+          "lower": 6.462890625,
+          "upper": 6.4638671875
+        }
+      },
+      {
+        "direction": 11,
+        "positive": {
+          "lower": 6.5576171875,
+          "upper": 6.55859375
+        },
+        "negative": {
+          "lower": 6.71875,
+          "upper": 6.7197265625
+        }
+      },
+      {
+        "direction": 12,
+        "positive": {
+          "lower": 6.791015625,
+          "upper": 6.7919921875
+        },
+        "negative": {
+          "lower": 6.240234375,
+          "upper": 6.2412109375
+        }
+      },
+      {
+        "direction": 13,
+        "positive": {
+          "lower": 6.9423828125,
+          "upper": 6.943359375
+        },
+        "negative": {
+          "lower": 6.3916015625,
+          "upper": 6.392578125
+        }
+      },
+      {
+        "direction": 14,
+        "positive": {
+          "lower": 6.1484375,
+          "upper": 6.1494140625
+        },
+        "negative": {
+          "lower": 6.576171875,
+          "upper": 6.5771484375
+        }
+      },
+      {
+        "direction": 15,
+        "positive": {
+          "lower": 6.3603515625,
+          "upper": 6.361328125
+        },
+        "negative": {
+          "lower": 6.283203125,
+          "upper": 6.2841796875
+        }
+      }
+    ],
+    "width_lower": 13.21435546875,
+    "width_upper": 13.21630859375,
+    "width": 13.21533203125,
+    "censored_rays": 0,
+    "weights_sha256": "9e98d1ef5ab3bd06036a160e4765c3f3b24a011182d081ee2b82b23c219d2af8",
+    "weights_restored": true,
+    "seconds": 5.631809500002419
+  },
+  "curvature": {
+    "dimensions": 2557632,
+    "draws": [
+      {
+        "index": 0,
+        "trace_per_parameter": 0.004125546895275921,
+        "squared_rms": 0.33399238641538986
+      },
+      {
+        "index": 1,
+        "trace_per_parameter": 0.0046784412876047015,
+        "squared_rms": 0.3436044445178459
+      },
+      {
+        "index": 2,
+        "trace_per_parameter": 0.0042463155260393706,
+        "squared_rms": 0.3625089088314085
+      },
+      {
+        "index": 3,
+        "trace_per_parameter": 0.004177782831348647,
+        "squared_rms": 0.3217729088027834
+      },
+      {
+        "index": 4,
+        "trace_per_parameter": 0.0037144596616435787,
+        "squared_rms": 0.3243607556379906
+      },
+      {
+        "index": 5,
+        "trace_per_parameter": 0.005412879955334141,
+        "squared_rms": 0.3532112826869085
+      },
+      {
+        "index": 6,
+        "trace_per_parameter": 0.0033580834706639635,
+        "squared_rms": 0.3185998566457488
+      },
+      {
+        "index": 7,
+        "trace_per_parameter": 0.003885805806418442,
+        "squared_rms": 0.3109023455614287
+      }
+    ],
+    "device": "cuda:0",
+    "dtype": "torch.float64",
+    "trace_per_parameter": 0.004199914429291096,
+    "rms_curvature": 0.5775977070050037
+  }
+}
