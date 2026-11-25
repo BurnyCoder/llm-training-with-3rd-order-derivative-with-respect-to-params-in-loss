@@ -140,16 +140,16 @@ def _result_tables(study):
     return scores, resources
 
 
-def _matched_rows(study):
+def _matched_rows(study,key="matched_time"):
     """Print every matched seed, including each arm's distance from the shared cutoff."""
     rows = []
     for stage, outcome in study["stages"].items():
-        for entry in outcome.get("matched_time", []):
+        for entry in outcome.get(key, []):
             cutoff = entry["cutoff_seconds"]
             losses = []
             for method in ("ce", "trace", "third"):
                 point = entry["by_method"][method]
-                lag = cutoff - point["train_seconds"]
+                lag = point["staleness_seconds"]
                 losses.append(f"{fmt(point['dev_nll'], 4)} ({fmt(lag, 1)})")
             rows.append([STAGES[stage], entry["seed"], fmt(cutoff, 1), *losses])
     return rows
@@ -326,7 +326,7 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
                               rows, [56, 49, 78, 35, 34, 64, 48, 57, 54]))
         p("Times and rates are per-run medians within each hardware, method, phase, strength and "
           "target budget. The clock sums synchronized training steps, including batch transfer and "
-          "the optimizer update. Evaluation, checkpointing and uploads take additional time. Peak "
+          "the optimizer update and any host FP64 probe while the GPU is reserved. Evaluation, checkpointing and uploads take additional time. Peak "
           "memory is PyTorch’s recorded maximum allocated GPU tensor memory during the run, including "
           "evaluation. Untrained controls have no training speed.", "caption")
     else:
@@ -345,6 +345,14 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
                           matched, [82, 34, 65, 98, 98, 98]))
     else:
         p("Awaiting a complete, timed three-method confirmatory seed with eligible development checkpoints.", "caption")
+    nonhost = _matched_rows(study,"matched_nonhost_time")
+    if nonhost:
+        p("Adapter timing after subtracting host derivative calls", "subheading")
+        p("This supplementary clock removes the observed duration of host derivative calls including their "
+          "transfers. The table uses the same fixed development windows and reports checkpoint lags in seconds. "
+          "Individual CUDA kernel durations were not profiled.", "caption")
+        flow.append(_grid(styles,["Corpus","Seed","Cutoff (s)","AdamW NLL (lag s)",
+                                  "Trace NLL (lag s)","Third NLL (lag s)"],nonhost,[82,34,65,98,98,98]))
     pair_rows = [[STAGES[stage], METHODS.get(base, base), pair["seed"],
                   fmt(pair["third_nll"], 5), fmt(pair["baseline_nll"], 5), fmt(pair["delta"], 5)]
                  for stage, outcome in study["stages"].items()
