@@ -139,7 +139,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Squared Hessian norm (3%) | 2,097,152 | 0 | 15.901 (1/1) | 0.42958 (1/1) | 0.9890 (1/1) |
 | Randomized gradient signs (1%) | 2,097,152 | 0 | 15.571 (1/1) | 0.4536 (1/1) | 0.9892 (1/1) |
 | Trace + third derivative (1%) | 2,097,152 | 0 | 15.741 (1/1) | 0.44132 (1/1) | 0.9891 (1/1) |
-| Ordinary AdamW · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
+| Ordinary AdamW · confirmation | 16,777,216 | 1–8 | 12.963 (1/8) | 0.56148 (1/8) | 1.0812 (1/8) |
 | Hessian trace · confirmation | 16,777,216 | 1–8 | Pending | Pending | Pending |
 | Third derivative · confirmation | 16,777,216 | 1–8 | 13.036 (1/8) | 0.55042 (1/8) | 1.0807 (1/8) |
 | Shared trace checkpoint | 8,388,608 | 21–28 | 15.201 (5/8) | 0.44989 (5/8) | 1.0624 (5/8) |
