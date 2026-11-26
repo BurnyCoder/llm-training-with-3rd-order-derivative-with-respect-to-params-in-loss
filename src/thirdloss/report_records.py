@@ -272,6 +272,7 @@ def study_snapshot(root: Path = Path(".")) -> dict:
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "runs": runs, "stages": stages, "method_names": METHODS, "stage_names": STAGES,
         "colors": COLORS, "context": context, "pilot_comparisons": pilots,"numerics":numerics,
+        "frozen_stages": [stage for stage in STAGES if (directory/"freeze"/f"{stage}.json").is_file()],
         "hybrid":hybrid_results(runs),
     }
 

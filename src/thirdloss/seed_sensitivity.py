@@ -7,24 +7,19 @@ import subprocess
 import sys
 from statistics import median,stdev
 
-from .records import HORIZONS,RATIOS,read_json,run_name,time_now,write_json
+from .records import HORIZONS,read_json,run_name,time_now,write_json
+from .run_inventory import scheduled_jobs
 from .report_records import METHODS,STAGES,atomic_text,completed,markdown_table,study_snapshot
 
 
 def _planned_ids(study):
     """Use the registered IDs, including the cyclic replay and the available precision diagnostic."""
     ids={r["id"] for r in study["runs"] if r["phase"]=="diagnostic"}
-    for stage in STAGES:
-        selected=study["context"][stage]["selection"]["ratios"]
-        ids.update(run_name(stage,m,"control",0,0) for m in ("initial","unigram"))
-        ids.add(run_name(stage,"ce","pilot",0,0))
-        ids.update(run_name(stage,m,"pilot",0,ratio) for m in ("trace","third") for ratio in RATIOS)
-        ids.update(run_name(stage,m,"pilot",0,ratio) for m,ratio in
-                   (("hessian_norm",.03),("sham",selected["third"]),("combined",selected["third"])))
-        ids.update(run_name(stage,m,"confirm",s,selected.get(m,0)) for s in range(1,9) for m in ("ce","trace","third"))
-    for s in range(21,29):
-        ids.add(run_name("stories","trunk","branch",s,.01))
-        ids.update(run_name("stories",m,"hybrid",s,.01) for m in ("adaptive","late","trace","strong","always","replay"))
+    for action,stage,phase,method,seed,ratio in scheduled_jobs(study):
+        if ratio is None:
+            raise ValueError(f"The final analysis awaits the selected {stage} strength")
+        if action=="fit":
+            ids.add(run_name(stage,method,phase,seed,ratio))
     return ids
 
 

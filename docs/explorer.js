@@ -98,7 +98,7 @@ function showLedger() {
       ? `${evaluation.split === "test" ? "scoring test" : run.status} (${number(100 * evaluation.targets_scored / evaluation.targets_to_score, 1)}%)`
       : run.status;
     for (const value of [methodName(run.method), run.seed ?? "—", number(run.ratio, 3),
-      number(run.tokens, 0), number(run.dev_nll, 4), number(run.test_nll, 4),
+      number(run.tokens, 0), number(isComplete(run) ? run.dev_nll : null, 4), number(run.test_nll, 4),
       number(run.tokens_per_sec, 0), number(run.peak_vram_mb, 0), status]) {
       tr.append(node("td", value));
     }
@@ -234,6 +234,58 @@ function table(headers, rows) {
   return wrapper;
 }
 
+function showSchedule() {
+  const plan = study.run_inventory;
+  if (!plan) return;
+  const byId = new Map(study.runs.map(run => [run.id, run]));
+  const frozen = new Set(study.frozen_stages || []);
+  for (const run of study.runs) if (run.freeze_id) frozen.add(run.stage);
+  const jobs = plan.fits.map(item => {
+    const r = byId.get(item.id);
+    if (!r) return {...item, active: false};
+    const progress = r.evaluation_progress;
+    const fitting = !isComplete(r) && !["planned","queued","failed"].includes(r.status);
+    const testing = progress?.split === "test" && !numeric(r.test_nll);
+    const fit = isComplete(r) ? "Complete" : progress?.split === "dev" ? "Scoring development" : r.status;
+    const test = item.phase !== "confirm" ? "—" : numeric(r.test_nll) && frozen.has(item.stage) ? "Complete"
+      : testing ? "Scoring test" : frozen.has(item.stage) ? "Queued" : "Awaiting freeze";
+    const geometry = r.score_flatness && (r.flatness || item.method === "unigram") ? "Complete"
+      : r.score_flatness || r.flatness ? "Partial" : "Pending";
+    let activity = "";
+    if (fitting || testing) {
+      const count = progress ? number(progress.targets_scored, 0) + "/" + number(progress.targets_to_score, 0) + " scored"
+        : number(r.tokens || 0, 0) + "/" + number(item.targets, 0) + " training targets";
+      activity = item.title + " · " + (testing ? test : fit) + " · " + count;
+    }
+    return {...item, fit, test, geometry, active: fitting || testing, activity};
+  });
+  const groups = plan.groups.map(g => {
+    const done = g.members.filter(i => jobs[i][g.field] === "Complete").length;
+    return [g.label, done, g.total - done, g.total];
+  });
+  const completed = groups.reduce((sum, group) => sum + group[1], 0);
+  element("milestone-count").textContent = completed + "/" + plan.total + " experimental milestones";
+  element("milestone-table").replaceChildren(table(["Experiment", "Completed", "Remaining", "Planned"], groups));
+  const active = jobs.filter(j => j.active);
+  element("current-activity").textContent = active.length ? "Recorded activity · " + active.map(j => j.activity).join(" / ")
+    : "Between recorded training and scoring updates.";
+  const next = plan.order.find(([i, action]) => jobs[i][action] !== "Complete" && !jobs[i].active);
+  const pending = next ? jobs[next[0]].title + (next[1] === "test" ? " · frozen test" : "") : plan.next;
+  element("next-job").textContent = "Next scheduled work · " + pending + ". Seed sensitivity is the final stage.";
+  const choice = element("queue-filter").value;
+  const visible = jobs.filter(j => choice === "all" || (choice === "active" && j.active)
+    || (choice === "complete" && j.fit === "Complete")
+    || (choice === "pending" && (j.fit !== "Complete" || j.geometry !== "Complete" || !["—","Complete"].includes(j.test))));
+  const rows = visible.map(j => [stageName(j.stage), j.phase, j.seed, methodName(j.method), number(j.targets, 0), j.fit, j.test, j.geometry]);
+  element("scheduled-table").replaceChildren(rows.length ?
+    table(["Model","Phase","Seed","Arm","Training targets","Training and development","Frozen test","Flatness"], rows)
+    : node("p", "No runs match this filter at the recorded time."));
+  const geometry = (study.headline_flatness || []).map(row => row.map(cell => String(cell).replaceAll("<br>", " · ")));
+  element("geometry-headlines").replaceChildren(geometry.length ?
+    table(["Model and paired cohort","Flatness statistic","AdamW","Hessian trace","Third order"], geometry)
+    : node("p", "Awaiting comparable checkpoint measurements."));
+}
+
 function showEvidence() {
   const stage = element("stage").value;
   const outcome = study.stages[stage] || {};
@@ -315,7 +367,7 @@ function showOutputs() {
 }
 
 function render() {
-  rebuildFilters(); showTotals(); showLedger(); collectCurves(); showEvidence(); showOutputs();
+  rebuildFilters(); showTotals(); showSchedule(); showLedger(); collectCurves(); showEvidence(); showOutputs();
 }
 
 async function getData(url) {
@@ -331,8 +383,9 @@ async function refresh() {
   const status = element("feed-status");
   try {
     if (local) {
-      try { study = await getData("/live.json"); live = true; }
-      catch { study = await getData("study.json"); }
+      const release = await getData("study.json");
+      try { study = {...release, ...await getData("/live.json")}; live = true; }
+      catch { study = release; }
     } else {
       study = await getData("study.json");
       try {
@@ -362,6 +415,7 @@ async function refresh() {
 }
 
 for (const id of ["stage", "phase", "run"]) element(id).addEventListener("change", render);
+element("queue-filter").addEventListener("change", showSchedule);
 for (const id of ["axis", "metric"]) element(id).addEventListener("change", collectCurves);
 element("sample").addEventListener("change", showSample);
 const canvas = element("chart");

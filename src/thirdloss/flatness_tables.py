@@ -102,7 +102,7 @@ def _weight_signature(point):
             point.get("dimensions"),point.get("hessian_dtype"))
 
 
-def primary_flatness_rows(pairs):
+def primary_flatness_rows(pairs, *, compact=False):
     """Compare the same measured seeds, trainable parameterization, training windows and probe backend."""
     methods=("ce","trace","third")
     measured=[pair for pair in pairs if all("flatness" in pair[m] for m in methods)]
@@ -112,14 +112,26 @@ def primary_flatness_rows(pairs):
     if len(signatures)!=1:
         raise ValueError("Matched flatness statistics require the same probes and arithmetic")
     groups=[[pair[m]["flatness"] for pair in measured] for m in methods]
+    width=["Directional width<br>↑ Wider is flatter",*[_width_stat(g,.5) for g in groups]]
+    rms=["RMS Hessian curvature<br>↓ Less local bending",*[f"{median(p['rms_curvature'] for p in g):.6g}" for g in groups]]
+    scores=[]
+    if all("score_flatness" in pair[m] for pair in measured for m in methods):
+        samples=[[pair[m]["score_flatness"] for pair in measured] for m in methods]
+        if (len({(p["protocol"],p["direction_sha256"],p["vocab"]) for group in samples for p in group})!=1 or
+                len({p["probe_windows_sha256"] for group in groups+samples for p in group})!=1):
+            raise ValueError("Matched score widths require the same windows, vocabulary and score directions")
+        scores=[["Common score width<br>↑ More score tolerance",*[_width_stat(g,.5,4) for g in samples]]]
+    if compact:
+        return [width,rms,*scores]
     return [
-        ["Directional width<br>↑ Wider is flatter",*[_width_stat(g,.5) for g in groups]],
+        width,
         ["Final width range across seeds<br>Descriptive spread",*[_seed_range(g) for g in groups]],
         ["Middle 50% of directions<br>Descriptive spread",*[_spread(g) for g in groups]],
         ["Rays at limit / tested<br>Measurement coverage",*[_ray_count(g) for g in groups]],
         ["Unperturbed probe NLL<br>↓ Lower fits these windows better",*[f"{median(p['baseline_nll'] for p in g):.5f}" for g in groups]],
-        ["RMS Hessian curvature<br>↓ Lower means less local bending",*[f"{median(p['rms_curvature'] for p in g):.6g}" for g in groups]],
+        rms,
         ["Signed Hessian trace / parameter<br>No general better direction",*[f"{median(p['trace_per_parameter'] for p in g):+.6g}" for g in groups]],
+        *scores,
     ]
 
 
