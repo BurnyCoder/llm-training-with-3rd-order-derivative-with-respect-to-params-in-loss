@@ -1,6 +1,6 @@
 # Study summary
 
-Recorded 84 runs, including 84 with a completed summary.
+Recorded 85 runs, including 85 with a completed summary.
 
 **TinyStories.** The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781).
 
@@ -8,13 +8,13 @@ Recorded 84 runs, including 84 with a completed summary.
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid outcomes](hybrid/results.md)
 
-**Snapshot at 2026-11-26T05:58:30+00:00** · 191/305 experimental milestones complete.
+**Snapshot at 2026-11-26T06:17:29+00:00** · 192/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
-**Next scheduled work** · Research abstracts · Ordinary AdamW · confirm seed 3.
+**Next scheduled work** · Research abstracts · Hessian trace · confirm seed 3 (1%).
 
-The measured remaining-time scenarios are 22.68–23.47 machine-hours.
+The measured remaining-time scenarios are 22.33–23.12 machine-hours.
 
 [Status of every planned run](planned-runs.md#current-evidence-and-remaining-runs)
 
@@ -30,7 +30,7 @@ The measured remaining-time scenarios are 22.68–23.47 machine-hours.
 
 | Stage | Phase | Method | Ratio | Tokens/run | Runs | Median dev NLL | Median dev PPL | Median test NLL | Median test PPL |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Research abstracts | confirm | Ordinary AdamW | 0.000 | 524,288 | 2 | 3.0371 | 20.8441 | — | — |
+| Research abstracts | confirm | Ordinary AdamW | 0.000 | 524,288 | 3 | 3.0371 | 20.8444 | — | — |
 | Research abstracts | confirm | Third derivative | 0.010 | 524,288 | 3 | 3.0371 | 20.8442 | — | — |
 | Research abstracts | confirm | Hessian trace | 0.010 | 524,288 | 2 | 3.0370 | 20.8427 | — | — |
 | Research abstracts | control | Initial checkpoint | 0.000 | 0 | 1 | 3.2517 | 25.8335 | — | — |
