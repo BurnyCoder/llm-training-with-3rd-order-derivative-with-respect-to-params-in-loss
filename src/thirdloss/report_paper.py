@@ -184,7 +184,7 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "a differentiable estimate of the squared norm of all third partial derivatives in "
       "the trainable coordinates. Two matched interventions compare this objective with "
       "ordinary AdamW and a signed Hessian-trace penalty. " +
-      " ".join(f"{STAGES[s]}: {escape(verdict_text(outcome))}" for s, outcome in study["stages"].items()))
+      " ".join(f"<b>{STAGES[s]}.</b> {escape(verdict_text(outcome,paired=True))}" for s, outcome in study["stages"].items()))
     p("Motivation and related work", "heading")
     p("Hochreiter and Schmidhuber proposed that flatter minima may generalize better at comparable "
       "training error. Coarser weights can preserve the fit, so fewer bits can describe it. Their "

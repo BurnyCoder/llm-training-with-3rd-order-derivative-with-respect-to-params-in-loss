@@ -41,7 +41,7 @@ LEDGER_HEADERS = ["Stage", "Method", "Phase", "Seed", "Ratio", "Train tokens", "
 
 def _stage_summary(study: dict) -> str:
     return "\n\n".join(
-        f"**{STAGES[stage]}.** {verdict_text(outcome)}" for stage, outcome in study["stages"].items()
+        f"**{STAGES[stage]}.** {verdict_text(outcome,paired=True)}" for stage, outcome in study["stages"].items()
     )
 
 

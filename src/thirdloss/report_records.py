@@ -296,17 +296,24 @@ def describe_difference(delta) -> str:
     return f"{abs(delta):.5f} nats per target token {direction}"
 
 
-def verdict_text(result: dict) -> str:
+def verdict_text(result: dict, *, paired=False) -> str:
     """Use the analysis contract to distinguish an incomplete matrix from an inconclusive trial."""
     status = result.get("status")
     count = result.get("n_complete_seeds", 0)
     goal = result.get("n_expected_seeds", 8)
-    if status == "confirmed":
-        return "Third-order training improved test NLL over both baselines under the registered decision rule."
-    if status == "inconclusive":
-        return "The completed stage did not establish an improvement over both baselines under the registered decision rule."
-    if status == "adverse":
-        return "The median test-loss difference favored at least one baseline across its full uncertainty interval."
+    conclusions = {
+        "confirmed": "Third-order training improved test NLL over both baselines under the registered decision rule.",
+        "inconclusive": "The registered test of superiority over both baselines was inconclusive.",
+        "adverse": "The median test-loss difference favored at least one baseline across its full uncertainty interval.",
+    }
+    if status in conclusions:
+        sentence = conclusions[status]
+        if paired:
+            ce, trace = (result["comparisons"][m] for m in ("ce", "trace"))
+            sentence += (f" Third order had lower test NLL in {ce['wins']}/{len(ce['pairs'])} pairs against AdamW "
+                         f"(Holm p = {ce['p_holm']:.5f}) and {trace['wins']}/{len(trace['pairs'])} against "
+                         f"Hessian trace (Holm p = {trace['p_holm']:.5f}).")
+        return sentence
     if status == "invalid":
         return f"The stage records require review. {result.get('reason') or 'See the analysis ledger.'}"
     return f"Awaiting paired test results ({count} of {goal} full-horizon training triplets)."
