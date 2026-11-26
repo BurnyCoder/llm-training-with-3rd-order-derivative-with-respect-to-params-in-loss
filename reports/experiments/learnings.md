@@ -2,7 +2,7 @@
 
 **TinyStories.** The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781).
 
-**Research abstracts.** Awaiting paired test results (1 of 8 full-horizon training triplets).
+**Research abstracts.** Awaiting paired test results (2 of 8 full-horizon training triplets).
 
 Independent random signs include mixed weight derivatives in the expected penalty. The trace implementation motivating the gradient check converted its estimate to a Python number. [Derivation and references](../literature-review.md)
 
@@ -16,7 +16,7 @@ Independent random signs include mixed weight derivatives in the expected penalt
 
 - [abstracts-confirm-s02-third-r01-fp64](./abstracts-confirm-s02-third-r01-fp64/experiment.md) — Development NLL changed by -0.2158 nats per target token from 0 to 524,288 training targets. Attribution to the regularizer uses matched comparisons across seeds.
 
-- [abstracts-confirm-s02-trace-r01-fp64](./abstracts-confirm-s02-trace-r01-fp64/experiment.md) — Development NLL changed by -0.2011 nats per target token from 0 to 229,376 training targets. Attribution to the regularizer uses matched comparisons across seeds.
+- [abstracts-confirm-s02-trace-r01-fp64](./abstracts-confirm-s02-trace-r01-fp64/experiment.md) — Development NLL changed by -0.2159 nats per target token from 0 to 524,288 training targets. Attribution to the regularizer uses matched comparisons across seeds.
 
 - [abstracts-control-s00-initial-r00](./abstracts-control-s00-initial-r00/experiment.md) — The observed development NLL is 3.2517 nats per target token.
 

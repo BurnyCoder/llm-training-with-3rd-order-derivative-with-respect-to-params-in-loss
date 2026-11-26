@@ -13,11 +13,11 @@ The research background includes flat minima, Hessian measurements and third der
 | Model and split | Matched evidence | Third-order NLL vs AdamW<br>↓ Lower is better | Third-order NLL vs trace<br>↓ Lower is better | Speed vs AdamW<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
 | TinyStories pretraining · test | 8/8 full-budget seeds | 0.000028 higher | 0.000222 lower | 69.4% slower |
-| Pythia-410M adapters · dev | 1/8 full-budget seeds | 0.000058 lower | 0.000024 higher | 91.5% slower |
+| Pythia-410M adapters · dev | 2/8 full-budget seeds | 0.000088 higher | 0.000154 higher | 92.4% slower |
 
 **Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
 
-**TinyStories pretraining** · The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781). **Pythia-410M adapters** · Awaiting paired test results (1 of 8 full-horizon training triplets).
+**TinyStories pretraining** · The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781). **Pythia-410M adapters** · Awaiting paired test results (2 of 8 full-horizon training triplets).
 
 [Side-by-side scores, accuracy, speed and memory](#side-by-side-comparisons) · [Flatness by variant and baseline](#all-variants-and-baselines) · [Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Paired tests and intervals](reports/summary.md)
 
@@ -38,13 +38,13 @@ These medians compare the same seeds and training windows within each model fami
 
 ### Current and planned runs
 
-**Snapshot at 2026-11-26T03:55:21+00:00** · 187/305 experimental milestones complete.
+**Snapshot at 2026-11-26T04:22:22+00:00** · 188/305 experimental milestones complete.
 
-**Recorded activity** · Research abstracts · Hessian trace · confirm seed 2 (1%) · Training · 253,952/524,288 training targets.
+**Recorded activity** · Between recorded training and scoring updates.
 
 **Next scheduled work** · Research abstracts · Third derivative · confirm seed 3 (1%).
 
-The measured remaining-time scenarios are 25.17–26.04 machine-hours.
+The measured remaining-time scenarios are 24.37–25.23 machine-hours.
 
 [Finished, active and planned experiments](reports/planned-runs.md#current-evidence-and-remaining-runs) · [Live measurements](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer)
 
@@ -127,22 +127,22 @@ A negative difference favors third order. A positive difference favors the named
 
 ### Pythia-410M adapters
 
-**Full development split · 1/8 full-budget seeds · 524,288 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](results/selection/abstracts.json) · [Experiment ledger](reports/experiments/experiments.md)
+**Full development split · 2/8 full-budget seeds · 524,288 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](results/selection/abstracts.json) · [Experiment ledger](reports/experiments/experiments.md)
 
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
-| Development NLL<br>↓ Lower is better | 3.036813 | **3.036731** | 3.036755 | 0.000058 lower | 0.000024 higher |
-| Development perplexity<br>↓ Lower is better | 20.8387 | **20.8370** | 20.8375 | 0.0012 lower | 0.0005 higher |
-| Dev top-1 accuracy<br>↑ Higher is better | **42.478%** | 42.476% | **42.478%** | Tie | 0.002 pp higher |
-| Equal-time probe NLL<br>↓ Lower is better | **3.00554** | 3.04789 | 3.16336 | 0.15782 higher | 0.11547 higher |
-| Training speed (targets/s)<br>↑ Higher is better | **1,507** | 350 | 128 | 91.5% slower | 63.4% slower |
+| Development NLL<br>↓ Lower is better | 3.037069 | **3.037003** | 3.037157 | 0.000088 higher | 0.000154 higher |
+| Development perplexity<br>↓ Lower is better | 20.8441 | **20.8427** | 20.8459 | 0.0018 higher | 0.0032 higher |
+| Dev top-1 accuracy<br>↑ Higher is better | **42.474%** | 42.472% | 42.472% | 0.002 pp lower | Tie |
+| Equal-time probe NLL<br>↓ Lower is better | **3.00576** | 3.05995 | 3.14928 | 0.14352 higher | 0.08933 higher |
+| Training speed (targets/s)<br>↑ Higher is better | **1,549** | 323 | 117 | 92.4% slower | 63.7% slower |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 2,346.3 | 2,346.3 | 2,346.3 | Tie | Tie |
 
-The common training-time cutoff had a median of 347.9 seconds. The furthest checkpoint used for this row was 112.1 seconds before its cutoff.
+The common training-time cutoff had a median of 338.8 seconds. The furthest checkpoint used for this row was 234.1 seconds before its cutoff.
 
 Peak host memory (lower uses less RAM) was AdamW 14.04 GiB, Hessian trace 14.04 GiB, Third order 14.04 GiB. This measure includes earlier work in each interpreter.
 
-Awaiting paired test results (1 of 8 full-horizon training triplets).
+Awaiting paired test results (2 of 8 full-horizon training triplets).
 
 The equal-time row uses the last available fixed-window development score at or before the fastest run’s finish time in each seed. Full-split NLL uses every development target. Training speed includes regularizer probes. Adapter derivatives use CPU float64 with one GPU reserved. [Timing definitions and checkpoint lags](reports/summary.md)
 
@@ -350,7 +350,7 @@ Seed sensitivity is the final stage, after both primary test evaluations, all hy
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 83 runs, including 82 with a completed summary.
+Recorded 83 runs, including 83 with a completed summary.
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
