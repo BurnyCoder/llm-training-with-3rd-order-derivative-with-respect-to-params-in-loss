@@ -1,0 +1,250 @@
+{
+  "run": "stories-confirm-s06-third-r01",
+  "checkpoint_file_sha256": "8ce4bdf593a14d89bd4e7ad3bee2c30c2595dbcfa95e31924d8b222ce1305922",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "width_device": "cuda",
+  "split": "train",
+  "probe_windows_sha256": "2b09cf8d13e4e0df411e816e32f1799f1ee165712973c51a09fc75d528c8c2b1",
+  "timestamp": "2026-11-26T00:21:23+00:00",
+  "protocol": "checkpoint-flatness-v1",
+  "width_windows": 8,
+  "curvature_windows": 2,
+  "width": {
+    "baseline_nll": 2.5793232917785645,
+    "delta_nll": 0.1,
+    "directions": [
+      {
+        "direction": 0,
+        "positive": {
+          "lower": 6.74609375,
+          "upper": 6.7470703125
+        },
+        "negative": {
+          "lower": 6.1650390625,
+          "upper": 6.166015625
+        }
+      },
+      {
+        "direction": 1,
+        "positive": {
+          "lower": 6.2373046875,
+          "upper": 6.23828125
+        },
+        "negative": {
+          "lower": 6.470703125,
+          "upper": 6.4716796875
+        }
+      },
+      {
+        "direction": 2,
+        "positive": {
+          "lower": 6.423828125,
+          "upper": 6.4248046875
+        },
+        "negative": {
+          "lower": 6.6259765625,
+          "upper": 6.626953125
+        }
+      },
+      {
+        "direction": 3,
+        "positive": {
+          "lower": 6.4677734375,
+          "upper": 6.46875
+        },
+        "negative": {
+          "lower": 6.7861328125,
+          "upper": 6.787109375
+        }
+      },
+      {
+        "direction": 4,
+        "positive": {
+          "lower": 6.6962890625,
+          "upper": 6.697265625
+        },
+        "negative": {
+          "lower": 5.72265625,
+          "upper": 5.7236328125
+        }
+      },
+      {
+        "direction": 5,
+        "positive": {
+          "lower": 6.703125,
+          "upper": 6.7041015625
+        },
+        "negative": {
+          "lower": 5.5546875,
+          "upper": 5.5556640625
+        }
+      },
+      {
+        "direction": 6,
+        "positive": {
+          "lower": 6.455078125,
+          "upper": 6.4560546875
+        },
+        "negative": {
+          "lower": 6.419921875,
+          "upper": 6.4208984375
+        }
+      },
+      {
+        "direction": 7,
+        "positive": {
+          "lower": 6.318359375,
+          "upper": 6.3193359375
+        },
+        "negative": {
+          "lower": 6.099609375,
+          "upper": 6.1005859375
+        }
+      },
+      {
+        "direction": 8,
+        "positive": {
+          "lower": 6.392578125,
+          "upper": 6.3935546875
+        },
+        "negative": {
+          "lower": 6.955078125,
+          "upper": 6.9560546875
+        }
+      },
+      {
+        "direction": 9,
+        "positive": {
+          "lower": 6.9541015625,
+          "upper": 6.955078125
+        },
+        "negative": {
+          "lower": 6.158203125,
+          "upper": 6.1591796875
+        }
+      },
+      {
+        "direction": 10,
+        "positive": {
+          "lower": 5.876953125,
+          "upper": 5.8779296875
+        },
+        "negative": {
+          "lower": 6.9716796875,
+          "upper": 6.97265625
+        }
+      },
+      {
+        "direction": 11,
+        "positive": {
+          "lower": 6.302734375,
+          "upper": 6.3037109375
+        },
+        "negative": {
+          "lower": 6.419921875,
+          "upper": 6.4208984375
+        }
+      },
+      {
+        "direction": 12,
+        "positive": {
+          "lower": 6.2939453125,
+          "upper": 6.294921875
+        },
+        "negative": {
+          "lower": 6.2783203125,
+          "upper": 6.279296875
+        }
+      },
+      {
+        "direction": 13,
+        "positive": {
+          "lower": 6.0341796875,
+          "upper": 6.03515625
+        },
+        "negative": {
+          "lower": 7.1806640625,
+          "upper": 7.181640625
+        }
+      },
+      {
+        "direction": 14,
+        "positive": {
+          "lower": 6.0625,
+          "upper": 6.0634765625
+        },
+        "negative": {
+          "lower": 6.4248046875,
+          "upper": 6.42578125
+        }
+      },
+      {
+        "direction": 15,
+        "positive": {
+          "lower": 6.6962890625,
+          "upper": 6.697265625
+        },
+        "negative": {
+          "lower": 6.4091796875,
+          "upper": 6.41015625
+        }
+      }
+    ],
+    "width_lower": 12.86181640625,
+    "width_upper": 12.86376953125,
+    "width": 12.86279296875,
+    "censored_rays": 0,
+    "weights_sha256": "a12f5d45b76fac8675ac27c9de083ed63cba89ea62d46d34d2d228baf34bec90",
+    "weights_restored": true,
+    "seconds": 5.618612600002962
+  },
+  "curvature": {
+    "dimensions": 2557632,
+    "draws": [
+      {
+        "index": 0,
+        "trace_per_parameter": 0.004504301060775209,
+        "squared_rms": 0.30240738116972715
+      },
+      {
+        "index": 1,
+        "trace_per_parameter": 0.004746687172586682,
+        "squared_rms": 0.3834467950908262
+      },
+      {
+        "index": 2,
+        "trace_per_parameter": 0.00566965684490377,
+        "squared_rms": 0.3257992696179381
+      },
+      {
+        "index": 3,
+        "trace_per_parameter": 0.005983454020480851,
+        "squared_rms": 0.3667026046002461
+      },
+      {
+        "index": 4,
+        "trace_per_parameter": 0.005028037017402615,
+        "squared_rms": 0.31964586670885453
+      },
+      {
+        "index": 5,
+        "trace_per_parameter": 0.005270452362731507,
+        "squared_rms": 0.3582334256976386
+      },
+      {
+        "index": 6,
+        "trace_per_parameter": 0.004664698294515362,
+        "squared_rms": 0.31290349462350003
+      },
+      {
+        "index": 7,
+        "trace_per_parameter": 0.004276230517686823,
+        "squared_rms": 0.336825256619859
+      }
+    ],
+    "device": "cuda:0",
+    "dtype": "torch.float64",
+    "trace_per_parameter": 0.005017939661385353,
+    "rms_curvature": 0.5815887823592144
+  }
+}
