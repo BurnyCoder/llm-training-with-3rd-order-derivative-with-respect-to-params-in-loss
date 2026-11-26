@@ -45,3 +45,15 @@ def test_queue_keeps_unknown_strength_explicit_and_defers_the_cyclic_replay(tmp_
     assert unselected["id"] is None and unselected["ratio"] is None
     hybrid = [j for j in plan["fits"] if j["phase"] == "hybrid"]
     assert (hybrid[-1]["seed"], hybrid[-1]["method"]) == (21, "replay")
+
+
+def test_standalone_status_reads_the_sealed_final_analysis(tmp_path):
+    """A fresh progress process recognizes the same final milestone as the published report."""
+    from thirdloss.records import write_json
+    from thirdloss.run_inventory import inventory
+
+    root = tmp_path / "results"
+    write_json(root / "analysis" / "seed-sensitivity.json", {"sealed_at": "final", "rows": []})
+    assert not inventory(study_snapshot(tmp_path))["final"]
+    write_json(root / "freeze" / "seed-sensitivity.json", {"sealed_at": "final"})
+    assert inventory(study_snapshot(tmp_path))["final"]

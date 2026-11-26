@@ -120,8 +120,7 @@ def progress(project,study=None):
     lines += geometry_progress(project,study)
     lines += ["## Overall completion and remaining time",
               *remaining_work(project,study,schedule,extra,normal,len(done)+len(tests),total)]
-    final=(project/"results"/"analysis"/"seed-sensitivity.json").is_file()
-    lines.append(("The final seed-sensitivity analysis is complete." if final else
+    lines.append(("The final seed-sensitivity analysis is complete." if plan["final"] else
                   "The final seed-sensitivity analysis is pending. The queue completes both stages’ single-seed "
                   "comparisons and original frozen test evaluations before the remaining hybrid replications. "
                   "All checkpoint measurements precede the final across-seed analysis.")

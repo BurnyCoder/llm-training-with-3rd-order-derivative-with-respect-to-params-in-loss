@@ -273,6 +273,8 @@ def study_snapshot(root: Path = Path(".")) -> dict:
         "runs": runs, "stages": stages, "method_names": METHODS, "stage_names": STAGES,
         "colors": COLORS, "context": context, "pilot_comparisons": pilots,"numerics":numerics,
         "frozen_stages": [stage for stage in STAGES if (directory/"freeze"/f"{stage}.json").is_file()],
+        "seed_sensitivity": (read_json(directory / "analysis" / "seed-sensitivity.json")
+                             if (directory / "freeze" / "seed-sensitivity.json").is_file() else None),
         "hybrid":hybrid_results(runs),
     }
 
