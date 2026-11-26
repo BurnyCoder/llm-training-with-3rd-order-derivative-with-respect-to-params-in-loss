@@ -1,14 +1,14 @@
 # Study progress
 
-Updated 2026-11-26T00:26:05+00:00.
+Updated 2026-11-26T00:31:04+00:00.
 
-44 training/control records and 0 final evaluations are complete. This is 36.7% of 120 planned model milestones.
+45 training/control records and 0 final evaluations are complete. This is 37.5% of 120 planned model milestones.
 
 ## Current record
 
-**stories** has 29 completed runs. The next milestone is determined by the run matrix.
+**stories** has 30 completed runs. The next milestone is determined by the run matrix.
 
-Pilot rates project 0.49 remaining confirmation GPU-hours, excluding validation, exports and uploads.
+Pilot rates project 0.42 remaining confirmation GPU-hours, excluding validation, exports and uploads.
 
 Statistical status: incomplete. All checkpoints must reach 16,777,216 target tokens.
 
@@ -43,9 +43,9 @@ Giving each predictor still missing a measurement one complete native pilot cycl
 
 ## Overall completion and remaining time
 
-Across training, references, final tests, hybrid runs and flatness evaluations, **145/305 milestones are complete (47.5%)** and 160 remain. Each milestone has equal weight in this count. Data preparation, software and publications are recorded separately.
+Across training, references, final tests, hybrid runs and flatness evaluations, **146/305 milestones are complete (47.9%)** and 159 remain. Each milestone has equal weight in this count. Data preparation, software and publications are recorded separately.
 
-Projected remaining machine time is **28.61–29.72 hours**, including model publication and geometry. There are 150.35 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
+Projected remaining machine time is **28.51–29.62 hours**, including model publication and geometry. There are 150.27 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
 
 The registered adapter schedules require 918 host derivative calls across unfinished runs. Scaling the pilot by token count alone gives 560. Pricing the scheduled calls at each method’s measured mean changes the forecast by +4.20 hours. The original pre-test feasibility record retains its initial estimate. [Per-arm counts and observed costs](../results/feasibility/remaining-work.json) · [Training gate](../src/thirdloss/windows.py)
 
