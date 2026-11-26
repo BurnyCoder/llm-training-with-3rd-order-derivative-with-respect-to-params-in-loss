@@ -9,8 +9,9 @@ from urllib.parse import quote
 from .report_figures import build_figures
 from .flatness_progress import geometry_coverage
 from .flatness_tables import checkpoint_table,flatness_ledger
-from .readme_comparisons import comparison_sections
+from .readme_comparisons import comparison_sections,geometry_headlines
 from .records import HORIZONS
+from .run_inventory import inventory,matrix_markdown,status_lines
 from .report_paper import write_paper
 from .report_records import (
     METHODS, PAGES, STAGES, atomic_text, completed, describe_difference, example_runs, finite, fmt, study_snapshot,
@@ -29,7 +30,7 @@ def _stage(run: dict) -> str:
 def _ledger_row(run: dict) -> list:
     return [
         _stage(run), _method(run), run.get("phase", "—"), run.get("seed", "—"),
-        fmt(run.get("ratio")), fmt(run.get("tokens"), 0), fmt(run.get("dev_nll"), 4),
+        fmt(run.get("ratio")), fmt(run.get("tokens"), 0), fmt(run.get("dev_nll") if completed(run) else None, 4),
         fmt(run.get("dev_perplexity"), 4), fmt(run.get("test_nll"), 4), fmt(run.get("test_perplexity"), 4),
         fmt(run.get("tokens_per_sec"), 0), run["status"],
     ]
@@ -107,7 +108,7 @@ def _run_learning(run: dict) -> str:
         return (f"Development NLL changed by {delta:+.4f} nats per target token from "
                 f"{series[0]['tokens']:,} to {series[-1]['tokens']:,} training targets. "
                 "Attribution to the regularizer uses matched comparisons across seeds.")
-    if finite(run.get("dev_nll")):
+    if completed(run) and finite(run.get("dev_nll")):
         return f"The observed development NLL is {fmt(run['dev_nll'], 4)} nats per target token."
     return "A development observation is pending."
 
@@ -131,13 +132,15 @@ def _experiments(root, study):
              "A smaller value assigns more probability to the observed next tokens. Perplexity (PPL) is the "
              "exponential of the full-corpus NLL. Lower is better within a corpus and tokenizer. "
              "The ratio sets the pilot regularizer-gradient magnitude relative to cross-entropy.",
-             "[Architecture, training algorithms, objectives and planned budgets](../planned-runs.md)"]
+             "[Architecture, training algorithms, objectives and planned budgets](../planned-runs.md)",
+             *status_lines(study),"[Status of every planned run](../planned-runs.md#current-evidence-and-remaining-runs)"]
     learnings = ["# Experimental learnings", _stage_summary(study),
                  "Independent random signs include mixed weight derivatives in the expected "
                  "penalty. The trace implementation motivating the gradient check converted its "
                  "estimate to a Python number. [Derivation and references](../literature-review.md)"]
     if study["runs"]:
         rows = []
+        planned = {r["id"]:r for r in study["run_inventory"]["fits"] if r["id"]}
         for run in study["runs"]:
             key = run["id"]
             link = "./" + quote(key, safe="") + "/experiment.md"
@@ -149,11 +152,18 @@ def _experiments(root, study):
                 _table([_ledger_row(run)], LEDGER_HEADERS),
                 f"Training time is {fmt(run.get('train_seconds'), 1)} seconds. "
                 f"Peak allocated GPU memory is {fmt(run.get('peak_vram_mb'), 1)} MiB. "
-                f"Development token accuracy is {fmt(run.get('dev_accuracy'), 4)}. "
+                f"Full-development token accuracy is {fmt(run.get('dev_accuracy') if completed(run) else None, 4)}. "
                 f"Test token accuracy is {fmt(run.get('test_accuracy'), 4)}.",
                 "[Design and hyperparameter rationale](../../planned-runs.md) · "
                 f"[Saved configuration]({raw_link}config.json)",
             ]
+            if key in planned:
+                item = planned[key]
+                material += [f"Training and development · {item['fit']}. Frozen test · {item['test']}. "
+                             f"Checkpoint flatness · {item['geometry']}. "
+                             "[Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)"]
+                if item["activity"]:
+                    material.append(f"Recorded on {study['generated_at']} · {item['activity']}.")
             if run.get("flatness") or run.get("score_flatness"):
                 material += ["## Checkpoint flatness",checkpoint_table(run["method"],run.get("flatness"),run.get("score_flatness")),
                              "The connection between width and better held-out prediction is unknown. "
@@ -331,6 +341,15 @@ def build_report(root: Path = Path(".")) -> dict:
     from .seed_sensitivity import render_seed_sensitivity
     sensitivity=render_seed_sensitivity(root,study)
     study["seed_sensitivity"]=sensitivity
+    study["run_inventory"]=inventory(study)
+    study["headline_flatness"]=geometry_headlines(study)
+    from .progress import progress
+    progress(root,study)
+    timing=root/"results"/"feasibility"/"remaining-work.json"
+    if timing.is_file():
+        measured=json.loads(timing.read_text(encoding="utf-8"))
+        if (measured["completed"],measured["planned"])==(study["run_inventory"]["done"],study["run_inventory"]["total"]):
+            study["forecast"]=[measured["scenarios"][key]["total_hours"] for key in ("typical","slower")]
     hybrid = _hybrid_report(root,study)
     atomic_text(root/"reports"/"flatness.md",flatness_ledger(study))
     figures = build_figures(study, root / "docs" / "figures")
@@ -345,7 +364,8 @@ def build_report(root: Path = Path(".")) -> dict:
     overview = f"Recorded {counts} runs, including {done} with a completed summary."
     documents = [f"[Interactive explorer]({PAGES})", "[Per-run ledger](experiments/experiments.md)", "[Final seed sensitivity](seed-sensitivity.md)",
                  "[Preregistration](preregistration.md)", "[Paper](paper.pdf)"]
-    summary = ["# Study summary", overview, _stage_summary(study), hybrid+" [Hybrid outcomes](hybrid/results.md)", " · ".join(documents)]
+    summary = ["# Study summary", overview, _stage_summary(study), hybrid+" [Hybrid outcomes](hybrid/results.md)",
+               *status_lines(study),"[Status of every planned run](planned-runs.md#current-evidence-and-remaining-runs)", " · ".join(documents)]
     pilots = _pilot_summary(study)
     if pilots:
         summary.extend(["## Development observations", pilots])
@@ -362,6 +382,13 @@ def build_report(root: Path = Path(".")) -> dict:
              "[Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · "
              "[Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)")
     opening,side_by_side=comparison_sections(study)
+    opening+="\n\n### Current and planned runs\n\n"+"\n\n".join(status_lines(study))+"\n\n"+(
+             "[Finished, active and planned experiments](reports/planned-runs.md#current-evidence-and-remaining-runs) · "
+             "[Live measurements](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer)")
+    _update_sections(root/"reports"/"planned-runs.md",[("RUNS",matrix_markdown(study),False)])
+    _update_sections(root/"reports"/"plan.md",[("STATUS","\n\n".join(["## Current evidence",*status_lines(study),
+                     _stage_summary(study),hybrid+" [Hybrid results](hybrid/results.md)",
+                     "[Execution matrix](planned-runs.md#current-evidence-and-remaining-runs) · [Flatness ledger](flatness.md)"]),False)])
     seed_status=("The final seed analysis is complete. It gives the across-seed spread and the range of medians "
                  "when each paired seed is omitted in turn." if sensitivity else
                  "Seed sensitivity is the final stage, after both primary test evaluations, all hybrid replications and checkpoint flatness.")

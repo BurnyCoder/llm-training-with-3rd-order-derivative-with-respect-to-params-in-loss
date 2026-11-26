@@ -86,6 +86,24 @@ def test_output_panel_requires_identical_prompts_and_escapes_generated_markup(tm
     assert "same prompt, seed 0" not in comparison_sections(study)[1]
 
 
+def test_opening_flatness_table_uses_the_same_checkpoint_cohort_for_every_arm(tmp_path):
+    study = study_snapshot(tmp_path)
+    native = {"protocol":"weights","probe_windows_sha256":"same","width_device":"cuda","hessian_device":"cpu",
+              "width":7.,"width_lower":6.99,"width_upper":7.01,"ray_count":32,"censored_rays":0,
+              "baseline_nll":3.,"rms_curvature":.25,"trace_per_parameter":-.01}
+    for i, method in enumerate(("ce","trace","third")):
+        row = pilot(method, 3., 100, 0. if method == "ce" else .03)
+        row["flatness"] = {**native, "width":7.+i}
+        row["score_flatness"] = {**native, "protocol":"scores","direction_sha256":"same","vocab":4096,"width":.9}
+        study["runs"].append(row)
+    opening, _ = comparison_sections(study)
+    assert "### Flatness at a glance" in opening
+    assert "7.000 | 8.000 | 9.000" in opening and "0.9000 | 0.9000 | 0.9000" in opening
+    assert "pilot seed 0" in opening and "RMS" in opening
+    study["runs"][1].pop("flatness")
+    assert "7.000 | 8.000 | 9.000" not in comparison_sections(study)[0]
+
+
 def test_legacy_stories_pilots_require_matching_first_update_when_initial_hash_is_absent(tmp_path):
     study=study_snapshot(tmp_path)
     for method in ("ce","trace","third"):

@@ -1,5 +1,27 @@
 # Research plan
 
+<!-- STATUS:START -->
+
+## Current evidence
+
+**Snapshot at 2026-11-26T03:47:00+00:00** · 187/305 experimental milestones complete.
+
+**Recorded activity** · Research abstracts · Hessian trace · confirm seed 2 (1%) · Training · 118,784/524,288 training targets.
+
+**Next scheduled work** · Research abstracts · Third derivative · confirm seed 3 (1%).
+
+The measured remaining-time scenarios are 25.17–26.04 machine-hours.
+
+**TinyStories.** The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781).
+
+**Research abstracts.** Awaiting paired test results (1 of 8 full-horizon training triplets).
+
+TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid results](hybrid/results.md)
+
+[Execution matrix](planned-runs.md#current-evidence-and-remaining-runs) · [Flatness ledger](flatness.md)
+
+<!-- STATUS:END -->
+
 Hochreiter and Schmidhuber hypothesized that, at comparable training loss, a model in a broad region of acceptable weights may need fewer bits to describe and may generalize better. This study asks whether penalizing variation in token-loss curvature improves held-out predictions at equal training tokens. It compares methods within a small decoder trained from scratch and within the trainable attention adapters of a pretrained decoder on a second corpus. [*Flat Minima*, §1](https://people.idsia.ch/~juergen/fm/node1.html) · [Preregistration](preregistration.md) · [Run matrix and optimizer settings](planned-runs.md)
 
 | Phase | Deliverable and release criterion |

@@ -118,7 +118,6 @@ def main(argv=None):
             return
         from .reporting import build_report
         build_report(project)
-        progress(project)
         if args.action == "publish":
             from .release import publish_snapshot, publish_weights
             if args.checkpoints:

@@ -272,6 +272,21 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
     p(f"The ledger contains {run_count} runs and {done_count} completed summaries. "
       f"{_link(REPOSITORY + '/tree/main/results', 'Raw records')} · "
       f"{_link(REPOSITORY + '/blob/main/reports/experiments/experiments.md', 'Per-run ledger')}")
+    plan = study["run_inventory"]
+    p("Completed, active and planned experiments", "subheading")
+    activity = " / ".join(plan["activity"]) or "Between recorded training and scoring updates"
+    p(f"At {escape(study['generated_at'])}, {plan['done']} of {plan['total']} experimental milestones were complete. "
+      f"Recorded activity · {escape(activity)}. Next scheduled work · {escape(plan['next'])}.")
+    if "forecast" in study:
+        low, high = study["forecast"]
+        p(f"Measured remaining-time scenarios span {low:.2f}–{high:.2f} machine-hours. "
+          f"{_link(REPOSITORY+'/blob/main/results/feasibility/remaining-work.json','Timing inputs and assumptions')}")
+    flow.append(_grid(styles, ["Experiment or evaluation","Completed","Remaining","Planned"],
+                      [[g["label"],g["done"],g["total"]-g["done"],g["total"]] for g in plan["groups"]],
+                      [268,72,72,65]))
+    p("The seed-sensitivity analysis is the final stage. The run matrix identifies every scheduled method, seed, "
+      "token budget, test evaluation and checkpoint geometry measurement. "
+      f"{_link(REPOSITORY+'/blob/main/reports/planned-runs.md#current-evidence-and-remaining-runs','Full execution matrix')}", "caption")
     for stage, outcome in study["stages"].items():
         p(f"<b>{STAGES[stage]}.</b> {escape(verdict_text(outcome))}")
         context = study["context"][stage]

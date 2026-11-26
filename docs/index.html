@@ -15,7 +15,7 @@
     <div class="rail">
       <a class="signature" href="#top" aria-label="Study overview">∂<sup>3</sup></a>
       <nav aria-label="Study sections">
-        <a href="#curves">Training</a><a href="#evidence">Evidence</a><a href="#outputs">Outputs</a><a href="#method">Method</a>
+        <a href="#run-status">Run status</a><a href="#curves">Training</a><a href="#evidence">Evidence</a><a href="#outputs">Outputs</a><a href="#method">Method</a>
       </nav>
       <a class="source" href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian">Repository ↗</a>
     </div>
@@ -34,6 +34,24 @@
       </div>
     </section>
     <div id="feed-status" class="feed" role="status">Loading the study ledger…</div>
+
+    <section id="run-status">
+      <div class="section-title"><h2>Completed, active and planned runs</h2><p id="milestone-count"></p></div>
+      <p class="prose" id="current-activity"></p>
+      <p class="prose" id="next-job"></p>
+      <details class="run-ledger"><summary>Study milestones and run matrix</summary>
+        <div id="milestone-table"></div>
+        <label class="queue-filter">Show runs<select id="queue-filter">
+          <option value="all">All scheduled runs</option><option value="active">Active now</option>
+          <option value="pending">Awaiting training or evaluation</option><option value="complete">Completed training and development</option>
+        </select></label>
+        <div id="scheduled-table"></div>
+      </details>
+      <h3>Flatness at a glance</h3>
+      <p class="prose">The medians use the same seeds within each model family. Wider weight or score intervals tolerate larger perturbations at a 0.1-nat increase in training-window loss. Lower RMS curvature means less local bending. The relation to held-out prediction is unknown.</p>
+      <div id="geometry-headlines"></div>
+      <p class="curve-note"><a href="https://github.com/BurnyCoder/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/blob/main/reports/flatness.md">All baselines, controls and raw measurements ↗</a></p>
+    </section>
 
     <section id="curves">
       <div class="section-title"><h2>Training curves</h2><p>One trajectory per run</p></div>

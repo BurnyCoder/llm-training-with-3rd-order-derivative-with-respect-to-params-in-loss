@@ -178,15 +178,27 @@ def _sample_panel(pairs,methods,title):
             markdown_table([[literal(s["continuation"]) for s in saved]],headers)+"\n\n</details>")
 
 
-def primary_geometry(study,stage):
+def primary_geometry(study,stage,*,compact=False):
     """Choose the furthest common horizon whose three geometry records are actually available."""
     for horizon in ("confirm","pilot"):
         pairs=[p for p in _paired_runs(study,stage,horizon,PRIMARY) if all("flatness" in p[m] for m in PRIMARY)]
         if pairs:
+            if compact:
+                scope=f"{len(pairs)}/8 full-budget seeds" if horizon=="confirm" else "pilot seed 0"
+                return f"{STAGES[stage]} · {scope}",primary_flatness_rows(pairs,compact=True)
             scope="full-budget checkpoints" if horizon=="confirm" else "development pilots"
             seeds=", ".join(str(p["ce"]["seed"]) for p in pairs)
             return f"{STAGES[stage]} · {scope} · seeds {seeds} · {pairs[0]['ce']['tokens']:,} training targets",primary_flatness_rows(pairs)
     return "",[]
+
+
+def geometry_headlines(study):
+    """Keep the same matched seeds, precision and censoring in the opening and the detailed tables."""
+    rows=[]
+    for stage in STAGES:
+        caption,statistics=primary_geometry(study,stage,compact=True)
+        rows.extend([[caption,*row] for row in statistics])
+    return rows
 
 
 def comparison_sections(study):
@@ -364,4 +376,14 @@ def comparison_sections(study):
     else:
         quick.insert(-1," ".join(f"**{name}** · {verdict_text(study['stages'][stage],paired=True)}"
                                  for stage,name in STAGES.items()))
+    geometry=study.get("headline_flatness") if "headline_flatness" in study else geometry_headlines(study)
+    if geometry:
+        quick.extend(["### Flatness at a glance",
+                      "These medians compare the same seeds and training windows within each model family. "
+                      "Weight width measures how far the trainable weights can move before NLL rises by 0.1 nats. "
+                      "Score width applies the corresponding test to token scores in RMS logit units. "
+                      "Their relationship to held-out prediction is unknown.",
+                      markdown_table(geometry,["Model and matched cohort","Statistic","AdamW","Hessian trace","Third order"]),
+                      "[All variants, initial models and unigram references](#all-variants-and-baselines) · "
+                      "[Per-seed widths, search brackets and curvature](reports/flatness.md)"])
     return "\n\n".join(quick),"\n\n".join(detail)
