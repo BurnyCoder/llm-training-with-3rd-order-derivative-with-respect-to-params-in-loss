@@ -50,7 +50,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | [stories-confirm-s07-trace-r01](./stories-confirm-s07-trace-r01/experiment.md) | TinyStories | Hessian trace | confirm | 7 | 0.010 | 16,777,216 | 2.5407 | 12.6888 | 2.5416 | 12.6994 | 72,117 | complete |
 | [stories-confirm-s08-ce-r00](./stories-confirm-s08-ce-r00/experiment.md) | TinyStories | Ordinary AdamW | confirm | 8 | 0.000 | 16,777,216 | 2.5406 | 12.6879 | 2.5395 | 12.6733 | 131,237 | complete |
 | [stories-confirm-s08-third-r01](./stories-confirm-s08-third-r01/experiment.md) | TinyStories | Third derivative | confirm | 8 | 0.010 | 16,777,216 | 2.5402 | 12.6826 | — | — | 40,220 | complete |
-| [stories-confirm-s08-trace-r01](./stories-confirm-s08-trace-r01/experiment.md) | TinyStories | Hessian trace | confirm | 8 | 0.010 | 16,777,216 | 2.5408 | 12.6902 | — | — | 69,513 | complete |
+| [stories-confirm-s08-trace-r01](./stories-confirm-s08-trace-r01/experiment.md) | TinyStories | Hessian trace | confirm | 8 | 0.010 | 16,777,216 | 2.5408 | 12.6902 | 2.5395 | 12.6735 | 69,513 | complete |
 | [stories-control-s00-initial-r00](./stories-control-s00-initial-r00/experiment.md) | TinyStories | Initial checkpoint | control | 0 | 0.000 | 0 | 8.3437 | 4,203.5319 | — | — | 0 | complete |
 | [stories-control-s00-unigram-r00](./stories-control-s00-unigram-r00/experiment.md) | TinyStories | Unigram | control | 0 | 0.000 | 0 | 6.0036 | 404.8654 | — | — | 0 | complete |
 | [stories-hybrid-s21-adaptive-r01](./stories-hybrid-s21-adaptive-r01/experiment.md) | TinyStories | Curvature-dependent hybrid | hybrid | 21 | 0.010 | 16,777,216 | 2.5459 | 12.7548 | — | — | 43,973 | complete |
