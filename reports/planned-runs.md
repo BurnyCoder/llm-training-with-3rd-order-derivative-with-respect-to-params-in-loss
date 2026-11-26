@@ -4,13 +4,13 @@
 
 ## Current evidence and remaining runs
 
-**Snapshot at 2026-11-26T05:54:14+00:00** · 190/305 experimental milestones complete.
+**Snapshot at 2026-11-26T05:58:30+00:00** · 191/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
 **Next scheduled work** · Research abstracts · Ordinary AdamW · confirm seed 3.
 
-The measured remaining-time scenarios are 22.73–23.56 machine-hours.
+The measured remaining-time scenarios are 22.68–23.47 machine-hours.
 
 | Work | Complete | Remaining | Planned |
 | --- | --- | --- | --- |
@@ -21,7 +21,7 @@ The measured remaining-time scenarios are 22.73–23.56 machine-hours.
 | Research abstracts · development and controls | 12 | 0 | 12 |
 | Research abstracts · full-budget primary runs | 7 | 17 | 24 |
 | Research abstracts · frozen tests | 0 | 24 | 24 |
-| Research abstracts · checkpoint flatness | 19 | 18 | 37 |
+| Research abstracts · checkpoint flatness | 20 | 17 | 37 |
 | TinyStories · shared hybrid checkpoints | 5 | 3 | 8 |
 | TinyStories · full hybrid runs | 23 | 25 | 48 |
 
@@ -148,7 +148,7 @@ The final seed-sensitivity analysis follows every model, frozen test and flatnes
 | confirm | 2 | [Third derivative](../results/abstracts-confirm-s02-third-r01-fp64/) | 1% | 524,288 | Complete | Awaiting freeze | Complete |
 | confirm | 2 | [Ordinary AdamW](../results/abstracts-confirm-s02-ce-r00/) | 0% | 524,288 | Complete | Awaiting freeze | Complete |
 | confirm | 2 | [Hessian trace](../results/abstracts-confirm-s02-trace-r01-fp64/) | 1% | 524,288 | Complete | Awaiting freeze | Complete |
-| confirm | 3 | [Third derivative](../results/abstracts-confirm-s03-third-r01-fp64/) | 1% | 524,288 | Complete | Awaiting freeze | Pending |
+| confirm | 3 | [Third derivative](../results/abstracts-confirm-s03-third-r01-fp64/) | 1% | 524,288 | Complete | Awaiting freeze | Complete |
 | confirm | 3 | Ordinary AdamW | 0% | 524,288 | Planned | Awaiting freeze | Pending |
 | confirm | 3 | Hessian trace | 1% | 524,288 | Planned | Awaiting freeze | Pending |
 | confirm | 4 | Third derivative | 1% | 524,288 | Planned | Awaiting freeze | Pending |
