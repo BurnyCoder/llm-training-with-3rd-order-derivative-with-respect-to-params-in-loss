@@ -1,12 +1,12 @@
 {
-  "as_of": "2026-11-26T01:41:51+00:00",
-  "completed": 183,
+  "as_of": "2026-11-26T03:12:58+00:00",
+  "completed": 184,
   "planned": 305,
-  "remaining": 122,
-  "remaining_hours_in_week": 149.0913888888889,
+  "remaining": 121,
+  "remaining_hours_in_week": 147.5727777777778,
   "hybrid_blocks_left_including_partial": 4,
   "replays_left": 5,
-  "remaining_primary_publications": 45,
+  "remaining_primary_publications": 44,
   "geometry": {
     "stories": {
       "planned": 92,
@@ -25,8 +25,8 @@
     "third": {
       "pilot_run": "abstracts-pilot-s00-third-r01-fp64",
       "pilot_calls": 5,
-      "observed_calls": 63,
-      "mean_host_seconds_per_call": 60.279946912698215,
+      "observed_calls": 135,
+      "mean_host_seconds_per_call": 59.82475521629614,
       "registered_calls_by_seed": {
         "1": 58,
         "2": 72,
@@ -38,7 +38,6 @@
         "8": 68
       },
       "remaining_seeds": [
-        2,
         3,
         4,
         5,
@@ -46,9 +45,9 @@
         7,
         8
       ],
-      "remaining_calls": 459,
-      "extrapolated_pilot_calls": 280.0,
-      "adjustment_hours": 3.271671120035714
+      "remaining_calls": 387,
+      "extrapolated_pilot_calls": 240.0,
+      "adjustment_hours": 2.647713661751856
     },
     "trace": {
       "pilot_run": "abstracts-pilot-s00-trace-r01-fp64",
@@ -81,20 +80,20 @@
   },
   "scenarios": {
     "typical": {
-      "confirmatory_training_and_test": 22.38086055943051,
+      "confirmatory_training_and_test": 20.743793599591093,
       "hybrid_training_and_widths": 2.843339459101358,
       "secondary_pilots": 0.0,
       "flatness_and_its_publication": 1.3902777777777777,
-      "original_model_publications": 0.6673528062499999,
-      "total_hours": 27.281830602559644
+      "original_model_publications": 0.6525227438888889,
+      "total_hours": 25.62993358035912
     },
     "slower": {
-      "confirmatory_training_and_test": 22.38086055943051,
+      "confirmatory_training_and_test": 20.743793599591093,
       "hybrid_training_and_widths": 2.843339459101358,
       "secondary_pilots": 0.0,
       "flatness_and_its_publication": 2.1019444444444444,
-      "original_model_publications": 0.9000219500000001,
-      "total_hours": 28.226166412976312
+      "original_model_publications": 0.8800214622222222,
+      "total_hours": 26.569098965359117
     }
   }
 }

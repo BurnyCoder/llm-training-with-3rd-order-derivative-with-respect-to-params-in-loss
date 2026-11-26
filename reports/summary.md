@@ -1,6 +1,6 @@
 # Study summary
 
-Recorded 81 runs, including 80 with a completed summary.
+Recorded 81 runs, including 81 with a completed summary.
 
 **TinyStories.** The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781).
 
@@ -21,7 +21,7 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 | Stage | Phase | Method | Ratio | Tokens/run | Runs | Median dev NLL | Median dev PPL | Median test NLL | Median test PPL |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Research abstracts | confirm | Ordinary AdamW | 0.000 | 524,288 | 1 | 3.0368 | 20.8387 | — | — |
-| Research abstracts | confirm | Third derivative | 0.010 | 524,288 | 1 | 3.0368 | 20.8375 | — | — |
+| Research abstracts | confirm | Third derivative | 0.010 | 524,288 | 2 | 3.0372 | 20.8459 | — | — |
 | Research abstracts | confirm | Hessian trace | 0.010 | 524,288 | 1 | 3.0367 | 20.8370 | — | — |
 | Research abstracts | control | Initial checkpoint | 0.000 | 0 | 1 | 3.2517 | 25.8335 | — | — |
 | Research abstracts | control | Unigram | 0.000 | 0 | 1 | 7.3306 | 1,526.3141 | — | — |
