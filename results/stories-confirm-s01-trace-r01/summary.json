@@ -37,5 +37,12 @@
   "dev_accuracy": 0.4614060362499179,
   "dev_tokens": 715643,
   "finished_at": "2026-11-25T20:18:55+00:00",
-  "status": "complete"
+  "status": "complete",
+  "test_nll": 2.5481642449856436,
+  "test_accuracy": 0.46202455708590884,
+  "test_tokens": 4884130,
+  "test_manifest_sha256": "228df80efc7ea7acd95020cf2a4d209d6a5071febe0c62a4b21b3b65b2e1b7c4",
+  "freeze_id": "a1878c4c4be30f650666996508abeb4dfc0b2481f56f85749dffa3a5fafca669",
+  "test_seconds": 13.479061499994714,
+  "evaluated_at": "2026-11-26T01:14:44+00:00"
 }
