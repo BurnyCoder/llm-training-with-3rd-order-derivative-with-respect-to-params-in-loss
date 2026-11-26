@@ -244,7 +244,7 @@ function showSchedule() {
     const r = byId.get(item.id);
     if (!r) return {...item, active: false};
     const progress = r.evaluation_progress;
-    const fitting = !isComplete(r) && !["planned","queued","failed"].includes(r.status);
+    const fitting = !isComplete(r) && !["planned","queued","failed","paused"].includes(r.status);
     const testing = progress?.split === "test" && !numeric(r.test_nll);
     const fit = isComplete(r) ? "Complete" : progress?.split === "dev" ? "Scoring development" : r.status;
     const test = item.phase !== "confirm" ? "—" : numeric(r.test_nll) && frozen.has(item.stage) ? "Complete"
@@ -267,11 +267,12 @@ function showSchedule() {
   element("milestone-count").textContent = completed + "/" + plan.total + " experimental milestones";
   element("milestone-table").replaceChildren(table(["Experiment", "Completed", "Remaining", "Planned"], groups));
   const active = jobs.filter(j => j.active);
+  const paused = jobs.some(j => j.fit.toLowerCase() === "paused");
   element("current-activity").textContent = active.length ? "Recorded activity · " + active.map(j => j.activity).join(" / ")
-    : "Between recorded training and scoring updates.";
+    : paused ? "Experiments paused by request. The remaining runs have no scheduled start date." : "Between recorded training and scoring updates.";
   const next = plan.order.find(([i, action]) => jobs[i][action] !== "Complete" && !jobs[i].active);
   const pending = next ? jobs[next[0]].title + (next[1] === "test" ? " · frozen test" : "") : plan.next;
-  element("next-job").textContent = "Next scheduled work · " + pending + ". Seed sensitivity is the final stage.";
+  element("next-job").textContent = (paused ? "First run on resumption · " : "Next scheduled work · ") + pending + ". Seed sensitivity is the final stage.";
   const choice = element("queue-filter").value;
   const visible = jobs.filter(j => choice === "all" || (choice === "active" && j.active)
     || (choice === "complete" && j.fit === "Complete")

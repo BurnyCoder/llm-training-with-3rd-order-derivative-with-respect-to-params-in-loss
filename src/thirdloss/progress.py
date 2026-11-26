@@ -60,7 +60,7 @@ def week_schedule(project):
 
 def progress(project,study=None):
     study = study if study is not None else study_snapshot(project)
-    from .run_inventory import inventory
+    from .run_inventory import activity_labels, inventory
     plan = study.get("run_inventory") or inventory(study)
     runs = [r for r in study["runs"] if r.get("phase") in {"control","pilot","confirm"}]
     done = [r for r in runs if r["status"] in {"complete","evaluated"}]
@@ -71,8 +71,9 @@ def progress(project,study=None):
     lines = ["# Study progress",f"Updated {study['generated_at']}.",f"{len(done)} training/control records and "
              f"{len(tests)} final evaluations are complete. This is {(len(done)+len(tests))/total:.1%} "
              f"of {total} planned model milestones.", "## Current record"]
-    lines.extend(["Recorded activity · "+(" / ".join(plan["activity"]) or "Between recorded training and scoring updates")+".",
-                  f"Next scheduled work · {plan['next']}. [Status of every planned run](planned-runs.md#current-evidence-and-remaining-runs)"])
+    activity, next_label = activity_labels(plan)
+    lines.extend([f"Recorded activity · {activity}.",
+                  f"{next_label} · {plan['next']}. [Status of every planned run](planned-runs.md#current-evidence-and-remaining-runs)"])
     for stage,horizon in HORIZONS.items():
         rows = [r for r in done if r.get("stage")==stage]
         live = [r for r in runs if r.get("stage")==stage and r not in done]

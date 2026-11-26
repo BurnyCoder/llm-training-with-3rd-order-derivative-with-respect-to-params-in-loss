@@ -131,6 +131,9 @@ def run_record(folder: Path) -> dict:
     summary = read_json(folder / "summary.json")
     last_error = read_json(folder / "failure.json")
     events = read_lines(folder / "events.jsonl")
+    if state.get("status") == "paused" and not summary:
+        # The optimizer can replay later logged updates only from the last saved state.
+        events = [event for event in events if event.get("step", 0) <= state["checkpoint_step"]]
     record = {key: config[key] for key in FIELDS if key in config}
     # Calibration can fail before the trainer writes the final configuration.
     identity = re.fullmatch(r"(stories|abstracts)-(\w+)-s(\d+)-(\w+)-r(\d+)(?:-fp64)?", folder.name)
@@ -164,7 +167,9 @@ def run_record(folder: Path) -> dict:
     if failures:
         record["failures"] = failures
     resumed = bool(last_error and events and events[-1].get("timestamp", "")>last_error.get("timestamp", ""))
-    if last_error and not summary and not resumed:
+    if state.get("status") == "paused" and not summary:
+        record["status"] = "paused"
+    elif last_error and not summary and not resumed:
         record["status"] = "failed"
         record["error"] = str(last_error.get("error", "Recorded failure"))
     elif resumed and not summary:

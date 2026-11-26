@@ -24,6 +24,7 @@ from reportlab.platypus import (
 )
 
 from .report_records import METHODS, REPOSITORY, STAGES, completed, describe_difference, example_runs, finite, fmt, verdict_text
+from .run_inventory import activity_labels
 
 REFERENCES = {
     "flat": ("Hochreiter and Schmidhuber (1994), Simplifying neural nets by discovering flat minima",
@@ -274,9 +275,9 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       f"{_link(REPOSITORY + '/blob/main/reports/experiments/experiments.md', 'Per-run ledger')}")
     plan = study["run_inventory"]
     p("Completed, active and planned experiments", "subheading")
-    activity = " / ".join(plan["activity"]) or "Between recorded training and scoring updates"
+    activity, next_label = activity_labels(plan)
     p(f"At {escape(study['generated_at'])}, {plan['done']} of {plan['total']} experimental milestones were complete. "
-      f"Recorded activity · {escape(activity)}. Next scheduled work · {escape(plan['next'])}.")
+      f"Recorded activity · {escape(activity)}. {next_label} · {escape(plan['next'])}.")
     if "forecast" in study:
         low, high = study["forecast"]
         p(f"Measured remaining-time scenarios span {low:.2f}–{high:.2f} machine-hours. "
