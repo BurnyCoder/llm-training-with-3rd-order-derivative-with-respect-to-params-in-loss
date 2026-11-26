@@ -4,9 +4,9 @@ Run `stories-confirm-s04-trace-r01` · [raw records](../../../results/stories-co
 
 | Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Hessian trace | confirm | 4 | 0.010 | 16,777,216 | 2.5438 | 12.7276 | — | — | 70,292 | complete |
+| TinyStories | Hessian trace | confirm | 4 | 0.010 | 16,777,216 | 2.5438 | 12.7276 | 2.5444 | 12.7350 | 70,292 | complete |
 
-Training time is 238.7 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4630. Test token accuracy is —.
+Training time is 238.7 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4630. Test token accuracy is 0.4631.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-confirm-s04-trace-r01/config.json)
 
