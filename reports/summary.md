@@ -1,8 +1,8 @@
 # Study summary
 
-Recorded 80 runs, including 80 with a completed summary.
+Recorded 81 runs, including 80 with a completed summary.
 
-**TinyStories.** The completed stage did not establish an improvement over both baselines under the registered decision rule.
+**TinyStories.** The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781).
 
 **Research abstracts.** Awaiting paired test results (1 of 8 full-horizon training triplets).
 

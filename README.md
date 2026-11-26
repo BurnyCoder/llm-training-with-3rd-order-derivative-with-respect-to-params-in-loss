@@ -17,7 +17,7 @@ The research background includes flat minima, Hessian measurements and third der
 
 **Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
 
-**TinyStories pretraining** · The completed stage did not establish an improvement over both baselines under the registered decision rule. **Pythia-410M adapters** · Awaiting paired test results (1 of 8 full-horizon training triplets).
+**TinyStories pretraining** · The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781). **Pythia-410M adapters** · Awaiting paired test results (1 of 8 full-horizon training triplets).
 
 [Side-by-side scores, accuracy, speed and memory](#side-by-side-comparisons) · [Flatness by variant and baseline](#all-variants-and-baselines) · [Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Paired tests and intervals](reports/summary.md)
 
@@ -89,7 +89,7 @@ Each row states which direction is better for that metric. Bold highlights the b
 
 The common training-time cutoff had a median of 127.9 seconds. The furthest checkpoint used for this row was 10.9 seconds before its cutoff.
 
-The completed stage did not establish an improvement over both baselines under the registered decision rule.
+The registered test of superiority over both baselines was inconclusive.
 
 | Against | Paired Δtest NLL | Median interval | Wins/ties/losses | Holm p |
 | --- | --- | --- | --- | --- |
@@ -321,7 +321,7 @@ Seed sensitivity is the final stage, after both primary test evaluations, all hy
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 80 runs, including 80 with a completed summary.
+Recorded 81 runs, including 80 with a completed summary.
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 
