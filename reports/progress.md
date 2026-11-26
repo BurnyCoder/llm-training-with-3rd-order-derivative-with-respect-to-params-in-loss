@@ -1,6 +1,6 @@
 # Study progress
 
-Updated 2026-11-26T03:12:52+00:00.
+Updated 2026-11-26T03:17:18+00:00.
 
 52 training/control records and 24 final evaluations are complete. This is 63.3% of 120 planned model milestones.
 
@@ -35,17 +35,17 @@ The first seed included 4.11 hours between the last pre-restart update and the f
 | Stage | Weight geometry | Shared score geometry | Median pilot cycle | Longest pilot cycle |
 | --- | --- | --- | --- | --- |
 | stories | 63/91 | 64/92 | 34 s | 37 s |
-| abstracts | 15/36 | 16/37 | 193 s | 311 s |
+| abstracts | 16/36 | 17/37 | 193 s | 311 s |
 
 Weight geometry covers every neural checkpoint. Score geometry also covers the two unigram references. [All arms and their measurements](flatness.md#every-variant-and-baseline)
 
-Giving each predictor still missing a measurement one complete native pilot cycle projects 1.39 additional hours at each stage’s median or 2.10 hours at its longest observed cycle. These scenarios include the observed reporting and upload time. Existing hybrid widths can be reused. The shared score calculation, archive growth and future interruptions can change the total. [Timestamped pilot measurements](../results/feasibility/flatness-pilot-wall-time.json) · [Archived timing log](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/logs/checkpoint-flatness-20261125T163331Z.log)
+Giving each predictor still missing a measurement one complete native pilot cycle projects 1.34 additional hours at each stage’s median or 2.02 hours at its longest observed cycle. These scenarios include the observed reporting and upload time. Existing hybrid widths can be reused. The shared score calculation, archive growth and future interruptions can change the total. [Timestamped pilot measurements](../results/feasibility/flatness-pilot-wall-time.json) · [Archived timing log](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/logs/checkpoint-flatness-20261125T163331Z.log)
 
 ## Overall completion and remaining time
 
-Across training, references, final tests, hybrid runs and flatness evaluations, **184/305 milestones are complete (60.3%)** and 121 remain. Each milestone has equal weight in this count. Data preparation, software and publications are recorded separately.
+Across training, references, final tests, hybrid runs and flatness evaluations, **185/305 milestones are complete (60.7%)** and 120 remain. Each milestone has equal weight in this count. Data preparation, software and publications are recorded separately.
 
-Projected remaining machine time is **25.63–26.57 hours**, including model publication and geometry. There are 147.57 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
+Projected remaining machine time is **25.58–26.48 hours**, including model publication and geometry. There are 147.50 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
 
 The registered adapter schedules require 846 host derivative calls across unfinished runs. Scaling the pilot by token count alone gives 520. Pricing the scheduled calls at each method’s measured mean changes the forecast by +3.57 hours. The original pre-test feasibility record retains its initial estimate. [Per-arm counts and observed costs](../results/feasibility/remaining-work.json) · [Training gate](../src/thirdloss/windows.py)
 
