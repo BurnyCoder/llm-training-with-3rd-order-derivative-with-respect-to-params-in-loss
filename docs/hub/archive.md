@@ -41,13 +41,13 @@ These medians compare the same seeds and training windows within each model fami
 
 ### Current and planned runs
 
-**Snapshot at 2026-11-26T07:05:21+00:00** · 195/305 experimental milestones complete.
+**Snapshot at 2026-11-26T08:26:57+00:00** · 196/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
-**Next scheduled work** · Research abstracts · Third derivative · confirm seed 4 (1%).
+**Next scheduled work** · Research abstracts · Ordinary AdamW · confirm seed 4.
 
-The measured remaining-time scenarios are 21.47–22.19 machine-hours.
+The measured remaining-time scenarios are 20.04–20.76 machine-hours.
 
 [Finished, active and planned experiments](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/planned-runs.md#current-evidence-and-remaining-runs) · [Live measurements](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer)
 

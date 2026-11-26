@@ -1,14 +1,14 @@
 # Study progress
 
-Updated 2026-11-26T07:05:21+00:00.
+Updated 2026-11-26T08:26:57+00:00.
 
-57 training/control records and 24 final evaluations are complete. This is 67.5% of 120 planned model milestones.
+58 training/control records and 24 final evaluations are complete. This is 68.3% of 120 planned model milestones.
 
 ## Current record
 
 Recorded activity · Between recorded training and scoring updates.
 
-Next scheduled work · Research abstracts · Third derivative · confirm seed 4 (1%). [Status of every planned run](planned-runs.md#current-evidence-and-remaining-runs)
+Next scheduled work · Research abstracts · Ordinary AdamW · confirm seed 4. [Status of every planned run](planned-runs.md#current-evidence-and-remaining-runs)
 
 **stories** has 36 completed runs. The next milestone is determined by the run matrix.
 
@@ -16,9 +16,9 @@ Pilot rates project 0.00 remaining confirmation GPU-hours, excluding validation,
 
 Statistical status: inconclusive. The registered two-comparison superiority criterion was unmet.
 
-**abstracts** has 21 completed runs. The next milestone is determined by the run matrix.
+**abstracts** has 22 completed runs. The next milestone is determined by the run matrix.
 
-Pilot rates project 5.97 remaining confirmation GPU-hours, excluding validation, exports and uploads.
+Pilot rates project 5.20 remaining confirmation GPU-hours, excluding validation, exports and uploads.
 
 Statistical status: incomplete. All checkpoints must reach 524,288 target tokens.
 
@@ -47,11 +47,11 @@ Giving each predictor still missing a measurement one complete native pilot cycl
 
 ## Overall completion and remaining time
 
-Across training, references, final tests, hybrid runs and flatness evaluations, **195/305 milestones are complete (63.9%)** and 110 remain. Each milestone has equal weight in this count. Data preparation, software and publications are recorded separately.
+Across training, references, final tests, hybrid runs and flatness evaluations, **196/305 milestones are complete (64.3%)** and 109 remain. Each milestone has equal weight in this count. Data preparation, software and publications are recorded separately.
 
-Projected remaining machine time is **21.47–22.19 hours**, including model publication and geometry. There are 143.70 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
+Projected remaining machine time is **20.04–20.76 hours**, including model publication and geometry. There are 142.34 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
 
-The registered adapter schedules require 640 host derivative calls across unfinished runs. Scaling the pilot by token count alone gives 400. Pricing the scheduled calls at each method’s measured mean changes the forecast by +2.68 hours. The original pre-test feasibility record retains its initial estimate. [Per-arm counts and observed costs](../results/feasibility/remaining-work.json) · [Training gate](../src/thirdloss/windows.py)
+The registered adapter schedules require 579 host derivative calls across unfinished runs. Scaling the pilot by token count alone gives 360. Pricing the scheduled calls at each method’s measured mean changes the forecast by +2.28 hours. The original pre-test feasibility record retains its initial estimate. [Per-arm counts and observed costs](../results/feasibility/remaining-work.json) · [Training gate](../src/thirdloss/windows.py)
 
 The final seed-sensitivity analysis is pending. The queue completes both stages’ single-seed comparisons and original frozen test evaluations before the remaining hybrid replications. All checkpoint measurements precede the final across-seed analysis. [Queue amendment](amendments/seed-sensitivity-last.md) · [Final report](seed-sensitivity.md)
 
