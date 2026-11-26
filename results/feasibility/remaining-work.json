@@ -1,12 +1,12 @@
 {
-  "as_of": "2026-11-26T06:21:00+00:00",
-  "completed": 193,
+  "as_of": "2026-11-26T07:01:55+00:00",
+  "completed": 194,
   "planned": 305,
-  "remaining": 112,
-  "remaining_hours_in_week": 144.4388888888889,
+  "remaining": 111,
+  "remaining_hours_in_week": 143.75694444444446,
   "hybrid_blocks_left_including_partial": 4,
   "replays_left": 5,
-  "remaining_primary_publications": 40,
+  "remaining_primary_publications": 39,
   "geometry": {
     "stories": {
       "planned": 92,
@@ -51,8 +51,8 @@
     "trace": {
       "pilot_run": "abstracts-pilot-s00-trace-r01-fp64",
       "pilot_calls": 5,
-      "observed_calls": 135,
-      "mean_host_seconds_per_call": 19.200631543704045,
+      "observed_calls": 202,
+      "mean_host_seconds_per_call": 19.10204541881222,
       "registered_calls_by_seed": {
         "1": 58,
         "2": 72,
@@ -64,34 +64,33 @@
         "8": 68
       },
       "remaining_seeds": [
-        3,
         4,
         5,
         6,
         7,
         8
       ],
-      "remaining_calls": 387,
-      "extrapolated_pilot_calls": 240.0,
-      "adjustment_hours": 0.729461436281539
+      "remaining_calls": 320,
+      "extrapolated_pilot_calls": 200.0,
+      "adjustment_hours": 0.5857875472277705
     }
   },
   "scenarios": {
     "typical": {
-      "confirmatory_training_and_test": 17.716432806334637,
+      "confirmatory_training_and_test": 16.978670581725314,
       "hybrid_training_and_widths": 2.843339459101358,
       "secondary_pilots": 0.0,
       "flatness_and_its_publication": 1.1222222222222222,
-      "original_model_publications": 0.5932024944444445,
-      "total_hours": 22.275196982102663
+      "original_model_publications": 0.5783724320833333,
+      "total_hours": 21.522604695132227
     },
     "slower": {
-      "confirmatory_training_and_test": 17.716432806334637,
+      "confirmatory_training_and_test": 16.978670581725314,
       "hybrid_training_and_widths": 2.843339459101358,
       "secondary_pilots": 0.0,
       "flatness_and_its_publication": 1.67,
-      "original_model_publications": 0.8000195111111111,
-      "total_hours": 23.029791776547107
+      "original_model_publications": 0.7800190233333333,
+      "total_hours": 22.272029064160005
     }
   }
 }
