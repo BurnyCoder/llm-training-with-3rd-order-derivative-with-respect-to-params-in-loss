@@ -78,6 +78,8 @@ Independent random signs include mixed weight derivatives in the expected penalt
 
 - [stories-confirm-s05-trace-r01](./stories-confirm-s05-trace-r01/experiment.md) — Development NLL changed by -3.4616 nats per target token from 524,288 to 16,777,216 training targets. Attribution to the regularizer uses matched comparisons across seeds.
 
+- [stories-confirm-s06-third-r01](./stories-confirm-s06-third-r01/experiment.md) — Development NLL changed by -3.4886 nats per target token from 524,288 to 16,777,216 training targets. Attribution to the regularizer uses matched comparisons across seeds.
+
 - [stories-control-s00-initial-r00](./stories-control-s00-initial-r00/experiment.md) — The observed development NLL is 8.3437 nats per target token.
 
 - [stories-control-s00-unigram-r00](./stories-control-s00-unigram-r00/experiment.md) — The observed development NLL is 6.0036 nats per target token.
