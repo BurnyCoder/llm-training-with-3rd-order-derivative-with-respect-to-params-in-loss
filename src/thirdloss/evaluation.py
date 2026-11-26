@@ -11,7 +11,7 @@ from .records import CONTEXT
 
 
 @torch.no_grad()
-def score(model, path, device, batch_size, limit_windows=None, unigram=None, progress=None):
+def score(model, path, device, batch_size, limit_windows=None, unigram=None, progress=None, top1_sink=None):
     """Score each packed target once, including a final short window, with a fixed context grid."""
     tokens = np.memmap(path, mode="r", dtype="<u2")
     n = len(tokens) - 1
@@ -34,11 +34,17 @@ def score(model, path, device, batch_size, limit_windows=None, unigram=None, pro
     def batch_score(ids):
         target = ids[:, 1:]
         if unigram is not None:
-            return (-np.log(unigram[target])).sum(dtype=np.float64).item(), int((target == unigram.argmax()).sum())
+            mode = unigram.argmax()
+            if top1_sink is not None:
+                top1_sink(np.full(target.size,mode,dtype=np.int64))
+            return (-np.log(unigram[target])).sum(dtype=np.float64).item(), int((target == mode).sum())
         seq = torch.from_numpy(ids.astype(np.int64)).to(device)
         logits = logits_of(model, seq[:, :-1])
         losses = token_nll(logits, seq[:, 1:])
-        return losses.sum(dtype=torch.float64).item(), (logits.argmax(-1) == seq[:, 1:]).sum().item()
+        predictions = logits.argmax(-1)
+        if top1_sink is not None:
+            top1_sink(predictions.detach().cpu().numpy().reshape(-1))
+        return losses.sum(dtype=torch.float64).item(), (predictions == seq[:, 1:]).sum().item()
 
     for start in range(0, len(indices), batch_size):
         offsets = indices[start:start+batch_size, None] * CONTEXT + np.arange(CONTEXT+1)

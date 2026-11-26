@@ -1,0 +1,2 @@
+# PDF cross-reference offsets refer to the exact byte stream on every checkout.
+*.pdf binary

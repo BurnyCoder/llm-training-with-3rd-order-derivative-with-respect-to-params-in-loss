@@ -5,13 +5,17 @@ third-order method. The module consumes ordinary JSON-compatible result records 
 CLI, static report, and interactive explorer can share the same inference.
 """
 
+import hashlib
+import json
+import re
 from math import comb, isfinite
 from statistics import median
+
+from .records import HORIZONS, RATIOS, run_name
 
 
 _METHODS = ("ce", "trace", "third")
 _SEEDS = range(1, 9)
-_HORIZON = {"stories": 2**24, "abstracts": 2**19}
 
 
 def _number(value):
@@ -42,7 +46,7 @@ def paired_sign(pairs, *, larger=False):
 
     # If m is a continuous population median, #{observations < m} has Bin(n, 1/2) law.
     # Choose the narrowest symmetric order-statistic interval meeting the registered level.
-    # Equations 29–30: https://nvlpubs.nist.gov/nistpubs/TechnicalNotes/NIST.TN.2119.pdf
+    # Quantile interval, eq. (30) with p=1/2: https://nvlpubs.nist.gov/nistpubs/TechnicalNotes/NIST.TN.2119.pdf#page=41
     n = len(ordered)
     rank = 0
     discarded = 0
@@ -105,26 +109,52 @@ def _time_match(seed, records, clock="train_seconds"):
     return {"seed": seed, "cutoff_seconds": cutoff, "by_method": matched}
 
 
-def _inconsistency(records):
-    """Check optional provenance as an all-or-none contract within a completed scored matrix."""
-    for field in ("freeze_id", "test_manifest_sha256", "test_tokens"):
-        values = {row.get(field) for row in records.values()}
-        if len(values) > 1:
-            return f"The stage has inconsistent {field} values across final checkpoints."
-    for method in ("trace", "third"):
-        ratios = {records[seed, method].get("ratio") for seed in _SEEDS}
-        if len(ratios) > 1:
-            return f"The frozen {method} regularization ratio changes across seeds."
+def freeze_digest(freeze):
+    """Recreate the original freeze identifier independent of file and platform line endings."""
+    payload = {key: value for key, value in freeze.items() if key != "freeze_id"}
+    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+
+
+def _inconsistency(records, stage, freeze, dataset):
+    """Bind all published scores to their preregistered checkpoint, training corpus and test denominator."""
+    if not freeze or freeze.get("stage") != stage or freeze.get("freeze_id") != freeze_digest(freeze):
+        return "Missing or inconsistent stage freeze."
+    if not dataset or dataset.get("stage") != stage:
+        return "Missing stage dataset manifest."
+    split = dataset.get("splits", {}).get("test", {})
+    if (not re.fullmatch(r"[a-f0-9]{64}", str(split.get("sha256"))) or
+            split["sha256"] != freeze.get("test_sha256") or type(split.get("tokens")) is not int or split["tokens"] < 2):
+        return "Frozen test split differs from the corpus manifest."
+    ratios = freeze.get("ratios", {})
+    if set(ratios) != {"third", "trace"} or any(value not in RATIOS for value in ratios.values()):
+        return "Invalid frozen ratios."
+    weights, initial = freeze.get("runs", {}), freeze.get("initializations", {})
+    if len(weights) != len(records) or set(initial) != {str(s) for s in _SEEDS}:
+        return "Incomplete checkpoint or initialization manifest."
+    # data.prepare publishes the sorted, indented UTF-8 manifest with one LF.
+    corpus = hashlib.sha256((json.dumps(dataset, indent=2, sort_keys=True) + "\n").encode()).hexdigest()
+    for (seed, method), row in records.items():
+        ratio = ratios.get(method, 0)
+        name = run_name(stage, method, "confirm", seed, ratio)
+        if not all(re.fullmatch(r"[a-f0-9]{64}", str(value)) for value in (weights.get(name), initial[str(seed)])):
+            return f"Missing checkpoint or initialization digest for {name}."
+        expected = {"id": name, "ratio": ratio, "weights_sha256": weights[name], "status": "complete",
+                    "token_budget": HORIZONS[stage], "initial_trainable_sha256": initial[str(seed)],
+                    "data_manifest_sha256": corpus, "test_tokens": split["tokens"] - 1,
+                    "test_manifest_sha256": split["sha256"], "freeze_id": freeze["freeze_id"]}
+        for key, value in expected.items():
+            if row.get(key) != value:
+                return f"Unverified {key} for {name}."
     return None
 
 
-def analyze_stage(summaries: list[dict], stage: str) -> dict:
+def analyze_stage(summaries: list[dict], stage: str, *, freeze=None, dataset=None) -> dict:
     """Analyze the fixed three-arm matrix after every registered checkpoint has a final score.
 
     Partial matrices expose progress and eligible elapsed-time development comparisons.
     Duplicate rows or incompatible provenance invalidate inference for that stage.
     """
-    horizon = _HORIZON[stage]
+    horizon = HORIZONS[stage]
     result = {
         "stage": stage, "status": "pending", "complete": False, "success": None,
         "n_expected_seeds": len(_SEEDS), "n_complete_seeds": 0, "missing": [],
@@ -177,7 +207,7 @@ def analyze_stage(summaries: list[dict], stage: str) -> dict:
     if result["missing"]:
         result.update(status="incomplete", reason="Awaiting the complete frozen set of final test scores.")
         return result
-    issue = _inconsistency(records)
+    issue = _inconsistency(records, stage, freeze, dataset)
     if issue:
         result.update(status="invalid", reason=issue)
         return result

@@ -6,7 +6,7 @@ The model assigns a probability to each possible next token. Its **loss** is the
 
 Hochreiter and Schmidhuber compared solutions that fit the training examples about equally well. They searched for a wide box of acceptable weight settings around a solution. The tolerated range for each weight determines how many digits can be discarded while preserving the fit. Under their encoding, a larger box can give a shorter description of the network. Their hypothesis was that these simpler fits would, on average, overfit less. [Box construction](https://people.idsia.ch/~juergen/fm/node2.html) · [Description-length argument](https://people.idsia.ch/~juergen/fm/node5.html) · [Assumptions about generalization](https://people.idsia.ch/~juergen/fm/node16.html)
 
-This project compares two local quantities. The Hessian trace sums the curvatures along the principal directions. The third derivative measures changes in the full Hessian, including changes that leave the trace constant. Dinh et al. showed that rescaling a ReLU network can change measured sharpness while preserving every prediction. For that reason the TinyStories follow-up measures perturbations in the same weight coordinates across runs. Wider measured directions with unchanged held-out token loss would show greater tolerance to those perturbations without evidence of better prediction. [Dinh et al., §4](https://proceedings.mlr.press/v70/dinh17b.pdf) · [Registered width measurements](../reports/hybrid/preregistration.md#endpoints-and-falsification)
+The Hessian trace sums the curvatures along the principal directions. The third derivative measures changes in the full Hessian, including changes that leave the trace constant. Dinh et al. showed that rescaling a ReLU network can change measured sharpness while preserving every prediction. Their Definition 1 concerns the volume of a connected low-loss region. This study measures directional crossing distances in fixed weight coordinates. Their median describes tolerance to those perturbations. Held-out NLL measures predictive performance separately. [Dinh et al., Definition 1 and §4](https://proceedings.mlr.press/v70/dinh17b/dinh17b.pdf) · [Registered width measurements](../reports/hybrid/preregistration.md#endpoints-and-falsification)
 
 ## When can the penalty favor a wider minimum?
 
@@ -208,12 +208,16 @@ Both pure third derivatives are zero. The three ones come from mixed derivatives
 
 The ordinary training gradient already contains one exact automatic derivative per trainable coordinate, up to floating-point rounding. A third derivative has three coordinate slots. With $d$ weights the dense array has $d^3$ ordered entries. The counts below use the recorded trainable coordinates. The storage estimates count just one dense array at the arithmetic precision used by the corresponding derivative path. An exabyte (EB) is $10^{18}$ bytes. [Weight and loss definitions](../src/thirdloss/models.py) · [Adapter precision amendment](../reports/amendments/adapter-precision.md)
 
-| Trainable coordinates in this project | $d$ | Dense third-derivative entries, $d^3$ | Storage for those entries |
-|---|---:|---:|---:|
-| TinyStories decoder trained from scratch, including its shared input/output embedding | 2,557,632 | $1.67\times10^{19}$ | about 66.9 EB at 4 bytes per entry |
-| Research abstracts, rank-eight LoRA factors in Pythia-410M’s query/key/value projections. The pretrained base weights are frozen. | 786,432 | $4.86\times10^{17}$ | about 3.89 EB at 8 bytes per entry |
+<!-- DENSE:START -->
 
-To reproduce either row, read `trainable_parameters` from the linked record, cube it, and multiply by the bytes per entry. Symmetry can reduce storage to one entry per distinct unordered triple, $d(d+1)(d+2)/6$, which still grows cubically. [TinyStories parameter count](../results/stories-pilot-s00-third-r03/summary.json) · [Adapter parameter count](../results/abstracts-pilot-s00-third-r03/summary.json)
+| Trainable coordinates | Weights | Dense ordered third partials | Hypothetical storage |
+| --- | --- | --- | --- |
+| Pythia-410M · rank-eight QKV LoRA factors | 786,432 | 4.86e+17 | 3.89 EB at 8 bytes per entry |
+| TinyStories · all decoder weights | 2,557,632 | 1.67e+19 | 66.9 EB at 4 bytes per entry |
+
+<!-- DENSE:END -->
+
+To reproduce either row, read `trainable_parameters` from the linked record, cube it, and multiply by the bytes per entry. Symmetry can reduce storage to one entry per distinct unordered triple, $d(d+1)(d+2)/6$, which still grows cubically. [TinyStories parameter count](../results/stories-pilot-s00-third-r03/summary.json) · [Amended FP64 adapter parameter count](../results/abstracts-pilot-s00-third-r03-fp64/summary.json)
 
 You *can* compute the exact sum without storing all $d^3$ entries. For example, take $u=e_j$ and $v=e_k$, where $e_j$ has a one only at position $j$. Then $u^\top H_Bv=H_{jk}$ and $r_i=T_{ijk}$. Square and sum this vector and repeat for every ordered pair $(j,k)$. That direct scheme needs $d^2$ such vectors. The project takes one random pair on an active update. It trades an exact scalar for a noisy estimate while still differentiating the loss directly along the chosen directions. The small-model reference test explicitly builds the tensor and compares the two computations for the **same** signs. [Dense reference and derivative tests](../tests/test_derivatives.py) · [PyTorch’s Hessian–vector product tutorial](https://docs.pytorch.org/tutorials/intermediate/jacobians_hessians.html#computing-hessian-vector-products)
 
@@ -273,7 +277,7 @@ for third_derivative in (1, 2):
 print("active objective difference", weight * (2**2 - 1**2) / gate_probability)
 
 for run, bytes_per_entry in (("stories-pilot-s00-third-r03", 4),
-                             ("abstracts-pilot-s00-third-r03", 8)):
+                             ("abstracts-pilot-s00-third-r03-fp64", 8)):
     summary = Path("results", run, "summary.json")
     d = json.loads(summary.read_text(encoding="utf-8"))["trainable_parameters"]
     entries = d**3

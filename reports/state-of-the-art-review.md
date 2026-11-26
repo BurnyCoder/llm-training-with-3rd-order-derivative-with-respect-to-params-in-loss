@@ -1,6 +1,6 @@
 # Comparison with existing methods
 
-The nearest published language experiment found in this review is Hessian-trace training of recurrent models. Its scalar regularizer measures signed curvature along coordinates. A Hessian with changing entries can have constant trace. Squared Frobenius penalties on the Hessian and on its derivative therefore supply important controls. [Hessian objective and experiments](https://arxiv.org/pdf/2208.05924)
+Two language-model precedents inform the comparison. Liu, Yu and Lin studied a sparsified Hessian-trace regularizer in recurrent language models on WikiText-2. Zhang, Li and Ju tested symmetric weight perturbations in GPT-2 fine-tuning. The local trace baseline differentiates a dense stochastic estimate of the signed trace. A Hessian with changing entries can have constant trace. The squared-Hessian pilot control checks sensitivity to penalizing curvature magnitude. [Recurrent objectives and experiments, §5.2](https://arxiv.org/pdf/2208.05924) · [GPT-2 experiments, Table 5](https://arxiv.org/pdf/2306.08553#page=12) · [Local objectives](../src/thirdloss/penalties.py)
 
 Noise stability optimization approximates a Hessian penalty by perturbing weights symmetrically and has been studied on multimodal pretraining and chain-of-thought fine-tuning. Expansion through a third-order term in an optimizer or perturbation formula is a different intervention from adding the squared third derivative to the training loss. [Zhang, Li and Ju](https://arxiv.org/pdf/2306.08553)
 

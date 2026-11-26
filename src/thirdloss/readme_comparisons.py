@@ -261,10 +261,10 @@ def comparison_sections(study):
                 lo,hi=stats["median_ci"]
                 rows.append([SHORT[m],f"{stats['median_delta']:+.6f}",f"[{lo:+.6f}, {hi:+.6f}]",
                              f"{stats['wins']}/{stats['ties']}/{stats['losses']}",f"{stats['p_holm']:.5f}"])
-            detail.append(markdown_table(rows,["Against","Paired Δtest NLL","Median interval","Wins/ties/losses","Holm p"]))
+            detail.append(markdown_table(rows,["Against","Paired Δtest NLL","Median interval (marginal)","Wins/ties/losses","Holm p"]))
             detail.append("A negative difference favors third order. A positive difference favors the named baseline. "
-                          "The interval shows uncertainty in the median difference. A smaller Holm-adjusted p-value "
-                          "gives stronger evidence for the registered improvement. [Test decision rule](reports/preregistration.md)")
+                          "The interval describes seed-to-seed uncertainty in the median difference on the fixed corpus. "
+                          "The sign tests use the directions of paired differences. [Test decision rule](reports/preregistration.md)")
         top.append([name+" · "+("test" if final else "dev"),cohort,_effect(pairs,metric,"third","ce"),
                     _effect(pairs,metric,"third","trace"),_effect(pairs,SPEED,"third","ce")])
     quick=["## Results at a glance","**Lower next-token loss (NLL) is better** because the model assigns more probability "
@@ -324,7 +324,7 @@ def comparison_sections(study):
         prediction=("The two schedules had equal development NLL at the displayed precision." if loss_change=="Tie"
                     else f"Adaptive development NLL was {loss_change}.")
         quick.append(f"**Adaptive vs fixed-ramp hybrid** · {n}/8 paired seeds. {prediction} {geometry} "
-                     "More width is better for the registered geometry test. Whether more width improves prediction is unknown.")
+                     "Whether more width improves prediction is unknown.")
         detail.append(f"**Adaptive vs fixed ramp · {n}/8 paired seeds · {fixed[0]['adaptive']['tokens']:,} targets per run.** "
                       "Both arms resume the same trace-trained checkpoint. Width change is final width minus width at "
                       "the switch. A larger change means more width retained at the fixed loss tolerance. "
@@ -338,12 +338,15 @@ def comparison_sections(study):
         pairs=_hybrid_pairs(study,m)
         rows.append([METHODS[m],f"{len(pairs)}/8",
                      *([_effect(pairs,k,"adaptive",m) for k in (NLL,WIDTH,SPEED)] if pairs else ["Pending","—","—"])])
-    detail.append("The remaining controls are paired independently. Each row uses only seeds that finished both arms. "
-                  "The always-on arm has its own measured width at the switch.")
+    detail.append("Each row uses seeds that finished both arms. Width changes use bracket midpoints. "
+                  "The always-on arm has its own measured width at the switch. Replay uses another seed's "
+                  "adaptive schedule, coupling neighboring seed pairs.")
     detail.append(markdown_table(rows,["Adaptive versus","Paired seeds","Adaptive NLL<br>"+NLL.direction,
                                       "Adaptive width change<br>"+WIDTH.direction,"Adaptive speed<br>"+SPEED.direction]))
-    detail.append(f"**Registered width decision** · {study['hybrid']['status'].capitalize()}. Width probes use fixed training windows. "
-                  "[Every width, training-fit flag, replay and paired difference](reports/hybrid/results.md)")
+    from .hybrid_results import hybrid_bound_text
+    boundary = hybrid_bound_text(study["hybrid"]) if "attainability" in study["hybrid"] else ""
+    detail.append(f"**Registered width decision** · {study['hybrid']['status'].capitalize()}. {boundary} "
+                  "[Numerical bounds, training fit and paired differences](reports/hybrid/results.md)")
     detail.append("**Training diagnostics have no established better direction for held-out prediction.** "
                   "A smaller derivative penalty meets its training objective more closely. The raw Hessian trace, "
                   "third-derivative estimate, gradient norm and penalty strength describe the training process. "

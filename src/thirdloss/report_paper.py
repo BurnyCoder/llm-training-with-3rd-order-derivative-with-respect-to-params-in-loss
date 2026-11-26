@@ -25,8 +25,15 @@ from reportlab.platypus import (
 
 from .report_records import METHODS, REPOSITORY, STAGES, completed, describe_difference, example_runs, finite, fmt, verdict_text
 from .run_inventory import activity_labels
+from .hybrid_results import hybrid_bound_text
 
 REFERENCES = {
+    "copies": ("Lee et al., Deduplicating Training Data Makes Language Models Better",
+               "https://aclanthology.org/2022.acl-long.577/"),
+    "sign": ("Dixon and Mood, The Statistical Sign Test",
+             "https://webspace.ship.edu/pgmarr/Geo441/Readings/Dixon%20and%20Mood%201946%20-%20The%20Statistical%20Sign%20Test.pdf"),
+    "interval": ("NIST, Estimating Instrument Performance with Confidence Intervals and Confidence Bounds, eq. 30",
+                 "https://nvlpubs.nist.gov/nistpubs/TechnicalNotes/NIST.TN.2119.pdf#page=41"),
     "flat": ("Hochreiter and Schmidhuber (1994), Simplifying neural nets by discovering flat minima",
              "https://proceedings.neurips.cc/paper/1994/hash/01882513d5fa7c329e940dda99b12147-Abstract.html"),
     "flat_mdl": ("Hochreiter and Schmidhuber (1997), Flat Minima",
@@ -182,8 +189,8 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
     p("Abstract", "heading")
     p("We study whether a language model improves its predictions when training penalizes "
       "variation in the curvature of its next-token loss. Independent random signs produce "
-      "a differentiable estimate of the squared norm of all third partial derivatives in "
-      "the trainable coordinates. Two matched interventions compare this objective with "
+      "a differentiable estimate of the squared norm of the two-window loss's third derivatives in "
+      "the trainable coordinates. Paired training runs compare this objective with "
       "ordinary AdamW and a signed Hessian-trace penalty. " +
       " ".join(f"<b>{STAGES[s]}.</b> {escape(verdict_text(outcome,paired=True))}" for s, outcome in study["stages"].items()))
     p("Motivation and related work", "heading")
@@ -212,7 +219,6 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
     flow.append(KeepTogether([_figure(figure_dir / figures["architecture"], max_height=140),
                               Paragraph("Figure 1. Trainable coordinate sets and the stochastic "
                                         "regularization path.", styles["caption"])]))
-    flow.append(PageBreak())
     p("Experimental design", "heading")
     p("Full-weight pretraining uses a four-block causal Transformer with width 192, four heads, "
       "a gated 512-wide MLP, tied embeddings and 128 targets per window. Stories use a "
@@ -234,7 +240,7 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "Across 16 batches at the shared pilot initialization, the median ordinary-to-penalty "
       "gradient-norm ratio sets the scale. Both regularizers try 1%, 3% and 10% of this scale. "
       f"{_link(REPOSITORY + '/blob/main/reports/preregistration.md', 'Training and selection protocol')}")
-    p("Normalize and deduplicate whole documents before fitting the stories tokenizer. Prioritize "
+    p("Use normalized text for duplicate detection and retained original text for fitting the stories tokenizer. Prioritize "
       "evaluation records when removing overlaps, and audit word-shingle similarity between "
       "splits. Pack documents with an end-of-sequence token. Full evaluation counts each valid "
       "target once. During training, the development curve uses a fixed subset of windows. "
@@ -252,11 +258,19 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
       "For each baseline, paired differences subtract baseline NLL from third-order NLL at the "
       "same token budget. The registered stage decision requires both one-sided exact paired "
       "sign tests to pass Holm correction at 0.05 across eight seed pairs. Ties are removed "
-      "from sign-test denominators. A distribution-free order-statistic interval quantifies "
-      "uncertainty in the median paired difference. Equal-time analyses use the latest logged "
+      "from sign-test denominators. A marginal order-statistic interval quantifies uncertainty in "
+      "each median across independent seed draws on the fixed corpus. Equality under a practical "
+      "equivalence margin was never tested. Equal-time analyses use the latest logged fixed-window "
       "development checkpoint within the shortest final training time of that seed triple. "
-      f"{_cite('seeds')} · {_link(REPOSITORY + '/blob/main/reports/preregistration.md', 'Decision rule')}")
+      f"{_cite('seeds')} · {_cite('sign')} · {_cite('interval')} · {_link(REPOSITORY + '/blob/main/reports/preregistration.md', 'Decision rule')}")
     p("Results", "heading")
+    audit = study.get("scientific_audit", {})
+    if audit:
+        p("Independent checks on archived evidence", "subheading")
+        for stage in STAGES:
+            if stage in audit:
+                p(escape(audit[stage]))
+        p(f"{_link(REPOSITORY + '/blob/main/reports/reviews/independent-scientific-audit.md','Calculations, exposure by seed and limitations')} · {_cite('copies')}", "caption")
     numerical = study.get("numerics",{})
     single = numerical.get("pythia-joint-cuda",{})
     double = numerical.get("pythia-fp64-agreement",{})
@@ -319,12 +333,12 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
           "strength and token horizon. NLL is in nats per target token. Perplexity (PPL) is the exponential "
           "of each run’s full-split NLL. Lower values are better for both metrics. Dashes mark missing "
           "observations. The paired seed analyses use individual final test scores.", "caption")
-    for key, caption in (("curves", "Development NLL by logged token count. Each line is a run; "
-                                    "panels separate training stages and phases."),
+    for key, caption in (("curves", "Fixed-window development NLL by logged token count. Each line is one run. "
+                                    "Panels group the trajectories by training stage and phase."),
                          ("paired", "Individual differences in test NLL. Diamonds mark median "
                                     "differences and horizontal segments show their registered intervals.")):
         if key in figures:
-            flow.append(KeepTogether([_figure(figure_dir / figures[key]),
+            flow.append(KeepTogether([_figure(figure_dir / figures[key],max_height=525 if key=="curves" else 240),
                                       Paragraph(caption, styles["caption"])]))
     p("Discussion and limitations", "heading")
     p("A wide minimum permits large weight displacements at a fixed loss increase. If curvature "
@@ -354,7 +368,9 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
     if "hybrid_width" in figures:
         flow.append(_figure(figure_dir/figures["hybrid_width"],max_height=605))
     p(f"{hybrid['completed_arms']} of 48 full hybrid arms and {hybrid['completed_trunks']} of 8 shared "
-      f"checkpoints have completed. Geometric endpoint: {hybrid['status']}. "
+      f"checkpoints have completed. Status of the width endpoint: {hybrid['status']}. "
+      f"{escape(hybrid_bound_text(hybrid))} The replay pairs share donor randomness. Their sign-test "
+      "probabilities and median-interval coverage have no established calibration. "
       f"{_link(REPOSITORY + '/blob/main/reports/hybrid/results.md', 'All observed widths, development scores and fit differences')}")
     geometry=hybrid_flatness_rows(study["runs"])
     if geometry:
@@ -379,8 +395,7 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
     for comparator,s in hybrid["comparisons"].items():
         lo,hi = s["median_ci"]
         p(f"Adaptive minus {METHODS[comparator]} median width gain {fmt(s['median_delta'],5)} "
-          f"[{fmt(lo,5)}, {fmt(hi,5)}]. One-sided sign p = {fmt(s['p_raw'],5)}, Holm p = {fmt(s.get('p_holm'),5)}. "
-          "Cross-seed replay shares schedule information across pairs, limiting the independent-sign approximation.","caption")
+          f"[{fmt(lo,5)}, {fmt(hi,5)}]. Nominal midpoint sign p = {fmt(s['p_raw'],5)}, Holm p = {fmt(s.get('p_holm'),5)}.","caption")
     p("Conclusion", "heading")
     if all(outcome.get("complete") for outcome in study["stages"].values()):
         confirmed = [STAGES[s] for s, outcome in study["stages"].items() if outcome.get("success")]
@@ -391,12 +406,16 @@ def write_paper(study: dict, output: Path, figure_dir: Path, figures: dict) -> N
             p("Neither stage established the registered dual-baseline improvement. The paired "
               "effects and uncertainty intervals quantify the range compatible with these data.")
     else:
-        p("The outstanding paired evaluations determine which claims can be made about prediction quality "
-          "at the registered horizons. The run ledger preserves every available observation and implementation failure.")
+        for stage, outcome in study["stages"].items():
+            p(f"<b>{STAGES[stage]}.</b> {escape(verdict_text(outcome,paired=outcome['complete']))}")
+        if "stories" in audit:
+            p("The TinyStories estimates apply to the released test stream including its shared passages. "
+              "Per-document predictive losses would be needed to quantify sensitivity to their removal.")
     p("Appendix · Computational cost", "heading")
     if resources:
         for device, rows in resources.items():
             p(escape(str(device)), "subheading")
+            p("Each row summarizes one method, phase, strength and target budget on the listed hardware.", "caption")
             flow.append(_grid(styles, ["Corpus", "Phase", "Method", "Ratio", "Runs", "Targets/run",
                                        "Train (s)", "Targets/s", "Peak GPU (MiB)"],
                               rows, [56, 49, 78, 35, 34, 64, 48, 57, 54]))

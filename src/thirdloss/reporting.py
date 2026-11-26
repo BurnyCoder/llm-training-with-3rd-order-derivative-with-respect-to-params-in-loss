@@ -7,6 +7,8 @@ from statistics import median
 from urllib.parse import quote
 
 from .report_figures import build_figures
+from .audit_report import findings
+from .hybrid_results import hybrid_bound_text
 from .flatness_progress import geometry_coverage
 from .flatness_tables import checkpoint_table,flatness_ledger
 from .readme_comparisons import comparison_sections,geometry_headlines
@@ -76,7 +78,7 @@ def _comparisons(study: dict) -> str:
                               fmt(pair["baseline_nll"], 5), fmt(pair["delta"], 5)])
         if summary:
             parts.append(f"### {STAGES[stage]}\n\n" + _table(summary, [
-                "Comparator", "Wins", "Ties", "Losses", "Median ΔNLL", "Median interval",
+                "Comparator", "Wins", "Ties", "Losses", "Median ΔNLL", "Marginal median interval",
                 "Coverage", "Sign-test p", "Holm p"]) + "\n\n" + _table(pairs, [
                     "Comparator", "Seed", "Third-order NLL", "Comparator NLL", "ΔNLL"]))
         times = [[t["seed"], fmt(t["cutoff_seconds"], 1), _method({"method": m}),
@@ -84,7 +86,8 @@ def _comparisons(study: dict) -> str:
                  for t in analysis.get("matched_time", []) for m, o in t.get("by_method", {}).items()
                  if isinstance(o, dict)]
         if times:
-            parts.append(f"### {STAGES[stage]} at equal training time\n\n" + _table(times, [
+            parts.append(f"### {STAGES[stage]} at the shared training-time cutoff\n\n"
+                         "Each row uses the latest fixed-window observation at or before the cutoff.\n\n" + _table(times, [
                 "Seed", "Common cutoff (s)", "Method", "Recorded checkpoint (s)",
                 "Training tokens", "Dev NLL"]))
         supplement = [[item["seed"],fmt(item["cutoff_seconds"],1),METHODS[m],fmt(point["clock_seconds"],1),
@@ -105,7 +108,7 @@ def _run_learning(run: dict) -> str:
     series = [e for e in run["events"] if finite(e.get("dev_nll")) and finite(e.get("tokens"))]
     if len(series) >= 2 and series[0]["tokens"] < series[-1]["tokens"]:
         delta = series[-1]["dev_nll"] - series[0]["dev_nll"]
-        return (f"Development NLL changed by {delta:+.4f} nats per target token from "
+        return (f"On the fixed development windows, NLL changed by {delta:+.4f} nats per target token from "
                 f"{series[0]['tokens']:,} to {series[-1]['tokens']:,} training targets. "
                 "Attribution to the regularizer uses matched comparisons across seeds.")
     if completed(run) and finite(run.get("dev_nll")):
@@ -138,6 +141,10 @@ def _experiments(root, study):
                  "Independent random signs include mixed weight derivatives in the expected "
                  "penalty. The trace implementation motivating the gradient check converted its "
                  "estimate to a Python number. [Derivation and references](../literature-review.md)"]
+    if study.get("scientific_audit"):
+        source = "[Independent verification, passage exposure and scope of inference](../reviews/independent-scientific-audit.md)"
+        index.append(source)
+        learnings.append(source)
     if study["runs"]:
         rows = []
         planned = {r["id"]:r for r in study["run_inventory"]["fits"] if r["id"]}
@@ -148,7 +155,8 @@ def _experiments(root, study):
             raw_link = "../../../results/" + quote(key, safe="") + "/"
             material = [
                 f"# {_stage(run)} · {_method(run)}",
-                f"Run `{key}` · [raw records]({raw_link}) · [registered design](../../preregistration.md)",
+                f"Run `{key}` · [raw records]({raw_link}) · [registered design](../../"
+                + ("hybrid/" if run.get("phase") in {"hybrid","branch"} else "") + "preregistration.md)",
                 _table([_ledger_row(run)], LEDGER_HEADERS),
                 f"Training time is {fmt(run.get('train_seconds'), 1)} seconds. "
                 f"Peak allocated GPU memory is {fmt(run.get('peak_vram_mb'), 1)} MiB. "
@@ -203,7 +211,7 @@ def _experiments(root, study):
                 observation += f" The run ledger records {len(run['failures'])} interrupted attempt(s)."
             atomic_text(base / key / "learnings.md", f"# Run learnings\n\n{observation}\n\n"
                         "[Experiment and source records](experiment.md)\n")
-            learnings.append(f"- [{key}]({link}) — {observation}")
+            learnings.append(f"- [{key}]({link}) — " + observation.replace("](../../../results/", "](../../results/"))
         index.append(_table(rows, ["Run", *LEDGER_HEADERS]))
     else:
         index.append("The first run record will populate this ledger.")
@@ -227,6 +235,19 @@ def _compact_table(study: dict) -> str:
                      middle("dev_nll"), middle("dev_perplexity"), middle("test_nll"), middle("test_perplexity")])
     return _table(rows, ["Stage", "Phase", "Method", "Ratio", "Tokens/run", "Runs",
                          "Median dev NLL", "Median dev PPL", "Median test NLL", "Median test PPL"]) if rows else ""
+
+
+def _dense_storage(study):
+    """Scale a hypothetical dense tensor from archived coordinate counts and derivative dtypes."""
+    examples = {"stories-pilot-s00-third-r03":("TinyStories · all decoder weights",4),
+                "abstracts-pilot-s00-third-r03-fp64":("Pythia-410M · rank-eight QKV LoRA factors",8)}
+    rows = []
+    for r in study["runs"]:
+        if r["id"] in examples and r.get("trainable_parameters"):
+            label, size = examples[r["id"]]
+            d = r["trainable_parameters"]
+            rows.append([label,f"{d:,}",f"{d**3:.3g}",f"{d**3*size/10**18:.3g} EB at {size} bytes per entry"])
+    return _table(rows,["Trainable coordinates","Weights","Dense ordered third partials","Hypothetical storage"]) if rows else "Awaiting archived coordinate counts."
 
 
 def _experiment_milestones(study):
@@ -274,7 +295,7 @@ def _hybrid_report(root,study):
     data = study["hybrid"]
     headline = (f"TinyStories hybrid follow-up: {data['completed_arms']} of 48 full runs and "
                 f"{data['completed_trunks']} of 8 shared checkpoints complete. "
-                f"Geometric decision: {data['status']}.")
+                f"Width analysis status is “{data['status']}”. " + hybrid_bound_text(data)).strip()
     material = ["# Hybrid schedules on TinyStories",headline,
                 "[Frozen protocol and decision rule](preregistration.md) · "
                 "[Interactive measurement and run selector](../../docs/index.html#curves)",
@@ -316,19 +337,23 @@ def _hybrid_report(root,study):
     if data["pairs"]:
         material += ["## Adaptive minus comparator per seed","Positive Δwidth favors the adaptive schedule. "
                      "Negative ΔNLL favors its prediction. Comparable fit uses the frozen 0.02-nat training threshold.",
-                     _table([[p["seed"],METHODS[p["comparator"]],fmt(p["delta"],6),fmt(p["dev_nll_delta"],6),
+                     _table([[p["seed"],METHODS[p["comparator"]],fmt(p["delta"],6),
+                              f"[{fmt(p['delta_lower'],6)}, {fmt(p['delta_upper'],6)}]",p["sign"],fmt(p["dev_nll_delta"],6),
                               fmt(p["train_probe_nll_delta"],6),"yes" if p["comparable_fit"] else "no"]
-                             for p in data["pairs"]],["Seed","Comparator","Δwidth gain","Δdev NLL","Δtrain NLL","Comparable fit"])]
+                             for p in data["pairs"]],["Seed","Comparator","Midpoint Δwidth gain","Search bounds","Resolved sign","Δdev NLL","Δtrain NLL","Comparable fit"]),
+                     "A shared trunk cancels in the contrast. Open bounds reflect censoring. These are numerical "
+                     "search brackets for the measured directions. Sampling uncertainty across seeds is a separate quantity."]
     for comparator,s in data["comparisons"].items():
         lo,hi = s["median_ci"]
         material.append(f"Against {METHODS[comparator]}, the median paired width difference is {fmt(s['median_delta'],6)}, "
                         f"interval [{fmt(lo,6)}, {fmt(hi,6)}], coverage {fmt(s['ci_coverage'],4)}. "
                         f"Wins/ties/losses: {s['wins']}/{s['ties']}/{s['losses']}. "
-                        f"One-sided sign p = {fmt(s['p_raw'],5)}, Holm p = {fmt(s.get('p_holm'),5)}.")
+                        f"Nominal one-sided midpoint sign p = {fmt(s['p_raw'],5)}, Holm p = {fmt(s.get('p_holm'),5)}.")
     material += [f"The completed branches reused {data['shared_training_tokens_saved']:,} targets of optimization "
                  "compared with independently training each branch from initialization. The replay permutation "
                  "couples different seeds through their coefficient histories. The sign-test reference for this "
-                 "comparison assumes exchangeable independent pair signs. Shared donor histories make that assumption approximate. "
+                 "comparison assumes independent fair signs under its null. Adjacent pairs reuse a donor's randomness. "
+                 "Calibration of the replay p-value and median interval is unestablished. "
                  "All raw pairs are reported for inspection."]
     atomic_text(root/"reports"/"hybrid"/"results.md","\n\n".join(material)+"\n")
     return headline
@@ -338,6 +363,7 @@ def build_report(root: Path = Path(".")) -> dict:
     """Regenerate README results, PDF, experiment ledger, figures and the static dashboard."""
     root = Path(root).resolve()
     study = study_snapshot(root)
+    _update_sections(root/"docs"/"third-derivative-penalty.md",[("DENSE",_dense_storage(study),False)])
     from .seed_sensitivity import render_seed_sensitivity
     sensitivity=render_seed_sensitivity(root,study)
     study["seed_sensitivity"]=sensitivity
@@ -351,6 +377,12 @@ def build_report(root: Path = Path(".")) -> dict:
         if (measured["completed"],measured["planned"])==(study["run_inventory"]["done"],study["run_inventory"]["total"]):
             study["forecast"]=[measured["scenarios"][key]["total_hours"] for key in ("typical","slower")]
     hybrid = _hybrid_report(root,study)
+    review = "reviews/independent-scientific-audit.md"
+    audit = study["scientific_audit"]
+    audit_prose = " ".join(audit[s] for s in ("stories","abstracts") if s in audit)
+    if audit:
+        record = json.loads((root/"results"/"analysis"/"scientific-audit.json").read_text(encoding="utf-8"))
+        _update_sections(root/"reports"/review,[("FINDINGS",findings(record),True)])
     atomic_text(root/"reports"/"flatness.md",flatness_ledger(study))
     figures = build_figures(study, root / "docs" / "figures")
     study["figures"] = figures
@@ -366,6 +398,8 @@ def build_report(root: Path = Path(".")) -> dict:
                  "[Preregistration](preregistration.md)", "[Paper](paper.pdf)"]
     summary = ["# Study summary", overview, _stage_summary(study), hybrid+" [Hybrid outcomes](hybrid/results.md)",
                *status_lines(study),"[Status of every planned run](planned-runs.md#current-evidence-and-remaining-runs)", " · ".join(documents)]
+    if audit:
+        summary.insert(3,audit_prose+f" [Independent scientific audit]({review})")
     pilots = _pilot_summary(study)
     if pilots:
         summary.extend(["## Development observations", pilots])
@@ -382,12 +416,15 @@ def build_report(root: Path = Path(".")) -> dict:
              "[Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · "
              "[Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)")
     opening,side_by_side=comparison_sections(study)
+    if audit:
+        opening += "\n\n"+audit_prose+f" [Independent scientific audit](reports/{review})"
     opening+="\n\n### Current and planned runs\n\n"+"\n\n".join(status_lines(study))+"\n\n"+(
              "[Finished, active and planned experiments](reports/planned-runs.md#current-evidence-and-remaining-runs) · "
              "[Live measurements](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer)")
     _update_sections(root/"reports"/"planned-runs.md",[("RUNS",matrix_markdown(study),False)])
     _update_sections(root/"reports"/"plan.md",[("STATUS","\n\n".join(["## Current evidence",*status_lines(study),
                      _stage_summary(study),hybrid+" [Hybrid results](hybrid/results.md)",
+                     f"[Independent verification of the available evidence]({review})" if audit else "",
                      "[Execution matrix](planned-runs.md#current-evidence-and-remaining-runs) · [Flatness ledger](flatness.md)"]),False)])
     seed_status=("The final seed analysis is complete. It gives the across-seed spread and the range of medians "
                  "when each paired seed is omitted in turn." if sensitivity else

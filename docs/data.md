@@ -17,6 +17,8 @@ The audit excludes any lower-priority document that reaches Jaccard similarity 4
 
 ## Token and evidence files
 
+The independent post-hoc check found exact passages shared by retained TinyStories training and test documents. Its per-seed counts intersect the matches with the complete input-and-target windows actually selected during training. The released aggregate test NLL cannot isolate the affected stories. [Exposure by seed and matching criteria](../reports/reviews/independent-scientific-audit.md) · [Exact substring deduplication](https://aclanthology.org/2022.acl-long.577/)
+
 - Stories use byte-level BPE with a complete byte alphabet, one end-of-text symbol, 4,096 entries, and all retained training documents. Abstracts reuse the exact tokenizer bytes of the base model. The manifest separates the largest usable tokenizer ID plus one from Pythia’s padded output-head width. [BPE trainer](https://huggingface.co/docs/tokenizers/en/api/trainers) · [Pinned base checkpoint](https://huggingface.co/EleutherAI/pythia-410m/tree/9879c9b5f8bea9051dcb0e68dff21493d67e9d4f)
 - Each split is a contiguous little-endian uint16 file ordered by source row, with one appended EOS per document and no injected BOS. The model can see previous documents in a packed window across EOS boundaries. Context and next-target shifting belong to the training/evaluation code. An example file opens with `numpy.memmap(stage_dir / "train.bin", dtype="<u2", mode="r")`.
 - `documents.jsonl` gives each retained document’s source ID, normalized content hash, starting token, and length including EOS. Abstracts additionally include the submitted timestamp. `rejections.jsonl` lists rejected document IDs and reasons. These two files contain metadata rather than copies of source documents.

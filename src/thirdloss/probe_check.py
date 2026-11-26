@@ -3,6 +3,7 @@
 import hashlib
 import time
 
+import numpy as np
 import torch
 
 from .models import build_model, logits_of, token_loss, trainable_digest
@@ -80,6 +81,16 @@ def verify_pretrained(project,device):
     return result
 
 
+def choose_scoring_batch(records):
+    """Apply the registered speed, NLL, predicted-ID and memory limits to aligned training windows."""
+    reference = records[0]
+    qualified = [r for r in records[1:] if r["tokens"] == reference["tokens"]
+                 and abs(r["nll"]-reference["nll"]) <= 2e-6 and r["top1_mismatches"] <= 1
+                 and r["targets_per_second"] >= 1.1*reference["targets_per_second"]
+                 and (r["peak_allocated_mib"] is None or r["peak_allocated_mib"] <= 7*1024)]
+    return max(qualified,key=lambda r:r["targets_per_second"]) if qualified else reference
+
+
 def benchmark_scoring(project,device):
     """Measure physical inference batch sizes on the same spaced *training* windows."""
     from .evaluation import score
@@ -96,14 +107,25 @@ def benchmark_scoring(project,device):
         seconds=time.perf_counter()-start
         records.append(dict(batch=batch,seconds=seconds,targets_per_second=metrics["tokens"]/seconds,
                             peak_allocated_mib=torch.cuda.max_memory_allocated(device)/2**20 if device.type=="cuda" else None,**metrics))
-    reference=records[0]
-    qualified=[r for r in records[1:] if abs(r["nll"]-reference["nll"])<=2e-6
-               and abs(r["accuracy"]-reference["accuracy"])*r["tokens"]<=1
-               and r["targets_per_second"]>=1.1*reference["targets_per_second"]
-               and (r["peak_allocated_mib"] is None or r["peak_allocated_mib"]<=7*1024)]
-    chosen=max(qualified,key=lambda r:r["targets_per_second"]) if qualified else reference
+    # Collect aligned token IDs outside the timed benchmark, using the identical fixed windows.
+    reference_ids = None
+    for row in records:
+        chunks = []
+        score(model,path,device,row["batch"],limit_windows=256,top1_sink=chunks.append)
+        ids = np.concatenate(chunks).astype("<i8",copy=False)
+        if reference_ids is None:
+            reference_ids = ids
+        if len(ids) != row["tokens"] or ids.shape != reference_ids.shape:
+            raise ValueError("Scoring batches must cover identical ordered target positions")
+        row["top1_mismatches"] = int(np.count_nonzero(ids != reference_ids))
+        row["top1_sha256"] = hashlib.sha256(ids.tobytes()).hexdigest()
+    chosen=choose_scoring_batch(records)
     result={"timestamp":time_now(),"split":"train","device":str(device),"initial_trainable_sha256":trainable_digest(model),
             "records":records,"selected_batch":chosen["batch"]}
-    write_json(project/"results"/"verification"/"pythia-scoring-batches.json",result)
+    path = project/"results"/"verification"/"pythia-scoring-batches.json"
+    if path.exists():
+        # Downstream runs cite the original selection. A subsequent benchmark is a new observation.
+        path = path.with_name("pythia-scoring-batches-tokenwise.json")
+    write_json(path,result)
     print(result,flush=True)
     return result

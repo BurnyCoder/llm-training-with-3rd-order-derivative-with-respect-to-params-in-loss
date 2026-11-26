@@ -97,9 +97,11 @@ def test_width_inference_requires_eight_pairs_and_keeps_censoring():
             base={"baseline_nll":2.,"weights_sha256":"same"}
             records.append(dict(seed=seed,method=arm,phase="hybrid",finished_at="today",tokens=2**24,dev_nll=3.,
                                 initial_trainable_sha256=str(seed),parent_restart_sha256=str(seed),
-                                data_manifest_sha256="data",widths={"2048":{**base,"width":1.},"4096":{**base,"width":w}}))
+                                data_manifest_sha256="data",widths={"2048":{**base,"width":1.,"width_lower":.99,"width_upper":1.01},
+                                "4096":{**base,"width":w,"width_lower":w-.01,"width_upper":w+.01}}))
     evidence = hybrid_results(records)
-    assert evidence["status"]=="both width comparisons passed"
+    assert "nominal" in evidence["status"]
+    assert evidence["comparisons"]["replay"]["dependent_pairs"]
     assert evidence["comparisons"]["late"]["p_holm"]==2/256
     records[-1]["widths"]["4096"]["width"]=None
     evidence = hybrid_results(records)

@@ -6,9 +6,11 @@ Recorded 90 runs, including 89 with a completed summary.
 
 **Research abstracts.** Awaiting paired test results (4 of 8 full-horizon training triplets).
 
-TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid outcomes](hybrid/results.md)
+The post-hoc copy check found exact passages of at least 50 tokens in 26 of 21,990 test stories. At the registered training horizon, the sampled windows contained such passages from 3–11 test stories per seed. The archived test losses cover the whole split. Their sensitivity to removing these stories is unknown. On 32,768 training targets the batch-size benchmark recorded 13,185 correct at batch 2 and 13,184 at batch 16. The aggregate counts leave token-by-token prediction agreement undetermined. [Independent scientific audit](reviews/independent-scientific-audit.md)
 
-**Snapshot at 2026-11-26T11:46:47+00:00** · 201/305 experimental milestones complete.
+TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Width analysis status is “awaiting eight paired width measurements”. Adaptive was narrower than the fixed ramp in 4 bracket-resolved pairs. Even the most favorable completion of the eight planned pairs gives raw p ≥ 0.63671875. The registered joint width-superiority criterion is unreachable. [Hybrid outcomes](hybrid/results.md)
+
+**Snapshot at 2026-11-26T12:35:20+00:00** · 201/305 experimental milestones complete.
 
 **Recorded activity** · Experiments paused by request. The remaining runs have no scheduled start date.
 
@@ -73,7 +75,7 @@ The measured remaining-time scenarios are 18.82–19.42 machine-hours.
 
 ### TinyStories
 
-| Comparator | Wins | Ties | Losses | Median ΔNLL | Median interval | Coverage | Sign-test p | Holm p |
+| Comparator | Wins | Ties | Losses | Median ΔNLL | Marginal median interval | Coverage | Sign-test p | Holm p |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Ordinary AdamW | 4 | 0 | 4 | 0.00003 | [-0.00068, 0.00044] | 0.9922 | 0.63672 | 0.63672 |
 | Hessian trace | 8 | 0 | 0 | -0.00022 | [-0.00059, -0.00008] | 0.9922 | 0.00391 | 0.00781 |
@@ -97,7 +99,9 @@ The measured remaining-time scenarios are 18.82–19.42 machine-hours.
 | Hessian trace | 7 | 2.54133 | 2.54155 | -0.00023 |
 | Hessian trace | 8 | 2.53893 | 2.53951 | -0.00059 |
 
-### TinyStories at equal training time
+### TinyStories at the shared training-time cutoff
+
+Each row uses the latest fixed-window observation at or before the cutoff.
 
 | Seed | Common cutoff (s) | Method | Recorded checkpoint (s) | Training tokens | Dev NLL |
 | --- | --- | --- | --- | --- | --- |
@@ -126,7 +130,9 @@ The measured remaining-time scenarios are 18.82–19.42 machine-hours.
 | 8 | 127.8 | Hessian trace | 121.2 | 8,388,608 | 2.74887 |
 | 8 | 127.8 | Third derivative | 120.9 | 4,718,592 | 3.04410 |
 
-### Research abstracts at equal training time
+### Research abstracts at the shared training-time cutoff
+
+Each row uses the latest fixed-window observation at or before the cutoff.
 
 | Seed | Common cutoff (s) | Method | Recorded checkpoint (s) | Training tokens | Dev NLL |
 | --- | --- | --- | --- | --- | --- |

@@ -302,6 +302,14 @@ function showEvidence() {
     (outcome.n_complete_seeds || 0) + " of " + (outcome.n_expected_seeds || 8) + ".";
   const target = element("stats");
   target.replaceChildren();
+  const audit = study.scientific_audit || {};
+  if (audit[stage]) target.append(node("p", audit[stage]));
+  const fixed = study.hybrid?.attainability?.late;
+  if (stage === "stories" && fixed?.best_raw_p > .05) {
+    target.append(node("p", "Adaptive had a narrower measured width gain than the fixed ramp in " +
+      fixed.narrower + " resolved pairs. Even if every remaining pair favors adaptive, the raw p-value is at least " +
+      number(fixed.best_raw_p, 8) + ". The registered joint width criterion is unreachable. The replay pairs share donor randomness."));
+  }
   const pilots = (study.pilot_comparisons || {})[stage] || [];
   if (pilots.length) {
     const heading = node("details");
@@ -313,7 +321,7 @@ function showEvidence() {
   }
   const entries = Object.entries(outcome.comparisons || {});
   if (entries.length) {
-    target.append(table(["Comparator", "Wins / ties / losses", "Median ΔNLL", "Median interval", "Coverage", "Holm p"],
+    target.append(table(["Comparator", "Wins / ties / losses", "Median ΔNLL", "Marginal median interval", "Coverage", "Holm p"],
       entries.map(([baseline, s]) => [methodName(baseline), [s.wins, s.ties, s.losses].join(" / "),
         number(s.median_delta, 5), (s.median_ci || []).map(x => number(x, 5)).join(" to "),
         number(s.ci_coverage * 100, 2) + "%", number(s.p_holm, 5)])));

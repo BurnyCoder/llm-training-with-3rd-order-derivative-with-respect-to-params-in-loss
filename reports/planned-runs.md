@@ -4,7 +4,7 @@
 
 ## Current evidence and remaining runs
 
-**Snapshot at 2026-11-26T11:46:47+00:00** · 201/305 experimental milestones complete.
+**Snapshot at 2026-11-26T12:35:20+00:00** · 201/305 experimental milestones complete.
 
 **Recorded activity** · Experiments paused by request. The remaining runs have no scheduled start date.
 

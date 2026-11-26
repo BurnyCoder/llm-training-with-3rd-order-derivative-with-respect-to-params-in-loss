@@ -4,8 +4,10 @@ import hashlib
 import io
 import json
 import re
+import shutil
 import subprocess
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 from huggingface_hub import CommitOperationAdd, CommitOperationDelete, HfApi, hf_hub_download, snapshot_download
 
@@ -158,6 +160,9 @@ def run_card(run,repo,weight=None,score=None,diagnostic=None):
            f"Full development NLL was {run['dev_nll']:.6f} nats per target. Lower NLL is better."]
     if "test_nll" in run:
         lines.append(f"Frozen-checkpoint test NLL was {run['test_nll']:.6f} nats per target.")
+        if run["stage"]=="stories":
+            lines.append("Some held-out stories share exact passages with sampled training windows. "
+                         f"The saved score covers the whole split. [Overlap by seed]({docs}/reports/reviews/independent-scientific-audit.md)")
     if run["method"]=="unigram":
         lines.append("This predictor uses add-one-smoothed training token counts. Its common score width "
                      "can be compared with the neural predictors on the same corpus.")
@@ -172,7 +177,7 @@ def run_card(run,repo,weight=None,score=None,diagnostic=None):
         lines.append(f"{diagnostic['reason']} [Numerical audit]({docs}/reports/amendments/adapter-precision.md)")
     if run["phase"] in {"branch","hybrid"}:
         lines.append(f"[Hybrid protocol]({docs}/reports/hybrid/preregistration.md) · "
-                     f"[Paired width and development results]({docs}/reports/hybrid/results.md)")
+                     f"[Paired width differences, numerical bounds and donor dependence]({docs}/reports/hybrid/results.md)")
     lines.extend(["## Flatness",checkpoint_table(run["method"],weight,score),
                   "Compare weight measurements within the same parameterization and token horizon. The shared "
                   "score probes use the same token-level perturbations within each corpus. Their value for predicting "
@@ -283,6 +288,12 @@ def publish_archive(project,storage,revision,message):
         if files:
             repositories[repo] = sync(api,repo,"model",files,cache,message)
     files = {"research/"+name:value for name,value in tree.items()}
+    evidence = json.loads(tree.get("results/analysis/scientific-audit.json", b"{}"))
+    for name,digest in evidence.get("precision",{}).get("reference_files",{}).items():
+        path = storage/"diagnostics"/name
+        if fingerprint(path,cache)["sha256"] != digest:
+            raise ValueError(f"FP64 reference digest differs for {name}")
+        files["diagnostics/"+name] = path
     for path in sorted((project/"logs").glob("*")):
         if path.is_file() and path.suffix in {".jsonl",".log"}:
             raw = path.read_bytes()
@@ -322,3 +333,42 @@ def audit_archive(project):
         raise ValueError("The published research tree differs from the committed Git blobs")
     return {"git_revision":commit,"git_files":len(tree),"archive_revision":current,
             "verified_files":{repo:len(r["files"]) for repo,r in receipt["repositories"].items()}}
+
+
+def restore_audit_inputs(project,storage,revision=None):
+    """Fetch missing numeric evidence from one publication receipt. No model is instantiated."""
+    snapshot = HfApi().repo_info(STUDY_HUB,revision=revision).sha
+    receipt = read_json(hf_hub_download(STUDY_HUB,"publication.json",revision=snapshot))
+
+    def restore(repo, name, destination):
+        record = receipt["repositories"][repo]
+        expected = record["files"][name]["sha256"]
+        if destination.exists() and fingerprint(destination)["sha256"]==expected:
+            return
+        cached = Path(hf_hub_download(repo,name,repo_type=record["type"],
+                                      revision=record.get("revision",snapshot)))
+        if fingerprint(cached)["sha256"]!=expected:
+            raise ValueError(f"Unexpected archived digest for {repo}/{name}")
+        destination.parent.mkdir(parents=True,exist_ok=True)
+        with NamedTemporaryFile(dir=destination.parent,delete=False) as handle:
+            temporary = Path(handle.name)
+        try:
+            shutil.copyfile(cached,temporary)
+            temporary.replace(destination)
+        finally:
+            temporary.unlink(missing_ok=True)
+
+    results = project/"results"
+    for stage,repo in DATA_HUB.items():
+        manifest = read_json(results/"datasets"/f"{stage}.json")
+        for name in ("manifest.json", *manifest["artifacts"]):
+            if name!="test.bin" or (results/"freeze"/f"{stage}.json").exists():
+                restore(repo,name,storage/"data"/stage/name)
+    for path in results.glob("*/summary.json"):
+        row = read_json(path)
+        if row.get("weights_name"):
+            name,run = row["weights_name"],row["id"]
+            restore(STAGE_HUB[row["stage"]],f"runs/{run}/{name}",storage/"checkpoints"/run/"export"/name)
+    for device in ("cpu","cuda"):
+        name = f"pythia-reference-{device}.safetensors"
+        restore(STUDY_HUB,"diagnostics/"+name,storage/"diagnostics"/name)

@@ -55,7 +55,7 @@ def test_hybrid_effects_use_each_comparators_own_pairs_and_width_gains(tmp_path)
 
 
 def test_final_scorecard_uses_all_eight_seeds_and_shows_holm_and_median_interval(tmp_path):
-    from thirdloss.analysis import analyze_stage
+    from frozen_fixture import analyze as analyze_stage, bind
     study=study_snapshot(tmp_path)
     study["context"]["stories"]["selection"]={"ratios":{"third":.01,"trace":.01}}
     for seed in range(1,9):
@@ -63,7 +63,7 @@ def test_final_scorecard_uses_all_eight_seeds_and_shows_holm_and_median_interval
             row=pilot(m,3.-i/10,100-i*15,.01 if i else 0.)
             row.update(id=f"{seed}-{m}",phase="confirm",seed=seed,tokens=2**24,test_nll=4.-i/10,
                        test_accuracy=.5+i/100,test_perplexity=exp(4.-i/10),freeze_id="frozen",test_manifest_sha256="split",test_tokens=128)
-            study["runs"].append(row)
+            study["runs"].append(bind(row))
     study["stages"]["stories"]=analyze_stage(study["runs"],"stories")
     top,detail=comparison_sections(study)
     assert "TinyStories pretraining · test" in top and "8/8 full-budget seeds" in top
