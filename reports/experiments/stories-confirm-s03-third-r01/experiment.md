@@ -6,9 +6,11 @@ Run `stories-confirm-s03-third-r01` · [raw records](../../../results/stories-co
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Third derivative | confirm | 3 | 0.010 | 16,777,216 | 2.5486 | 12.7898 | 2.5496 | 12.8019 | 38,410 | complete |
 
-Training time is 436.8 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4617. Test token accuracy is 0.4620.
+Training time is 436.8 seconds. Peak allocated GPU memory is 608.2 MiB. Full-development token accuracy is 0.4617. Test token accuracy is 0.4620.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-confirm-s03-third-r01/config.json)
+
+Training and development · Complete. Frozen test · Complete. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

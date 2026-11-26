@@ -6,9 +6,11 @@ Run `abstracts-confirm-s02-ce-r00` · [raw records](../../../results/abstracts-c
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Research abstracts | Ordinary AdamW | confirm | 2 | 0.000 | 524,288 | 3.0373 | 20.8494 | — | — | 1,591 | complete |
 
-Training time is 329.6 seconds. Peak allocated GPU memory is 2,346.3 MiB. Development token accuracy is 0.4247. Test token accuracy is —.
+Training time is 329.6 seconds. Peak allocated GPU memory is 2,346.3 MiB. Full-development token accuracy is 0.4247. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/abstracts-confirm-s02-ce-r00/config.json)
+
+Training and development · Complete. Frozen test · Awaiting freeze. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

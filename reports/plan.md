@@ -4,9 +4,9 @@
 
 ## Current evidence
 
-**Snapshot at 2026-11-26T03:47:00+00:00** · 187/305 experimental milestones complete.
+**Snapshot at 2026-11-26T03:49:53+00:00** · 187/305 experimental milestones complete.
 
-**Recorded activity** · Research abstracts · Hessian trace · confirm seed 2 (1%) · Training · 118,784/524,288 training targets.
+**Recorded activity** · Research abstracts · Hessian trace · confirm seed 2 (1%) · Training · 155,648/524,288 training targets.
 
 **Next scheduled work** · Research abstracts · Third derivative · confirm seed 3 (1%).
 

@@ -6,9 +6,11 @@ Run `abstracts-pilot-s00-trace-r03-fp64` · [raw records](../../../results/abstr
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Research abstracts | Hessian trace | pilot | 0 | 0.030 | 65,536 | 3.1141 | 22.5136 | — | — | 427 | complete |
 
-Training time is 153.6 seconds. Peak allocated GPU memory is 2,346.3 MiB. Development token accuracy is 0.4132. Test token accuracy is —.
+Training time is 153.6 seconds. Peak allocated GPU memory is 2,346.3 MiB. Full-development token accuracy is 0.4132. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/abstracts-pilot-s00-trace-r03-fp64/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

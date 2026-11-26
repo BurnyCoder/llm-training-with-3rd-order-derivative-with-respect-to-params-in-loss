@@ -6,9 +6,11 @@ Run `stories-hybrid-s22-always-r01` · [raw records](../../../results/stories-hy
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Always-on hybrid | hybrid | 22 | 0.010 | 16,777,216 | 2.5460 | 12.7556 | — | — | 25,017 | complete |
 
-Training time is 670.6 seconds. Peak allocated GPU memory is 621.3 MiB. Development token accuracy is 0.4627. Test token accuracy is —.
+Training time is 670.6 seconds. Peak allocated GPU memory is 621.3 MiB. Full-development token accuracy is 0.4627. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-hybrid-s22-always-r01/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

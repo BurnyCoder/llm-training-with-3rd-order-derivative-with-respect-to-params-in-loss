@@ -1,12 +1,22 @@
 # Study summary
 
-Recorded 82 runs, including 82 with a completed summary.
+Recorded 83 runs, including 82 with a completed summary.
 
 **TinyStories.** The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781).
 
 **Research abstracts.** Awaiting paired test results (1 of 8 full-horizon training triplets).
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid outcomes](hybrid/results.md)
+
+**Snapshot at 2026-11-26T03:49:53+00:00** · 187/305 experimental milestones complete.
+
+**Recorded activity** · Research abstracts · Hessian trace · confirm seed 2 (1%) · Training · 155,648/524,288 training targets.
+
+**Next scheduled work** · Research abstracts · Third derivative · confirm seed 3 (1%).
+
+The measured remaining-time scenarios are 25.17–26.04 machine-hours.
+
+[Status of every planned run](planned-runs.md#current-evidence-and-remaining-runs)
 
 [Interactive explorer](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Per-run ledger](experiments/experiments.md) · [Final seed sensitivity](seed-sensitivity.md) · [Preregistration](preregistration.md) · [Paper](paper.pdf)
 

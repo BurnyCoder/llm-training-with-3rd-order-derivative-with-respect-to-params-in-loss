@@ -6,9 +6,11 @@ Run `stories-hybrid-s23-trace-r01` · [raw records](../../../results/stories-hyb
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Hessian trace | hybrid | 23 | 0.010 | 16,777,216 | 2.5423 | 12.7083 | — | — | 59,471 | complete |
 
-Training time is 282.1 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4632. Test token accuracy is —.
+Training time is 282.1 seconds. Peak allocated GPU memory is 608.2 MiB. Full-development token accuracy is 0.4632. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-hybrid-s23-trace-r01/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

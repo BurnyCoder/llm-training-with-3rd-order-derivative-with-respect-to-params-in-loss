@@ -6,9 +6,11 @@ Run `stories-pilot-s00-hessian_norm-r03` · [raw records](../../../results/stori
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Squared Hessian norm | pilot | 0 | 0.030 | 2,097,152 | 3.8787 | 48.3603 | — | — | 83,790 | complete |
 
-Training time is 25.0 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.3230. Test token accuracy is —.
+Training time is 25.0 seconds. Peak allocated GPU memory is 608.2 MiB. Full-development token accuracy is 0.3230. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-pilot-s00-hessian_norm-r03/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

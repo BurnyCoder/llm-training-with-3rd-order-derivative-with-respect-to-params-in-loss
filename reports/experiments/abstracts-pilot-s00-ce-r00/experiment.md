@@ -6,9 +6,11 @@ Run `abstracts-pilot-s00-ce-r00` · [raw records](../../../results/abstracts-pil
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Research abstracts | Ordinary AdamW | pilot | 0 | 0.000 | 65,536 | 3.1139 | 22.5097 | — | — | 1,659 | complete |
 
-Training time is 39.5 seconds. Peak allocated GPU memory is 2,346.3 MiB. Development token accuracy is 0.4132. Test token accuracy is —.
+Training time is 39.5 seconds. Peak allocated GPU memory is 2,346.3 MiB. Full-development token accuracy is 0.4132. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/abstracts-pilot-s00-ce-r00/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

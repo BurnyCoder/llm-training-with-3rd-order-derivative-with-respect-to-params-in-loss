@@ -21,6 +21,33 @@ The research background includes flat minima, Hessian measurements and third der
 
 [Side-by-side scores, accuracy, speed and memory](#side-by-side-comparisons) · [Flatness by variant and baseline](#all-variants-and-baselines) · [Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Paired tests and intervals](reports/summary.md)
 
+### Flatness at a glance
+
+These medians compare the same seeds and training windows within each model family. Weight width measures how far the trainable weights can move before NLL rises by 0.1 nats. Score width applies the corresponding test to token scores in RMS logit units. Their relationship to held-out prediction is unknown.
+
+| Model and matched cohort | Statistic | AdamW | Hessian trace | Third order |
+| --- | --- | --- | --- | --- |
+| TinyStories pretraining · 8/8 full-budget seeds | Directional width<br>↑ Wider is flatter | 12.807 | 12.899 | 12.913 |
+| TinyStories pretraining · 8/8 full-budget seeds | RMS Hessian curvature<br>↓ Less local bending | 0.590453 | 0.581726 | 0.573339 |
+| TinyStories pretraining · 8/8 full-budget seeds | Common score width<br>↑ More score tolerance | 1.0815 | 1.0815 | 1.0813 |
+| Pythia-410M adapters · 1/8 full-budget seeds | Directional width<br>↑ Wider is flatter | 20.132 | 20.270 | 20.313 |
+| Pythia-410M adapters · 1/8 full-budget seeds | RMS Hessian curvature<br>↓ Less local bending | 0.555644 | 0.624955 | 0.605748 |
+| Pythia-410M adapters · 1/8 full-budget seeds | Common score width<br>↑ More score tolerance | 1.1054 | 1.1057 | 1.1055 |
+
+[All variants, initial models and unigram references](#all-variants-and-baselines) · [Per-seed widths, search brackets and curvature](reports/flatness.md)
+
+### Current and planned runs
+
+**Snapshot at 2026-11-26T03:49:53+00:00** · 187/305 experimental milestones complete.
+
+**Recorded activity** · Research abstracts · Hessian trace · confirm seed 2 (1%) · Training · 155,648/524,288 training targets.
+
+**Next scheduled work** · Research abstracts · Third derivative · confirm seed 3 (1%).
+
+The measured remaining-time scenarios are 25.17–26.04 machine-hours.
+
+[Finished, active and planned experiments](reports/planned-runs.md#current-evidence-and-remaining-runs) · [Live measurements](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer)
+
 <!-- READOUT:END -->
 
 Sepp Hochreiter and Jürgen Schmidhuber proposed that **among models that fit the training data equally well, those in flatter minima may generalize better to unseen data**. In a flat minimum, many nearby weight settings still fit. If some weights can be rounded more coarsely without spoiling the fit, a good predictor can take fewer bits to describe under a fixed encoding. Their minimum-description-length argument links that shorter description to a lower risk of overfitting. [Hochreiter and Schmidhuber, *Flat Minima* (1997), §1](https://people.idsia.ch/~juergen/fm/node1.html)
@@ -209,8 +236,9 @@ Each row uses the same fixed training windows and probe directions within its st
 | Middle 50% of directions<br>Descriptive spread | 12.567–13.040 | 12.684–13.125 | 12.714–13.115 |
 | Rays at limit / tested<br>Measurement coverage | 0/256 | 0/256 | 0/256 |
 | Unperturbed probe NLL<br>↓ Lower fits these windows better | 2.58516 | 2.58323 | 2.58409 |
-| RMS Hessian curvature<br>↓ Lower means less local bending | 0.590453 | 0.581726 | 0.573339 |
+| RMS Hessian curvature<br>↓ Less local bending | 0.590453 | 0.581726 | 0.573339 |
 | Signed Hessian trace / parameter<br>No general better direction | +0.00493753 | +0.00494619 | +0.00485706 |
+| Common score width<br>↑ More score tolerance | 1.0815 | 1.0815 | 1.0813 |
 
 **Pythia-410M adapters · full-budget checkpoints · seeds 1 · 524,288 training targets**
 
@@ -221,8 +249,9 @@ Each row uses the same fixed training windows and probe directions within its st
 | Middle 50% of directions<br>Descriptive spread | 19.362–20.737 | 19.558–20.675 | 19.476–20.931 |
 | Rays at limit / tested<br>Measurement coverage | 0/32 | 0/32 | 0/32 |
 | Unperturbed probe NLL<br>↓ Lower fits these windows better | 2.84601 | 2.84668 | 2.84606 |
-| RMS Hessian curvature<br>↓ Lower means less local bending | 0.555644 | 0.624955 | 0.605748 |
+| RMS Hessian curvature<br>↓ Less local bending | 0.555644 | 0.624955 | 0.605748 |
 | Signed Hessian trace / parameter<br>No general better direction | +0.00201225 | +0.00159403 | +0.00183383 |
+| Common score width<br>↑ More score tolerance | 1.1054 | 1.1057 | 1.1055 |
 
 For the primary comparison, TinyStories uses all weights and Pythia uses the LoRA factors. Compare widths within each model. The link gives every run, directional bracket and Hessian probe. [Flatness statistics and raw files](reports/flatness.md) · [Secondary measurement design](reports/amendments/checkpoint-flatness.md)
 
@@ -321,7 +350,7 @@ Seed sensitivity is the final stage, after both primary test evaluations, all hy
 
 [Explore the results](https://burnycoder.github.io/llm-training-with-penalizing-rapid-changes-of-curvature-of-its-loss-with-derivative-of-hessian/) · [Hugging Face explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/third-derivatives-in-language-model-training-6b067fb7d5ae3eca49ebb378) · [Paper](reports/paper.pdf) · [Run ledger](reports/experiments/experiments.md)
 
-Recorded 82 runs, including 82 with a completed summary.
+Recorded 83 runs, including 82 with a completed summary.
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
 

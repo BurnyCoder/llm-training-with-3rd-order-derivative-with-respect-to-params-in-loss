@@ -6,9 +6,11 @@ Run `stories-pilot-s00-trace-r10` · [raw records](../../../results/stories-pilo
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Hessian trace | pilot | 0 | 0.100 | 2,097,152 | 3.8979 | 49.2988 | — | — | 70,730 | complete |
 
-Training time is 29.7 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.3206. Test token accuracy is —.
+Training time is 29.7 seconds. Peak allocated GPU memory is 608.2 MiB. Full-development token accuracy is 0.3206. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-pilot-s00-trace-r10/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

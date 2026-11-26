@@ -6,9 +6,11 @@ Run `stories-confirm-s04-trace-r01` · [raw records](../../../results/stories-co
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Hessian trace | confirm | 4 | 0.010 | 16,777,216 | 2.5438 | 12.7276 | 2.5444 | 12.7350 | 70,292 | complete |
 
-Training time is 238.7 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4630. Test token accuracy is 0.4631.
+Training time is 238.7 seconds. Peak allocated GPU memory is 608.2 MiB. Full-development token accuracy is 0.4630. Test token accuracy is 0.4631.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-confirm-s04-trace-r01/config.json)
+
+Training and development · Complete. Frozen test · Complete. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

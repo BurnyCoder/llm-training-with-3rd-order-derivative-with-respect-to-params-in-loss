@@ -6,9 +6,11 @@ Run `stories-branch-s24-trunk-r01` · [raw records](../../../results/stories-bra
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Shared trace checkpoint | branch | 24 | 0.010 | 8,388,608 | 2.7639 | 15.8611 | — | — | 60,780 | complete |
 
-Training time is 138.0 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4326. Test token accuracy is —.
+Training time is 138.0 seconds. Peak allocated GPU memory is 608.2 MiB. Full-development token accuracy is 0.4326. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-branch-s24-trunk-r01/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

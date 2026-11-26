@@ -6,9 +6,11 @@ Run `stories-control-s00-unigram-r00` · [raw records](../../../results/stories-
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Unigram | control | 0 | 0.000 | 0 | 6.0036 | 404.8654 | — | — | 0 | complete |
 
-Training time is 0.0 seconds. Peak allocated GPU memory is 0.1 MiB. Development token accuracy is 0.0715. Test token accuracy is —.
+Training time is 0.0 seconds. Peak allocated GPU memory is 0.1 MiB. Full-development token accuracy is 0.0715. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-control-s00-unigram-r00/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

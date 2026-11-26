@@ -6,9 +6,11 @@ Run `stories-hybrid-s23-adaptive-r01` · [raw records](../../../results/stories-
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Curvature-dependent hybrid | hybrid | 23 | 0.010 | 16,777,216 | 2.5423 | 12.7084 | — | — | 37,872 | complete |
 
-Training time is 443.0 seconds. Peak allocated GPU memory is 617.3 MiB. Development token accuracy is 0.4632. Test token accuracy is —.
+Training time is 443.0 seconds. Peak allocated GPU memory is 617.3 MiB. Full-development token accuracy is 0.4632. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-hybrid-s23-adaptive-r01/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

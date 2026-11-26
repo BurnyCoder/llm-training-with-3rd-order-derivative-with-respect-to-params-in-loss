@@ -6,9 +6,11 @@ Run `abstracts-confirm-s01-third-r01-fp64` · [raw records](../../../results/abs
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Research abstracts | Third derivative | confirm | 1 | 0.010 | 524,288 | 3.0368 | 20.8375 | — | — | 128 | complete |
 
-Training time is 4,098.6 seconds. Peak allocated GPU memory is 2,346.3 MiB. Development token accuracy is 0.4248. Test token accuracy is —.
+Training time is 4,098.6 seconds. Peak allocated GPU memory is 2,346.3 MiB. Full-development token accuracy is 0.4248. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/abstracts-confirm-s01-third-r01-fp64/config.json)
+
+Training and development · Complete. Frozen test · Awaiting freeze. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

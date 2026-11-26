@@ -6,9 +6,11 @@ Run `stories-control-s00-initial-r00` · [raw records](../../../results/stories-
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Initial checkpoint | control | 0 | 0.000 | 0 | 8.3437 | 4,203.5319 | — | — | 0 | complete |
 
-Training time is 0.0 seconds. Peak allocated GPU memory is 138.0 MiB. Development token accuracy is 0.0031. Test token accuracy is —.
+Training time is 0.0 seconds. Peak allocated GPU memory is 138.0 MiB. Full-development token accuracy is 0.0031. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-control-s00-initial-r00/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

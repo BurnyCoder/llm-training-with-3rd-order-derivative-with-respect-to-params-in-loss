@@ -6,9 +6,11 @@ Run `stories-pilot-s00-ce-r00` · [raw records](../../../results/stories-pilot-s
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Ordinary AdamW | pilot | 0 | 0.000 | 2,097,152 | 3.8770 | 48.2780 | — | — | 123,871 | complete |
 
-Training time is 16.9 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.3234. Test token accuracy is —.
+Training time is 16.9 seconds. Peak allocated GPU memory is 608.2 MiB. Full-development token accuracy is 0.3234. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-pilot-s00-ce-r00/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

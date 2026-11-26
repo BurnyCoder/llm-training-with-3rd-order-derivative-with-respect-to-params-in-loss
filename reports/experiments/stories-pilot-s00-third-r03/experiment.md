@@ -6,9 +6,11 @@ Run `stories-pilot-s00-third-r03` · [raw records](../../../results/stories-pilo
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Third derivative | pilot | 0 | 0.030 | 2,097,152 | 3.8778 | 48.3167 | — | — | 46,072 | complete |
 
-Training time is 45.5 seconds. Peak allocated GPU memory is 608.6 MiB. Development token accuracy is 0.3231. Test token accuracy is —.
+Training time is 45.5 seconds. Peak allocated GPU memory is 608.6 MiB. Full-development token accuracy is 0.3231. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-pilot-s00-third-r03/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

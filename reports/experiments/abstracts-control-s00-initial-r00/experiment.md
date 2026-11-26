@@ -6,9 +6,11 @@ Run `abstracts-control-s00-initial-r00` · [raw records](../../../results/abstra
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Research abstracts | Initial checkpoint | control | 0 | 0.000 | 0 | 3.2517 | 25.8335 | — | — | 0 | complete |
 
-Training time is 0.0 seconds. Peak allocated GPU memory is 2,337.3 MiB. Development token accuracy is 0.3991. Test token accuracy is —.
+Training time is 0.0 seconds. Peak allocated GPU memory is 2,337.3 MiB. Full-development token accuracy is 0.3991. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/abstracts-control-s00-initial-r00/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

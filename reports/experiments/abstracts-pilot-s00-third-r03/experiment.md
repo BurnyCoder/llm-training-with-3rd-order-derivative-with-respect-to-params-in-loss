@@ -6,9 +6,11 @@ Run `abstracts-pilot-s00-third-r03` · [raw records](../../../results/abstracts-
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Research abstracts | Third derivative | diagnostic | 0 | 0.030 | 65,536 | 3.1168 | 22.5739 | — | — | 907 | complete |
 
-Training time is 72.3 seconds. Peak allocated GPU memory is 6,369.6 MiB. Development token accuracy is 0.4128. Test token accuracy is —.
+Training time is 72.3 seconds. Peak allocated GPU memory is 6,369.6 MiB. Full-development token accuracy is 0.4128. Test token accuracy is —.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/abstracts-pilot-s00-third-r03/config.json)
+
+Training and development · Complete. Frozen test · —. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 

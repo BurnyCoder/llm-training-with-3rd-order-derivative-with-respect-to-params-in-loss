@@ -6,9 +6,11 @@ Run `stories-confirm-s02-ce-r00` · [raw records](../../../results/stories-confi
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TinyStories | Ordinary AdamW | confirm | 2 | 0.000 | 16,777,216 | 2.5440 | 12.7299 | 2.5445 | 12.7366 | 130,533 | complete |
 
-Training time is 128.5 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4624. Test token accuracy is 0.4627.
+Training time is 128.5 seconds. Peak allocated GPU memory is 608.2 MiB. Full-development token accuracy is 0.4624. Test token accuracy is 0.4627.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-confirm-s02-ce-r00/config.json)
+
+Training and development · Complete. Frozen test · Complete. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
 
 ## Checkpoint flatness
 
