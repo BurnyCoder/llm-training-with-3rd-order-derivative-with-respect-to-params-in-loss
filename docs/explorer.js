@@ -12,7 +12,7 @@ const metrics = {
   dev_nll: ["Development NLL", "nats / target token"], loss: ["Training NLL", "nats / target token"],
   dev_accuracy: ["Development accuracy", "% correct"], accuracy: ["Training accuracy", "% correct"],
   penalty: ["Weighted active penalty", "weighted loss contribution"],
-  raw_third: ["Third-derivative norm estimate", "squared Frobenius estimate"],
+  raw_third: ["Squared third-derivative norm estimate", "two-window squared Frobenius norm estimate"],
   raw_trace: ["Hessian trace estimate", "signed trace estimate"],
   raw_hessian_norm: ["Squared Hessian norm estimate", "squared Frobenius estimate"],
   width: ["Directional width", "Euclidean weight distance · wider is flatter"], width_probe_nll: ["Width-probe loss", "nats / target token"],
