@@ -1,20 +1,20 @@
 # Study summary
 
-Recorded 88 runs, including 88 with a completed summary.
+Recorded 89 runs, including 89 with a completed summary.
 
 **TinyStories.** The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781).
 
-**Research abstracts.** Awaiting paired test results (3 of 8 full-horizon training triplets).
+**Research abstracts.** Awaiting paired test results (4 of 8 full-horizon training triplets).
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid outcomes](hybrid/results.md)
 
-**Snapshot at 2026-11-26T08:53:01+00:00** · 199/305 experimental milestones complete.
+**Snapshot at 2026-11-26T09:32:34+00:00** · 200/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
-**Next scheduled work** · Research abstracts · Hessian trace · confirm seed 4 (1%).
+**Next scheduled work** · Research abstracts · Third derivative · confirm seed 5 (1%).
 
-The measured remaining-time scenarios are 19.59–20.23 machine-hours.
+The measured remaining-time scenarios are 18.87–19.51 machine-hours.
 
 [Status of every planned run](planned-runs.md#current-evidence-and-remaining-runs)
 
@@ -32,7 +32,7 @@ The measured remaining-time scenarios are 19.59–20.23 machine-hours.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Research abstracts | confirm | Ordinary AdamW | 0.000 | 524,288 | 4 | 3.0369 | 20.8416 | — | — |
 | Research abstracts | confirm | Third derivative | 0.010 | 524,288 | 4 | 3.0370 | 20.8425 | — | — |
-| Research abstracts | confirm | Hessian trace | 0.010 | 524,288 | 3 | 3.0370 | 20.8418 | — | — |
+| Research abstracts | confirm | Hessian trace | 0.010 | 524,288 | 4 | 3.0368 | 20.8394 | — | — |
 | Research abstracts | control | Initial checkpoint | 0.000 | 0 | 1 | 3.2517 | 25.8335 | — | — |
 | Research abstracts | control | Unigram | 0.000 | 0 | 1 | 7.3306 | 1,526.3141 | — | — |
 | Research abstracts | pilot | Ordinary AdamW | 0.000 | 65,536 | 1 | 3.1139 | 22.5097 | — | — |
@@ -139,6 +139,9 @@ The measured remaining-time scenarios are 19.59–20.23 machine-hours.
 | 3 | 318.3 | Ordinary AdamW | 318.3 | 524,288 | 3.00681 |
 | 3 | 318.3 | Hessian trace | 308.4 | 98,304 | 3.04877 |
 | 3 | 318.3 | Third derivative | 212.4 | 32,768 | 3.13038 |
+| 4 | 325.6 | Ordinary AdamW | 325.6 | 524,288 | 3.00634 |
+| 4 | 325.6 | Hessian trace | 302.0 | 98,304 | 3.04726 |
+| 4 | 325.6 | Third derivative | 278.0 | 32,768 | 3.13198 |
 
 ### Research abstracts after subtracting host derivative calls
 
@@ -155,6 +158,9 @@ This supplementary clock excludes the measured host probe calls and their transf
 | 3 | 318.3 | Ordinary AdamW | 318.3 | 524,288 | 3.00681 |
 | 3 | 318.3 | Hessian trace | 311.5 | 491,520 | 3.00756 |
 | 3 | 318.3 | Third derivative | 287.6 | 229,376 | 3.01960 |
+| 4 | 325.6 | Ordinary AdamW | 325.6 | 524,288 | 3.00634 |
+| 4 | 325.6 | Hessian trace | 304.5 | 393,216 | 3.00889 |
+| 4 | 325.6 | Third derivative | 304.3 | 262,144 | 3.01656 |
 
 ![Computation graph](../docs/figures/architecture.png)
 

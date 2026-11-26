@@ -16,11 +16,11 @@ Does penalizing changes in loss curvature improve next-token prediction? The stu
 | Model and split | Matched evidence | Third-order NLL vs AdamW<br>↓ Lower is better | Third-order NLL vs trace<br>↓ Lower is better | Speed vs AdamW<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
 | TinyStories pretraining · test | 8/8 full-budget seeds | 0.000028 higher | 0.000222 lower | 69.4% slower |
-| Pythia-410M adapters · dev | 3/8 full-budget seeds | 0.000008 lower | 0.000118 higher | 92.8% slower |
+| Pythia-410M adapters · dev | 4/8 full-budget seeds | 0.000080 higher | 0.000162 higher | 92.4% slower |
 
 **Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
 
-**TinyStories pretraining** · The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781). **Pythia-410M adapters** · Awaiting paired test results (3 of 8 full-horizon training triplets).
+**TinyStories pretraining** · The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781). **Pythia-410M adapters** · Awaiting paired test results (4 of 8 full-horizon training triplets).
 
 [Side-by-side scores, accuracy, speed and memory](#side-by-side-comparisons) · [Flatness by variant and baseline](#all-variants-and-baselines) · [Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Paired tests and intervals](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/summary.md)
 
@@ -41,13 +41,13 @@ These medians compare the same seeds and training windows within each model fami
 
 ### Current and planned runs
 
-**Snapshot at 2026-11-26T08:53:01+00:00** · 199/305 experimental milestones complete.
+**Snapshot at 2026-11-26T09:32:34+00:00** · 200/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
-**Next scheduled work** · Research abstracts · Hessian trace · confirm seed 4 (1%).
+**Next scheduled work** · Research abstracts · Third derivative · confirm seed 5 (1%).
 
-The measured remaining-time scenarios are 19.59–20.23 machine-hours.
+The measured remaining-time scenarios are 18.87–19.51 machine-hours.
 
 [Finished, active and planned experiments](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/planned-runs.md#current-evidence-and-remaining-runs) · [Live measurements](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer)
 
@@ -84,22 +84,22 @@ A negative difference favors third order. A positive difference favors the named
 
 ### Pythia-410M adapters
 
-**Full development split · 3/8 full-budget seeds · 524,288 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/selection/abstracts.json) · [Experiment ledger](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/experiments/experiments.md)
+**Full development split · 4/8 full-budget seeds · 524,288 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/results/selection/abstracts.json) · [Experiment ledger](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/experiments/experiments.md)
 
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
-| Development NLL<br>↓ Lower is better | 3.037085 | **3.036959** | 3.037076 | 0.000008 lower | 0.000118 higher |
-| Development perplexity<br>↓ Lower is better | 20.8444 | **20.8418** | 20.8442 | 0.0002 lower | 0.0025 higher |
-| Dev top-1 accuracy<br>↑ Higher is better | 42.470% | 42.470% | **42.472%** | Tie | 0.002 pp higher |
-| Equal-time probe NLL<br>↓ Lower is better | **3.00597** | 3.04877 | 3.13520 | 0.12923 higher | 0.08161 higher |
-| Training speed (targets/s)<br>↑ Higher is better | **1,591** | 328 | 118 | 92.8% slower | 64.0% slower |
+| Development NLL<br>↓ Lower is better | 3.036949 | **3.036845** | 3.036994 | 0.000080 higher | 0.000162 higher |
+| Development perplexity<br>↓ Lower is better | 20.8416 | **20.8394** | 20.8425 | 0.0017 higher | 0.0034 higher |
+| Dev top-1 accuracy<br>↑ Higher is better | **42.474%** | 42.473% | **42.474%** | 0.002 pp lower | Tie |
+| Equal-time probe NLL<br>↓ Lower is better | **3.00616** | 3.04833 | 3.13359 | 0.12743 higher | 0.08317 higher |
+| Training speed (targets/s)<br>↑ Higher is better | **1,600** | 333 | 123 | 92.4% slower | 63.7% slower |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 2,346.3 | 2,346.3 | 2,346.3 | Tie | Tie |
 
-The common training-time cutoff had a median of 329.6 seconds. The furthest checkpoint used for this row was 234.1 seconds before its cutoff.
+The common training-time cutoff had a median of 327.6 seconds. The furthest checkpoint used for this row was 234.1 seconds before its cutoff.
 
 Peak host memory (lower uses less RAM) was AdamW 14.04 GiB, Hessian trace 14.04 GiB, Third order 14.04 GiB. This measure includes earlier work in each interpreter.
 
-Awaiting paired test results (3 of 8 full-horizon training triplets).
+Awaiting paired test results (4 of 8 full-horizon training triplets).
 
 The equal-time row uses the last available fixed-window development score at or before the fastest run’s finish time in each seed. Full-split NLL uses every development target. Training speed includes regularizer probes. Adapter derivatives use CPU float64 with one GPU reserved. [Timing definitions and checkpoint lags](https://huggingface.co/BurnyCoder/thirdloss-study/blob/main/research/reports/summary.md)
 

@@ -4,17 +4,17 @@
 
 ## Current evidence
 
-**Snapshot at 2026-11-26T08:53:01+00:00** · 199/305 experimental milestones complete.
+**Snapshot at 2026-11-26T09:32:34+00:00** · 200/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
-**Next scheduled work** · Research abstracts · Hessian trace · confirm seed 4 (1%).
+**Next scheduled work** · Research abstracts · Third derivative · confirm seed 5 (1%).
 
-The measured remaining-time scenarios are 19.59–20.23 machine-hours.
+The measured remaining-time scenarios are 18.87–19.51 machine-hours.
 
 **TinyStories.** The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781).
 
-**Research abstracts.** Awaiting paired test results (3 of 8 full-horizon training triplets).
+**Research abstracts.** Awaiting paired test results (4 of 8 full-horizon training triplets).
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid results](hybrid/results.md)
 
