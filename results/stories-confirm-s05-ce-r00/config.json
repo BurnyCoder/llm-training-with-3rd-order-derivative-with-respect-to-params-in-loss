@@ -1,0 +1,14 @@
+{
+  "id": "stories-confirm-s05-ce-r00",
+  "stage": "stories",
+  "method": "ce",
+  "phase": "confirm",
+  "seed": 5,
+  "ratio": 0.0,
+  "token_budget": 16777216,
+  "batch_windows": 32,
+  "context": 128,
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "microbatch": 32,
+  "coefficients": {}
+}
