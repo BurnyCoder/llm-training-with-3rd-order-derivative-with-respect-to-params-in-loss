@@ -4,11 +4,11 @@
 
 ## Current evidence and remaining runs
 
-**Snapshot at 2026-11-26T09:36:15+00:00** · 201/305 experimental milestones complete.
+**Snapshot at 2026-11-26T11:46:47+00:00** · 201/305 experimental milestones complete.
 
-**Recorded activity** · Between recorded training and scoring updates.
+**Recorded activity** · Experiments paused by request. The remaining runs have no scheduled start date.
 
-**Next scheduled work** · Research abstracts · Third derivative · confirm seed 5 (1%).
+**First run on resumption** · Research abstracts · Third derivative · confirm seed 5 (1%).
 
 The measured remaining-time scenarios are 18.82–19.42 machine-hours.
 
@@ -154,7 +154,7 @@ The final seed-sensitivity analysis follows every model, frozen test and flatnes
 | confirm | 4 | [Third derivative](../results/abstracts-confirm-s04-third-r01-fp64/) | 1% | 524,288 | Complete | Awaiting freeze | Complete |
 | confirm | 4 | [Ordinary AdamW](../results/abstracts-confirm-s04-ce-r00/) | 0% | 524,288 | Complete | Awaiting freeze | Complete |
 | confirm | 4 | [Hessian trace](../results/abstracts-confirm-s04-trace-r01-fp64/) | 1% | 524,288 | Complete | Awaiting freeze | Complete |
-| confirm | 5 | Third derivative | 1% | 524,288 | Planned | Awaiting freeze | Pending |
+| confirm | 5 | [Third derivative](../results/abstracts-confirm-s05-third-r01-fp64/) | 1% | 524,288 | Paused | Awaiting freeze | Pending |
 | confirm | 5 | Ordinary AdamW | 0% | 524,288 | Planned | Awaiting freeze | Pending |
 | confirm | 5 | Hessian trace | 1% | 524,288 | Planned | Awaiting freeze | Pending |
 | confirm | 6 | Third derivative | 1% | 524,288 | Planned | Awaiting freeze | Pending |

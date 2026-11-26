@@ -1,6 +1,6 @@
 # Study summary
 
-Recorded 89 runs, including 89 with a completed summary.
+Recorded 90 runs, including 89 with a completed summary.
 
 **TinyStories.** The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781).
 
@@ -8,11 +8,11 @@ Recorded 89 runs, including 89 with a completed summary.
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid outcomes](hybrid/results.md)
 
-**Snapshot at 2026-11-26T09:36:15+00:00** · 201/305 experimental milestones complete.
+**Snapshot at 2026-11-26T11:46:47+00:00** · 201/305 experimental milestones complete.
 
-**Recorded activity** · Between recorded training and scoring updates.
+**Recorded activity** · Experiments paused by request. The remaining runs have no scheduled start date.
 
-**Next scheduled work** · Research abstracts · Third derivative · confirm seed 5 (1%).
+**First run on resumption** · Research abstracts · Third derivative · confirm seed 5 (1%).
 
 The measured remaining-time scenarios are 18.82–19.42 machine-hours.
 

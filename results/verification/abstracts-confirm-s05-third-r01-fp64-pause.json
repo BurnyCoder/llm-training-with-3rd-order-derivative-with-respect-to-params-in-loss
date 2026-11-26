@@ -1,0 +1,30 @@
+{
+  "run": "abstracts-confirm-s05-third-r01-fp64",
+  "status": "paused",
+  "reason": "Experiments postponed by request following a system restart.",
+  "checkpoint_step": 448,
+  "checkpoint_targets": 458752,
+  "total_steps": 512,
+  "last_logged_step": 464,
+  "last_logged_targets": 475136,
+  "last_logged_at": "2026-11-26T10:29:37+00:00",
+  "logged_steps_to_replay": 16,
+  "checkpoint_train_seconds": 2975.0965325001016,
+  "checkpoint_sha256": "3e1a9558aa992a3667c25709e0857f707e29fb7b6861e69ff7c280df563001cd",
+  "size_bytes": 9497907,
+  "training_manifest_sha256": "0638bd23a7d1dc3ecb9138074ecd922211df2637f60736ddfab7e9aec0b3ccb9",
+  "trainable_tensors": 48,
+  "optimizer_states": 48,
+  "stored_rng": [
+    "cpu",
+    "cuda"
+  ],
+  "next_start_date": null,
+  "hub_checkpoint": {
+    "repo": "BurnyCoder/thirdloss-pythia-410m-adapters",
+    "revision": "d67fb076e614e6c8699b85be96ce5475b7e5314a",
+    "path": "paused-runs/abstracts-confirm-s05-third-r01-fp64/step-000448-3e1a9558aa99/training_state.pt",
+    "url": "https://huggingface.co/BurnyCoder/thirdloss-pythia-410m-adapters/blob/d67fb076e614e6c8699b85be96ce5475b7e5314a/paused-runs/abstracts-confirm-s05-third-r01-fp64/step-000448-3e1a9558aa99/training_state.pt"
+  },
+  "recorded_at": "2026-11-26T11:46:04+00:00"
+}

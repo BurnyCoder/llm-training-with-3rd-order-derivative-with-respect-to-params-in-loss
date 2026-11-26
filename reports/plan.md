@@ -4,11 +4,11 @@
 
 ## Current evidence
 
-**Snapshot at 2026-11-26T09:36:15+00:00** · 201/305 experimental milestones complete.
+**Snapshot at 2026-11-26T11:46:47+00:00** · 201/305 experimental milestones complete.
 
-**Recorded activity** · Between recorded training and scoring updates.
+**Recorded activity** · Experiments paused by request. The remaining runs have no scheduled start date.
 
-**Next scheduled work** · Research abstracts · Third derivative · confirm seed 5 (1%).
+**First run on resumption** · Research abstracts · Third derivative · confirm seed 5 (1%).
 
 The measured remaining-time scenarios are 18.82–19.42 machine-hours.
 
