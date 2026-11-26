@@ -1,6 +1,6 @@
 # Hybrid schedules on TinyStories
 
-TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements.
+TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Width analysis status is “awaiting eight paired width measurements”. Adaptive was narrower than the fixed ramp in 4 bracket-resolved pairs. Even the most favorable completion of the eight planned pairs gives raw p ≥ 0.63671875. The registered joint width-superiority criterion is unreachable.
 
 [Frozen protocol and decision rule](preregistration.md) · [Interactive measurement and run selector](../../docs/index.html#curves)
 
@@ -133,26 +133,28 @@ Two-sided directional width is measured in the original Euclidean weight coordin
 
 Positive Δwidth favors the adaptive schedule. Negative ΔNLL favors its prediction. Comparable fit uses the frozen 0.02-nat training threshold.
 
-| Seed | Comparator | Δwidth gain | Δdev NLL | Δtrain NLL | Comparable fit |
-| --- | --- | --- | --- | --- | --- |
-| 21 | Fixed late hybrid | -0.058105 | -0.000205 | -0.000104 | yes |
-| 22 | Fixed late hybrid | -0.052734 | -0.000143 | -0.000277 | yes |
-| 23 | Fixed late hybrid | -0.054199 | -0.000204 | 0.000159 | yes |
-| 24 | Fixed late hybrid | -0.054199 | -0.000203 | -0.000192 | yes |
-| 22 | Cross-seed replay | -0.002930 | -0.000002 | -0.000018 | yes |
-| 23 | Cross-seed replay | 0.000977 | 0.000003 | -0.000008 | yes |
-| 24 | Cross-seed replay | -0.002441 | -0.000003 | -0.000006 | yes |
-| 21 | Hessian trace | 0.002930 | 0.000005 | 0.000008 | yes |
-| 22 | Hessian trace | 0.000000 | 0.000000 | 0.000003 | yes |
-| 23 | Hessian trace | 0.001953 | 0.000004 | -0.000010 | yes |
-| 24 | Hessian trace | 0.000000 | 0.000000 | 0.000000 | yes |
-| 21 | Stronger trace | -0.017578 | -0.000102 | -0.000018 | yes |
-| 22 | Stronger trace | -0.018066 | -0.000083 | -0.000074 | yes |
-| 23 | Stronger trace | -0.020508 | -0.000094 | -0.000076 | yes |
-| 24 | Stronger trace | -0.021973 | -0.000093 | -0.000321 | yes |
-| 21 | Always-on hybrid | 0.041748 | -0.000015 | -0.000061 | yes |
-| 22 | Always-on hybrid | -0.063965 | 0.000337 | 0.000030 | yes |
-| 23 | Always-on hybrid | 0.050781 | -0.000626 | 0.001359 | yes |
-| 24 | Always-on hybrid | 0.005127 | 0.000270 | 0.002343 | yes |
+| Seed | Comparator | Midpoint Δwidth gain | Search bounds | Resolved sign | Δdev NLL | Δtrain NLL | Comparable fit |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 21 | Fixed late hybrid | -0.058105 | [-0.060059, -0.056152] | narrower | -0.000205 | -0.000104 | yes |
+| 22 | Fixed late hybrid | -0.052734 | [-0.054688, -0.050781] | narrower | -0.000143 | -0.000277 | yes |
+| 23 | Fixed late hybrid | -0.054199 | [-0.056152, -0.052246] | narrower | -0.000204 | 0.000159 | yes |
+| 24 | Fixed late hybrid | -0.054199 | [-0.056152, -0.052246] | narrower | -0.000203 | -0.000192 | yes |
+| 22 | Cross-seed replay | -0.002930 | [-0.004883, -0.000977] | narrower | -0.000002 | -0.000018 | yes |
+| 23 | Cross-seed replay | 0.000977 | [-0.000977, 0.002930] | unresolved | 0.000003 | -0.000008 | yes |
+| 24 | Cross-seed replay | -0.002441 | [-0.004395, -0.000488] | narrower | -0.000003 | -0.000006 | yes |
+| 21 | Hessian trace | 0.002930 | [0.000977, 0.004883] | wider | 0.000005 | 0.000008 | yes |
+| 22 | Hessian trace | 0.000000 | [-0.001953, 0.001953] | unresolved | 0.000000 | 0.000003 | yes |
+| 23 | Hessian trace | 0.001953 | [0.000000, 0.003906] | unresolved | 0.000004 | -0.000010 | yes |
+| 24 | Hessian trace | 0.000000 | [-0.001953, 0.001953] | unresolved | 0.000000 | 0.000000 | yes |
+| 21 | Stronger trace | -0.017578 | [-0.019531, -0.015625] | narrower | -0.000102 | -0.000018 | yes |
+| 22 | Stronger trace | -0.018066 | [-0.020020, -0.016113] | narrower | -0.000083 | -0.000074 | yes |
+| 23 | Stronger trace | -0.020508 | [-0.022461, -0.018555] | narrower | -0.000094 | -0.000076 | yes |
+| 24 | Stronger trace | -0.021973 | [-0.023926, -0.020020] | narrower | -0.000093 | -0.000321 | yes |
+| 21 | Always-on hybrid | 0.041748 | [0.037598, 0.045898] | wider | -0.000015 | -0.000061 | yes |
+| 22 | Always-on hybrid | -0.063965 | [-0.068359, -0.059570] | narrower | 0.000337 | 0.000030 | yes |
+| 23 | Always-on hybrid | 0.050781 | [0.046875, 0.054688] | wider | -0.000626 | 0.001359 | yes |
+| 24 | Always-on hybrid | 0.005127 | [0.000488, 0.009766] | wider | 0.000270 | 0.002343 | yes |
 
-The completed branches reused 125,829,120 targets of optimization compared with independently training each branch from initialization. The replay permutation couples different seeds through their coefficient histories. The sign-test reference for this comparison assumes exchangeable independent pair signs. Shared donor histories make that assumption approximate. All raw pairs are reported for inspection.
+A shared trunk cancels in the contrast. Open bounds reflect censoring. These are numerical search brackets for the measured directions. Sampling uncertainty across seeds is a separate quantity.
+
+The completed branches reused 125,829,120 targets of optimization compared with independently training each branch from initialization. The replay permutation couples different seeds through their coefficient histories. The sign-test reference for this comparison assumes independent fair signs under its null. Adjacent pairs reuse a donor's randomness. Calibration of the replay p-value and median interval is unestablished. All raw pairs are reported for inspection.

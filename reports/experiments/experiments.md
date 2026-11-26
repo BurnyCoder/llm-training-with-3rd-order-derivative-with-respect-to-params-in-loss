@@ -4,7 +4,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 
 [Architecture, training algorithms, objectives and planned budgets](../planned-runs.md)
 
-**Snapshot at 2026-11-26T11:46:47+00:00** · 201/305 experimental milestones complete.
+**Snapshot at 2026-11-26T12:35:20+00:00** · 201/305 experimental milestones complete.
 
 **Recorded activity** · Experiments paused by request. The remaining runs have no scheduled start date.
 
@@ -13,6 +13,8 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 The measured remaining-time scenarios are 18.82–19.42 machine-hours.
 
 [Status of every planned run](../planned-runs.md#current-evidence-and-remaining-runs)
+
+[Independent verification, passage exposure and scope of inference](../reviews/independent-scientific-audit.md)
 
 | Run | Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

@@ -4,7 +4,7 @@
 
 ## Current evidence
 
-**Snapshot at 2026-11-26T11:46:47+00:00** · 201/305 experimental milestones complete.
+**Snapshot at 2026-11-26T12:35:20+00:00** · 201/305 experimental milestones complete.
 
 **Recorded activity** · Experiments paused by request. The remaining runs have no scheduled start date.
 
@@ -16,7 +16,9 @@ The measured remaining-time scenarios are 18.82–19.42 machine-hours.
 
 **Research abstracts.** Awaiting paired test results (4 of 8 full-horizon training triplets).
 
-TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid results](hybrid/results.md)
+TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Width analysis status is “awaiting eight paired width measurements”. Adaptive was narrower than the fixed ramp in 4 bracket-resolved pairs. Even the most favorable completion of the eight planned pairs gives raw p ≥ 0.63671875. The registered joint width-superiority criterion is unreachable. [Hybrid results](hybrid/results.md)
+
+[Independent verification of the available evidence](reviews/independent-scientific-audit.md)
 
 [Execution matrix](planned-runs.md#current-evidence-and-remaining-runs) · [Flatness ledger](flatness.md)
 

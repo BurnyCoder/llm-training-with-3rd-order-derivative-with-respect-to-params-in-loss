@@ -1,6 +1,6 @@
 # TinyStories · Always-on hybrid
 
-Run `stories-hybrid-s23-always-r01` · [raw records](../../../results/stories-hybrid-s23-always-r01/) · [registered design](../../preregistration.md)
+Run `stories-hybrid-s23-always-r01` · [raw records](../../../results/stories-hybrid-s23-always-r01/) · [registered design](../../hybrid/preregistration.md)
 
 | Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

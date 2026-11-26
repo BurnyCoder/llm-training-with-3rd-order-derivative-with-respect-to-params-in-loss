@@ -21,6 +21,8 @@ def test_width_sign_depends_on_crossing_bounds_and_shared_trunk_cancels():
     observed = width_contrast(trunk, width(2, 2.2), trunk, width(2.1, 2.3), shared=True)
     assert observed["sign"] == "unresolved" and observed["delta_lower"] < 0 < observed["delta_upper"]
     assert width_contrast(trunk, width(2, 2.1), trunk, width(3, None), shared=True)["sign"] == "narrower"
+    censored_trunk = width(10,None)
+    assert width_contrast(censored_trunk,width(2,2),censored_trunk,width(3,3),shared=True)["delta"] == -1
     assert width_contrast(trunk, width(2, 2.1), width(10, 11), width(2.2, 2.3), shared=False)["sign"] == "unresolved"
     assert attainable_p(4, 0, 8) == 163/256
     assert attainable_p(0, 1, 8) == 1/128

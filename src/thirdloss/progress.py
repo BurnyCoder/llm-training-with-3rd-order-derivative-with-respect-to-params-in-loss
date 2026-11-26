@@ -99,9 +99,13 @@ def progress(project,study=None):
                   "secondary pilots, setup, publication and interruptions. [Timing and GPU memory by method]"
                   "(../results/feasibility/one-week.json)"]
     followup = study["hybrid"]
+    from .hybrid_results import hybrid_bound_text
     lines += ["## TinyStories hybrid follow-up",f"{followup['completed_arms']} of 48 full runs and "
               f"{followup['completed_trunks']} of 8 shared checkpoints complete. "
-              f"{followup['status']}. [Per-seed widths and development scores](hybrid/results.md)"]
+              f"{followup['status']}. {hybrid_bound_text(followup)} [Per-seed widths and development scores](hybrid/results.md)"]
+    if study.get("scientific_audit"):
+        lines += ["## Scientific audit",study["scientific_audit"].get("stories","")+
+                  " [Hypothesis decisions, numerical qualifications and provenance](reviews/independent-scientific-audit.md)"]
     extra = hybrid_schedule(project,schedule)
     normal = None
     if extra:

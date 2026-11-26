@@ -21,35 +21,39 @@ def audit_readout(record):
     readout["abstracts"] = (
         f"On {bench['targets']:,} training targets the batch-size benchmark recorded "
         f"{bench['reference_correct']:,} correct at batch {bench['reference_batch']} and "
-        f"{bench['selected_correct']:,} at batch {bench['selected_batch']}. The aggregate counts "
-        "leave token-by-token prediction agreement undetermined.")
+        f"{bench['selected_correct']:,} at batch {bench['selected_batch']}. ")
+    readout["abstracts"] += (f"The aligned top-one IDs differed at {bench['top1_mismatches']} positions."
+                             if "top1_mismatches" in bench else
+                             "The aggregate counts leave token-by-token prediction agreement undetermined.")
     return readout
 
 
 def findings(record):
     """Report exact tests, corpus exposure and verification coverage with their actual units."""
+    from .report_records import METHODS, REPOSITORY, STAGES
     scope = audit_readout(record)
     evidence = record["evidence_revision"]
     lines = [f"Audited run and measurement records through Git `{evidence}`. "
              "[Machine-readable calculations, checkpoint and split fingerprints](../../results/analysis/scientific-audit.json)",
-             "### Frozen predictive endpoints",
+             "", "### Frozen predictive endpoints", "",
              "| Corpus and comparator | Seed wins / ties / losses | Median ΔNLL | Marginal median interval | Coverage | Raw p | Holm p |",
              "|---|---:|---:|---:|---:|---:|---:|"]
     for stage, result in record["primary"].items():
         for comparator, s in result["comparisons"].items():
             lo, hi = s["median_ci"]
-            lines.append(f"| {stage} · {comparator} | {s['wins']} / {s['ties']} / {s['losses']} | "
+            lines.append(f"| {STAGES[stage]} · {METHODS[comparator]} | {s['wins']} / {s['ties']} / {s['losses']} | "
                          f"{s['median_delta']:+.9f} | [{lo:+.9f}, {hi:+.9f}] | {100*s['coverage']:.5f}% | "
                          f"{s['p_raw']:.8f} | {s['p_holm']:.8f} |")
     for stage, result in record["primary"].items():
         checkpoints = len(result["completed_triplets"])
-        lines += ["", f"**{stage.capitalize()}** has {checkpoints} completed full-budget training triplets "
+        lines += ["", f"**{STAGES[stage]}** has {checkpoints} completed full-budget training triplets "
                   f"and {result['scores']} final test scores in this snapshot."]
         if result.get("freeze_commit"):
             lines[-1] += (f" The freeze commit contained their final weights' digests and unscored summaries. "
                           f"The paired arms used {result['unique_initializations']} distinct initializations across seeds. "
                           f"The released stream supplies {result['test_targets']:,} next-token targets. "
-                          f"[Committed freeze](../../results/freeze/{stage}.json)")
+                          f"[Checkpoint freeze]({REPOSITORY}/commit/{result['freeze_commit']}) · "
+                          f"[First public score commit]({REPOSITORY}/commit/{result['first_scored_commit']})")
     if "stories" in scope:
         p = record["passages"]
         lines += ["", "### Passage overlap and actual training exposure", "", scope["stories"], "",

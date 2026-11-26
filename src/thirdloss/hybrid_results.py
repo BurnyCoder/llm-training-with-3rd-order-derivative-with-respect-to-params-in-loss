@@ -18,7 +18,9 @@ def width_contrast(a0, a1, b0, b1, *, shared):
         bl0, bh0 = endpoints(b0)
         low, high = low+bl0-ah0, high+bh0-al0
     delta = None
-    if all(p["width"] is not None for p in (a0,a1,b0,b1)):
+    if shared and a1["width"] is not None and b1["width"] is not None:
+        delta = a1["width"]-b1["width"]
+    elif all(p["width"] is not None for p in (a0,a1,b0,b1)):
         delta = (a1["width"]-a0["width"])-(b1["width"]-b0["width"])
     sign = "wider" if low>0 else "narrower" if high<0 else "tie" if low==high==0 else "unresolved"
     return {"delta":delta, "delta_lower":low if math.isfinite(low) else None,
@@ -37,7 +39,7 @@ def hybrid_bound_text(data):
     if fixed["best_raw_p"] <= .05:
         return ""
     return (f"Adaptive was narrower than the fixed ramp in {fixed['narrower']} bracket-resolved pairs. "
-            f"Even the most favorable completion of the eight planned pairs gives raw p ≥ {fixed['best_raw_p']:.5f}. "
+            f"Even the most favorable completion of the eight planned pairs gives raw p ≥ {fixed['best_raw_p']:.8f}. "
             "The registered joint width-superiority criterion is unreachable.")
 
 

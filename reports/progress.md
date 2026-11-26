@@ -1,6 +1,6 @@
 # Study progress
 
-Updated 2026-11-26T11:46:47+00:00.
+Updated 2026-11-26T12:35:20+00:00.
 
 60 training/control records and 24 final evaluations are complete. This is 70.0% of 120 planned model milestones.
 
@@ -28,7 +28,11 @@ At the pre-test check on 2026-11-25T10:33:28+00:00, pilot timings projected 22.5
 
 ## TinyStories hybrid follow-up
 
-23 of 48 full runs and 5 of 8 shared checkpoints complete. awaiting eight paired width measurements. [Per-seed widths and development scores](hybrid/results.md)
+23 of 48 full runs and 5 of 8 shared checkpoints complete. awaiting eight paired width measurements. Adaptive was narrower than the fixed ramp in 4 bracket-resolved pairs. Even the most favorable completion of the eight planned pairs gives raw p ≥ 0.63671875. The registered joint width-superiority criterion is unreachable. [Per-seed widths and development scores](hybrid/results.md)
+
+## Scientific audit
+
+The post-hoc copy check found exact passages of at least 50 tokens in 26 of 21,990 test stories. At the registered training horizon, the sampled windows contained such passages from 3–11 test stories per seed. The archived test losses cover the whole split. Their sensitivity to removing these stories is unknown. [Hypothesis decisions, numerical qualifications and provenance](reviews/independent-scientific-audit.md)
 
 The first measured set of hybrid arms projects 33.68 further hours from that checkpoint, including the eight replays. With the original confirmations and final scoring, the projected remaining work at the check was 56.18 hours with 159.49 hours left in the week. [Wall-time assumptions, measured memory and inputs](../results/feasibility/hybrid-week.json)
 
@@ -49,7 +53,7 @@ Giving each predictor still missing a measurement one complete native pilot cycl
 
 Across training, references, final tests, hybrid runs and flatness evaluations, **201/305 milestones are complete (65.9%)** and 104 remain. Each milestone has equal weight in this count. Data preparation, software and publications are recorded separately.
 
-Projected remaining machine time is **18.82–19.42 hours**, including model publication and geometry. There are 139.01 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
+Projected remaining machine time is **18.82–19.42 hours**, including model publication and geometry. There are 138.20 hours left in the original week. These are two timing scenarios. They use the recorded pilot rates, whole remaining hybrid seed blocks, the longest primary pilot as a proxy for each remaining secondary pilot, and median or slower diagnostic and release cycles. Machine or network interruptions can extend them. [Cost by task](../results/feasibility/remaining-work.json) · [Observed release times](../results/feasibility/checkpoint-publication-time.json)
 
 The registered adapter schedules require 518 host derivative calls across unfinished runs. Scaling the pilot by token count alone gives 320. Pricing the scheduled calls at each method’s measured mean changes the forecast by +2.18 hours. The original pre-test feasibility record retains its initial estimate. [Per-arm counts and observed costs](../results/feasibility/remaining-work.json) · [Training gate](../src/thirdloss/windows.py)
 

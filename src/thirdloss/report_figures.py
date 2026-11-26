@@ -48,17 +48,18 @@ def architecture(path: Path) -> None:
 
     box(0.06, 2.12, 2.01, 0.77, "TinyStories", "all decoder weights", "#e7f2ef")
     box(0.06, 0.42, 2.01, 0.77, "Research abstracts", "Pythia QKV adapters", "#e7f2ef")
-    box(2.65, 1.27, 1.85, 0.77, "Next-token loss", "cross-entropy L", "#f0f3f1")
-    box(5.15, 2.12, 2.0, 0.77, "Hessian contraction", "independent signs u, v", "#f6ede6")
+    box(2.65, 1.27, 1.85, 0.77, "Training windows", "next-token targets", "#f0f3f1")
+    box(5.15, 2.12, 2.0, 0.77, "Two-window Hessian", "independent signs u, v", "#f6ede6")
     box(7.84, 2.12, 2.0, 0.77, "Third derivative", "r = grad(uᵀ H v)", "#e7f2ef")
-    box(7.84, 0.42, 2.0, 0.77, "Training objective", "L + weighted ‖r‖²", "#d9eee8")
+    box(7.84, 0.42, 2.0, 0.77, "Training objective", "CE + (gate/p) λ‖r‖²", "#d9eee8")
     arrow((2.08, 2.48), (2.65, 1.83))
     arrow((2.08, 0.80), (2.65, 1.47))
     arrow((4.51, 1.84), (5.14, 2.47))
     arrow((7.17, 2.5), (7.82, 2.5))
     arrow((8.84, 2.08), (8.84, 1.2))
     arrow((4.51, 1.43), (7.80, 0.73))
-    ax.text(5.8, 0.5, "AdamW differentiates the complete objective",
+    ax.text(6.12, 1.27, "full-batch CE", fontsize=8, color="#526863", ha="center")
+    ax.text(4.95, 0.23, "Autograd computes both gradients. AdamW uses their clipped sum.",
             fontsize=8, color="#526863", ha="center")
     _save(fig, path)
 
@@ -127,8 +128,12 @@ def _curves(study, path) -> bool:
             groups.setdefault((run.get("stage"), run.get("phase")), []).append((run, points))
     if not groups:
         return False
-    fig = Figure(figsize=(8, 2.8 * len(groups)), layout="constrained")
-    axes = fig.subplots(len(groups), 1, squeeze=False).ravel()
+    columns = min(2,len(groups))
+    rows = (len(groups)+columns-1)//columns
+    fig = Figure(figsize=(4.8*columns, 2.65*rows), layout="constrained")
+    axes = fig.subplots(rows, columns, squeeze=False).ravel()
+    for unused in axes[len(groups):]:
+        unused.set_visible(False)
     for ax, ((stage, phase), series) in zip(axes, groups.items()):
         labels = set()
         for run, points in series:
@@ -138,7 +143,7 @@ def _curves(study, path) -> bool:
             tokens, losses = zip(*points)
             ax.plot(tokens, losses, color=COLORS.get(method, "#777"), marker=".",
                     markersize=3, linewidth=1, alpha=0.78, label=label)
-        _axes_style(ax, "Training target tokens", "Development NLL (nats/token)")
+        _axes_style(ax, "Training target tokens", "Fixed-window dev NLL (nats/token)")
         ax.set_title(f"{STAGES.get(stage, stage)}  /  {phase}", loc="left", fontsize=11, color=INK)
         ax.legend(loc="best", fontsize=7, frameon=False, ncol=2)
     _save(fig, path)
@@ -166,7 +171,7 @@ def _paired(study, path) -> bool:
     ax.axvline(0, color="#677572", linewidth=0.8, linestyle="--")
     ax.set_yticks(range(len(rows)), axis_labels)
     _axes_style(ax, "Test NLL difference, third-order minus baseline (nats/token)", "")
-    ax.set_title("Paired seeds and median intervals", loc="left", fontsize=11, color=INK)
+    ax.set_title("Paired seed differences and marginal median intervals", loc="left", fontsize=11, color=INK)
     _save(fig, path)
     return True
 

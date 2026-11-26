@@ -177,6 +177,8 @@ def scientific_audit(project, storage):
     output["scoring_benchmark"] = {"reference_batch":ref["batch"],"selected_batch":batch["batch"],"targets":ref["tokens"],
         "reference_correct":round(ref["accuracy"]*ref["tokens"]),"selected_correct":round(batch["accuracy"]*batch["tokens"]),
         "delta_nll":batch["nll"]-ref["nll"],"per_token_ids_archived":False}
+    if "top1_mismatches" in batch:
+        output["scoring_benchmark"]["top1_mismatches"] = batch["top1_mismatches"]
     output["precision"] = _precision(root,storage)
     path = root/"analysis"/"scientific-audit.json"
     write_json(path,output)

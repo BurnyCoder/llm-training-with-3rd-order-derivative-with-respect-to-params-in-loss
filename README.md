@@ -15,7 +15,7 @@ The research background includes flat minima, Hessian measurements and third der
 | TinyStories pretraining · test | 8/8 full-budget seeds | 0.000028 higher | 0.000222 lower | 69.4% slower |
 | Pythia-410M adapters · dev | 4/8 full-budget seeds | 0.000080 higher | 0.000162 higher | 92.4% slower |
 
-**Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
+**Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). Whether more width improves prediction is unknown.
 
 **TinyStories pretraining** · The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781). **Pythia-410M adapters** · Awaiting paired test results (4 of 8 full-horizon training triplets).
 
@@ -36,9 +36,11 @@ These medians compare the same seeds and training windows within each model fami
 
 [All variants, initial models and unigram references](#all-variants-and-baselines) · [Per-seed widths, search brackets and curvature](reports/flatness.md)
 
+The post-hoc copy check found exact passages of at least 50 tokens in 26 of 21,990 test stories. At the registered training horizon, the sampled windows contained such passages from 3–11 test stories per seed. The archived test losses cover the whole split. Their sensitivity to removing these stories is unknown. On 32,768 training targets the batch-size benchmark recorded 13,185 correct at batch 2 and 13,184 at batch 16. The aggregate counts leave token-by-token prediction agreement undetermined. [Independent scientific audit](reports/reviews/independent-scientific-audit.md)
+
 ### Current and planned runs
 
-**Snapshot at 2026-11-26T11:46:47+00:00** · 201/305 experimental milestones complete.
+**Snapshot at 2026-11-26T12:35:20+00:00** · 201/305 experimental milestones complete.
 
 **Recorded activity** · Experiments paused by request. The remaining runs have no scheduled start date.
 
@@ -118,12 +120,12 @@ The common training-time cutoff had a median of 127.9 seconds. The furthest chec
 
 The registered test of superiority over both baselines was inconclusive.
 
-| Against | Paired Δtest NLL | Median interval | Wins/ties/losses | Holm p |
+| Against | Paired Δtest NLL | Median interval (marginal) | Wins/ties/losses | Holm p |
 | --- | --- | --- | --- | --- |
 | AdamW | +0.000028 | [-0.000682, +0.000436] | 4/0/4 | 0.63672 |
 | Hessian trace | -0.000222 | [-0.000588, -0.000081] | 8/0/0 | 0.00781 |
 
-A negative difference favors third order. A positive difference favors the named baseline. The interval shows uncertainty in the median difference. A smaller Holm-adjusted p-value gives stronger evidence for the registered improvement. [Test decision rule](reports/preregistration.md)
+A negative difference favors third order. A positive difference favors the named baseline. The interval describes seed-to-seed uncertainty in the median difference on the fixed corpus. The sign tests use the directions of paired differences. [Test decision rule](reports/preregistration.md)
 
 ### Pythia-410M adapters
 
@@ -268,7 +270,7 @@ For the primary comparison, TinyStories uses all weights and Pythia uses the LoR
 | Training speed (targets/s)<br>↑ Higher is better | 39,820 | **40,902** | 2.6% slower |
 | Peak GPU allocation (MiB)<br>↓ Lower is better | 617.3 | 617.3 | Tie |
 
-The remaining controls are paired independently. Each row uses only seeds that finished both arms. The always-on arm has its own measured width at the switch.
+Each row uses seeds that finished both arms. Width changes use bracket midpoints. The always-on arm has its own measured width at the switch. Replay uses another seed's adaptive schedule, coupling neighboring seed pairs.
 
 | Adaptive versus | Paired seeds | Adaptive NLL<br>↓ Lower is better | Adaptive width change<br>↑ More retained is better for the width test | Adaptive speed<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
@@ -277,7 +279,7 @@ The remaining controls are paired independently. Each row uses only seeds that f
 | Stronger trace | 4/8 | 0.000094 lower | 0.0193 less retained | 35.6% slower |
 | Always-on hybrid | 4/8 | 0.000127 higher | 0.0234 more retained | 33.4% faster |
 
-**Registered width decision** · Awaiting eight paired width measurements. Width probes use fixed training windows. [Every width, training-fit flag, replay and paired difference](reports/hybrid/results.md)
+**Registered width decision** · Awaiting eight paired width measurements. Adaptive was narrower than the fixed ramp in 4 bracket-resolved pairs. Even the most favorable completion of the eight planned pairs gives raw p ≥ 0.63671875. The registered joint width-superiority criterion is unreachable. [Numerical bounds, training fit and paired differences](reports/hybrid/results.md)
 
 **Training diagnostics have no established better direction for held-out prediction.** A smaller derivative penalty meets its training objective more closely. The raw Hessian trace, third-derivative estimate, gradient norm and penalty strength describe the training process. Their predictive value is assessed separately by held-out NLL. [Objectives and endpoints](reports/preregistration.md)
 
@@ -352,7 +354,7 @@ Seed sensitivity is the final stage, after both primary test evaluations, all hy
 
 Recorded 90 runs, including 89 with a completed summary.
 
-TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Width measurements, scores and controls](reports/hybrid/results.md)
+TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Width analysis status is “awaiting eight paired width measurements”. Adaptive was narrower than the fixed ramp in 4 bracket-resolved pairs. Even the most favorable completion of the eight planned pairs gives raw p ≥ 0.63671875. The registered joint width-superiority criterion is unreachable. [Width measurements, scores and controls](reports/hybrid/results.md)
 
 [Full score table, strength search and per-seed test differences](reports/summary.md)
 

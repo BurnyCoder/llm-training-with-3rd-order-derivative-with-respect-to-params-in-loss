@@ -1,6 +1,6 @@
 # TinyStories · Shared trace checkpoint
 
-Run `stories-branch-s21-trunk-r01` · [raw records](../../../results/stories-branch-s21-trunk-r01/) · [registered design](../../preregistration.md)
+Run `stories-branch-s21-trunk-r01` · [raw records](../../../results/stories-branch-s21-trunk-r01/) · [registered design](../../hybrid/preregistration.md)
 
 | Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
