@@ -38,13 +38,13 @@ These medians compare the same seeds and training windows within each model fami
 
 ### Current and planned runs
 
-**Snapshot at 2026-11-26T08:26:57+00:00** · 196/305 experimental milestones complete.
+**Snapshot at 2026-11-26T08:30:55+00:00** · 197/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
 **Next scheduled work** · Research abstracts · Ordinary AdamW · confirm seed 4.
 
-The measured remaining-time scenarios are 20.04–20.76 machine-hours.
+The measured remaining-time scenarios are 19.99–20.67 machine-hours.
 
 [Finished, active and planned experiments](reports/planned-runs.md#current-evidence-and-remaining-runs) · [Live measurements](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer)
 
@@ -213,7 +213,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Trace + third derivative (1%) | 65,536 | 0 | 19.910 (1/1) | 0.6078 (1/1) | 1.0928 (1/1) |
 | Ordinary AdamW · confirmation | 524,288 | 1–8 | 19.426 (3/8) | 0.62462 (3/8) | 1.1047 (3/8) |
 | Hessian trace · confirmation | 524,288 | 1–8 | 19.669 (3/8) | 0.62496 (3/8) | 1.1047 (3/8) |
-| Third derivative · confirmation | 524,288 | 1–8 | 19.898 (3/8) | 0.61282 (3/8) | 1.1049 (3/8) |
+| Third derivative · confirmation | 524,288 | 1–8 | 20.106 (4/8) | 0.60928 (4/8) | 1.1050 (4/8) |
 
 <details><summary>Pythia-410M · adapter weights · other pilot strengths and precision diagnostics</summary>
 

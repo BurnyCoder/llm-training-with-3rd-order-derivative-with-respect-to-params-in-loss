@@ -10,7 +10,20 @@ Training time is 4,099.2 seconds. Peak allocated GPU memory is 2,346.3 MiB. Full
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/abstracts-confirm-s04-third-r01-fp64/config.json)
 
-Training and development · Complete. Frozen test · Awaiting freeze. Checkpoint flatness · Pending. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
+Training and development · Complete. Frozen test · Awaiting freeze. Checkpoint flatness · Complete. [Scheduled peers and controls](../../planned-runs.md#current-evidence-and-remaining-runs)
+
+## Checkpoint flatness
+
+| Training-window measurement | Value | Interpretation |
+| --- | --- | --- |
+| Weight width | 20.351 | ↑ Wider is flatter in these weight coordinates |
+| RMS weight curvature | 0.575044 | ↓ Lower means less local bending |
+| Signed Hessian trace / parameter | 0.000448216 | No general better direction |
+| Common score width | 1.1051 | ↑ Wider tolerates larger changes in token scores |
+| Common score-width search bracket | [1.10504, 1.10526] | Numerical resolution of the median two-sided crossing |
+| Mean directional score curvature | 0.675528 | ↓ Lower means less local bending in score space |
+
+The connection between width and better held-out prediction is unknown. [Compare against every variant and baseline](../../flatness.md#every-variant-and-baseline).
 
 The process working-set high-water mark was 14,379.9 MiB. This OS measure includes earlier work in the same interpreter.
 
