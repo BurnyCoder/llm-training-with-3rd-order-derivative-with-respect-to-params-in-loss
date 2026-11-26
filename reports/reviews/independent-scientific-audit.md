@@ -72,6 +72,8 @@ Reconciled 89 completed summaries, 85 fitted weight files, 76 terminal full-deve
 
 ## Evidence for the remaining claim families
 
+The preprocessing rules gave held-out documents priority when filtering duplicates from development and training. Building the corpus therefore consulted held-out document signatures. The freeze chronology verifies when model scoring was published. It leaves the earlier, registered preprocessing access visible. [Split construction](../../docs/data.md) · [Frozen primary protocol](../preregistration.md)
+
 | Published quantity or claim | What was verified and where the evidence ends |
 |---|---|
 | Objective, gradient and baseline definitions | With fixed minibatch and independent unit-variance sign probes, expanding the squared contraction cancels mixed-index cross terms in expectation. Autograd differentiates through the resulting norm. The trace arm uses the signed trace. The squared-Hessian control measures a different norm. The two-window objective, random gate and gradient clipping limit the interpretation of the applied updates. In particular, the expected squared norm of a minibatch tensor includes minibatch variability. It can differ from the squared norm for the full-corpus loss. [Algebra and exact toy examples](../../docs/third-derivative-penalty.md) · [Implemented contractions](../../src/thirdloss/penalties.py) · [Gradient accumulation](../../src/thirdloss/objectives.py) · [Rank-one estimation](https://arxiv.org/pdf/2004.06433) |
