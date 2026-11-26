@@ -66,7 +66,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | Randomized gradient signs (1%) | 65,536 | 0 | 19.858 (1/1) | 0.73137 (1/1) | 1.0928 (1/1) |
 | Trace + third derivative (1%) | 65,536 | 0 | 19.910 (1/1) | 0.6078 (1/1) | 1.0928 (1/1) |
 | Ordinary AdamW · confirmation | 524,288 | 1–8 | 19.426 (3/8) | 0.62462 (3/8) | 1.1047 (3/8) |
-| Hessian trace · confirmation | 524,288 | 1–8 | 19.746 (2/8) | 0.6552 (2/8) | 1.1044 (2/8) |
+| Hessian trace · confirmation | 524,288 | 1–8 | 19.669 (3/8) | 0.62496 (3/8) | 1.1047 (3/8) |
 | Third derivative · confirmation | 524,288 | 1–8 | 19.898 (3/8) | 0.61282 (3/8) | 1.1049 (3/8) |
 
 <details><summary>Pythia-410M · adapter weights · other pilot strengths and precision diagnostics</summary>
@@ -93,6 +93,7 @@ Parentheses give measured / planned seeds. A unigram has only the common score-s
 | abstracts | confirm | 2 | Hessian trace | 1% | 19.222 | 18.553–19.954 | 0/32 | 0.685452 | +0.00138366 | 1.1031<br>[1.10296, 1.10322] | 1.100–1.111 | 0/32 | 0.678014 | [Weight probes](../results/abstracts-confirm-s02-trace-r01-fp64/flatness.json) · [Score probes](../results/abstracts-confirm-s02-trace-r01-fp64/score-flatness.json) |
 | abstracts | confirm | 3 | Ordinary AdamW | 0% | 19.426 | 18.744–20.119 | 0/32 | 0.624617 | +0.00044988 | 1.1047<br>[1.10461, 1.10486] | 1.103–1.112 | 0/32 | 0.675849 | [Weight probes](../results/abstracts-confirm-s03-ce-r00/flatness.json) · [Score probes](../results/abstracts-confirm-s03-ce-r00/score-flatness.json) |
 | abstracts | confirm | 3 | Third derivative | 1% | 19.898 | 19.353–20.611 | 0/32 | 0.612819 | +0.000255454 | 1.1049<br>[1.10473, 1.10499] | 1.103–1.112 | 0/32 | 0.675441 | [Weight probes](../results/abstracts-confirm-s03-third-r01-fp64/flatness.json) · [Score probes](../results/abstracts-confirm-s03-third-r01-fp64/score-flatness.json) |
+| abstracts | confirm | 3 | Hessian trace | 1% | 19.669 | 18.967–20.328 | 0/32 | 0.585462 | +0.00163817 | 1.1047<br>[1.10461, 1.10486] | 1.103–1.112 | 0/32 | 0.675728 | [Weight probes](../results/abstracts-confirm-s03-trace-r01-fp64/flatness.json) · [Score probes](../results/abstracts-confirm-s03-trace-r01-fp64/score-flatness.json) |
 | abstracts | control | 0 | Initial checkpoint | 0% | 21.890 | 21.676–22.687 | 0/32 | 0.690576 | +0.0011406 | 1.0859<br>[1.08575, 1.08597] | 1.081–1.095 | 0/32 | 0.700479 | [Weight probes](../results/abstracts-control-s00-initial-r00/flatness.json) · [Score probes](../results/abstracts-control-s00-initial-r00/score-flatness.json) |
 | abstracts | control | 0 | Unigram | 0% | N/A | N/A | N/A | N/A | N/A | 0.9150<br>[0.91494, 0.91511] | 0.913–0.924 | 0/32 | 0.993798 | [Score probes](../results/abstracts-control-s00-unigram-r00/score-flatness.json) |
 | abstracts | pilot | 0 | Ordinary AdamW | 0% | 19.784 | 19.185–20.320 | 0/32 | 1.28684 | +0.00312322 | 1.0930<br>[1.09295, 1.09314] | 1.090–1.100 | 0/32 | 0.69199 | [Weight probes](../results/abstracts-pilot-s00-ce-r00/flatness.json) · [Score probes](../results/abstracts-pilot-s00-ce-r00/score-flatness.json) |
