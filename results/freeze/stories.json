@@ -1,0 +1,45 @@
+{
+  "stage": "stories",
+  "ratios": {
+    "trace": 0.01,
+    "third": 0.01
+  },
+  "test_sha256": "228df80efc7ea7acd95020cf2a4d209d6a5071febe0c62a4b21b3b65b2e1b7c4",
+  "runs": {
+    "stories-confirm-s01-ce-r00": "2bf3233dd38500046fcf3484a8a4f1f348f0c20f437d4481b7e6f12d81a9d9ba",
+    "stories-confirm-s01-trace-r01": "8db53dc4cbac9fe0d9b010befd6220b8c442e9429ada01ad247589746c808c04",
+    "stories-confirm-s01-third-r01": "7726c8432e4d9934221f3a2fe158db83ae8023b89805e1c2afbdfb3291d435c3",
+    "stories-confirm-s02-ce-r00": "8c7719568f364cd741e430ab24039acb44b72e8b8721f06be71f0a8e2f7a2932",
+    "stories-confirm-s02-trace-r01": "8ee43a4835e375e9f0e801aab5301ce46407bb93f1e9d538f8ca2afab787c25d",
+    "stories-confirm-s02-third-r01": "20f60ce92e8d06b8af9f751b4410d3776a79d70b040c61116ea8470eb86cdd8d",
+    "stories-confirm-s03-ce-r00": "d1054eb4a70cc08dddf27f698a873d843e29ba6ed3cefe3ea9aa2361ba07514d",
+    "stories-confirm-s03-trace-r01": "1ddcc9f9caaca52c0f5e6c82f40915b4393aedb4d0be7921a9296716473de78f",
+    "stories-confirm-s03-third-r01": "bf386566227502e7e29078da4ac416dd9446e91bc32ee7d39b84cc5a6fdf1126",
+    "stories-confirm-s04-ce-r00": "624d5c4441a989138f3a081fa93e6406ea50f33ed8f1b3e059cf3a53eb7ea346",
+    "stories-confirm-s04-trace-r01": "49ebd3e840bc7fa80bc7592a6a8e3264dfeb46869d0620255dfa118a9c498367",
+    "stories-confirm-s04-third-r01": "53521491e21a45729e33ee420b772909b276718792917618de59110f01b7c357",
+    "stories-confirm-s05-ce-r00": "6ae2ab61c34c1e0af889ba42bbe32bdee6f87576426df91cbda10118d18c7a1c",
+    "stories-confirm-s05-trace-r01": "3cfe7611e27f30f93d26a26c534eba38c4b94e8667bdadcd61a31b3312e8136d",
+    "stories-confirm-s05-third-r01": "29c8d80c507a6295a9d9a25e1d79aa6c42028d302863f3d0f47965fa4a49fbf0",
+    "stories-confirm-s06-ce-r00": "f03178e50671fec90a70884f9d9903ccce5548c6f2bdc639f761d70bb2834061",
+    "stories-confirm-s06-trace-r01": "d90640956915d3a6d91160e8976d3e99c1c7c77c4925f2af6584709db45222ca",
+    "stories-confirm-s06-third-r01": "8ce4bdf593a14d89bd4e7ad3bee2c30c2595dbcfa95e31924d8b222ce1305922",
+    "stories-confirm-s07-ce-r00": "b0cbe09856fcffd83e450677af5f94be6df2f37ac410b1d4d849ad2512687520",
+    "stories-confirm-s07-trace-r01": "d0b9f905474e49ff727c64b4c656776a8710a31cbce62bf5ad789b4cbda37f4f",
+    "stories-confirm-s07-third-r01": "91bac3fa81e628a706a05a3cca2c85db91a854d8be2f1fbf885a40370b9bae28",
+    "stories-confirm-s08-ce-r00": "ded2658651d54872ce5422fc8f591d49037605af28d0dc81a875d0b7951997ab",
+    "stories-confirm-s08-trace-r01": "740e0353056eff937df17c26ecc11a15755e0a718c3b7c386edb519f008fbb2a",
+    "stories-confirm-s08-third-r01": "aa3c128f863234eaeb97cfa2505f791555e8793e92cf18521d6acc3cbaebc4d5"
+  },
+  "initializations": {
+    "1": "b3b1ec8b84b69a3751bedf551cf71c34d3860d0f841474d09d21532b1f1d96c7",
+    "2": "7d7ac9f1de0859cbdf383124b788b62a18705b7d07089dd08a1fc26dccb54bed",
+    "3": "70b8a47a5ddd9de3b6a3526acabcb040b0055da99854a85c902428ca86feae1d",
+    "4": "7b75a255eab4d6519b84e58a1818e4151f027455768165c49e815166d7bf0f41",
+    "5": "696da0d3a103f48d1029c8377365e65dd3966c04170de54f919894669bdf856a",
+    "6": "97a961aaf25c08938a1a54a5c43896a09576ca131523b222cab9224c687072ef",
+    "7": "df18ecef961b1aa0dade0b2ffb980aa5b460ffb399d917a0a7fa20d6a317cc52",
+    "8": "caa3329ac48f40aa65585dc5766a8366516c47574d9b7ca5e0e225934c09d682"
+  },
+  "freeze_id": "a1878c4c4be30f650666996508abeb4dfc0b2481f56f85749dffa3a5fafca669"
+}
