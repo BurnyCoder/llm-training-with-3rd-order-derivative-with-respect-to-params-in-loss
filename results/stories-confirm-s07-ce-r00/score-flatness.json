@@ -1,0 +1,217 @@
+{
+  "run": "stories-confirm-s07-ce-r00",
+  "checkpoint_file_sha256": "b0cbe09856fcffd83e450677af5f94be6df2f37ac410b1d4d849ad2512687520",
+  "data_manifest_sha256": "f61dcd6d63f102755b2705140b274b65fc870c3cded3961845ca5ed51e1a6d00",
+  "width_device": "cuda",
+  "split": "train",
+  "probe_windows_sha256": "2b09cf8d13e4e0df411e816e32f1799f1ee165712973c51a09fc75d528c8c2b1",
+  "timestamp": "2026-11-26T00:45:42+00:00",
+  "protocol": "shared-logit-width-v1",
+  "score": {
+    "baseline_nll": 2.5736674272321793,
+    "delta_nll": 0.1,
+    "units": "RMS logit displacement",
+    "vocab": 4096,
+    "targets": 1024,
+    "direction_sha256": "5e9a84c337f2062645979ddc7e6cf7a9517d49d7715790081425badae96f5577",
+    "directions": [
+      {
+        "direction": 0,
+        "positive": {
+          "lower": 0.537353515625,
+          "upper": 0.5374755859375
+        },
+        "negative": {
+          "lower": 0.5401611328125,
+          "upper": 0.540283203125
+        },
+        "curvature": 0.7062258622715812
+      },
+      {
+        "direction": 1,
+        "positive": {
+          "lower": 0.5130615234375,
+          "upper": 0.51318359375
+        },
+        "negative": {
+          "lower": 0.5621337890625,
+          "upper": 0.562255859375
+        },
+        "curvature": 0.709435734341338
+      },
+      {
+        "direction": 2,
+        "positive": {
+          "lower": 0.5181884765625,
+          "upper": 0.518310546875
+        },
+        "negative": {
+          "lower": 0.560302734375,
+          "upper": 0.5604248046875
+        },
+        "curvature": 0.7072382966004711
+      },
+      {
+        "direction": 3,
+        "positive": {
+          "lower": 0.5440673828125,
+          "upper": 0.544189453125
+        },
+        "negative": {
+          "lower": 0.533935546875,
+          "upper": 0.5340576171875
+        },
+        "curvature": 0.7059382416522102
+      },
+      {
+        "direction": 4,
+        "positive": {
+          "lower": 0.562744140625,
+          "upper": 0.5628662109375
+        },
+        "negative": {
+          "lower": 0.5382080078125,
+          "upper": 0.538330078125
+        },
+        "curvature": 0.6753959195260739
+      },
+      {
+        "direction": 5,
+        "positive": {
+          "lower": 0.4329833984375,
+          "upper": 0.43304443359375
+        },
+        "negative": {
+          "lower": 0.677734375,
+          "upper": 0.6778564453125
+        },
+        "curvature": 0.6954971756931986
+      },
+      {
+        "direction": 6,
+        "positive": {
+          "lower": 0.544189453125,
+          "upper": 0.5443115234375
+        },
+        "negative": {
+          "lower": 0.5333251953125,
+          "upper": 0.533447265625
+        },
+        "curvature": 0.7070132301080171
+      },
+      {
+        "direction": 7,
+        "positive": {
+          "lower": 0.602783203125,
+          "upper": 0.6029052734375
+        },
+        "negative": {
+          "lower": 0.478271484375,
+          "upper": 0.47833251953125
+        },
+        "curvature": 0.7136543799416667
+      },
+      {
+        "direction": 8,
+        "positive": {
+          "lower": 0.5821533203125,
+          "upper": 0.582275390625
+        },
+        "negative": {
+          "lower": 0.5115966796875,
+          "upper": 0.51171875
+        },
+        "curvature": 0.6899359642426645
+      },
+      {
+        "direction": 9,
+        "positive": {
+          "lower": 0.551025390625,
+          "upper": 0.5511474609375
+        },
+        "negative": {
+          "lower": 0.53759765625,
+          "upper": 0.5377197265625
+        },
+        "curvature": 0.6920035923213993
+      },
+      {
+        "direction": 10,
+        "positive": {
+          "lower": 0.62158203125,
+          "upper": 0.6217041015625
+        },
+        "negative": {
+          "lower": 0.48974609375,
+          "upper": 0.48980712890625
+        },
+        "curvature": 0.6809106657565256
+      },
+      {
+        "direction": 11,
+        "positive": {
+          "lower": 0.5692138671875,
+          "upper": 0.5693359375
+        },
+        "negative": {
+          "lower": 0.5185546875,
+          "upper": 0.5186767578125
+        },
+        "curvature": 0.6935631589440439
+      },
+      {
+        "direction": 12,
+        "positive": {
+          "lower": 0.47271728515625,
+          "upper": 0.4727783203125
+        },
+        "negative": {
+          "lower": 0.603515625,
+          "upper": 0.6036376953125
+        },
+        "curvature": 0.7171481369986928
+      },
+      {
+        "direction": 13,
+        "positive": {
+          "lower": 0.555908203125,
+          "upper": 0.5560302734375
+        },
+        "negative": {
+          "lower": 0.538330078125,
+          "upper": 0.5384521484375
+        },
+        "curvature": 0.6845445649669692
+      },
+      {
+        "direction": 14,
+        "positive": {
+          "lower": 0.5614013671875,
+          "upper": 0.5615234375
+        },
+        "negative": {
+          "lower": 0.5185546875,
+          "upper": 0.5186767578125
+        },
+        "curvature": 0.7045435433426005
+      },
+      {
+        "direction": 15,
+        "positive": {
+          "lower": 0.5784912109375,
+          "upper": 0.57861328125
+        },
+        "negative": {
+          "lower": 0.50634765625,
+          "upper": 0.5064697265625
+        },
+        "curvature": 0.700909915519422
+      }
+    ],
+    "width_lower": 1.08294677734375,
+    "width_upper": 1.083160400390625,
+    "width": 1.0830535888671875,
+    "censored_rays": 0,
+    "mean_directional_curvature": 0.6989973988891797
+  }
+}
