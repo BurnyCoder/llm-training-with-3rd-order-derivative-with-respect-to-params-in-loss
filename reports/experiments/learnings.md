@@ -1,6 +1,6 @@
 # Experimental learnings
 
-**TinyStories.** Awaiting paired test results (8 of 8 full-horizon training triplets).
+**TinyStories.** The completed stage did not establish an improvement over both baselines under the registered decision rule.
 
 **Research abstracts.** Awaiting paired test results (1 of 8 full-horizon training triplets).
 

@@ -12,12 +12,12 @@ The research background includes flat minima, Hessian measurements and third der
 
 | Model and split | Matched evidence | Third-order NLL vs AdamW<br>↓ Lower is better | Third-order NLL vs trace<br>↓ Lower is better | Speed vs AdamW<br>↑ Higher is better |
 | --- | --- | --- | --- | --- |
-| TinyStories pretraining · dev | 8/8 full-budget seeds | 0.000013 higher | 0.000228 lower | 69.4% slower |
+| TinyStories pretraining · test | 8/8 full-budget seeds | 0.000028 higher | 0.000222 lower | 69.4% slower |
 | Pythia-410M adapters · dev | 1/8 full-budget seeds | 0.000058 lower | 0.000024 higher | 91.5% slower |
 
 **Adaptive vs fixed-ramp hybrid** · 4/8 paired seeds. Adaptive development NLL was 0.000203 lower. It retained 0.0542 less directional width after the switch. Median final widths were 13.103 (adaptive) and 13.159 (fixed). More width is better for the registered geometry test. Whether more width improves prediction is unknown.
 
-Both primary test decisions are pending. Each stage requires eight paired test seeds and superiority over both baselines under Holm correction.
+**TinyStories pretraining** · The completed stage did not establish an improvement over both baselines under the registered decision rule. **Pythia-410M adapters** · Awaiting paired test results (1 of 8 full-horizon training triplets).
 
 [Side-by-side scores, accuracy, speed and memory](#side-by-side-comparisons) · [Flatness by variant and baseline](#all-variants-and-baselines) · [Live explorer](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer) · [Paired tests and intervals](reports/summary.md)
 
@@ -73,10 +73,13 @@ Each row states which direction is better for that metric. Bold highlights the b
 
 ### TinyStories pretraining
 
-**Full development split · 8/8 full-budget seeds · 16,777,216 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](results/selection/stories.json) · [Experiment ledger](reports/experiments/experiments.md)
+**Final test · 8/8 full-budget seeds · 16,777,216 training targets per run.** Method columns show medians over the same seeds. The two right columns give the median paired change for third order against each baseline. [Strength selection](results/selection/stories.json) · [Experiment ledger](reports/experiments/experiments.md)
 
 | Metric | AdamW | Hessian trace | Third order | vs AdamW | vs Hessian trace |
 | --- | --- | --- | --- | --- | --- |
+| Final test NLL<br>↓ Lower is better | **2.544147** | 2.544678 | 2.544355 | 0.000028 higher | 0.000222 lower |
+| Final test perplexity<br>↓ Lower is better | **12.7324** | 12.7391 | 12.7350 | 0.0004 higher | 0.0028 lower |
+| Final test accuracy<br>↑ Higher is better | **46.298%** | 46.297% | 46.297% | 0.004 pp lower | 0.004 pp higher |
 | Development NLL<br>↓ Lower is better | **2.543536** | 2.544168 | 2.543755 | 0.000013 higher | 0.000228 lower |
 | Development perplexity<br>↓ Lower is better | **12.7246** | 12.7326 | 12.7274 | 0.0002 higher | 0.0029 lower |
 | Dev top-1 accuracy<br>↑ Higher is better | 46.281% | 46.283% | **46.284%** | Tie | 0.002 pp higher |
@@ -86,7 +89,14 @@ Each row states which direction is better for that metric. Bold highlights the b
 
 The common training-time cutoff had a median of 127.9 seconds. The furthest checkpoint used for this row was 10.9 seconds before its cutoff.
 
-Awaiting paired test results (8 of 8 full-horizon training triplets).
+The completed stage did not establish an improvement over both baselines under the registered decision rule.
+
+| Against | Paired Δtest NLL | Median interval | Wins/ties/losses | Holm p |
+| --- | --- | --- | --- | --- |
+| AdamW | +0.000028 | [-0.000682, +0.000436] | 4/0/4 | 0.63672 |
+| Hessian trace | -0.000222 | [-0.000588, -0.000081] | 8/0/0 | 0.00781 |
+
+A negative difference favors third order. A positive difference favors the named baseline. The interval shows uncertainty in the median difference. A smaller Holm-adjusted p-value gives stronger evidence for the registered improvement. [Test decision rule](reports/preregistration.md)
 
 ### Pythia-410M adapters
 
@@ -320,6 +330,8 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 ![Directional width by TinyStories arm and seed](docs/figures/hybrid_width.png)
 
 ![Parameter-space computation graph](docs/figures/architecture.png)
+
+![Paired test differences](docs/figures/paired.png)
 
 ![Development NLL](docs/figures/curves.png)
 

@@ -2,7 +2,7 @@
 
 Recorded 80 runs, including 80 with a completed summary.
 
-**TinyStories.** Awaiting paired test results (8 of 8 full-horizon training triplets).
+**TinyStories.** The completed stage did not establish an improvement over both baselines under the registered decision rule.
 
 **Research abstracts.** Awaiting paired test results (1 of 8 full-horizon training triplets).
 
@@ -38,7 +38,7 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 | Research abstracts | pilot | Hessian trace | 0.100 | 65,536 | 1 | 3.1143 | 22.5172 | — | — |
 | TinyStories | branch | Shared trace checkpoint | 0.010 | 8,388,608 | 5 | 2.7577 | 15.7633 | — | — |
 | TinyStories | confirm | Ordinary AdamW | 0.000 | 16,777,216 | 8 | 2.5435 | 12.7246 | 2.5441 | 12.7324 |
-| TinyStories | confirm | Third derivative | 0.010 | 16,777,216 | 8 | 2.5438 | 12.7274 | 2.5449 | 12.7422 |
+| TinyStories | confirm | Third derivative | 0.010 | 16,777,216 | 8 | 2.5438 | 12.7274 | 2.5444 | 12.7350 |
 | TinyStories | confirm | Hessian trace | 0.010 | 16,777,216 | 8 | 2.5442 | 12.7326 | 2.5447 | 12.7391 |
 | TinyStories | control | Initial checkpoint | 0.000 | 0 | 1 | 8.3437 | 4,203.5319 | — | — |
 | TinyStories | control | Unigram | 0.000 | 0 | 1 | 6.0036 | 404.8654 | — | — |
@@ -60,6 +60,32 @@ TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints c
 | TinyStories | pilot | Hessian trace | 0.100 | 2,097,152 | 1 | 3.8979 | 49.2988 | — | — |
 
 ## Paired evidence
+
+### TinyStories
+
+| Comparator | Wins | Ties | Losses | Median ΔNLL | Median interval | Coverage | Sign-test p | Holm p |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Ordinary AdamW | 4 | 0 | 4 | 0.00003 | [-0.00068, 0.00044] | 0.9922 | 0.63672 | 0.63672 |
+| Hessian trace | 8 | 0 | 0 | -0.00022 | [-0.00059, -0.00008] | 0.9922 | 0.00391 | 0.00781 |
+
+| Comparator | Seed | Third-order NLL | Comparator NLL | ΔNLL |
+| --- | --- | --- | --- | --- |
+| Ordinary AdamW | 1 | 2.54795 | 2.54787 | 0.00008 |
+| Ordinary AdamW | 2 | 2.54492 | 2.54448 | 0.00044 |
+| Ordinary AdamW | 3 | 2.54959 | 2.54981 | -0.00022 |
+| Ordinary AdamW | 4 | 2.54379 | 2.54381 | -0.00002 |
+| Ordinary AdamW | 5 | 2.54186 | 2.54174 | 0.00012 |
+| Ordinary AdamW | 6 | 2.54503 | 2.54571 | -0.00068 |
+| Ordinary AdamW | 7 | 2.54133 | 2.54115 | 0.00017 |
+| Ordinary AdamW | 8 | 2.53893 | 2.53950 | -0.00058 |
+| Hessian trace | 1 | 2.54795 | 2.54816 | -0.00022 |
+| Hessian trace | 2 | 2.54492 | 2.54500 | -0.00008 |
+| Hessian trace | 3 | 2.54959 | 2.54999 | -0.00040 |
+| Hessian trace | 4 | 2.54379 | 2.54436 | -0.00057 |
+| Hessian trace | 5 | 2.54186 | 2.54194 | -0.00008 |
+| Hessian trace | 6 | 2.54503 | 2.54519 | -0.00016 |
+| Hessian trace | 7 | 2.54133 | 2.54155 | -0.00023 |
+| Hessian trace | 8 | 2.53893 | 2.53951 | -0.00059 |
 
 ### TinyStories at equal training time
 
@@ -111,3 +137,5 @@ This supplementary clock excludes the measured host probe calls and their transf
 ![Computation graph](../docs/figures/architecture.png)
 
 ![Development trajectories](../docs/figures/curves.png)
+
+![Paired test differences](../docs/figures/paired.png)

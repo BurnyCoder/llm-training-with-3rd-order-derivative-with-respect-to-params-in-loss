@@ -4,9 +4,9 @@ Run `stories-confirm-s08-third-r01` · [raw records](../../../results/stories-co
 
 | Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Third derivative | confirm | 8 | 0.010 | 16,777,216 | 2.5402 | 12.6826 | — | — | 40,220 | complete |
+| TinyStories | Third derivative | confirm | 8 | 0.010 | 16,777,216 | 2.5402 | 12.6826 | 2.5389 | 12.6660 | 40,220 | complete |
 
-Training time is 417.1 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4634. Test token accuracy is —.
+Training time is 417.1 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4634. Test token accuracy is 0.4643.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-confirm-s08-third-r01/config.json)
 
