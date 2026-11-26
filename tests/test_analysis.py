@@ -4,7 +4,7 @@ import math
 
 import pytest
 
-from thirdloss.analysis import analyze_stage
+from frozen_fixture import analyze as analyze_stage, bind, inputs
 
 
 METHODS = ("ce", "trace", "third")
@@ -14,12 +14,12 @@ STORY_TOKENS = 16_777_216
 def complete_matrix():
     """Every registered seed has the same tiny improvement in this artificial fixture."""
     return [
-        {
+        bind({
             "id": f"stories-{method}-{seed}", "stage": "stories", "phase": "confirm",
             "seed": seed, "method": method, "tokens": STORY_TOKENS,
             "test_nll": 1.0 if method == "third" else 1.5,
             "freeze_id": "fixture-matrix", "test_manifest_sha256": "fixture-test-corpus",
-        }
+        })
         for seed in range(1, 9)
         for method in METHODS
     ]
@@ -116,6 +116,33 @@ def test_adverse_effect_reported_separately_from_uncertainty():
     result = analyze_stage(rows, "stories")
     assert result["status"] == "adverse"
     assert result["comparisons"]["trace"]["interpretation"] == "adverse"
+
+
+@pytest.mark.parametrize("defect", ["absent freeze", "stale hash", "missing hashes", "foreign weight",
+                                   "wrong denominator", "wrong initialization", "wrong dataset"])
+def test_real_manifest_required_even_when_every_summary_agrees(defect):
+    from thirdloss.analysis import analyze_stage as analyze_records
+    rows = complete_matrix()
+    seal, corpus = inputs("stories")
+    if defect == "absent freeze":
+        seal = None
+    elif defect == "stale hash":
+        seal["ratios"]["third"] = .03
+    elif defect == "missing hashes":
+        for row in rows:
+            for key in ("freeze_id", "test_tokens", "test_manifest_sha256"):
+                del row[key]
+    elif defect == "foreign weight":
+        rows[0]["weights_sha256"] = rows[1]["weights_sha256"]
+    elif defect == "wrong denominator":
+        for row in rows:
+            row["test_tokens"] = 129
+    elif defect == "wrong initialization":
+        rows[0]["initial_trainable_sha256"] = "different"
+    else:
+        corpus["splits"]["test"]["sha256"] = "other"
+    result = analyze_records(rows, "stories", freeze=seal, dataset=corpus)
+    assert not result["complete"] and not result["comparisons"]
 
 
 def test_exploratory_arms_and_other_stages_do_not_enter_paired_matrix():

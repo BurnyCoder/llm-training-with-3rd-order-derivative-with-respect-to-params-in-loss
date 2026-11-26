@@ -1,7 +1,5 @@
 """Sequence prospective pilots, blinded model selection, sealed evaluation and releases."""
 
-import hashlib
-import json
 import subprocess
 import sys
 from pathlib import Path
@@ -9,6 +7,7 @@ from pathlib import Path
 from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
 
+from .analysis import freeze_digest
 from .data import prepare
 from .evaluation import score
 from .models import build_model
@@ -125,7 +124,7 @@ def freeze(project, storage, stage):
         if len(initial)!=1:
             raise ValueError(f"Initial trainable weights differ across {stage} seed {seed} arms")
         frozen.setdefault("initializations",{})[str(seed)] = initial.pop()
-    frozen["freeze_id"] = hashlib.sha256(json.dumps(frozen,sort_keys=True).encode()).hexdigest()
+    frozen["freeze_id"] = freeze_digest(frozen)
     path = project/"results"/"freeze"/f"{stage}.json"
     if path.exists() and read_json(path)!=frozen:
         raise ValueError("A sealed checkpoint or dataset changed")

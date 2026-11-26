@@ -36,7 +36,7 @@ def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--project",type=Path,default=Path.cwd())
     parsers = p.add_subparsers(dest="action",required=True)
-    for action in ("prepare","train","study","hybrid","flatness","freeze","evaluate","seed-sensitivity","report","dashboard","publish","audit-hub","audit-restart","progress","verify"):
+    for action in ("prepare","train","study","hybrid","flatness","freeze","evaluate","seed-sensitivity","report","dashboard","publish","audit-hub","audit-restart","audit-science","progress","verify"):
         sub = parsers.add_parser(action)
         if action in {"prepare","study","flatness"}:
             sub.add_argument("--stage",choices=(*HORIZONS,"both"),default="both")
@@ -71,6 +71,10 @@ def parser():
             sub.add_argument("run_id")
         if action=="dashboard":
             sub.add_argument("--port",type=int,default=8765)
+        if action=="audit-science":
+            sub.add_argument("--restore",action="store_true",help="Restore the required public archive files into study storage")
+            sub.add_argument("--archive-revision",help="Use a particular thirdloss-study Hub revision when restoring")
+            sub.add_argument("--report",action="store_true",help="Rebuild the study publications after verification")
         if action=="publish":
             sub.add_argument("--message",default="Update third-derivative study records")
             sub.add_argument("--checkpoints",action="store_true",help="Republish the fitted checkpoints and restart states in the collection")
@@ -81,6 +85,16 @@ def main(argv=None):
     args = parser().parse_args(argv)
     project = args.project.resolve()
     storage = storage_root(project)
+    if args.action=="audit-science":
+        from .scientific_audit import scientific_audit
+        if args.restore:
+            from .hub_archive import restore_audit_inputs
+            restore_audit_inputs(project,storage,args.archive_revision)
+        print(scientific_audit(project,storage),flush=True)
+        if args.report:
+            from .reporting import build_report
+            build_report(project)
+        return
     if args.action=="seed-sensitivity":
         from .seed_sensitivity import finish_seed_sensitivity
         finish_seed_sensitivity(project,args.publish)

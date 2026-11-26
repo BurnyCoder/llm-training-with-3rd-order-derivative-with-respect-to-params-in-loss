@@ -10,6 +10,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from .analysis import analyze_stage
+from .audit_report import audit_readout
 from .flatness_stats import compact_width
 from .hybrid_results import hybrid_results
 from .records import GITHUB as REPOSITORY, PAGES
@@ -264,12 +265,13 @@ def study_snapshot(root: Path = Path(".")) -> dict:
             run.update(registered_phase=run["phase"], phase="diagnostic", precision_audit=exclusions[run["id"]])
         if run["id"] in restarts:
             run["restart_audits"] = restarts[run["id"]]
-    stages = {stage: analyze_stage(runs, stage) for stage in STAGES}
+    context = {stage: {key: read_json(directory / key / f"{stage}.json")
+                       for key in ("datasets", "selection", "feasibility")} for stage in STAGES}
+    stages = {stage: analyze_stage(runs, stage, freeze=read_json(directory/"freeze"/f"{stage}.json"),
+                                   dataset=context[stage]["datasets"]) for stage in STAGES}
     for run in runs:
         run["events_total"] = len(run["events"])
         run["events"] = display_events(run["events"])
-    context = {stage: {key: read_json(directory / key / f"{stage}.json")
-                       for key in ("datasets", "selection", "feasibility")} for stage in STAGES}
     pilots = {s: pilot_differences(runs, s, context[s]["selection"]) for s in STAGES}
     numerics = {key:read_json(directory/"verification"/(key+".json")) for key in
                 ("pythia-joint-cuda","pythia-fp64-agreement","pythia-fp64-cpu","pythia-fp64-cuda","stories-full-gradient")}
@@ -281,6 +283,7 @@ def study_snapshot(root: Path = Path(".")) -> dict:
         "seed_sensitivity": (read_json(directory / "analysis" / "seed-sensitivity.json")
                              if (directory / "freeze" / "seed-sensitivity.json").is_file() else None),
         "hybrid":hybrid_results(runs),
+        "scientific_audit":audit_readout(read_json(directory/"analysis"/"scientific-audit.json")),
     }
 
 
