@@ -44,7 +44,7 @@ NLL is negative log-likelihood in nats per target token. A smaller value assigns
 | [stories-confirm-s05-trace-r01](./stories-confirm-s05-trace-r01/experiment.md) | TinyStories | Hessian trace | confirm | 5 | 0.010 | 16,777,216 | 2.5424 | 12.7104 | 2.5419 | 12.7043 | 70,286 | complete |
 | [stories-confirm-s06-ce-r00](./stories-confirm-s06-ce-r00/experiment.md) | TinyStories | Ordinary AdamW | confirm | 6 | 0.000 | 16,777,216 | 2.5459 | 12.7553 | 2.5457 | 12.7523 | 132,129 | complete |
 | [stories-confirm-s06-third-r01](./stories-confirm-s06-third-r01/experiment.md) | TinyStories | Third derivative | confirm | 6 | 0.010 | 16,777,216 | 2.5455 | 12.7491 | — | — | 41,244 | complete |
-| [stories-confirm-s06-trace-r01](./stories-confirm-s06-trace-r01/experiment.md) | TinyStories | Hessian trace | confirm | 6 | 0.010 | 16,777,216 | 2.5453 | 12.7474 | — | — | 71,044 | complete |
+| [stories-confirm-s06-trace-r01](./stories-confirm-s06-trace-r01/experiment.md) | TinyStories | Hessian trace | confirm | 6 | 0.010 | 16,777,216 | 2.5453 | 12.7474 | 2.5452 | 12.7457 | 71,044 | complete |
 | [stories-confirm-s07-ce-r00](./stories-confirm-s07-ce-r00/experiment.md) | TinyStories | Ordinary AdamW | confirm | 7 | 0.000 | 16,777,216 | 2.5404 | 12.6847 | — | — | 131,830 | complete |
 | [stories-confirm-s07-third-r01](./stories-confirm-s07-third-r01/experiment.md) | TinyStories | Third derivative | confirm | 7 | 0.010 | 16,777,216 | 2.5405 | 12.6866 | — | — | 41,583 | complete |
 | [stories-confirm-s07-trace-r01](./stories-confirm-s07-trace-r01/experiment.md) | TinyStories | Hessian trace | confirm | 7 | 0.010 | 16,777,216 | 2.5407 | 12.6888 | — | — | 72,117 | complete |
