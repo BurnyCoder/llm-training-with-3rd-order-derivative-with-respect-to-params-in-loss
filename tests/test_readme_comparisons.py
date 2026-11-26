@@ -67,6 +67,8 @@ def test_final_scorecard_uses_all_eight_seeds_and_shows_holm_and_median_interval
     study["stages"]["stories"]=analyze_stage(study["runs"],"stories")
     top,detail=comparison_sections(study)
     assert "TinyStories pretraining · test" in top and "8/8 full-budget seeds" in top
+    assert "8/8 pairs against AdamW" in top and "8/8 against Hessian trace" in top
+    assert "Holm p = 0.00781" in top
     assert "| Final test NLL<br>↓ Lower is better | 4.000000 | 3.900000 | **3.800000** |" in detail
     assert "| Final test perplexity<br>↓ Lower is better | 54.5982 | 49.4024 | **44.7012** |" in detail
     assert "Median interval" in detail and "Holm p" in detail and "0.00781" in detail

@@ -362,6 +362,6 @@ def comparison_sections(study):
         quick.insert(-1,"Both primary test decisions are pending. Each stage requires eight paired test seeds "
                      "and superiority over both baselines under Holm correction.")
     else:
-        quick.insert(-1," ".join(f"**{name}** · {verdict_text(study['stages'][stage])}"
+        quick.insert(-1," ".join(f"**{name}** · {verdict_text(study['stages'][stage],paired=True)}"
                                  for stage,name in STAGES.items()))
     return "\n\n".join(quick),"\n\n".join(detail)
