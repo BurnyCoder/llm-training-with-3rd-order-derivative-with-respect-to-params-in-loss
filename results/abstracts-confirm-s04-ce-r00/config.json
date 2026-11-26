@@ -1,0 +1,14 @@
+{
+  "id": "abstracts-confirm-s04-ce-r00",
+  "stage": "abstracts",
+  "method": "ce",
+  "phase": "confirm",
+  "seed": 4,
+  "ratio": 0.0,
+  "token_budget": 524288,
+  "batch_windows": 8,
+  "context": 128,
+  "data_manifest_sha256": "0638bd23a7d1dc3ecb9138074ecd922211df2637f60736ddfab7e9aec0b3ccb9",
+  "microbatch": 2,
+  "coefficients": {}
+}
