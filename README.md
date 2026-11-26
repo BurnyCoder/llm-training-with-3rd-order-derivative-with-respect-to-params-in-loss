@@ -30,21 +30,21 @@ These medians compare the same seeds and training windows within each model fami
 | TinyStories pretraining · 8/8 full-budget seeds | Directional width<br>↑ Wider is flatter | 12.807 | 12.899 | 12.913 |
 | TinyStories pretraining · 8/8 full-budget seeds | RMS Hessian curvature<br>↓ Less local bending | 0.590453 | 0.581726 | 0.573339 |
 | TinyStories pretraining · 8/8 full-budget seeds | Common score width<br>↑ More score tolerance | 1.0815 | 1.0815 | 1.0813 |
-| Pythia-410M adapters · 1/8 full-budget seeds | Directional width<br>↑ Wider is flatter | 20.132 | 20.270 | 20.313 |
-| Pythia-410M adapters · 1/8 full-budget seeds | RMS Hessian curvature<br>↓ Less local bending | 0.555644 | 0.624955 | 0.605748 |
-| Pythia-410M adapters · 1/8 full-budget seeds | Common score width<br>↑ More score tolerance | 1.1054 | 1.1057 | 1.1055 |
+| Pythia-410M adapters · 2/8 full-budget seeds | Directional width<br>↑ Wider is flatter | 19.665 | 19.746 | 19.828 |
+| Pythia-410M adapters · 2/8 full-budget seeds | RMS Hessian curvature<br>↓ Less local bending | 0.724098 | 0.655204 | 0.626507 |
+| Pythia-410M adapters · 2/8 full-budget seeds | Common score width<br>↑ More score tolerance | 1.1043 | 1.1044 | 1.1043 |
 
 [All variants, initial models and unigram references](#all-variants-and-baselines) · [Per-seed widths, search brackets and curvature](reports/flatness.md)
 
 ### Current and planned runs
 
-**Snapshot at 2026-11-26T04:22:22+00:00** · 188/305 experimental milestones complete.
+**Snapshot at 2026-11-26T04:26:10+00:00** · 189/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
 **Next scheduled work** · Research abstracts · Third derivative · confirm seed 3 (1%).
 
-The measured remaining-time scenarios are 24.37–25.23 machine-hours.
+The measured remaining-time scenarios are 24.31–25.14 machine-hours.
 
 [Finished, active and planned experiments](reports/planned-runs.md#current-evidence-and-remaining-runs) · [Live measurements](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer)
 
@@ -212,7 +212,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Randomized gradient signs (1%) | 65,536 | 0 | 19.858 (1/1) | 0.73137 (1/1) | 1.0928 (1/1) |
 | Trace + third derivative (1%) | 65,536 | 0 | 19.910 (1/1) | 0.6078 (1/1) | 1.0928 (1/1) |
 | Ordinary AdamW · confirmation | 524,288 | 1–8 | 19.665 (2/8) | 0.7241 (2/8) | 1.1043 (2/8) |
-| Hessian trace · confirmation | 524,288 | 1–8 | 20.270 (1/8) | 0.62496 (1/8) | 1.1057 (1/8) |
+| Hessian trace · confirmation | 524,288 | 1–8 | 19.746 (2/8) | 0.6552 (2/8) | 1.1044 (2/8) |
 | Third derivative · confirmation | 524,288 | 1–8 | 19.828 (2/8) | 0.62651 (2/8) | 1.1043 (2/8) |
 
 <details><summary>Pythia-410M · adapter weights · other pilot strengths and precision diagnostics</summary>
@@ -240,18 +240,18 @@ Each row uses the same fixed training windows and probe directions within its st
 | Signed Hessian trace / parameter<br>No general better direction | +0.00493753 | +0.00494619 | +0.00485706 |
 | Common score width<br>↑ More score tolerance | 1.0815 | 1.0815 | 1.0813 |
 
-**Pythia-410M adapters · full-budget checkpoints · seeds 1 · 524,288 training targets**
+**Pythia-410M adapters · full-budget checkpoints · seeds 1, 2 · 524,288 training targets**
 
 | Flatness statistic | AdamW | Hessian trace | Third order |
 | --- | --- | --- | --- |
-| Directional width<br>↑ Wider is flatter | 20.132 | 20.270 | 20.313 |
-| Final width range across seeds<br>Descriptive spread | One seed | One seed | One seed |
-| Middle 50% of directions<br>Descriptive spread | 19.362–20.737 | 19.558–20.675 | 19.476–20.931 |
-| Rays at limit / tested<br>Measurement coverage | 0/32 | 0/32 | 0/32 |
-| Unperturbed probe NLL<br>↓ Lower fits these windows better | 2.84601 | 2.84668 | 2.84606 |
-| RMS Hessian curvature<br>↓ Less local bending | 0.555644 | 0.624955 | 0.605748 |
-| Signed Hessian trace / parameter<br>No general better direction | +0.00201225 | +0.00159403 | +0.00183383 |
-| Common score width<br>↑ More score tolerance | 1.1054 | 1.1057 | 1.1055 |
+| Directional width<br>↑ Wider is flatter | 19.665 | 19.746 | 19.828 |
+| Final width range across seeds<br>Descriptive spread | 19.197–20.132 | 19.222–20.270 | 19.342–20.313 |
+| Middle 50% of directions<br>Descriptive spread | 18.991–20.349 | 19.055–20.315 | 19.147–20.608 |
+| Rays at limit / tested<br>Measurement coverage | 0/64 | 0/64 | 0/64 |
+| Unperturbed probe NLL<br>↓ Lower fits these windows better | 2.84422 | 2.84513 | 2.84461 |
+| RMS Hessian curvature<br>↓ Less local bending | 0.724098 | 0.655204 | 0.626507 |
+| Signed Hessian trace / parameter<br>No general better direction | +0.00193947 | +0.00148884 | +0.00111663 |
+| Common score width<br>↑ More score tolerance | 1.1043 | 1.1044 | 1.1043 |
 
 For the primary comparison, TinyStories uses all weights and Pythia uses the LoRA factors. Compare widths within each model. The link gives every run, directional bracket and Hessian probe. [Flatness statistics and raw files](reports/flatness.md) · [Secondary measurement design](reports/amendments/checkpoint-flatness.md)
 
