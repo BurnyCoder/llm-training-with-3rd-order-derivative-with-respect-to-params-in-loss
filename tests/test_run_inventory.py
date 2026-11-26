@@ -57,3 +57,24 @@ def test_standalone_status_reads_the_sealed_final_analysis(tmp_path):
     assert not inventory(study_snapshot(tmp_path))["final"]
     write_json(root / "freeze" / "seed-sensitivity.json", {"sealed_at": "final"})
     assert inventory(study_snapshot(tmp_path))["final"]
+
+
+def test_pause_uses_durable_progress_and_leaves_the_queue_idle(tmp_path):
+    """Uncommitted log entries remain available in the raw interrupted attempt."""
+    from thirdloss.live_hub import overlay
+    from thirdloss.records import write_json
+    from thirdloss.run_inventory import inventory
+
+    run = run_name("stories", "third", "pilot", 0, .03)
+    folder = tmp_path / "results" / run
+    write_json(folder / "config.json", {"stage": "stories", "method": "third", "phase": "pilot", "seed": 0, "ratio": .03})
+    write_json(folder / "state.json", {"status": "paused", "checkpoint_step": 2})
+    (folder / "events.jsonl").write_text('{"step":2,"tokens":4}\n{"step":3,"tokens":6}\n', encoding="utf-8")
+    study = study_snapshot(tmp_path)
+    row = study["runs"][0]
+    assert (row["status"], row["steps"], row["tokens"]) == ("paused", 2, 4)
+    plan = inventory(study)
+    assert plan["paused"] and not plan["activity"] and run == plan["fits"][0]["id"]
+    assert "Third derivative" in plan["next"] and plan["done"] == 0
+    update = overlay(study)
+    assert not update["active"] and update["runs"][0]["status"] == "paused"

@@ -76,7 +76,7 @@ def _entry(study, observed, stage, phase, method, seed, ratio, run_id):
     strength = f" ({ratio:.0%})" if ratio else ""
     title = f"{STAGES[stage]} · {METHODS[method]} · {phase} seed {seed}{strength}"
     activity = ""
-    if test == "Scoring test" or (row and not done and status not in {"queued", "planned", "failed"}):
+    if test == "Scoring test" or (row and not done and status not in {"queued", "planned", "failed", "paused"}):
         label = "Scoring test" if test == "Scoring test" else fit
         if evaluation.get("targets_to_score"):
             detail = f"{evaluation['targets_scored']:,}/{evaluation['targets_to_score']:,} targets scored"
@@ -125,17 +125,25 @@ def inventory(study):
     if next_job is None:
         next_job = ("Complete remaining checkpoint flatness" if any(r["geometry"] != "Complete" for r in rows)
                     else "Study complete" if final else "Final seed-sensitivity analysis")
+    paused = any(r["fit"] == "Paused" for r in rows)
     return {"groups": groups, "fits": rows, "done": sum(g["done"] for g in groups),
             "total": sum(g["total"] for g in groups), "activity": [r["activity"] for r in rows if r["activity"]],
-            "next": next_job, "final": final, "order":[[positions[id(fits[key])],action] for key,action in order]}
+            "paused": paused, "next": next_job, "final": final, "order":[[positions[id(fits[key])],action] for key,action in order]}
+
+
+def activity_labels(plan):
+    """Keep the current status and conditional resumption wording consistent across publications."""
+    if plan["paused"]:
+        return "Experiments paused by request. The remaining runs have no scheduled start date", "First run on resumption"
+    return " / ".join(plan["activity"]) or "Between recorded training and scoring updates", "Next scheduled work"
 
 
 def status_lines(study):
     """Label the publication time and distinguish observed activity from the next scheduled job."""
     plan = study["run_inventory"]
-    active = " / ".join(plan["activity"]) or "Between recorded training and scoring updates"
+    active, next_label = activity_labels(plan)
     lines = [f"**Snapshot at {study['generated_at']}** · {plan['done']}/{plan['total']} experimental milestones complete.",
-             f"**Recorded activity** · {active}.", f"**Next scheduled work** · {plan['next']}."]
+             f"**Recorded activity** · {active}.", f"**{next_label}** · {plan['next']}."]
     if "forecast" in study:
         low, high = study["forecast"]
         lines.append(f"The measured remaining-time scenarios are {low:.2f}–{high:.2f} machine-hours.")

@@ -37,7 +37,7 @@ def overlay(snapshot):
                                       key=lambda r:r.get("evaluated_at") or r.get("finished_at",""))
     active = [r for r in snapshot["runs"] if not completed(r) or "evaluation_progress" in r]
     rows = {r["id"]:r for r in (*recent.values(),*active)}
-    return {"runs":list(rows.values()),"active":bool(active),"stages":snapshot["stages"],
+    return {"runs":list(rows.values()),"active":any(r.get("status") != "paused" for r in active),"stages":snapshot["stages"],
             "pilot_comparisons":snapshot["pilot_comparisons"]}
 
 
