@@ -4,9 +4,9 @@ Run `stories-confirm-s08-ce-r00` · [raw records](../../../results/stories-confi
 
 | Stage | Method | Phase | Seed | Ratio | Train tokens | Dev NLL | Dev PPL | Test NLL | Test PPL | Tokens/s | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TinyStories | Ordinary AdamW | confirm | 8 | 0.000 | 16,777,216 | 2.5406 | 12.6879 | — | — | 131,237 | complete |
+| TinyStories | Ordinary AdamW | confirm | 8 | 0.000 | 16,777,216 | 2.5406 | 12.6879 | 2.5395 | 12.6733 | 131,237 | complete |
 
-Training time is 127.8 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4634. Test token accuracy is —.
+Training time is 127.8 seconds. Peak allocated GPU memory is 608.2 MiB. Development token accuracy is 0.4634. Test token accuracy is 0.4643.
 
 [Design and hyperparameter rationale](../../planned-runs.md) · [Saved configuration](../../../results/stories-confirm-s08-ce-r00/config.json)
 
