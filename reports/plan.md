@@ -4,13 +4,13 @@
 
 ## Current evidence
 
-**Snapshot at 2026-11-26T09:32:34+00:00** · 200/305 experimental milestones complete.
+**Snapshot at 2026-11-26T09:36:15+00:00** · 201/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
 **Next scheduled work** · Research abstracts · Third derivative · confirm seed 5 (1%).
 
-The measured remaining-time scenarios are 18.87–19.51 machine-hours.
+The measured remaining-time scenarios are 18.82–19.42 machine-hours.
 
 **TinyStories.** The registered test of superiority over both baselines was inconclusive. Third order had lower test NLL in 4/8 pairs against AdamW (Holm p = 0.63672) and 8/8 against Hessian trace (Holm p = 0.00781).
 

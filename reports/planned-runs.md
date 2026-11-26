@@ -4,13 +4,13 @@
 
 ## Current evidence and remaining runs
 
-**Snapshot at 2026-11-26T09:32:34+00:00** · 200/305 experimental milestones complete.
+**Snapshot at 2026-11-26T09:36:15+00:00** · 201/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
 **Next scheduled work** · Research abstracts · Third derivative · confirm seed 5 (1%).
 
-The measured remaining-time scenarios are 18.87–19.51 machine-hours.
+The measured remaining-time scenarios are 18.82–19.42 machine-hours.
 
 | Work | Complete | Remaining | Planned |
 | --- | --- | --- | --- |
@@ -21,7 +21,7 @@ The measured remaining-time scenarios are 18.87–19.51 machine-hours.
 | Research abstracts · development and controls | 12 | 0 | 12 |
 | Research abstracts · full-budget primary runs | 12 | 12 | 24 |
 | Research abstracts · frozen tests | 0 | 24 | 24 |
-| Research abstracts · checkpoint flatness | 24 | 13 | 37 |
+| Research abstracts · checkpoint flatness | 25 | 12 | 37 |
 | TinyStories · shared hybrid checkpoints | 5 | 3 | 8 |
 | TinyStories · full hybrid runs | 23 | 25 | 48 |
 
@@ -153,7 +153,7 @@ The final seed-sensitivity analysis follows every model, frozen test and flatnes
 | confirm | 3 | [Hessian trace](../results/abstracts-confirm-s03-trace-r01-fp64/) | 1% | 524,288 | Complete | Awaiting freeze | Complete |
 | confirm | 4 | [Third derivative](../results/abstracts-confirm-s04-third-r01-fp64/) | 1% | 524,288 | Complete | Awaiting freeze | Complete |
 | confirm | 4 | [Ordinary AdamW](../results/abstracts-confirm-s04-ce-r00/) | 0% | 524,288 | Complete | Awaiting freeze | Complete |
-| confirm | 4 | [Hessian trace](../results/abstracts-confirm-s04-trace-r01-fp64/) | 1% | 524,288 | Complete | Awaiting freeze | Pending |
+| confirm | 4 | [Hessian trace](../results/abstracts-confirm-s04-trace-r01-fp64/) | 1% | 524,288 | Complete | Awaiting freeze | Complete |
 | confirm | 5 | Third derivative | 1% | 524,288 | Planned | Awaiting freeze | Pending |
 | confirm | 5 | Ordinary AdamW | 0% | 524,288 | Planned | Awaiting freeze | Pending |
 | confirm | 5 | Hessian trace | 1% | 524,288 | Planned | Awaiting freeze | Pending |
