@@ -41,9 +41,9 @@ These medians compare the same seeds and training windows within each model fami
 
 ### Current and planned runs
 
-**Snapshot at 2026-11-26T03:49:53+00:00** · 187/305 experimental milestones complete.
+**Snapshot at 2026-11-26T03:55:21+00:00** · 187/305 experimental milestones complete.
 
-**Recorded activity** · Research abstracts · Hessian trace · confirm seed 2 (1%) · Training · 155,648/524,288 training targets.
+**Recorded activity** · Research abstracts · Hessian trace · confirm seed 2 (1%) · Training · 253,952/524,288 training targets.
 
 **Next scheduled work** · Research abstracts · Third derivative · confirm seed 3 (1%).
 
