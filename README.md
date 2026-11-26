@@ -141,7 +141,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Randomized gradient signs (1%) | 2,097,152 | 0 | 15.571 (1/1) | 0.4536 (1/1) | 0.9892 (1/1) |
 | Trace + third derivative (1%) | 2,097,152 | 0 | 15.741 (1/1) | 0.44132 (1/1) | 0.9891 (1/1) |
 | Ordinary AdamW · confirmation | 16,777,216 | 1–8 | 12.807 (8/8) | 0.59045 (8/8) | 1.0815 (8/8) |
-| Hessian trace · confirmation | 16,777,216 | 1–8 | 12.903 (7/8) | 0.58448 (7/8) | 1.0815 (7/8) |
+| Hessian trace · confirmation | 16,777,216 | 1–8 | 12.899 (8/8) | 0.58173 (8/8) | 1.0815 (8/8) |
 | Third derivative · confirmation | 16,777,216 | 1–8 | 12.913 (8/8) | 0.57334 (8/8) | 1.0813 (8/8) |
 | Shared trace checkpoint | 8,388,608 | 21–28 | 15.201 (5/8) | 0.44989 (5/8) | 1.0624 (5/8) |
 | Curvature-dependent hybrid · hybrid study | 16,777,216 | 21–28 | 13.103 (4/8) | 0.57782 (4/8) | 1.0824 (4/8) |
@@ -190,17 +190,17 @@ Each row uses the same fixed training windows and probe directions within its st
 
 </details>
 
-**TinyStories pretraining · full-budget checkpoints · seeds 1, 2, 3, 4, 5, 6, 7 · 16,777,216 training targets**
+**TinyStories pretraining · full-budget checkpoints · seeds 1, 2, 3, 4, 5, 6, 7, 8 · 16,777,216 training targets**
 
 | Flatness statistic | AdamW | Hessian trace | Third order |
 | --- | --- | --- | --- |
-| Directional width<br>↑ Wider is flatter | 12.783 | 12.903 | 12.923 |
+| Directional width<br>↑ Wider is flatter | 12.807 | 12.899 | 12.913 |
 | Final width range across seeds<br>Descriptive spread | 12.542–12.963 | 12.638–13.044 | 12.667–13.101 |
-| Middle 50% of directions<br>Descriptive spread | 12.611–13.082 | 12.739–13.166 | 12.735–13.122 |
-| Rays at limit / tested<br>Measurement coverage | 0/224 | 0/224 | 0/224 |
-| Unperturbed probe NLL<br>↓ Lower fits these windows better | 2.58686 | 2.58382 | 2.58588 |
-| RMS Hessian curvature<br>↓ Lower means less local bending | 0.592477 | 0.584484 | 0.575793 |
-| Signed Hessian trace / parameter<br>No general better direction | +0.00489463 | +0.00485511 | +0.00473987 |
+| Middle 50% of directions<br>Descriptive spread | 12.567–13.040 | 12.684–13.125 | 12.714–13.115 |
+| Rays at limit / tested<br>Measurement coverage | 0/256 | 0/256 | 0/256 |
+| Unperturbed probe NLL<br>↓ Lower fits these windows better | 2.58516 | 2.58323 | 2.58409 |
+| RMS Hessian curvature<br>↓ Lower means less local bending | 0.590453 | 0.581726 | 0.573339 |
+| Signed Hessian trace / parameter<br>No general better direction | +0.00493753 | +0.00494619 | +0.00485706 |
 
 **Pythia-410M adapters · full-budget checkpoints · seeds 1 · 524,288 training targets**
 
