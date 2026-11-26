@@ -38,13 +38,13 @@ These medians compare the same seeds and training windows within each model fami
 
 ### Current and planned runs
 
-**Snapshot at 2026-11-26T08:49:36+00:00** · 198/305 experimental milestones complete.
+**Snapshot at 2026-11-26T08:53:01+00:00** · 199/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
 **Next scheduled work** · Research abstracts · Hessian trace · confirm seed 4 (1%).
 
-The measured remaining-time scenarios are 19.64–20.32 machine-hours.
+The measured remaining-time scenarios are 19.59–20.23 machine-hours.
 
 [Finished, active and planned experiments](reports/planned-runs.md#current-evidence-and-remaining-runs) · [Live measurements](https://huggingface.co/spaces/BurnyCoder/thirdloss-explorer)
 
@@ -211,7 +211,7 @@ Each row uses the same fixed training windows and probe directions within its st
 | Squared Hessian norm (3%) | 65,536 | 0 | 19.853 (1/1) | 1.4535 (1/1) | 1.0927 (1/1) |
 | Randomized gradient signs (1%) | 65,536 | 0 | 19.858 (1/1) | 0.73137 (1/1) | 1.0928 (1/1) |
 | Trace + third derivative (1%) | 65,536 | 0 | 19.910 (1/1) | 0.6078 (1/1) | 1.0928 (1/1) |
-| Ordinary AdamW · confirmation | 524,288 | 1–8 | 19.426 (3/8) | 0.62462 (3/8) | 1.1047 (3/8) |
+| Ordinary AdamW · confirmation | 524,288 | 1–8 | 19.654 (4/8) | 0.61284 (4/8) | 1.1050 (4/8) |
 | Hessian trace · confirmation | 524,288 | 1–8 | 19.669 (3/8) | 0.62496 (3/8) | 1.1047 (3/8) |
 | Third derivative · confirmation | 524,288 | 1–8 | 20.106 (4/8) | 0.60928 (4/8) | 1.1050 (4/8) |
 

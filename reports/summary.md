@@ -8,13 +8,13 @@ Recorded 88 runs, including 88 with a completed summary.
 
 TinyStories hybrid follow-up: 23 of 48 full runs and 5 of 8 shared checkpoints complete. Geometric decision: awaiting eight paired width measurements. [Hybrid outcomes](hybrid/results.md)
 
-**Snapshot at 2026-11-26T08:49:36+00:00** · 198/305 experimental milestones complete.
+**Snapshot at 2026-11-26T08:53:01+00:00** · 199/305 experimental milestones complete.
 
 **Recorded activity** · Between recorded training and scoring updates.
 
 **Next scheduled work** · Research abstracts · Hessian trace · confirm seed 4 (1%).
 
-The measured remaining-time scenarios are 19.64–20.32 machine-hours.
+The measured remaining-time scenarios are 19.59–20.23 machine-hours.
 
 [Status of every planned run](planned-runs.md#current-evidence-and-remaining-runs)
 
